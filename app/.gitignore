@@ -1,0 +1,11 @@
+/build
+.project
+.classpath
+.settings/
+# VsCode
+.vscode/
+
+# RELEASE
+O2PLATFORM/
+huawei/
+xiaomi/

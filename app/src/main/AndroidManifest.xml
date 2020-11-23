@@ -1,0 +1,398 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="net.zoneland.x.bpm.mobile.v1.zoneXBPM">
+    <!-- baidu需要 -->
+    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.GET_TASKS" /> <!-- 获取网络状态 -->
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 网络通信 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 获取设备信息 -->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" android:maxSdkVersion="28"/>
+    <!-- 读写sdcard，storage等等 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 允许程序录制音频 -->
+    <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 拨打电话 -->
+    <uses-permission android:name="android.permission.CALL_PHONE" /> <!-- 拍照 -->
+    <uses-permission android:name="android.permission.CAMERA" /> <!-- 允许监听启动完成事件 -->
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.BROADCAST_STICKY" />
+    <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.KILL_BACKGROUND_PROCESSES" /> <!-- 允许访问震动器 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 选举使用，当应用有删除或者更新时需要重新选举，复用推送通道 -->
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED" />
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
+    <uses-permission android:name="android.permission.RESTART_PACKAGES" /> <!-- 允许task重排序 -->
+    <uses-permission android:name="android.permission.REORDER_TASKS" /> <!-- 蓝牙 -->
+    <uses-permission android:name="android.permission.BLUETOOTH" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- gps -->
+    <uses-feature android:name="android.hardware.location.gps" /> <!-- android 8.0 安装未知来源apk的权限问题 -->
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
+    <application
+        android:name=".O2App"
+        android:allowBackup="false"
+        tools:replace="android:allowBackup"
+        android:hardwareAccelerated="true"
+        android:icon="@mipmap/logo"
+        android:label="@string/app_name"
+        android:roundIcon="@mipmap/logo_round"
+        android:networkSecurityConfig="@xml/network_security_config"
+        android:theme="@style/XBPMTheme.NoActionBar">
+
+        <activity android:name=".app.im.O2LocationActivity" />
+        <activity android:name=".app.im.O2InstantMessageActivity" />
+        <activity android:name=".app.im.O2ChatActivity" />
+        <activity android:name=".app.VideoPlayerActivity" />
+        <activity
+            android:name=".app.clouddrive.v2.viewer.BigImageViewActivity"
+             />
+        <activity android:name=".app.clouddrive.v2.type.CloudDiskFileTypeActivity" />
+        <activity android:name=".app.clouddrive.v2.picker.CloudDiskFolderPickerActivity" />
+        <activity
+            android:name=".app.clouddrive.v2.CloudDiskActivity"
+            android:label="@string/title_activity_yunpan"
+
+            android:theme="@style/XBPMTheme.NoActionBar.Transparent" />
+        <activity android:name=".app.o2.organization.ContactPickerActivity" />
+        <activity android:name=".app.cms.application.CMSPublishDocumentActivity" />
+        <activity
+            android:name=".app.o2.webview.LocalImageViewActivity"
+
+            android:theme="@style/XBPMTheme.fullscreen" />
+        <activity android:name=".app.o2.security.DeviceManagerActivity" />
+
+        <activity
+            android:name=".app.o2.launch.LaunchActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+
+            android:theme="@style/XBPMLauncherTheme">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+                <category android:name="android.intent.category.BROWSABLE" />
+
+                <data
+                    android:host="launch"
+                    android:scheme="o2oa" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".app.o2.bind.BindPhoneActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+
+            android:theme="@style/XBPMClearActivityTheme" />
+        <activity
+            android:name=".app.o2.login.LoginActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+
+            android:theme="@style/XBPMClearActivityTheme"
+            android:windowSoftInputMode="adjustUnspecified|stateHidden" />
+        <activity
+            android:name=".app.o2.main.MainActivity"
+            android:label="@string/app_name"
+            android:launchMode="singleTask"
+
+            android:theme="@style/XBPMClearActivityTheme" />
+        <activity
+            android:name=".app.o2.group.GroupActivity"
+            android:label="@string/title_activity_group"
+             />
+        <activity
+            android:name=".app.o2.person.PersonActivity"
+            android:label="@string/title_activity_person_info"
+            >
+            <intent-filter>
+                <action android:name="o2_person" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".app.o2.organization.NewOrganizationActivity"
+            android:label="@string/title_activity_contact"
+             />
+        <activity
+            android:name=".app.o2.my.MyInfoActivity"
+            android:label="@string/title_activity_my_info"
+            >
+            <intent-filter>
+                <action android:name="o2_my_info" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".app.o2.my.ClipAvatarActivity"
+            android:label="@string/title_activity_clip_avatar"
+             />
+        <activity
+            android:name=".app.o2.security.AccountSecurityActivity"
+            android:label="@string/title_activity_account_security"
+             />
+        <activity
+            android:name=".app.o2.notice.NoticeSettingActivity"
+            android:label="@string/title_activity_notice_setting"
+             />
+        <activity
+            android:name=".app.o2.notice.NoticeSettingHelpActivity"
+            android:label="@string/title_activity_notice_setting"
+             />
+        <activity
+            android:name=".app.o2.about.AboutActivity"
+            android:label="@string/app_about"
+             /> <!-- 扫描二维码 -->
+        <activity
+            android:name=".utils.zxing.activity.CaptureActivity"
+            android:label="@string/str_scan_title"
+             />
+        <activity
+            android:name=".app.o2.scanlogin.ScanLoginActivity"
+            android:label="@string/scan_login_confirm_title"
+             />
+        <activity
+            android:name=".app.o2.process.StartProcessActivity"
+            android:label="@string/title_activity_start_process"
+             />
+        <activity
+            android:name=".app.o2.webview.TaskWebViewActivity"
+            android:label="@string/title_activity_work_web_view"
+             />
+        <activity
+            android:name=".app.o2.process.TaskListActivity"
+            android:label="@string/title_activity_task_list"
+             />
+        <activity
+            android:name=".app.o2.process.TaskCompletedListActivity"
+            android:label="@string/title_activity_task_complete"
+             />
+        <activity
+            android:name=".app.o2.process.TaskCompletedSearchActivity"
+            android:label="@string/title_activity_task_complete"
+             />
+        <activity
+            android:name=".app.o2.process.ReadListActivity"
+            android:label="@string/title_activity_read_list"
+             />
+        <activity
+            android:name=".app.o2.process.ReadCompletedListActivity"
+            android:label="@string/title_activity_read_complete"
+             /> <!-- bbs -->
+        <activity
+            android:name=".app.bbs.main.BBSMainActivity"
+            android:label="@string/bbs"
+
+            android:theme="@style/XBPMTheme.NoActionBar.Transparent" />
+        <activity
+            android:name=".app.bbs.section.BBSSectionActivity"
+            android:label="@string/title_activity_bbs_section"
+             />
+        <activity
+            android:name=".app.bbs.view.BBSWebViewSubjectActivity"
+            android:label="@string/title_activity_bbs_view"
+
+            android:windowSoftInputMode="adjustResize|stateHidden" />
+        <activity
+            android:name=".app.bbs.publish.BBSPublishSubjectActivity"
+            android:label="@string/title_activity_bbs_publish_subject"
+             />
+        <activity
+            android:name=".app.bbs.reply.BBSReplyActivity"
+            android:label="@string/title_activity_bbs_reply"
+             /> <!-- cms -->
+        <activity
+            android:name=".app.cms.index.CMSIndexActivity"
+            android:label="@string/cms"
+
+            android:theme="@style/XBPMTheme.NoActionBar.Transparent" />
+        <activity
+            android:name=".app.cms.application.CMSApplicationActivity"
+            android:label="@string/title_cms_application"
+             />
+        <activity
+            android:name=".app.cms.view.CMSWebViewActivity"
+            android:label="@string/title_cms_view"
+             /> <!-- cloud drive -->
+        <activity
+            android:name=".app.clouddrive.CloudDriveActivity"
+            android:label="@string/title_activity_yunpan"
+
+            android:theme="@style/XBPMTheme.NoActionBar.Transparent" />
+        <activity
+            android:name=".app.clouddrive.viewer.PictureViewActivity"
+            android:label="@string/title_activity_picture_viewer"
+             /> <!-- meeting -->
+        <activity
+            android:name=".app.meeting.main.MeetingMainActivity"
+            android:label="@string/title_activity_meeting"
+
+            android:theme="@style/XBPMTheme.NoActionBar.Transparent" />
+        <activity
+            android:name=".app.meeting.room.MeetingRoomChooseActivity"
+             />
+        <activity
+            android:name=".app.meeting.apply.MeetingApplyActivity"
+            android:label="@string/title_activity_meeting_create_form"
+             />
+        <activity
+            android:name=".app.meeting.edit.MeetingEditActivity"
+            android:label="@string/title_activity_meeting_edit_form"
+             />
+        <activity
+            android:name=".app.meeting.invited.MeetingDetailInfoActivity"
+            android:label="@string/meeting_detail"
+             />
+        <activity
+            android:name=".app.meeting.reserve.MeetingRoomDetailActivity"
+            android:label="@string/meeting_detail"
+             /> <!-- attendance -->
+        <activity
+            android:name=".app.attendance.main.AttendanceMainActivity"
+            android:label="@string/attendance_check_in_title"
+
+            android:theme="@style/XBPMTheme.NoActionBar.Transparent" />
+        <activity
+            android:name=".app.attendance.list.AttendanceListActivity"
+            android:label="@string/title_activity_attendance"
+             />
+        <activity
+            android:name=".app.attendance.appeal.AttendanceAppealActivity"
+            android:label="@string/title_activity_attendance_appeal"
+             />
+        <activity
+            android:name=".app.attendance.approval.AttendanceAppealApprovalActivity"
+            android:label="@string/title_activity_attendance_appeal_approval"
+             />
+        <activity
+            android:name=".app.attendance.setting.AttendanceLocationSettingActivity"
+            android:label="@string/title_activity_attendance_location_setting"
+             />
+        <activity
+            android:name=".app.o2.main.MyAppActivity"
+            android:label="所有应用"
+             /> <!-- ai -->
+        <activity
+            android:name=".app.o2.ai.O2AIActivity"
+            android:launchMode="singleTask"
+             /> <!-- calendar -->
+        <activity
+            android:name=".app.calendar.CalendarMainActivity"
+            android:label="@string/calendar_name"
+
+            android:theme="@style/XBPMTheme.NoActionBar.Transparent" />
+        <activity android:name=".app.calendar.CreateEventActivity" />
+        <activity android:name=".app.calendar.CreateCalendarActivity" />
+        <activity android:name=".app.calendar.CalendarStoreActivity" /> <!-- portal -->
+        <activity
+            android:name=".app.o2.webview.PortalWebViewActivity"
+
+            android:theme="@style/XBPMTheme.NoActionBar.Transparent" /> <!-- 换肤 -->
+        <activity
+            android:name=".app.o2.skin.SkinManagerActivity"
+            android:label="@string/skin_manager"
+             />
+        <activity android:name=".app.o2.skin.SkinShowActivity" />
+
+        <!-- 蓝牙相关 -->
+        <activity android:name=".app.bluetooth.BlueToothClientActivity" />
+        <activity android:name=".app.bluetooth.BlueToothServerActivity" />
+        <activity android:name=".app.bluetooth.BlueToothBLEClientActivity" />
+        <activity android:name=".app.bluetooth.BlueToothBLEServerActivity" />
+        <!-- ```````````````````service```````````````````` -->
+        <!-- baidu -->
+        <service
+            android:name="com.baidu.location.f"
+            android:enabled="true"
+            android:process=":remote" />
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="${BAIDU_MAP_APPKEY}" /> <!-- baidu yuyin -->
+        <service
+            android:name="com.baidu.speech.VoiceRecognitionService"
+            android:exported="false" />
+
+        <meta-data
+            android:name="com.baidu.speech.APP_ID"
+            android:value="${BAIDU_SPEECH_APPID}" />
+        <meta-data
+            android:name="com.baidu.speech.API_KEY"
+            android:value="${BAIDU_SPEECH_APPKEY}" />
+        <meta-data
+            android:name="com.baidu.speech.SECRET_KEY"
+            android:value="${BAIDU_SPEECH_SECRET}" /> <!-- 删除临时文件任务 -->
+        <service
+            android:name=".core.service.ClearTempFileJobService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+        <service
+            android:name=".core.service.CollectLogJobService"
+            android:exported="true"
+            android:permission="android.permission.BIND_JOB_SERVICE" /> <!-- 下载apk -->
+        <service
+            android:name=".core.service.DownloadAPKService"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="${applicationId}.action.UPDATE" />
+            </intent-filter>
+        </service> <!-- 重启应用的service -->
+        <service android:name=".core.service.RestartSelfService" /> <!-- jpush -->
+        <service
+            android:name=".core.service.WebSocketService"
+            android:exported="false" /> <!-- 录音 转mp3 service -->
+        <service android:name="com.zlw.main.recorderlib.recorder.RecordService" />
+
+        <receiver
+            android:name=".core.receiver.JpushNoticeBroadReceiver"
+            android:enabled="true">
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.REGISTRATION" />
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
+                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
+
+                <category android:name="${applicationId}" />
+            </intent-filter>
+        </receiver>
+
+
+        <!-- bugly -->
+        <!-- 配置APP ID -->
+        <meta-data
+            android:name="BUGLY_APPID"
+            android:value="${BUGLY_APPID}" /> <!-- 配置APP渠道号 -->
+        <meta-data
+            android:name="BUGLY_APP_CHANNEL"
+            android:value="${JPUSH_CHANNEL}" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.fileProvider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/file_paths" />
+        </provider>
+        <provider
+            android:name="cn.jpush.android.service.DataProvider"
+            android:authorities="${applicationId}.DataProvider"
+            android:exported="true"
+            tools:replace="android:exported, android:authorities" />
+
+        <activity android:name=".app.tbs.FileReaderActivity" />
+        <activity android:name=".flutter.FlutterConnectActivity" />
+
+        <uses-library android:name="org.apache.http.legacy" android:required="false" />
+    </application>
+
+</manifest>
