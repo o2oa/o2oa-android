@@ -14,11 +14,11 @@ O2OA 平台Android客户端，最低支持Android版本4.4 Android KitKat，编�
 
 安装Android Studio完成后，打开设置里面的SDK Manager工具。
 
-![image](https://cdn.nlark.com/yuque/0/2019/png/638329/1577344557429-5f5242d4-89b0-426e-bf59-057a2e52686f.png)
+![image](./img/1577344557429-5f5242d4-89b0-426e-bf59-057a2e52686f.png)
 
 选择**Android 9.0 (Pie)** ，安装SDK。
 
-![image.png](https://cdn.nlark.com/yuque/0/2020/png/501589/1598252598869-65ccd9b0-f539-4846-a56e-d242fb75225f.png?x-oss-process=image%2Fresize%2Cw_1500)
+![image.png](./img/1598252598869-65ccd9b0-f539-4846-a56e-d242fb75225f.png)
 
 然后选择SDK Tools 选项卡，勾选右下角的Show Package Details，然后选择Android SDK Build-Tools 下面的**28.0.3**版本进行安装。
 
@@ -34,7 +34,7 @@ O2OA 平台Android客户端，最低支持Android版本4.4 Android KitKat，编�
 
 
 
-![image](https://cdn.nlark.com/yuque/0/2019/png/638329/1577344557509-a21b55b1-4241-4b5a-b642-aa6c74c8e549.png)
+![image](./img/1577344557509-a21b55b1-4241-4b5a-b642-aa6c74c8e549.png)
 
 
 
@@ -42,7 +42,7 @@ O2OA 平台Android客户端，最低支持Android版本4.4 Android KitKat，编�
 
 
 
-![image](https://cdn.nlark.com/yuque/0/2019/png/638329/1577344558957-4a1ed875-17de-4d35-9a53-1fc14de8caff.png)
+![image](./img/1577344558957-4a1ed875-17de-4d35-9a53-1fc14de8caff.png)
 
 
 
@@ -58,7 +58,7 @@ O2OA 平台Android客户端，最低支持Android版本4.4 Android KitKat，编�
 
 
 
-![image](https://cdn.nlark.com/yuque/0/2019/png/638329/1577344557451-0d30193a-801c-43bd-94a5-b60ac07773a5.png?x-oss-process=image%2Fresize%2Cw_1500)
+![image](./img/1577344557451-0d30193a-801c-43bd-94a5-b60ac07773a5.png)
 
 
 
@@ -70,7 +70,7 @@ O2OA 平台Android客户端，最低支持Android版本4.4 Android KitKat，编�
 
 |                                                              |                                                              |
 | ------------------------------------------------------------ | ------------------------------------------------------------ |
-| ![image](https://cdn.nlark.com/yuque/0/2019/png/638329/1577344557413-0780e7c6-8597-4239-a47a-b2aef0b879dc.png) | ![image](https://cdn.nlark.com/yuque/0/2019/png/638329/1577344557674-0bc05c23-9c26-409c-b2e4-5f16f92e7f8b.png) |
+| ![image](./img/1577344557413-0780e7c6-8597-4239-a47a-b2aef0b879dc.png) | ![image](./img/1577344557674-0bc05c23-9c26-409c-b2e4-5f16f92e7f8b.png) |
 
 
 
@@ -80,7 +80,7 @@ O2OA 平台Android客户端，最低支持Android版本4.4 Android KitKat，编�
 
 Android应用都有一个唯一的应用ID `applicationId` 。这个id代表这个Android App所以不能重复，一般都用公司域名组成的一串字符串，如： `com.baidu.app.xxx` 。 修改的文件是在`./app/build.gradle` 文件中，android -> defaultConfig -> applicationId 。
 
-![image](https://cdn.nlark.com/yuque/0/2019/png/638329/1577344557438-dee08395-93fd-427a-86be-871cc8701316.png?x-oss-process=image%2Fresize%2Cw_1500)
+![image](./img/1577344557438-dee08395-93fd-427a-86be-871cc8701316.png)
 
 
 
@@ -133,11 +133,11 @@ signingConfig.storePassword=存储密码
 
 buildConfigField "Boolean", "InnerServer", "true"
 
-![image](https://cdn.nlark.com/yuque/0/2019/png/638329/1577344559312-11600328-394a-4b1a-8798-b85c1af59219.png?x-oss-process=image%2Fresize%2Cw_1500)
+![image](./img/1577344559312-11600328-394a-4b1a-8798-b85c1af59219.png)
 
 然后找到app->assets 目录下找到server.json文件，把里面的centerHost 、 centerPort、httpProtocol改成你们自己的O2OA中心服务器地址信息。
 
-![image](https://cdn.nlark.com/yuque/0/2019/png/638329/1577344559030-1735ff15-8980-42cf-a8c8-220d9d8ff200.png?x-oss-process=image%2Fresize%2Cw_1500)
+![image](./img/1577344559030-1735ff15-8980-42cf-a8c8-220d9d8ff200.png)
 
 
 
@@ -147,7 +147,7 @@ buildConfigField "Boolean", "InnerServer", "true"
 
 
 
-![image](https://cdn.nlark.com/yuque/0/2019/png/638329/1577344557829-5b7d13c2-9b8c-4743-abb6-b7df21af84f9.png)
+![image](./img/1577344557829-5b7d13c2-9b8c-4743-abb6-b7df21af84f9.png)
 
 
 
@@ -155,7 +155,7 @@ buildConfigField "Boolean", "InnerServer", "true"
 
 
 
-![image](https://cdn.nlark.com/yuque/0/2019/png/638329/1577344558176-f5c3d53c-4483-4070-9164-49de977ef72e.png)
+![image](./img/1577344558176-f5c3d53c-4483-4070-9164-49de977ef72e.png)
 
 
 
@@ -163,7 +163,7 @@ buildConfigField "Boolean", "InnerServer", "true"
 
 
 
-![image](https://cdn.nlark.com/yuque/0/2019/png/638329/1577344558020-ea1b6356-e766-4b1f-a7f6-eff15dae770f.png)
+![image](./img/1577344558020-ea1b6356-e766-4b1f-a7f6-eff15dae770f.png)
 
 这里的签名版本V1和V2都勾选。点击 `Finish` 就开始打包了。 打包完成后，APK文件在 `./app/O2PLATFORM/release/` 目录下 。
 
