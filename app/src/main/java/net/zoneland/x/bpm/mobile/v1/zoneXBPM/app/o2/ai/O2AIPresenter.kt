@@ -7,6 +7,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.TulingPostData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.TaskData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.trimPunct
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pinyin.HanyuPinyin
 import okhttp3.MediaType
 import okhttp3.RequestBody
@@ -44,9 +45,11 @@ class O2AIPresenter : BasePresenterImpl<O2AIContract.View>(), O2AIContract.Prese
 
     override fun listenFinish(result: String) {
         XLog.info("listen  command is $result")
+        val r = result.trimPunct()
+        XLog.info("去除了标点后的 $r")
         when (status) {
-            STATUS_TOP -> logicTop(result)
-            STATUS_TASK -> logicTask(result)
+            STATUS_TOP -> logicTop(r)
+            STATUS_TASK -> logicTask(r)
         }
     }
 

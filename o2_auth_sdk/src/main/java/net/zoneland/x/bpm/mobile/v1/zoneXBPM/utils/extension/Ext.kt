@@ -20,6 +20,16 @@ import rx.Observable
  */
 
 /**
+ * 删除所有的标点符号
+ *
+ * @param str 处理的字符串
+ */
+fun String.trimPunct(): String {
+    return if (this.isEmpty()) {
+        ""
+    } else this.replace("[\\\\pP\\\\p{Punct}]".toRegex(), "")
+}
+/**
  * 长度转成文件大小名称
  */
 fun Long.friendlyFileLength(): String {
