@@ -119,6 +119,7 @@ class LaunchPresenter : BasePresenterImpl<LaunchContract.View>(), LaunchContract
             putString(O2CustomStyle.INDEX_TYPE_PREF_KEY, data?.indexType
                     ?: O2CustomStyle.INDEX_TYPE_DEFAULT)
             putString(O2CustomStyle.INDEX_ID_PREF_KEY, data?.indexPortal ?: "")
+            putBoolean(O2CustomStyle.CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY, data?.simpleMode ?: false)
         }
     }
 

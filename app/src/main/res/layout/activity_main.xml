@@ -47,17 +47,4 @@
 
     </LinearLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_main_start_ai"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:src="@mipmap/o2_ai_start"
-        app:backgroundTint="@color/z_color_bottom_bar_background"
-        app:rippleColor="@color/z_color_bottom_bar_background"
-        app:elevation="1px"
-        app:fabSize="normal"
-        android:scaleType="center"
-        android:layout_gravity="bottom|center"
-        android:layout_marginBottom="@dimen/fab_margin"
-        android:visibility="gone"/>
 </FrameLayout>

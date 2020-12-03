@@ -18,21 +18,7 @@ import rx.schedulers.Schedulers
 
 class MainPresenter : BasePresenterImpl<MainContract.View>(), MainContract.Presenter {
 
-    override fun checkO2AIEnable() {
-        RealmDataService().findAllNativeApp().subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .o2Subscribe {
-                    onNext {
-                        mView?.o2AIEnable(it.any {
-                            it.enable && it.key == ApplicationEnum.O2AI.key
-                        })
-                    }
-                    onError { e, isNetworkError ->
-                        XLog.error("o2ai check error $isNetworkError", e)
-                        mView?.o2AIEnable(false)
-                    }
-                }
-    }
+
 
     override fun checkAttendanceFeature() {
         getAttendanceAssembleControlService(mView?.getContext())?.let {

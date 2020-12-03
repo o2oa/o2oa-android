@@ -10,11 +10,9 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseView
 
 object MainContract {
     interface View : BaseView{
-        fun o2AIEnable(enable: Boolean)
     }
 
     interface Presenter: BasePresenter<View> {
-        fun checkO2AIEnable()
         fun checkAttendanceFeature()
     }
 }
