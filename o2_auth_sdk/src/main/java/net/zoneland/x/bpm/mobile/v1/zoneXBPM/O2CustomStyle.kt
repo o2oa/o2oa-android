@@ -28,6 +28,8 @@ object O2CustomStyle {
     //MARK - 移动端首页展现类型的key
     const val INDEX_TYPE_PREF_KEY = "customStyleIndexTypeKey"
     const val INDEX_ID_PREF_KEY = "customStyleIndexIdKey"
+    // 移动端简易模式 key
+    const val CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY = "customStyleSimpleModeKey"
 
     const val extension_png = ".png"
 

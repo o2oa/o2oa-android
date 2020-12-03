@@ -46,17 +46,14 @@ import java.io.File
 
 class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(), MainContract.View, View.OnClickListener {
 
-    val TAKE_FROM_PICTURES_CODE = 1
-    val TAKE_FROM_CAMERA_CODE = 2
-    val CLIP_AVATAR_ACTIVITY_CODE = 3
 
     override var mPresenter: MainContract.Presenter = MainPresenter()
 
-    private val fragmentList: ArrayList<Fragment> = ArrayList(5)
-    private val fragmentTitles: ArrayList<String> = ArrayList(5)
+    private val fragmentList: ArrayList<Fragment> = ArrayList()
+    private val fragmentTitles: ArrayList<String> = ArrayList()
     private val mCurrentSelectIndexKey = "mCurrentSelectIndexKey"
     private var mCurrentSelectIndex = 2
-    private lateinit var cameraImageUri: Uri
+    private var simpleMode = false
 
 
     var pictureLoaderService: PictureLoaderService? = null
@@ -79,56 +76,84 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         XLog.info("main activity init..............")
         val indexType = O2SDKManager.instance().prefs().getString(O2CustomStyle.INDEX_TYPE_PREF_KEY, O2CustomStyle.INDEX_TYPE_DEFAULT)
         val indexId = O2SDKManager.instance().prefs().getString(O2CustomStyle.INDEX_ID_PREF_KEY, "") ?: ""
-        XLog.info("main activity isIndex $indexType..............")
-
-        val newsFragment = O2IMConversationFragment()
-//        val newsFragment = NewsFragment()
-        fragmentList.add(newsFragment)
-        fragmentTitles.add(getString(R.string.tab_message))
-
-        val contactFragment = NewContactFragment()
-        fragmentList.add(contactFragment)
-        fragmentTitles.add(getString(R.string.tab_contact))
-
-        val indexName = getString(R.string.tab_todo)
-        if (indexType == O2CustomStyle.INDEX_TYPE_DEFAULT || TextUtils.isEmpty(indexId)) {
-            val indexFragment = IndexFragment()
-            fragmentList.add(indexFragment)
-            fragmentTitles.add(indexName)
+        simpleMode = O2SDKManager.instance().prefs().getBoolean(O2CustomStyle.CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY, false)
+        XLog.info("main activity isIndex $indexType..............simpleMode: $simpleMode")
+        // 简易模式 只有首页和设置页面
+        if (simpleMode) {
+            val indexName = getString(R.string.tab_todo)
+            if (indexType == O2CustomStyle.INDEX_TYPE_DEFAULT || TextUtils.isEmpty(indexId)) {
+                val indexFragment = IndexFragment()
+                fragmentList.add(indexFragment)
+                fragmentTitles.add(indexName)
+            } else {
+                val indexFragment = IndexPortalFragment.instance(indexId)
+                fragmentList.add(indexFragment)
+                fragmentTitles.add(indexName)
+            }
+            val settingFragment = SettingsFragment()
+            fragmentList.add(settingFragment)
+            fragmentTitles.add(getString(R.string.tab_settings))
+            icon_main_bottom_news.gone()
+            icon_main_bottom_contact.gone()
+            icon_main_bottom_app.gone()
+            icon_main_bottom_index.setOnClickListener(this)
+            icon_main_bottom_setting.setOnClickListener(this)
         } else {
-            val indexFragment = IndexPortalFragment.instance(indexId)
-            fragmentList.add(indexFragment)
-            fragmentTitles.add(indexName)
+            val newsFragment = O2IMConversationFragment()
+            fragmentList.add(newsFragment)
+            fragmentTitles.add(getString(R.string.tab_message))
+
+            val contactFragment = NewContactFragment()
+            fragmentList.add(contactFragment)
+            fragmentTitles.add(getString(R.string.tab_contact))
+
+            val indexName = getString(R.string.tab_todo)
+            if (indexType == O2CustomStyle.INDEX_TYPE_DEFAULT || TextUtils.isEmpty(indexId)) {
+                val indexFragment = IndexFragment()
+                fragmentList.add(indexFragment)
+                fragmentTitles.add(indexName)
+            } else {
+                val indexFragment = IndexPortalFragment.instance(indexId)
+                fragmentList.add(indexFragment)
+                fragmentTitles.add(indexName)
+            }
+
+            val appFragment = AppFragment()
+            fragmentList.add(appFragment)
+            fragmentTitles.add(getString(R.string.tab_app))
+
+            val settingFragment = SettingsFragment()
+            fragmentList.add(settingFragment)
+            fragmentTitles.add(getString(R.string.tab_settings))
+            icon_main_bottom_news.visible()
+            icon_main_bottom_contact.visible()
+            icon_main_bottom_app.visible()
+            icon_main_bottom_news.setOnClickListener(this)
+            icon_main_bottom_app.setOnClickListener(this)
+            icon_main_bottom_index.setOnClickListener(this)
+            icon_main_bottom_contact.setOnClickListener(this)
+            icon_main_bottom_setting.setOnClickListener(this)
         }
 
-        val appFragment = AppFragment()
-        fragmentList.add(appFragment)
-        fragmentTitles.add(getString(R.string.tab_app))
-
-        val settingFragment = SettingsFragment()
-        fragmentList.add(settingFragment)
-        fragmentTitles.add(getString(R.string.tab_settings))
 
         content_fragmentView_id.adapter = adapter
-        content_fragmentView_id.offscreenPageLimit = 5
+        content_fragmentView_id.offscreenPageLimit = if(simpleMode){2}else{5}
         content_fragmentView_id.addOnPageChangeListener {
             onPageSelected { position ->
-                selectTab(position)
+                var index = position
+                if (simpleMode) {
+                    index = when(position) {
+                        0 -> 2
+                        else -> 4
+                    }
+                }
+                selectTab(index)
             }
         }
 
-        fab_main_start_ai.setOnClickListener(this)
-        icon_main_bottom_news.setOnClickListener(this)
-        icon_main_bottom_app.setOnClickListener(this)
-//        icon_main_bottom_index_blur.setOnClickListener(this)
-        icon_main_bottom_index.setOnClickListener(this)
-        icon_main_bottom_contact.setOnClickListener(this)
-        icon_main_bottom_setting.setOnClickListener(this)
+
 
         selectTab(mCurrentSelectIndex)
-
-        //初始化拍照地址等
-        SDCardHelper.generateNewFile(FileExtensionHelper.getCameraCacheFilePath())
 
         //register scheduler job
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
@@ -148,16 +173,6 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         mPresenter.checkAttendanceFeature()
     }
 
-    override fun o2AIEnable(enable: Boolean) {
-        XLog.info("O2AI enable: $enable")
-//        if (enable) {
-//            icon_main_bottom_center_gap.visible()
-//            fab_main_start_ai.visible()
-//        }else {
-//            icon_main_bottom_center_gap.gone()
-//            fab_main_start_ai.gone()
-//        }
-    }
 
     override fun onResume() {
         super.onResume()
@@ -198,7 +213,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         super.onRestoreInstanceState(savedInstanceState)
-        mCurrentSelectIndex = savedInstanceState.getInt(mCurrentSelectIndexKey) ?: 2
+        mCurrentSelectIndex = savedInstanceState.getInt(mCurrentSelectIndexKey)
     }
 
     override fun onDestroy() {
@@ -211,8 +226,13 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            return if (mCurrentSelectIndex == 2 && fragmentList[2] is IndexPortalFragment) {
-                if ((fragmentList[2] as IndexPortalFragment).previousPage()) {
+            val indexFragment =  if (simpleMode) {
+                fragmentList[0]
+            }else {
+                fragmentList[2]
+            }
+            return if (mCurrentSelectIndex == 2 && indexFragment is IndexPortalFragment) {
+                if (indexFragment.previousPage()) {
                     true
                 } else {
                     doubleClickExitHelper.onKeyDown(keyCode, event)
@@ -224,52 +244,23 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         return super.onKeyDown(keyCode, event)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            fragmentList.map { it.onActivityResult(requestCode, resultCode, data) }
-            when (requestCode) {
-                TAKE_FROM_CAMERA_CODE -> startClipAvatar(cameraImageUri)
-
-                TAKE_FROM_PICTURES_CODE -> {
-                    XLog.debug("choose from pictures ...")
-                    data?.let {
-                        val result = it.extras?.getString(PicturePicker.FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY, "")
-                        if (!TextUtils.isEmpty(result)) {
-                            val uri = Uri.fromFile(File(result))
-                            startClipAvatar(uri)
-                        }
-                    }
-                }
-
-                CLIP_AVATAR_ACTIVITY_CODE -> {
-                    data?.let {
-                        val url = it.extras?.getString("clipAvatarFilePath")
-                        XLog.debug("back Myinfo avatar uri : $url ")
-                        if (content_fragmentView_id.currentItem == 3 && fragmentList[3] is MyFragment) {
-                            (fragmentList[3] as MyFragment).modifyAvatar2Remote(url)
-                        }
-
-                    }
-                }
-            }
-        }
-    }
-
     override fun onClick(v: View?) {
         when (v?.id) {
-//            R.id.icon_main_bottom_index_blur -> selectTab(0)
             R.id.icon_main_bottom_news -> selectTab(0)
             R.id.icon_main_bottom_contact -> selectTab(1)
             R.id.icon_main_bottom_index -> {
-                if (fragmentList[2] is IndexPortalFragment) {
-                    (fragmentList[2] as IndexPortalFragment).loadWebview()
+                val indexFragment = if (simpleMode) {
+                    fragmentList[0]
+                }else {
+                    fragmentList[2]
+                }
+                if (indexFragment is IndexPortalFragment) {
+                    indexFragment.loadWebview()
                 }
                 selectTab(2)
             }
             R.id.icon_main_bottom_app -> selectTab(3)
             R.id.icon_main_bottom_setting -> selectTab(4)
-            R.id.fab_main_start_ai -> startAi()
         }
     }
 
@@ -280,60 +271,15 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
 
     //跳转到应用页面 首页使用
     fun gotoApp() {
-        selectTab(3)
+        if (!simpleMode) {
+            selectTab(3)
+        }
     }
-
-    private fun startAi() {
-        IndexFragment.go(ApplicationEnum.O2AI.key, this)
-    }
-
 
     private fun selectTab(i: Int) {
         changePageView(i)
         changeBottomIcon(i)
         mCurrentSelectIndex = i
-    }
-
-    fun takeFromPictures() {
-        PicturePicker()
-                .withActivity(this)
-                .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
-                .requestCode(TAKE_FROM_PICTURES_CODE)
-                .start()
-    }
-
-    fun takeFromCamera() {
-        PermissionRequester(this).request(Manifest.permission.CAMERA)
-                .o2Subscribe {
-                    onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
-                        XLog.info("granted:$granted , shouldShowRequest:$shouldShowRequestPermissionRationale, denied:$deniedPermissions")
-                        if (!granted) {
-                            O2DialogSupport.openAlertDialog(this@MainActivity, "非常抱歉，相机权限没有开启，无法使用相机！")
-                        } else {
-                            openCamera()
-                        }
-                    }
-                    onError { e, _ ->
-                        XLog.error("检查权限出错", e)
-                    }
-                }
-    }
-
-    private fun startClipAvatar(pictureUri: Uri) {
-        goWithRequestCode<ClipAvatarActivity>(ClipAvatarActivity.startWithBundle(pictureUri), CLIP_AVATAR_ACTIVITY_CODE)
-    }
-
-    private fun openCamera() {
-        XLog.info("openCamera")
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        //return-data false 不是直接返回拍照后的照片Bitmap 因为照片太大会传输失败
-        intent.putExtra("return-data", false)
-        //改用Uri 传递
-        cameraImageUri = FileUtil.getUriFromFile(this@MainActivity, File(FileExtensionHelper.getCameraCacheFilePath()))
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
-        intent.putExtra("noFaceDetection", true)
-        startActivityForResult(intent, TAKE_FROM_CAMERA_CODE)
     }
 
 
@@ -370,7 +316,16 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
     }
 
     private fun changePageView(position: Int) {
-        content_fragmentView_id.setCurrentItem(position, false)
+        val pageIndex = if (simpleMode) {
+            if (position == 4) {
+                1
+            }else {
+                0
+            }
+        }else {
+            position
+        }
+        content_fragmentView_id.setCurrentItem(pageIndex, false)
         when (position) {
             0 -> resetToolBar(getString(R.string.tab_message))
             1 -> resetToolBar(getString(R.string.tab_contact))
@@ -446,17 +401,6 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
             }
             XLog.debug("storage success, width:$width, height:$height")
         }
-    }
-
-    fun changeIndexFragment() {
-        XLog.info("changeIndexFragment  ..................")
-        val isIndex = O2SDKManager.instance().prefs().getBoolean(O2.O2_INDEX_OR_PORTAL, true)
-        XLog.info("changeIndexFragment  $isIndex..................")
-        O2SDKManager.instance().prefs().edit {
-            XLog.info("edit index..................")
-            putBoolean(O2.O2_INDEX_OR_PORTAL, !isIndex)
-        }
-        restartAppSelf(this)
     }
 
     /**

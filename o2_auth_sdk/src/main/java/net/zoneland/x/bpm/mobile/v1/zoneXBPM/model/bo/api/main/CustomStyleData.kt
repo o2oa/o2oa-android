@@ -13,6 +13,7 @@ data class CustomStyleData(
         var indexType: String = "default",
 //        var indexId: String = "",
         var indexPortal: String = "",
+        var simpleMode: Boolean = false,
         var portalList: List<PortalData> = ArrayList(),
         var nativeAppList: List<AppItemOnlineVo> = ArrayList(),
         var images: ArrayList<ImageValue> = ArrayList()

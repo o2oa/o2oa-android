@@ -87,15 +87,6 @@
             android:src="@mipmap/index_bottom_menu_logo_focus"
             android:scaleType="fitCenter"
             />
-        <!--<RelativeLayout-->
-            <!--android:id="@+id/icon_main_bottom_center_gap"-->
-            <!--android:layout_width="0dp"-->
-            <!--android:layout_weight="1"-->
-            <!--android:layout_height="match_parent"-->
-            <!--android:padding="2dp"-->
-            <!--android:visibility="gone">-->
-
-        <!--</RelativeLayout>-->
         <RelativeLayout
             android:id="@+id/icon_main_bottom_app"
             android:layout_width="0dp"
