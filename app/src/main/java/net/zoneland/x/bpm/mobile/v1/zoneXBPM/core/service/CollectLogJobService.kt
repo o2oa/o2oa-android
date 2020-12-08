@@ -45,7 +45,11 @@ class CollectLogJobService : JobService() {
     }
 
     private fun executeTask(params: JobParameters?) {
-        val logFolderPath = FileExtensionHelper.getXBPMLogFolder()
+        val logFolderPath = FileExtensionHelper.getXBPMLogFolder(baseContext)
+        if (logFolderPath == null) {
+            XLog.error("没有获取到日志目录。。。。。")
+            return
+        }
         XLog.info("log folder: $logFolderPath")
         val logFolder = File(logFolderPath)
         if (logFolder.exists()) {

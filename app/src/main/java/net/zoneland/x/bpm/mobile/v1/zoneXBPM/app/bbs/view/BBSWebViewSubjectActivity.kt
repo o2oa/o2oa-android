@@ -83,7 +83,7 @@ class BBSWebViewSubjectActivity : BaseMVPActivity<BBSWebViewSubjectContract.View
         subjectId = intent.extras?.getString(BBS_VIEW_SUBJECT_ID_KEY)?:""
         subjectTitle = intent.extras?.getString(BBS_VIEW_SUBJECT_TITLE_KEY)?:""
         //prepare attachment storage dir
-        val folder = File(FileExtensionHelper.getXBPMBBSAttachFolder())
+        val folder = File(FileExtensionHelper.getXBPMBBSAttachFolder(this))
         if (!folder.exists()) {
             folder.mkdirs()
         }
@@ -299,7 +299,7 @@ class BBSWebViewSubjectActivity : BaseMVPActivity<BBSWebViewSubjectContract.View
 
     private fun getAttachFileLocalPath(id:String) : String{
         var path  = ""
-        attachList.asSequence().filter { it.id == id }.map { path = FileExtensionHelper.getXBPMBBSAttachFolder()+File.separator+it.fileName }.toList()
+        attachList.asSequence().filter { it.id == id }.map { path = FileExtensionHelper.getXBPMBBSAttachFolder(this) + File.separator + it.fileName }.toList()
         return path
     }
 

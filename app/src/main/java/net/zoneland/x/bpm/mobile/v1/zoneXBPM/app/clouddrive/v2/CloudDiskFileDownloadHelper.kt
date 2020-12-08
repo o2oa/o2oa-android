@@ -30,7 +30,7 @@ class CloudDiskFileDownloadHelper(val activity: Activity) {
     fun startDownload(fileId: String, extension: String, result: (file: File?)->Unit) {
         showLoading?.invoke()
 
-        val path = FileExtensionHelper.getXBPMTempFolder()+ File.separator + fileId + "." +extension
+        val path = FileExtensionHelper.getXBPMTempFolder(activity)+ File.separator + fileId + "." +extension
         XLog.debug("file path $path")
         val downloadUrl = APIAddressHelper.instance()
                 .getCommonDownloadUrl(APIDistributeTypeEnum.x_file_assemble_control, "jaxrs/attachment2/$fileId/download/stream")

@@ -86,7 +86,7 @@ class ClipAvatarActivity : AppCompatActivity() {
 
         override fun doInBackground(vararg params: Bitmap): String {
             XLog.debug("clip finish !")
-            val avatarFilePath = FileExtensionHelper.generateAvatarFilePath()
+            val avatarFilePath = FileExtensionHelper.generateAvatarFilePath(baseContext)
             val generateNewFile = SDCardHelper.generateNewFile(avatarFilePath)
             if (generateNewFile) {
                 XLog.debug("generateFile finish file is $avatarFilePath")

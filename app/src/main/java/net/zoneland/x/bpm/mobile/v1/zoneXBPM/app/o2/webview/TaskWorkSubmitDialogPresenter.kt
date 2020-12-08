@@ -63,7 +63,7 @@ class TaskWorkSubmitDialogPresenter : BasePresenterImpl<TaskWorkSubmitDialogCont
         } else {
             // 有签名的 先上传签名
             try {
-                val tempSignPath = FileExtensionHelper.generateSignTempFilePath()
+                val tempSignPath = FileExtensionHelper.generateSignTempFilePath(mView?.getContext())
                 val result = SDCardHelper.bitmapToPNGFile(sign, tempSignPath)
                 XLog.info("生成签名图片:$tempSignPath , result: $result")
                 val file = File(tempSignPath)

@@ -122,7 +122,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     private var mPlayer: MediaPlayer? = null
 
     //拍照
-    private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath())) }
+    private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
     private val camera_result_code = 10240
 
     //是否能修改群名 群成员
@@ -278,7 +278,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         if (resultCode == Activity.RESULT_OK && requestCode == camera_result_code) {
             //拍照
             XLog.debug("拍照//// ")
-            newImageMessage(FileExtensionHelper.getCameraCacheFilePath())
+            newImageMessage(FileExtensionHelper.getCameraCacheFilePath(this))
         }
     }
 
@@ -615,7 +615,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         RecordManager.getInstance().changeFormat(RecordConfig.RecordFormat.MP3)
         RecordManager.getInstance().changeRecordConfig(RecordManager.getInstance().recordConfig.setSampleRate(16000))
         RecordManager.getInstance().changeRecordConfig(RecordManager.getInstance().recordConfig.setEncodingConfig(AudioFormat.ENCODING_PCM_8BIT))
-        RecordManager.getInstance().changeRecordDir(FileExtensionHelper.getXBPMTempFolder() + File.separator)
+        RecordManager.getInstance().changeRecordDir(FileExtensionHelper.getXBPMTempFolder(this) + File.separator)
         RecordManager.getInstance().setRecordStateListener(object : RecordStateListener {
             override fun onError(error: String?) {
                 XLog.error("录音错误, $error")

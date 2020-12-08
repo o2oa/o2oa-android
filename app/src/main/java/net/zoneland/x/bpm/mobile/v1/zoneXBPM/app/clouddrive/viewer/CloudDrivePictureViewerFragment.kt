@@ -43,7 +43,7 @@ class CloudDrivePictureViewerFragment : BaseMVPViewPagerFragment<CloudDrivePictu
             circle_progress_fragment_picture_view.visible()
             zoomImage_fragment_picture_view.visible()
 
-            val path = FileExtensionHelper.getXBPMTempFolder()+ File.separator + fileName
+            val path = FileExtensionHelper.getXBPMTempFolder(activity)+ File.separator + fileName
             XLog.debug("file path $path")
             val downloadUrl = APIAddressHelper.instance()
                     .getCommonDownloadUrl(APIDistributeTypeEnum.x_file_assemble_control, "jaxrs/attachment/$fileId/download/stream")

@@ -52,7 +52,7 @@ class DownloadDocument(val context: Activity) {
                     fileName = fileName.substringAfterLast("''")
                 }
                 XLog.debug("下载文件名称: $fileName")
-                val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(fileName)
+                val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(fileName, context)
                 XLog.debug("本地文件存储地址： $path")
                 file = File(path)
                 val fos = FileOutputStream(file)

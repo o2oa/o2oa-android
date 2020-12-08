@@ -10,6 +10,7 @@ import android.os.Environment
 import android.provider.DocumentsContract
 import android.provider.MediaStore
 import androidx.core.content.FileProvider
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import java.io.*
 import java.nio.channels.FileChannel
 
@@ -52,9 +53,9 @@ object FileUtil {
     fun appExternalImageDir(context: Context): File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 
     /**
-     * sd卡根目录
+     * o2 base 目录
      */
-    fun sdcardDir() = Environment.getExternalStorageDirectory()
+    fun o2AppExternalBaseDir(context: Context): File? = context.getExternalFilesDir(O2.BASE_FILE_PATH)
 
 
     /**

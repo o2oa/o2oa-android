@@ -67,7 +67,7 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
     private val jsBiz: JSInterfaceO2mBiz by lazy { JSInterfaceO2mBiz.with(this) }
 
     private val downloadDocument: DownloadDocument by lazy { DownloadDocument(this) }
-    private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath())) }
+    private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
     //上传附件
     private var site = ""
     //replace 附件
@@ -80,7 +80,7 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
         docTitle = intent.extras?.getString(CMS_VIEW_DOCUMENT_TITLE_KEY) ?: ""
 
         //初始化附件存储目录  权限
-        val folder = File(FileExtensionHelper.getXBPMCMSAttachFolder())
+        val folder = File(FileExtensionHelper.getXBPMCMSAttachFolder(this))
         if (!folder.exists()) {
             folder.mkdirs()
         }
@@ -162,7 +162,7 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
                 TAKE_FROM_CAMERA_CODE -> {
                     //拍照
                     XLog.debug("拍照//// ")
-                    uploadImage2FileStorageStart(FileExtensionHelper.getCameraCacheFilePath())
+                    uploadImage2FileStorageStart(FileExtensionHelper.getCameraCacheFilePath(this))
                 }
             }
         }

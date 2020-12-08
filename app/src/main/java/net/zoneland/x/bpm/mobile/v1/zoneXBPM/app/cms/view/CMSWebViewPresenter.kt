@@ -71,7 +71,7 @@ class CMSWebViewPresenter : BasePresenterImpl<CMSWebViewContract.View>(), CMSWeb
                                 if (idData == null || TextUtils.isEmpty(idData.id)) {
                                     t?.onError(Exception("没有返回附件id"))
                                 } else {
-                                    val parentFolder = FileExtensionHelper.getXBPMCMSAttachFolder()
+                                    val parentFolder = FileExtensionHelper.getXBPMCMSAttachFolder(mView?.getContext())
                                     val folder = File(parentFolder)
                                     if (folder.exists()) {
                                         folder.listFiles().filter { (it != null && it.exists() && it.isFile) }.map(File::delete)
@@ -104,7 +104,7 @@ class CMSWebViewPresenter : BasePresenterImpl<CMSWebViewContract.View>(), CMSWeb
                         val attachInfo = res.data
                         if (attachInfo != null) {
 
-                            val filePath = FileExtensionHelper.getXBPMCMSAttachFolder() + File.separator + attachInfo.name
+                            val filePath = FileExtensionHelper.getXBPMCMSAttachFolder(mView?.getContext()) + File.separator + attachInfo.name
                             val downloadUrl = APIAddressHelper.instance()
                                     .getCommonDownloadUrl(APIDistributeTypeEnum.x_cms_assemble_control, "jaxrs/fileinfo/download/document/$attachmentId/stream")
                             O2FileDownloadHelper.download(downloadUrl, filePath)

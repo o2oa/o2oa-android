@@ -26,6 +26,7 @@ class LogRecord2FileTask(val context: Context,
         } else {
             try {
                 val filePath = getLogFile()
+                Log.e("LogRecord2FileTask", filePath)
                 val todayFile = File(filePath)
                 if (!todayFile.exists()) {
                     SDCardHelper.generateNewFile(filePath)
@@ -53,7 +54,7 @@ class LogRecord2FileTask(val context: Context,
      * 获取今天的日志文件
      */
     private fun getLogFile(): String {
-        return FileExtensionHelper.getXBPMLogFolder() + File.separator + DateHelper.nowByFormate("yyyy-MM-dd") + ".log"
+        return FileExtensionHelper.getXBPMLogFolder(context) + File.separator + DateHelper.nowByFormate("yyyy-MM-dd") + ".log"
     }
 
     /**

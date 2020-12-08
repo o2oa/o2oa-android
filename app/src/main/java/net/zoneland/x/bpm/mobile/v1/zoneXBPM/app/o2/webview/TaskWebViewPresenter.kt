@@ -173,7 +173,7 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                                     if (idData == null || TextUtils.isEmpty(idData.id)) {
                                         t?.onError(Exception("没有返回附件id"))
                                     } else {
-                                        val parentFolder = FileExtensionHelper.getXBPMWORKAttachmentFolder()
+                                        val parentFolder = FileExtensionHelper.getXBPMWORKAttachmentFolder(mView?.getContext())
                                         val folder = File(parentFolder)
                                         if (folder.exists()) {
                                             folder.listFiles().filter { (it != null && it.exists() && it.isFile) }.map(File::delete)
@@ -207,7 +207,7 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                     .flatMap { response ->
                         val info: AttachmentInfo? = response.data
                         if (info != null) {
-                            val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(info.name)
+                            val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(info.name, mView?.getContext())
                             val downloadUrl = APIAddressHelper.instance()
                                     .getCommonDownloadUrl(APIDistributeTypeEnum.x_processplatform_assemble_surface, "jaxrs/attachment/download/$attachmentId/work/$workId/stream")
                             O2FileDownloadHelper.download(downloadUrl, path)
@@ -283,7 +283,7 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                     .flatMap { response ->
                         val info: AttachmentInfo? = response.data
                         if (info != null) {
-                            val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(info.name)
+                            val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(info.name, mView?.getContext())
 
                             val downloadUrl = APIAddressHelper.instance()
                                     .getCommonDownloadUrl(APIDistributeTypeEnum.x_processplatform_assemble_surface, "jaxrs/attachment/download/$attachmentId/workcompleted/$workCompleted/stream")
