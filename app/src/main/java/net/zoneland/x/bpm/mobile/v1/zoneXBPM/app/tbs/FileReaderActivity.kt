@@ -65,7 +65,7 @@ class FileReaderActivity : BaseO2BindActivity() {
         if (b == true) {
             val bund = Bundle()
             bund.putString("filePath", file)
-            bund.putString("tempPath", FileExtensionHelper.getXBPMTempFolder())
+            bund.putString("tempPath", FileExtensionHelper.getXBPMTempFolder(this))
             mTbsReaderView?.openFile(bund)
         }else {
             XLog.error("type is error , $type")

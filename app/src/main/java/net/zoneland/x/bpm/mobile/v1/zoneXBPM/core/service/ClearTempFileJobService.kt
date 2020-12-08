@@ -5,6 +5,7 @@ import android.app.job.JobParameters
 import android.app.job.JobService
 import android.os.Build
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
@@ -33,7 +34,7 @@ class ClearTempFileJobService : JobService() {
     private fun executeTask(params: JobParameters?) {
         Observable.create<Unit> { subscriber ->
             try {
-                val baseFolderPath = FileExtensionHelper.getXBPMBaseFolder()
+                val baseFolderPath = FileUtil.o2AppExternalBaseDir(baseContext)?.absolutePath
                 XLog.info("ClearTempFile Base Folder:$baseFolderPath")
                 val baseFolder = File(baseFolderPath)
                 if (baseFolder.exists()) {

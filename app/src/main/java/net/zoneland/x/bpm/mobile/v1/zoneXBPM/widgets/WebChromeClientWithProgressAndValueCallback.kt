@@ -58,7 +58,7 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
             progressBar?.progressDrawable = drawable
         }
         if (activity != null) {
-            cameraImageUri = FileUtil.getUriFromFile(activity, File(FileExtensionHelper.getCameraCacheFilePath()))
+            cameraImageUri = FileUtil.getUriFromFile(activity, File(FileExtensionHelper.getCameraCacheFilePath(activity)))
         }
     }
 

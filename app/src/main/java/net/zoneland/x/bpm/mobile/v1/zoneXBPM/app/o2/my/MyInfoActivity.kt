@@ -49,7 +49,7 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
     val avatarMenu: CommonMenuPopupWindow by lazy { CommonMenuPopupWindow(avatarMenuList, this) }
 
     var person: PersonJson? = null
-    val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath())) }
+    val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
     var isEdit = false
 
     //软键盘
@@ -60,7 +60,7 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         //初始化拍照地址等
-        SDCardHelper.generateNewFile(FileExtensionHelper.getCameraCacheFilePath())
+        SDCardHelper.generateNewFile(FileExtensionHelper.getCameraCacheFilePath(this))
 
         image_myInfo_back.setOnClickListener(this)
         image_myInfo_avatar.setOnClickListener(this)

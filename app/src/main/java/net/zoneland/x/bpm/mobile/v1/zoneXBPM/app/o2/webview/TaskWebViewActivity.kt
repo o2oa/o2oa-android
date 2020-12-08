@@ -107,7 +107,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     private val routeNameList = ArrayList<String>()
 
     private val downloadDocument: DownloadDocument by lazy { DownloadDocument(this) }
-    private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath())) }
+    private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
     private val webChromeClient: WebChromeClientWithProgressAndValueCallback by lazy { WebChromeClientWithProgressAndValueCallback.with(this) }
     var imageUploadData: O2UploadImageData? = null
     private val jsNotification: JSInterfaceO2mNotification by lazy { JSInterfaceO2mNotification.with(this) }
@@ -231,7 +231,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                 TAKE_FROM_CAMERA_CODE -> {
                     //拍照
                     XLog.debug("拍照//// ")
-                    uploadImage2FileStorageStart(FileExtensionHelper.getCameraCacheFilePath())
+                    uploadImage2FileStorageStart(FileExtensionHelper.getCameraCacheFilePath(this))
                 }
             }
         }

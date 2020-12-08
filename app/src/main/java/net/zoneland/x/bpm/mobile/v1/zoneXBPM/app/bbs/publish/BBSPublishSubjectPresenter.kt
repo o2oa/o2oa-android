@@ -55,7 +55,7 @@ class BBSPublishSubjectPresenter : BasePresenterImpl<BBSPublishSubjectContract.V
             Observable.create(object : Observable.OnSubscribe<File> {
                 override fun call(t: Subscriber<in File>?) {
                     try {
-                        val path = ZoneUtil.compressBBSImage(filePath)
+                        val path = ZoneUtil.compressBBSImage(filePath, mView?.getContext())
                         val file = File(path)
                         t?.onNext(file)
                     } catch (e: Exception) {

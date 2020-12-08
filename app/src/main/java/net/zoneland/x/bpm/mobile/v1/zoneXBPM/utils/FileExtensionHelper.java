@@ -1,5 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils;
 
+import android.content.Context;
 import android.text.TextUtils;
 
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2;
@@ -13,104 +14,105 @@ import java.util.UUID;
  */
 public class FileExtensionHelper {
 
-    /*****************************************base folder*********************************************/
-    public static String getXBPMBaseFolder() {
-        return SDCardHelper.INSTANCE.getSdCardPath() + File.separator + O2.INSTANCE.getBASE_FILE_PATH();
-    }
+
 
     /**
      * 临时目录
      * @return
      */
-    public static String getXBPMTempFolder() {
-        return getXBPMBaseFolder() + File.separator + O2.INSTANCE.getBASE_TMP_FOLDER();
-    }
-
-    /**
-     * liaot
-     * @return
-     */
-    public static String getXBPMIMReciFolder() {
-        return getXBPMBaseFolder() + File.separator + O2.INSTANCE.getBASE_IM_RECI_FOLDER();
+    public static String getXBPMTempFolder(Context context) {
+        File file = FileUtil.INSTANCE.o2AppExternalBaseDir(context);
+        if (file != null) {
+            return file.getAbsolutePath() + File.separator + O2.INSTANCE.getBASE_TMP_FOLDER();
+        }else {
+            return null;
+        }
     }
 
     /**
      * 日志目录
      * @return
      */
-    public static String getXBPMLogFolder() {
-        return getXBPMBaseFolder() + File.separator + O2.INSTANCE.getBASE_LOG_FOLDER();
+    public static String getXBPMLogFolder(Context context) {
+        File file = FileUtil.INSTANCE.o2AppExternalBaseDir(context);
+        if (file != null) {
+            return file.getAbsolutePath() + File.separator + O2.INSTANCE.getBASE_LOG_FOLDER();
+        }else {
+            return null;
+        }
     }
 
     /**
      * 流程平台附件临时目录
      * @return
      */
-    public static String getXBPMWORKAttachmentFolder() {
-        return getXBPMBaseFolder() + File.separator + O2.INSTANCE.getBASE_WORK_ATTACH_FOLDER();
+    public static String getXBPMWORKAttachmentFolder(Context context) {
+        File file = FileUtil.INSTANCE.o2AppExternalBaseDir(context);
+        if (file != null) {
+            return file.getAbsolutePath() + File.separator + O2.INSTANCE.getBASE_WORK_ATTACH_FOLDER();
+        }else {
+            return null;
+        }
     }
 
     /**
      * 论坛附件下载目录
      * @return
      */
-    public static String getXBPMBBSAttachFolder() {
-        return getXBPMBaseFolder() + File.separator + O2.INSTANCE.getBASE_BBS_ATTACH_FOLDER();
+    public static String getXBPMBBSAttachFolder(Context context) {
+        File file = FileUtil.INSTANCE.o2AppExternalBaseDir(context);
+        if (file != null) {
+            return file.getAbsolutePath() + File.separator + O2.INSTANCE.getBASE_BBS_ATTACH_FOLDER();
+        }else {
+            return null;
+        }
     }
 
     /**
      * 会议附件下载目录
      * @return
      */
-    public static String getXBPMMEETINGAttachFolder() {
-        return getXBPMBaseFolder() + File.separator + O2.INSTANCE.getBASE_MEETING_ATTACH_FOLDER();
+    public static String getXBPMMEETINGAttachFolder(Context context) {
+        File file = FileUtil.INSTANCE.o2AppExternalBaseDir(context);
+        if (file != null) {
+            return file.getAbsolutePath() + File.separator + O2.INSTANCE.getBASE_MEETING_ATTACH_FOLDER();
+        }else {
+            return null;
+        }
     }
 
     /**
      * 内容附件下载目录
      * @return
      */
-    public static String getXBPMCMSAttachFolder() {
-        return getXBPMBaseFolder() + File.separator + O2.INSTANCE.getBASE_CMS_ATTACH_FOLDER();
+    public static String getXBPMCMSAttachFolder(Context context) {
+        File file = FileUtil.INSTANCE.o2AppExternalBaseDir(context);
+        if (file != null) {
+            return file.getAbsolutePath() + File.separator + O2.INSTANCE.getBASE_CMS_ATTACH_FOLDER();
+        }else {
+            return null;
+        }
     }
 
     /**
      * 头像缓存目录
      * @return
      */
-    public static String getXBPMAvatarTempFolder() {
-        return getXBPMBaseFolder() + File.separator + O2.INSTANCE.getAVATAR_TMP_FOLDER();
-    }
-
-    /**
-     * 存放皮肤文件的目录
-     * @return
-     */
-    public static String getSkinFileTempFolder() {
-        return getXBPMBaseFolder() + File.separator + O2.INSTANCE.getSKIN_FILE_FOLDER();
-    }
-
-
-
-
-
-    /*****************************************************************************************/
-
-    /**
-     *
-     * @param skin
-     * @return
-     */
-    public static String generateSkinFilePath(String skin) {
-        return getSkinFileTempFolder() + File.separator + skin;
+    public static String getXBPMAvatarTempFolder(Context context) {
+        File file = FileUtil.INSTANCE.o2AppExternalBaseDir(context);
+        if (file != null) {
+            return file.getAbsolutePath() + File.separator + O2.INSTANCE.getAVATAR_TMP_FOLDER();
+        }else {
+            return null;
+        }
     }
 
     /**
      * 签名图片临时地址
      * @return
      */
-    public static String generateSignTempFilePath() {
-        return getXBPMTempFolder() + File.separator + UUID.randomUUID().toString() + O2.INSTANCE.getIMAGE_SUFFIX_PNG();
+    public static String generateSignTempFilePath(Context context) {
+        return getXBPMTempFolder(context) + File.separator + UUID.randomUUID().toString() + O2.INSTANCE.getIMAGE_SUFFIX_PNG();
     }
 
     /**
@@ -118,9 +120,9 @@ public class FileExtensionHelper {
      *
      * @return
      */
-    public static String generateAvatarFilePath() {
+    public static String generateAvatarFilePath(Context context) {
         String avatar_icon_file_name = UUID.randomUUID().toString();
-        String imageFilePath = getXBPMAvatarTempFolder() + File.separator + avatar_icon_file_name + O2.INSTANCE.getIMAGE_SUFFIX_PNG();
+        String imageFilePath = getXBPMAvatarTempFolder(context) + File.separator + avatar_icon_file_name + O2.INSTANCE.getIMAGE_SUFFIX_PNG();
         return imageFilePath;
     }
 
@@ -128,19 +130,9 @@ public class FileExtensionHelper {
      * BBS上传文件压缩后使用的临时文件路径
      * @return
      */
-    public static String generateBBSTempFilePath() {
+    public static String generateBBSTempFilePath(Context context) {
         String randomId = UUID.randomUUID().toString();
-        return getXBPMTempFolder() + File.separator + randomId + O2.INSTANCE.getIMAGE_SUFFIX_PNG();
-    }
-
-    /**
-     * 生成广告热图图片地址 id作为图片地址
-     * @param id
-     * @return
-     */
-    public static String generateHotPicturePath(String id) {
-        String imageFilePath = getXBPMAvatarTempFolder() + File.separator + id + O2.INSTANCE.getIMAGE_SUFFIX_PNG();
-        return imageFilePath;
+        return getXBPMTempFolder(context) + File.separator + randomId + O2.INSTANCE.getIMAGE_SUFFIX_PNG();
     }
 
     /**
@@ -148,8 +140,8 @@ public class FileExtensionHelper {
      * @param fileName
      * @return
      */
-    public static String getXBPMWORKAttachmentFileByName(String fileName) {
-        return getXBPMWORKAttachmentFolder() + File.separator + fileName;
+    public static String getXBPMWORKAttachmentFileByName(String fileName, Context context) {
+        return getXBPMWORKAttachmentFolder(context) + File.separator + fileName;
     }
 
     /**
@@ -157,8 +149,8 @@ public class FileExtensionHelper {
      * @param fileName
      * @return
      */
-    public static String getXBPMMEETINGAttachmentFileByName(String fileName) {
-        return getXBPMMEETINGAttachFolder() + File.separator + fileName;
+    public static String getXBPMMEETINGAttachmentFileByName(String fileName, Context context) {
+        return getXBPMMEETINGAttachFolder(context) + File.separator + fileName;
     }
 
 
@@ -167,8 +159,8 @@ public class FileExtensionHelper {
      * png
      * @return
      */
-    public static String getCameraCacheFilePath() {
-        return getXBPMTempFolder() + File.separator + "camera_cache.png";
+    public static String getCameraCacheFilePath(Context context) {
+        return getXBPMTempFolder(context) + File.separator + "camera_cache.png";
     }
 
 

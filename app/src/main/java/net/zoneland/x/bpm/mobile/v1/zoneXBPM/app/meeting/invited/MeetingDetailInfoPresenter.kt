@@ -29,7 +29,7 @@ class MeetingDetailInfoPresenter : BasePresenterImpl<MeetingDetailInfoContract.V
         MeetingDetailInfoContract.Presenter {
 
     override fun downloadMeetingFile(meetingFileInfoJson: MeetingFileInfoJson) {
-        val path = FileExtensionHelper.getXBPMMEETINGAttachmentFileByName(meetingFileInfoJson.name)
+        val path = FileExtensionHelper.getXBPMMEETINGAttachmentFileByName(meetingFileInfoJson.name, mView?.getContext())
         val downloadUrl = APIAddressHelper.instance()
                 .getCommonDownloadUrl(APIDistributeTypeEnum.x_meeting_assemble_control, "jaxrs/attachment/${meetingFileInfoJson.id}/download/true")
         O2FileDownloadHelper.download(downloadUrl, path)

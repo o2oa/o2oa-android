@@ -41,7 +41,7 @@ public class ZoneUtil {
      * @param oldFilePath
      * @return
      */
-    public static String compressBBSImage(String oldFilePath) {
+    public static String compressBBSImage(String oldFilePath, Context context) {
         BitmapFactory.Options options = BitmapUtil.INSTANCE.getImageOptions(oldFilePath);
         int width = options.outWidth;
         int height = options.outHeight;
@@ -53,7 +53,7 @@ public class ZoneUtil {
             showWidth = O2.INSTANCE.getBBS_IMAGE_MAX_WIDTH();
         }
         Bitmap bitmap = BitmapUtil.INSTANCE.getFitSampleBitmap(oldFilePath, showWidth, showHeight);
-        String filePath = FileExtensionHelper.generateBBSTempFilePath();
+        String filePath = FileExtensionHelper.generateBBSTempFilePath(context);
         XLog.debug("BBS上传文件 压缩后的新文件路径："+filePath);
         SDCardHelper.INSTANCE.bitmapToPNGFile(bitmap, filePath);
         return filePath;

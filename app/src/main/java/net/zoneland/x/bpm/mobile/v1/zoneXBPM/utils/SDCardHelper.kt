@@ -10,30 +10,6 @@ import java.io.*
  */
 object SDCardHelper {
 
-    /**
-     * 判断SDCard是否存在 [当没有外挂SD卡时，内置ROM也被识别为存在sd卡]
-     *
-     * @return
-     */
-    val isSdCardExist: Boolean
-        get() = Environment.getExternalStorageState() == Environment.MEDIA_MOUNTED
-
-    /**
-     * 获取SD卡根目录路径
-     *
-     * @return
-     */
-    val sdCardPath: String?
-        get() {
-            val exist = isSdCardExist
-            var sdpath: String? = null
-            if (exist) {
-                sdpath = Environment.getExternalStorageDirectory()
-                        .absolutePath
-            }
-            return sdpath
-
-        }
 
     /**
      * 写入png文件

@@ -49,7 +49,7 @@ public class OfflineResource {
 
     private String createTmpDir(Context context) {
         String sampleDir = "baiduASR";
-        String samplePath = FileExtensionHelper.getXBPMBaseFolder() + File.separator + sampleDir;
+        String samplePath = FileUtil.INSTANCE.o2AppExternalBaseDir(context).getAbsolutePath() + File.separator + sampleDir;
         if (!SDCardHelper.INSTANCE.makeDir(samplePath)) {
             samplePath = context.getExternalFilesDir(sampleDir).getAbsolutePath();
             if (!SDCardHelper.INSTANCE.makeDir(samplePath)) {

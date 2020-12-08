@@ -301,7 +301,6 @@
             android:name=".app.o2.skin.SkinManagerActivity"
             android:label="@string/skin_manager"
              />
-        <activity android:name=".app.o2.skin.SkinShowActivity" />
 
         <!-- 蓝牙相关 -->
         <activity android:name=".app.bluetooth.BlueToothClientActivity" />

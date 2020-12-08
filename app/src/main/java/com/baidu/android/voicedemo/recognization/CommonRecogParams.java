@@ -8,6 +8,7 @@ import com.baidu.speech.asr.SpeechConstant;
 
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper;
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileUtil;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.SDCardHelper;
 
 import java.io.File;
@@ -64,7 +65,7 @@ public class CommonRecogParams {
      */
     protected void initSamplePath(Activity context) {
         String sampleDir = "baiduASR";
-        samplePath = FileExtensionHelper.getXBPMBaseFolder() + File.separator + sampleDir;
+        samplePath = FileUtil.INSTANCE.o2AppExternalBaseDir(context).getAbsolutePath() + File.separator + sampleDir;
         if (!SDCardHelper.INSTANCE.makeDir(samplePath)) {
             samplePath = context.getApplication().getExternalFilesDir(sampleDir).getAbsolutePath();
             if (!SDCardHelper.INSTANCE.makeDir(samplePath)) {

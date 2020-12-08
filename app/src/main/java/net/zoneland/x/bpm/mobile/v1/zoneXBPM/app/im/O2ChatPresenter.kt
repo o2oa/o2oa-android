@@ -208,7 +208,7 @@ class O2ChatPresenter : BasePresenterImpl<O2ChatContract.View>(), O2ChatContract
             mView?.localFile(body.fileTempPath!!, body.type!!,  position)
         }else if (!TextUtils.isEmpty(body.fileId)) {
             val fileId = body.fileId!!
-            val path = FileExtensionHelper.getXBPMTempFolder()+ File.separator + fileId + "." +body.fileExtension
+            val path = FileExtensionHelper.getXBPMTempFolder(mView?.getContext())+ File.separator + fileId + "." +body.fileExtension
             val downloadUrl = APIAddressHelper.instance().getImFileDownloadUrl(fileId)
             O2FileDownloadHelper.download(downloadUrl, path)
                     .subscribeOn(Schedulers.io())
