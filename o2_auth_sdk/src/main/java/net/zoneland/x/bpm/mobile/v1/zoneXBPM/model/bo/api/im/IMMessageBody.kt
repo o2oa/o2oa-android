@@ -7,6 +7,7 @@ class IMMessageBody(
         var fileId: String? = null, //文件id
         var fileExtension: String? = null, //文件扩展
         var fileTempPath: String? = null, //本地临时文件地址
+        var fileName: String? = null, // 文件名称
         var audioDuration: String? = null, // 音频文件时长
         var address: String? = null, //type=location的时候位置信息
         var addressDetail: String? = null,

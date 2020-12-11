@@ -103,7 +103,7 @@ class O2ChatPresenter : BasePresenterImpl<O2ChatContract.View>(), O2ChatContract
         val service = getMessageCommunicateService(mView?.getContext())
         //audio 和 image 需要先上传文件 然后发送消息
         val body = O2SDKManager.instance().gson.fromJson(msg.body, IMMessageBody::class.java)
-        if (body.type == MessageType.audio.key || body.type == MessageType.image.key) {
+        if (body.type == MessageType.audio.key || body.type == MessageType.image.key || body.type == MessageType.file.key) {
             val file = File(body.fileTempPath)
             val mediaType = FileUtil.getMIMEType(file)
             val requestBody = RequestBody.create(MediaType.parse(mediaType), file)
@@ -113,9 +113,11 @@ class O2ChatPresenter : BasePresenterImpl<O2ChatContract.View>(), O2ChatContract
                     ?.flatMap { idData ->
                         val id = idData.data.id
                         val extension = idData.data.fileExtension
+                        val fileName = idData.data.fileName
                         if (!TextUtils.isEmpty(id)) {//消息体中添加fileId 并清楚暂存的本地地址fileTempPath
                             body.fileId = id
                             body.fileExtension = extension
+                            body.fileName = fileName
                             body.fileTempPath = null
                             msg.body = O2SDKManager.instance().gson.toJson(body)
                             service.sendMessage(msg)

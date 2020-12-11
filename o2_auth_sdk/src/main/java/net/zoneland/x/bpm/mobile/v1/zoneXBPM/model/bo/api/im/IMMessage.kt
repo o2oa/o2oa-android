@@ -27,11 +27,13 @@ enum class MessageType(val key:String) {
     emoji("emoji"),
     image("image"),
     audio("audio"),
-    location("location")
+    location("location"),
+    file("file")
 }
 
 enum class MessageBody(val body:String) {
     image("[图片]"),
     audio("[语音]"),
-    location("[位置]")
+    location("[位置]"),
+    file("[文件]")
 }

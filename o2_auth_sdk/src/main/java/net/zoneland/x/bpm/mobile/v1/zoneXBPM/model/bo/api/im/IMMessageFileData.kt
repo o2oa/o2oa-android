@@ -8,5 +8,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im
 
 data class IMMessageFileData(
         var id: String = "",
-        var fileExtension: String = ""
+        var fileExtension: String = "",
+        var fileName: String = ""
 )
