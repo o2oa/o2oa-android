@@ -54,6 +54,13 @@
             android:paddingStart="@dimen/activity_horizontal_margin"
             android:paddingEnd="@dimen/activity_horizontal_margin"
             android:orientation="horizontal">
+            <ImageView
+                android:id="@+id/img_o2_chat_mic"
+                android:layout_width="28dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:layout_marginEnd="@dimen/activity_horizontal_margin"
+                android:src="@mipmap/chat_iicon_yuyin" />
             <EditText
                 android:id="@+id/et_o2_chat_input"
                 android:layout_width="0dp"
@@ -93,66 +100,75 @@
 
         </LinearLayout>
         <LinearLayout
+            android:id="@+id/ll_o2_chat_tool_bar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/spacing_small"
-            android:paddingStart="@dimen/activity_horizontal_margin"
-            android:paddingEnd="@dimen/activity_horizontal_margin"
-            android:orientation="horizontal"
-            android:baselineAligned="false">
-             <LinearLayout
-                 android:id="@+id/ll_o2_chat_audio_btn"
-                 android:layout_width="0dp"
-                 android:layout_height="wrap_content"
-                 android:layout_weight="1"
-                 android:orientation="vertical">
-                 <ImageView
-                     android:id="@+id/img_o2_chat_mic"
-                     android:layout_width="28dp"
-                     android:layout_height="28dp"
-                     android:layout_gravity="center"
-                     android:src="@mipmap/chat_iicon_yuyin" />
-             </LinearLayout>
+            android:orientation="vertical"
+            android:visibility="visible">
             <LinearLayout
-                android:id="@+id/ll_o2_chat_album_btn"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <ImageView
-                    android:id="@+id/img_o2_chat_img"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:src="@mipmap/chat_iicon_tupian" />
+                android:layout_marginBottom="@dimen/spacing_small"
+                android:paddingStart="@dimen/activity_horizontal_margin"
+                android:paddingEnd="@dimen/activity_horizontal_margin"
+                android:orientation="horizontal"
+                android:baselineAligned="false">
+                <LinearLayout
+                    android:id="@+id/ll_o2_chat_album_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/img_o2_chat_img"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/chat_iicon_tupian" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/ll_o2_chat_camera_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/img_o2_chat_camera"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/chat_iicon_xiangji" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/ll_o2_chat_location_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/img_o2_chat_location"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/chat_icon_ditu" />
+                </LinearLayout>
+                <LinearLayout
+                    android:id="@+id/ll_o2_chat_file_btn"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:orientation="vertical">
+                    <ImageView
+                        android:id="@+id/img_o2_chat_file"
+                        android:layout_width="28dp"
+                        android:layout_height="28dp"
+                        android:layout_gravity="center"
+                        android:src="@mipmap/chat_icon_file" />
+                </LinearLayout>
             </LinearLayout>
-            <LinearLayout
-                android:id="@+id/ll_o2_chat_camera_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <ImageView
-                    android:id="@+id/img_o2_chat_camera"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:src="@mipmap/chat_iicon_xiangji" />
-            </LinearLayout>
-            <LinearLayout
-                android:id="@+id/ll_o2_chat_location_btn"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:orientation="vertical">
-                <ImageView
-                    android:id="@+id/img_o2_chat_location"
-                    android:layout_width="28dp"
-                    android:layout_height="28dp"
-                    android:layout_gravity="center"
-                    android:src="@mipmap/chat_icon_ditu" />
-            </LinearLayout>
+
         </LinearLayout>
+
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/rv_o2_chat_emoji_box"

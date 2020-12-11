@@ -15,11 +15,12 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMMessage
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMMessageBody
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.MessageType
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
-import retrofit2.http.POST
+import java.io.File
 
 
 class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
@@ -131,6 +132,7 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     MessageType.image.key -> renderImageMessage(messageBody, holder, position)
                     MessageType.audio.key -> renderAudioMessage(messageBody, holder, position)
                     MessageType.location.key -> renderLocationMessage(messageBody, holder)
+                    MessageType.file.key -> renderFileMessage(messageBody, holder, position)
                 }
             }
 
@@ -169,6 +171,8 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         audioMessageView.gone()
         val locationMessageView = holder.getView<RelativeLayout>(R.id.rl_o2_chat_message_location_body)
         locationMessageView.gone()
+        val fileMessageView = holder.getView<RelativeLayout>(R.id.rl_o2_chat_message_file_body)
+        fileMessageView.gone()
     }
     private fun renderEmojiMessage(msgBody: IMMessageBody, holder: CommonRecyclerViewHolder) {
         val textMessageView = holder.getView<TextView>(R.id.tv_o2_chat_message_body)
@@ -184,6 +188,8 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         audioMessageView.gone()
         val locationMessageView = holder.getView<RelativeLayout>(R.id.rl_o2_chat_message_location_body)
         locationMessageView.gone()
+        val fileMessageView = holder.getView<RelativeLayout>(R.id.rl_o2_chat_message_file_body)
+        fileMessageView.gone()
     }
     private fun renderImageMessage(msgBody: IMMessageBody, holder: CommonRecyclerViewHolder,  position: Int) {
         val textMessageView = holder.getView<TextView>(R.id.tv_o2_chat_message_body)
@@ -203,6 +209,8 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         audioMessageView.gone()
         val locationMessageView = holder.getView<RelativeLayout>(R.id.rl_o2_chat_message_location_body)
         locationMessageView.gone()
+        val fileMessageView = holder.getView<RelativeLayout>(R.id.rl_o2_chat_message_file_body)
+        fileMessageView.gone()
     }
     private fun renderAudioMessage(msgBody: IMMessageBody, holder: CommonRecyclerViewHolder, position: Int) {
         val textMessageView = holder.getView<TextView>(R.id.tv_o2_chat_message_body)
@@ -218,6 +226,8 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         audioMessageView.setOnClickListener { eventListener?.playAudio(position, msgBody) }
         val locationMessageView = holder.getView<RelativeLayout>(R.id.rl_o2_chat_message_location_body)
         locationMessageView.gone()
+        val fileMessageView = holder.getView<RelativeLayout>(R.id.rl_o2_chat_message_file_body)
+        fileMessageView.gone()
     }
     private fun renderLocationMessage(msgBody: IMMessageBody, holder: CommonRecyclerViewHolder) {
         val textMessageView = holder.getView<TextView>(R.id.tv_o2_chat_message_body)
@@ -233,6 +243,41 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         addressTv.text = msgBody.address
         locationMessageView.visible()
         locationMessageView.setOnClickListener { eventListener?.openLocation(msgBody) }
+        val fileMessageView = holder.getView<RelativeLayout>(R.id.rl_o2_chat_message_file_body)
+        fileMessageView.gone()
+    }
+    private fun renderFileMessage(msgBody: IMMessageBody, holder: CommonRecyclerViewHolder, position: Int) {
+        val textMessageView = holder.getView<TextView>(R.id.tv_o2_chat_message_body)
+        textMessageView.gone()
+        val emojiMessageView = holder.getView<ImageView>(R.id.image_o2_chat_message_emoji_body)
+        emojiMessageView.gone()
+        val imageMessageView = holder.getView<ImageView>(R.id.image_o2_chat_message_image_body)
+        imageMessageView.gone()
+        val audioMessageView = holder.getView<LinearLayout>(R.id.ll_o2_chat_message_audio_body)
+        audioMessageView.gone()
+        val locationMessageView = holder.getView<RelativeLayout>(R.id.rl_o2_chat_message_location_body)
+        locationMessageView.gone()
+        val fileMessageView = holder.getView<RelativeLayout>(R.id.rl_o2_chat_message_file_body)
+        if (!TextUtils.isEmpty(msgBody.fileId)) {
+            val resId = FileExtensionHelper.getImageResourceByFileExtension(msgBody.fileExtension)
+            val fileIcon = holder.getView<ImageView>(R.id.image_o2_chat_message_file_icon)
+            fileIcon.setImageResource(resId)
+            val fileNameView = holder.getView<TextView>(R.id.tv_o2_chat_message_file_name)
+            fileNameView.text = msgBody.fileName
+        }else if (!TextUtils.isEmpty(msgBody.fileTempPath)) {
+            // 获取fileExtension
+            val index = msgBody.fileTempPath!!.lastIndexOf(".")
+            val extension = msgBody.fileTempPath!!.substring(index+1)
+            val resId = FileExtensionHelper.getImageResourceByFileExtension(extension)
+            val fileIcon = holder.getView<ImageView>(R.id.image_o2_chat_message_file_icon)
+            fileIcon.setImageResource(resId)
+            val fileNameIndex = msgBody.fileTempPath!!.lastIndexOf(File.separator)
+            val fileName = msgBody.fileTempPath!!.substring(fileNameIndex+1)
+            val fileNameView = holder.getView<TextView>(R.id.tv_o2_chat_message_file_name)
+            fileNameView.text = fileName
+        }
+        fileMessageView.visible()
+        fileMessageView.setOnClickListener{ eventListener?.openFile(position, msgBody) }
     }
 
 
@@ -242,5 +287,6 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         fun playAudio(position: Int, msgBody: IMMessageBody)
         fun openOriginImage(position: Int, msgBody: IMMessageBody)
         fun openLocation(msgBody: IMMessageBody)
+        fun openFile(position: Int, msgBody: IMMessageBody)
     }
 }

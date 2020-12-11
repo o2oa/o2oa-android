@@ -33,12 +33,14 @@ import com.zlw.main.recorderlib.recorder.RecordConfig
 import com.zlw.main.recorderlib.recorder.RecordHelper
 import com.zlw.main.recorderlib.recorder.listener.RecordStateListener
 import kotlinx.android.synthetic.main.activity_o2_chat.*
+import net.muliba.fancyfilepickerlibrary.FilePicker
 import net.muliba.fancyfilepickerlibrary.PicturePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.ContactPickerActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.LocalImageViewActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.*
@@ -61,7 +63,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         fun startChat(activity: Activity, conversationId: String) {
             val bundle = Bundle()
             bundle.putString(con_id_key, conversationId)
-            activity?.go<O2ChatActivity>(bundle)
+            activity.go<O2ChatActivity>(bundle)
         }
     }
 
@@ -170,6 +172,10 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                 val location = O2LocationActivity.LocationData(msgBody.address, msgBody.addressDetail, msgBody.latitude, msgBody.longitude)
                 val bundle = O2LocationActivity.showLocation(location)
                 go<O2LocationActivity>(bundle)
+            }
+
+            override fun openFile(position: Int, msgBody: IMMessageBody) {
+                mPresenter.getFileFromNetOrLocal(position, msgBody)
             }
         }
         //输入法切换的时候滚动到底部
@@ -425,7 +431,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                 //打开大图
                 go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(filePath))
             }
-            else -> AndroidUtils.openFileWithDefaultApp(this@O2ChatActivity, File(filePath))
+            else -> go<FileReaderActivity>(FileReaderActivity.startBundle(filePath))
         }
 
     }
@@ -507,7 +513,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 
         //bottom toolbar
         image_o2_chat_audio_speak_btn.setOnTouchListener(this)
-        ll_o2_chat_audio_btn.setOnClickListener {
+        img_o2_chat_mic.setOnClickListener {
             //先检查录音权限
             PermissionRequester(this@O2ChatActivity)
                     .request(Manifest.permission.RECORD_AUDIO)
@@ -578,6 +584,17 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                             if (location != null) {
                                 newLocationMessage(location)
                             }
+                        }
+                    }
+        }
+        ll_o2_chat_file_btn.setOnClickListener {
+            //文件选择器
+            FilePicker()
+                    .withActivity(this@O2ChatActivity)
+                    .chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
+                    .forResult { filePaths ->
+                        if (filePaths.isNotEmpty()) {
+                            newFileMessage(filePaths[0])
                         }
                     }
         }
@@ -812,6 +829,29 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         adapter.addMessage(message)
         mPresenter.sendIMMessage(message)//发送到服务器
         scroll2Bottom()
+    }
+
+    /**
+     * 文件消息 创建并发送
+     */
+    private fun newFileMessage(filePath: String) {
+        // 如果是图片 用图片消息发送
+        val index = filePath.lastIndexOf(".")
+        val extension = filePath.substring(index+1)
+        if (FileExtensionHelper.isImageFromFileExtension(extension)) {
+            newImageMessage(filePath)
+        }else {
+            val time = DateHelper.now()
+            val body = IMMessageBody(type = MessageType.file.key, body = MessageBody.file.body, fileTempPath = filePath)
+            val bodyJson = O2SDKManager.instance().gson.toJson(body)
+            XLog.debug("body: $bodyJson")
+            val uuid = UUID.randomUUID().toString()
+            val message = IMMessage(uuid, conversationId, bodyJson,
+                    O2SDKManager.instance().distinguishedName, time, 1)
+            adapter.addMessage(message)
+            mPresenter.sendIMMessage(message)//发送到服务器
+            scroll2Bottom()
+        }
     }
 
     /**
