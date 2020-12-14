@@ -20,6 +20,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
+import pl.droidsonroids.gif.GifDrawable
+import pl.droidsonroids.gif.GifImageView
 import java.io.File
 
 
@@ -76,19 +78,6 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         }else {
             TEXT_left
         }
-//
-//        val body = message.messageBody()
-//        if(body != null) {
-//            if (body is IMMessageBody.Text) {
-//                return if (message.createPerson == O2SDKManager.instance().distinguishedName) {
-//                    TEXT_right
-//                }else {
-//                    TEXT_left
-//                }
-//            }
-//            //其它
-//        }
-//        return 0
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
@@ -103,7 +92,7 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     override fun getItemCount(): Int  = messages.size
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-//        val viewType = getItemViewType(position)
+        val viewType = getItemViewType(position)
         if (holder is CommonRecyclerViewHolder) {
             val message = messages[position]
             val messageBody = message.messageBody()
@@ -130,7 +119,7 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
                     MessageType.text.key -> renderTextMessage(messageBody, holder)
                     MessageType.emoji.key -> renderEmojiMessage(messageBody, holder)
                     MessageType.image.key -> renderImageMessage(messageBody, holder, position)
-                    MessageType.audio.key -> renderAudioMessage(messageBody, holder, position)
+                    MessageType.audio.key -> renderAudioMessage(messageBody, holder, position, viewType)
                     MessageType.location.key -> renderLocationMessage(messageBody, holder)
                     MessageType.file.key -> renderFileMessage(messageBody, holder, position)
                 }
@@ -212,7 +201,16 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val fileMessageView = holder.getView<RelativeLayout>(R.id.rl_o2_chat_message_file_body)
         fileMessageView.gone()
     }
-    private fun renderAudioMessage(msgBody: IMMessageBody, holder: CommonRecyclerViewHolder, position: Int) {
+    private var audioPlayPosition: Int? = null
+    fun playAudioAnimation(position: Int) {
+        audioPlayPosition = position
+        notifyItemChanged(position)
+    }
+    fun stopAudioAnimation() {
+        audioPlayPosition = null
+        notifyDataSetChanged()
+    }
+    private fun renderAudioMessage(msgBody: IMMessageBody, holder: CommonRecyclerViewHolder, position: Int, viewType: Int) {
         val textMessageView = holder.getView<TextView>(R.id.tv_o2_chat_message_body)
         textMessageView.gone()
         val emojiMessageView = holder.getView<ImageView>(R.id.image_o2_chat_message_emoji_body)
@@ -222,8 +220,26 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         val audioMessageView = holder.getView<LinearLayout>(R.id.ll_o2_chat_message_audio_body)
         val durationTv = holder.getView<TextView>(R.id.tv_o2_chat_message_audio_duration)
         durationTv.text = "${msgBody.audioDuration}\""
+        val playGif = holder.getView<GifImageView>(R.id.gif_o2_chat_message_audio)
+        playGif.visible()
+        if (audioPlayPosition != null && audioPlayPosition == position) {
+            if (viewType == TEXT_left) {
+                playGif.setImageResource(R.mipmap.chat_play_left)
+            }else {
+                playGif.setImageResource(R.mipmap.chat_play_right)
+            }
+        }else {
+            if (viewType == TEXT_left) {
+                playGif.setImageResource(R.mipmap.chat_play_left_s)
+            }else {
+                playGif.setImageResource(R.mipmap.chat_play_right_s)
+            }
+        }
         audioMessageView.visible()
-        audioMessageView.setOnClickListener { eventListener?.playAudio(position, msgBody) }
+        audioMessageView.setOnClickListener {
+            playAudioAnimation(position)
+            eventListener?.playAudio(position, msgBody)
+        }
         val locationMessageView = holder.getView<RelativeLayout>(R.id.rl_o2_chat_message_location_body)
         locationMessageView.gone()
         val fileMessageView = holder.getView<RelativeLayout>(R.id.rl_o2_chat_message_file_body)

@@ -60,10 +60,13 @@
                 android:layout_gravity="center_vertical"
                 android:visibility="gone"
                 android:orientation="horizontal">
-                <ImageView
+                <pl.droidsonroids.gif.GifImageView
+                    android:id="@+id/gif_o2_chat_message_audio"
                     android:layout_width="24dp"
                     android:layout_height="24dp"
-                    android:src="@mipmap/chat_icon_audio_play"/>
+                    android:visibility="gone"
+                    android:src="@mipmap/chat_play_left_s"
+                    />
                 <TextView
                     android:id="@+id/tv_o2_chat_message_audio_duration"
                     android:layout_width="wrap_content"
@@ -96,7 +99,7 @@
                 android:id="@+id/rl_o2_chat_message_file_body"
                 android:layout_width="wrap_content"
                 android:layout_height="40dp"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:orientation="horizontal">
                 <ImageView
                     android:id="@+id/image_o2_chat_message_file_icon"

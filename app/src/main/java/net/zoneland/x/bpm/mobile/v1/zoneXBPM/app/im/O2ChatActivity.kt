@@ -52,6 +52,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
+import pl.droidsonroids.gif.GifDrawable
+import pl.droidsonroids.gif.GifImageView
 import java.io.File
 import java.util.*
 
@@ -303,7 +305,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             MotionEvent.ACTION_DOWN -> {
                 startY = event.y
                 XLog.debug("点击开始............录音")
-                updateRecordingDialogUI(R.mipmap.listener08, "松开发送，上滑取消")
+                updateRecordingDialogUI(0)
                 recordingDialog?.show()
                 startRecordAudio()
             }
@@ -322,11 +324,11 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                 val moveY = event.y
                 if (startY - moveY > 100) {
                     isCancelRecord = true
-                    updateRecordingDialogUI(R.mipmap.chat_audio_record_cancel, "松开手指，取消发送")
+                    updateRecordingDialogUI(1)
                 }
                 if (startY - moveY < 20) {
                     isCancelRecord = false
-                    updateRecordingDialogUI(R.mipmap.listener08, "松开发送，上滑取消")
+                    updateRecordingDialogUI(0)
                 }
             }
             MotionEvent.ACTION_CANCEL -> {
@@ -339,23 +341,33 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     }
 
     private var tvPrompt: TextView? = null
-    private var ivLoad:ImageView? = null
+    private var ivLoadGif: GifImageView? = null
     private var recordingDialog: AlertDialog? = null
     private fun recordingDialog() : AlertDialog {
         val dialogBuilder = AlertDialog.Builder(this, R.style.DialogManage)
         dialogBuilder.setCancelable(false)
         val view: View = LayoutInflater.from(this).inflate(R.layout.dialog_voice_speak, null)
         tvPrompt = view.findViewById<TextView>(R.id.tv_prompt)
-        ivLoad = view.findViewById<ImageView>(R.id.iv_load)
+        ivLoadGif = view.findViewById(R.id.iv_load_gif)
         dialogBuilder.setView(view)
         val dialog = dialogBuilder.create()
         dialog.window?.setBackgroundDrawable(BitmapDrawable())
         return dialog
     }
-    private fun updateRecordingDialogUI(resId: Int, prompt: String?) {
-        if (null != tvPrompt && null != ivLoad) {
-            tvPrompt?.text = prompt
-            ivLoad?.setImageResource(resId)
+
+    /**
+     * @param status 0 录制中 1 取消发送
+     */
+    private fun updateRecordingDialogUI(status: Int) {
+        when(status) {
+            0 -> {
+                tvPrompt?.text = "松开发送，上滑取消"
+                ivLoadGif?.setImageResource(R.mipmap.listener08_anim)
+            }
+            1 -> {
+                tvPrompt?.text = "松开手指，取消发送"
+                ivLoadGif?.setImageResource(R.mipmap.chat_audio_record_cancel)
+            }
         }
     }
 
@@ -662,7 +674,9 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                         XToast.toastShort(this@O2ChatActivity, "录音时间太短！")
                     }
                 } else {
-                    newAudioMessage(result.path, "$audioRecordTime")
+                    if (!isAudioRecordCancel) {
+                        newAudioMessage(result.path, "$audioRecordTime")
+                    }
                 }
             }
         }
@@ -712,7 +726,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         mPlayer = MediaPlayer.create(this@O2ChatActivity, uri)
         mPlayer?.setOnCompletionListener {
             XLog.debug("播音结束！")
-
+            adapter.stopAudioAnimation()
         }
         mPlayer?.start()
     }

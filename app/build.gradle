@@ -318,6 +318,9 @@ dependencies {
     //mp3录音
     implementation 'com.github.zhaolewei:ZlwAudioRecorder:v1.07'
 
+    //gif 播放
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
+
 
 
     testImplementation 'junit:junit:4.12'
