@@ -14,6 +14,7 @@ import io.realm.Realm
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.skin.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.LogSingletonService
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2MediaPlayerManager
 
 
 /**
@@ -82,6 +83,9 @@ class O2App : MultiDexApplication() {
 
             //极光推送
             initJMessageAndJPush()
+
+            //播放器
+            O2MediaPlayerManager.instance().init(this)
         } catch (e: Exception) {
         }
 
