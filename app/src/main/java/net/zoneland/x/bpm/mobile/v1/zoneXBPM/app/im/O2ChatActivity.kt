@@ -891,6 +891,9 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
+        if (O2MediaPlayerManager.instance().isHeadsetOn()) { //如果连接了耳机就不切换
+            return
+        }
         val value = event?.values?.get(0)
         if (value != null) {
             if (O2MediaPlayerManager.instance().isPlaying()) {

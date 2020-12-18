@@ -49,6 +49,14 @@ class O2MediaPlayerManager private constructor() {
         audioManager.isSpeakerphoneOn = false
         audioManager.mode = AudioManager.MODE_IN_COMMUNICATION
     }
+
+    /**
+     * 是否连接耳机
+     */
+    fun isHeadsetOn() : Boolean {
+        return audioManager.isWiredHeadsetOn
+    }
+
     /**
      * 开始播放
      */

@@ -38,7 +38,8 @@ abstract class BaseO2BindActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         beforeSetContentView()
         bindView(savedInstanceState)
-        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
+        //防止截屏
+//        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         // 沉浸式状态栏
         ImmersedStatusBarUtils.setImmersedStatusBar(this)
         afterSetContentView(savedInstanceState)
