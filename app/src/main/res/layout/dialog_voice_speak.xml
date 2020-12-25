@@ -8,14 +8,15 @@
     android:paddingLeft="@dimen/spacing_tiny"
     android:paddingRight="@dimen/spacing_tiny">
 
-    <ImageView
-        android:id="@+id/iv_load"
+    <pl.droidsonroids.gif.GifImageView
+        android:id="@+id/iv_load_gif"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/spacing_huge"
         android:layout_marginStart="@dimen/spacing_normal"
         android:layout_marginEnd="@dimen/spacing_normal"
-        android:src="@mipmap/listener08" />
+        android:src="@mipmap/listener08_anim"
+        />
 
     <TextView
         android:id="@+id/tv_prompt"

@@ -59,16 +59,19 @@
                 android:layout_gravity="center_vertical"
                 android:visibility="gone"
                 android:orientation="horizontal">
-                <ImageView
-                    android:layout_width="24dp"
-                    android:layout_height="24dp"
-                    android:src="@mipmap/chat_icon_audio_play"/>
                 <TextView
                     android:id="@+id/tv_o2_chat_message_audio_duration"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/spacing_small"
+                    android:layout_marginEnd="@dimen/spacing_small"
                     tools:text="60&#34;" />
+                <pl.droidsonroids.gif.GifImageView
+                    android:id="@+id/gif_o2_chat_message_audio"
+                    android:layout_width="24dp"
+                    android:layout_height="24dp"
+                    android:visibility="gone"
+                    android:src="@mipmap/chat_play_right_s"
+                    />
             </LinearLayout>
             <RelativeLayout
                 android:id="@+id/rl_o2_chat_message_location_body"

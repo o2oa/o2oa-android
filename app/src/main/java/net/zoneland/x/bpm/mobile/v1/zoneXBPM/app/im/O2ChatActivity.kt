@@ -3,13 +3,16 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im
 import android.Manifest
 import android.app.Activity
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
+import android.hardware.Sensor
+import android.hardware.SensorEvent
+import android.hardware.SensorEventListener
+import android.hardware.SensorManager
 import android.media.AudioFormat
 import android.media.MediaPlayer
 import android.net.Uri
@@ -17,16 +20,15 @@ import android.os.Bundle
 import android.os.CountDownTimer
 import android.provider.MediaStore
 import android.provider.Settings
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
-import android.widget.ImageView
 import android.widget.TextView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.wugang.activityresult.library.ActivityResult
 import com.zlw.main.recorderlib.RecordManager
 import com.zlw.main.recorderlib.recorder.RecordConfig
@@ -52,11 +54,12 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
+import pl.droidsonroids.gif.GifImageView
 import java.io.File
 import java.util.*
 
 
-class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Presenter>(), O2ChatContract.View, View.OnTouchListener {
+class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Presenter>(), O2ChatContract.View, View.OnTouchListener, SensorEventListener {
 
     companion object {
         const val con_id_key = "con_id_key"
@@ -121,7 +124,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     }
 
     //media play
-    private var mPlayer: MediaPlayer? = null
+//    private var mPlayer: MediaPlayer? = null
 
     //拍照
     private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
@@ -205,6 +208,9 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         initAudioRecord()
 
         registerBroadcast()
+
+        // 距离监听 手机是否靠近耳朵
+        sensorListen()
     }
 
 
@@ -273,10 +279,10 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         if (mReceiver != null) {
             unregisterReceiver(mReceiver)
         }
-        if (mPlayer != null) {
-            mPlayer?.release()//释放资源
-            mPlayer = null
-        }
+//        if (mPlayer != null) {
+//            mPlayer?.release()//释放资源
+//            mPlayer = null
+//        }
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -303,7 +309,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             MotionEvent.ACTION_DOWN -> {
                 startY = event.y
                 XLog.debug("点击开始............录音")
-                updateRecordingDialogUI(R.mipmap.listener08, "松开发送，上滑取消")
+                updateRecordingDialogUI(0)
                 recordingDialog?.show()
                 startRecordAudio()
             }
@@ -322,12 +328,12 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                 val moveY = event.y
                 if (startY - moveY > 100) {
                     isCancelRecord = true
-                    updateRecordingDialogUI(R.mipmap.chat_audio_record_cancel, "松开手指，取消发送")
+                    updateRecordingDialogUI(1)
                 }
-                if (startY - moveY < 20) {
-                    isCancelRecord = false
-                    updateRecordingDialogUI(R.mipmap.listener08, "松开发送，上滑取消")
-                }
+//                if (startY - moveY < 20) {
+//                    isCancelRecord = false
+//                    updateRecordingDialogUI(0)
+//                }
             }
             MotionEvent.ACTION_CANCEL -> {
                 XLog.debug("取消了................录音")
@@ -339,23 +345,33 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     }
 
     private var tvPrompt: TextView? = null
-    private var ivLoad:ImageView? = null
+    private var ivLoadGif: GifImageView? = null
     private var recordingDialog: AlertDialog? = null
     private fun recordingDialog() : AlertDialog {
         val dialogBuilder = AlertDialog.Builder(this, R.style.DialogManage)
         dialogBuilder.setCancelable(false)
         val view: View = LayoutInflater.from(this).inflate(R.layout.dialog_voice_speak, null)
         tvPrompt = view.findViewById<TextView>(R.id.tv_prompt)
-        ivLoad = view.findViewById<ImageView>(R.id.iv_load)
+        ivLoadGif = view.findViewById(R.id.iv_load_gif)
         dialogBuilder.setView(view)
         val dialog = dialogBuilder.create()
         dialog.window?.setBackgroundDrawable(BitmapDrawable())
         return dialog
     }
-    private fun updateRecordingDialogUI(resId: Int, prompt: String?) {
-        if (null != tvPrompt && null != ivLoad) {
-            tvPrompt?.text = prompt
-            ivLoad?.setImageResource(resId)
+
+    /**
+     * @param status 0 录制中 1 取消发送
+     */
+    private fun updateRecordingDialogUI(status: Int) {
+        when(status) {
+            0 -> {
+                tvPrompt?.text = "松开发送，上滑取消"
+                ivLoadGif?.setImageResource(R.mipmap.listener08_anim)
+            }
+            1 -> {
+                tvPrompt?.text = "松开手指，取消发送"
+                ivLoadGif?.setImageResource(R.mipmap.chat_audio_record_cancel)
+            }
         }
     }
 
@@ -662,7 +678,9 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                         XToast.toastShort(this@O2ChatActivity, "录音时间太短！")
                     }
                 } else {
-                    newAudioMessage(result.path, "$audioRecordTime")
+                    if (!isAudioRecordCancel) {
+                        newAudioMessage(result.path, "$audioRecordTime")
+                    }
                 }
             }
         }
@@ -703,18 +721,24 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     }
 
     private fun playAudio2(filePath: String, position: Int) {
-        if (mPlayer != null) {
-            mPlayer?.release()
-            mPlayer = null
-        }
-        XLog.debug("uri : $filePath")
-        val uri = Uri.fromFile(File(filePath))
-        mPlayer = MediaPlayer.create(this@O2ChatActivity, uri)
-        mPlayer?.setOnCompletionListener {
-            XLog.debug("播音结束！")
 
+        O2MediaPlayerManager.instance().startPlay(filePath) {
+            adapter.stopAudioAnimation()
         }
-        mPlayer?.start()
+//
+//        if (mPlayer != null) {
+//            mPlayer?.release()
+//            mPlayer = null
+//        }
+//        XLog.debug("uri : $filePath")
+//        val uri = Uri.fromFile(File(filePath))
+//        mPlayer = MediaPlayer.create(this@O2ChatActivity, uri)
+//        mPlayer?.setVolume(1.0f, 1.0f)
+//        mPlayer?.setOnCompletionListener {
+//            XLog.debug("播音结束！")
+//            adapter.stopAudioAnimation()
+//        }
+//        mPlayer?.start()
     }
 
 
@@ -852,6 +876,39 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             mPresenter.sendIMMessage(message)//发送到服务器
             scroll2Bottom()
         }
+    }
+
+
+    private lateinit var sensorManager: SensorManager
+    private lateinit var sensor: Sensor
+    private fun sensorListen() {
+        sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
+        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+    }
+
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+    }
+
+    override fun onSensorChanged(event: SensorEvent?) {
+        if (O2MediaPlayerManager.instance().isHeadsetOn()) { //如果连接了耳机就不切换
+            return
+        }
+        val value = event?.values?.get(0)
+        if (value != null) {
+            if (O2MediaPlayerManager.instance().isPlaying()) {
+                if (value == sensor.maximumRange) {
+                    O2MediaPlayerManager.instance().changeToSpeaker()
+                } else {
+                    O2MediaPlayerManager.instance().changeToReceiver()
+                }
+            }else {
+                if(value == sensor.maximumRange){
+                    O2MediaPlayerManager.instance().changeToSpeaker()
+                }
+            }
+        }
+
     }
 
     /**
