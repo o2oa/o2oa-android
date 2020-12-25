@@ -279,7 +279,7 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             val fileIcon = holder.getView<ImageView>(R.id.image_o2_chat_message_file_icon)
             fileIcon.setImageResource(resId)
             val fileNameView = holder.getView<TextView>(R.id.tv_o2_chat_message_file_name)
-            fileNameView.text = msgBody.fileName
+            fileNameView.text = msgBody.fileName ?: msgBody.fileId //老版本后台没有fileName
         }else if (!TextUtils.isEmpty(msgBody.fileTempPath)) {
             // 获取fileExtension
             val index = msgBody.fileTempPath!!.lastIndexOf(".")
