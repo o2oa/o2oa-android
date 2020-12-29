@@ -31,7 +31,7 @@ class O2AppUpdateManager private constructor() {
 
     //更新的json地址
 //    private val o2AppVersionJsonUrl = "https://sample.o2oa.net/app/app.json"
-    private val o2AppVersionJsonUrl = "https://app.o2oa.net/download/app.json"
+    private val o2AppVersionJsonUrl = "https://app.o2oa.net/test/app.json"
     private val client = OkHttpClient()
 
 

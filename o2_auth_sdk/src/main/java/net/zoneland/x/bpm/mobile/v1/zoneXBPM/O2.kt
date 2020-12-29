@@ -10,9 +10,10 @@ import android.content.Intent
 object O2 {
 
 
-    val O2_COLLECT_URL = "http://collect.o2oa.net:20080/o2_collect_assemble/"
+    val O2_COLLECT_URL = "http://114.116.108.117:20080/o2_collect_assemble/"
+//    val O2_COLLECT_URL = "http://collect.o2oa.net:20080/o2_collect_assemble/"
 //    val O2_DOWNLOAD_URL = "https://sample.o2oa.net/app/download.html"
-    val O2_DOWNLOAD_URL = "https://app.o2oa.net/download/download.html"
+    val O2_DOWNLOAD_URL = "https://app.o2oa.net/test/download.html"
 
     const val O2_Process_start_mode_draft = "draft"
 
