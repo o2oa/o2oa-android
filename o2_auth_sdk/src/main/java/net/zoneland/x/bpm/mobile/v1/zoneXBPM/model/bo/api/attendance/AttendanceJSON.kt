@@ -194,7 +194,9 @@ data class MobileCheckInJson(
         var recordStatus: Int = 0, //记录状态：0-未分析 1-已分析
 //        "checkin_type": "上午上班打卡",
 ////        "checkin_time": 1591166591469,
-        var checkin_type: String? = ""
+        var checkin_type: String? = "",
+        var isExternal: Boolean = false, // 是否外勤打卡
+        var workAddress: String? = "" // 当前打卡的工作地点 外勤打卡为空
 )
 /**
  * 班次设置情况

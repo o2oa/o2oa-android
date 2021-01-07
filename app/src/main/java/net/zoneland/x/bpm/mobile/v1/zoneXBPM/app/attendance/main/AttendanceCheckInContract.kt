@@ -20,6 +20,6 @@ object AttendanceCheckInContract {
         fun listMyRecords()
         fun findTodayCheckInRecord(person: String)
         fun loadAllWorkplace()
-        fun checkIn(latitude: String, longitude: String, addrStr: String?, signDesc: String, signDate: String, signTime: String, id: String, checkType: String?)
+        fun checkIn(latitude: String, longitude: String, addrStr: String?, signDesc: String, signDate: String, signTime: String, id: String, checkType: String?, isExternal: Boolean, workAddress: String?)
     }
 }
