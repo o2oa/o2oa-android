@@ -83,7 +83,9 @@ class AttendanceCheckInPresenter : BasePresenterImpl<AttendanceCheckInContract.V
         }
     }
 
-    override fun checkIn(latitude: String, longitude: String, addrStr: String?, signDesc: String, signDate: String, signTime: String, id: String, checkType: String?) {
+    override fun checkIn(latitude: String, longitude: String, addrStr: String?, signDesc: String,
+                         signDate: String, signTime: String, id: String, checkType: String?,
+                         isExternal: Boolean, workAddress: String?) {
         val form = MobileCheckInJson()
         if (!TextUtils.isEmpty(id)) {
             form.id = id
@@ -97,6 +99,8 @@ class AttendanceCheckInPresenter : BasePresenterImpl<AttendanceCheckInContract.V
         form.optSystemName = O2.DEVICE_TYPE
         form.recordAddress = addrStr ?: ""
         form.checkin_type = checkType
+        form.isExternal = isExternal
+        form.workAddress = workAddress
         val json = O2SDKManager.instance().gson.toJson(form)
         val body = RequestBody.create(MediaType.parse("text/json"), json)
         getAttendanceAssembleControlService(mView?.getContext())?.let { service ->

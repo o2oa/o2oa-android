@@ -32,6 +32,7 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory
 import com.baidu.mapapi.map.MapStatus
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.MobileFeature
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.MobileMyRecords
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
 
 class AttendanceCheckInFragment : BaseMVPViewPagerFragment<AttendanceCheckInContract.View, AttendanceCheckInContract.Presenter>(),
@@ -67,7 +68,7 @@ class AttendanceCheckInFragment : BaseMVPViewPagerFragment<AttendanceCheckInCont
     private var workplaceCircle: Circle? = null //最近的工作地点打卡范围的蓝圈
     private var myLocation: BDLocation? = null //当前我的位置
     private var checkInPosition: MobileCheckInWorkplaceInfoJson? = null//离的最近的工作地点位置
-    private var isInCheckInPositionRange = false
+    private var isInCheckInPositionRange = false // 是否在考勤范围内
     private var feature : MobileFeature? = null
 
 
@@ -108,17 +109,26 @@ class AttendanceCheckInFragment : BaseMVPViewPagerFragment<AttendanceCheckInCont
     }
 
     private fun clickCheckIn() {
-        if (!isInCheckInPositionRange) {
-            XToast.toastShort(activity!!, "还未进入打卡范围，无法打卡！")
-            return
-        }
+
         if (myLocation!=null ){
             tv_attendance_check_in_button_label.text = getString(R.string.attendance_check_in_knock_loading)
             tv_attendance_check_in_time.gone()
             val signDate = DateHelper.nowByFormate("yyyy-MM-dd")
             val signTime = DateHelper.nowByFormate("HH:mm:ss")
-            mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
-                    myLocation!!.addrStr, "", signDate, signTime, "", this.feature?.checkinType)
+
+
+            if (!isInCheckInPositionRange) { // 外勤打卡
+                O2DialogSupport.openConfirmDialog(activity, "当前不在打卡范围内，你确定要进行外勤打卡？", { _ ->
+                    mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
+                            myLocation!!.addrStr, "", signDate, signTime, "", this.feature?.checkinType, true, "")
+                })
+            }else {
+                mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
+                        myLocation!!.addrStr, "", signDate, signTime, "", this.feature?.checkinType, false, checkInPosition?.placeName)
+            }
+
+        }else {
+            XToast.toastShort(activity!!, "没有获取到你的位置信息，请确认是否开启定位功能！")
         }
     }
 

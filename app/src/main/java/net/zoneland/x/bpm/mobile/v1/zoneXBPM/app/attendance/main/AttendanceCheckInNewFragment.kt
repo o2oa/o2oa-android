@@ -125,18 +125,25 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
                 XToast.toastShort(activity, "今日已经不需要打卡！")
                 return@setOnClickListener
             }
-            if (!isInCheckInPositionRange) {
-                XToast.toastShort(activity, "还未进入打卡范围，无法打卡！")
-                return@setOnClickListener
-            }
+
             if (myLocation != null ){
                 tv_attendance_check_in_new_check_in.text = getString(R.string.attendance_check_in_knock_loading)
                 tv_attendance_check_in_new_now_time.gone()
                 val signDate = DateHelper.nowByFormate("yyyy-MM-dd")
                 val signTime = DateHelper.nowByFormate("HH:mm:ss")
                 val checkType = calCheckType()
-                mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
-                        myLocation!!.addrStr, "", signDate, signTime, "", checkType)
+                if (!isInCheckInPositionRange) {
+                    O2DialogSupport.openConfirmDialog(activity, "当前不在打卡范围内，你确定要进行外勤打卡？", { _ ->
+                        mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
+                                myLocation!!.addrStr, "", signDate, signTime, "", checkType, true, "")
+                    })
+                }else {
+                    mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
+                            myLocation!!.addrStr, "", signDate, signTime, "", checkType, false, checkInPosition?.placeName)
+                }
+
+            }else {
+                XToast.toastShort(activity!!, "没有获取到你的位置信息，请确认是否开启定位功能！")
             }
         }
         //时间
@@ -151,7 +158,7 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
             val signDate = DateHelper.nowByFormate("yyyy-MM-dd")
             val signTime = DateHelper.nowByFormate("HH:mm:ss")
             mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
-                    myLocation!!.addrStr, "", signDate, signTime, info.recordId, info.checkinType)
+                    myLocation!!.addrStr, "", signDate, signTime, info.recordId, info.checkinType, !isInCheckInPositionRange, checkInPosition?.placeName)
         })
     }
 
