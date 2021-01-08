@@ -114,6 +114,7 @@
                     android:padding="@dimen/spacing_tiny"
                     android:maxLines="1"
                     android:textSize="@dimen/font_small"
+                    android:maxWidth="175dp"
                     android:ellipsize="end"
                     tools:text="这个是文件名.png" />
             </RelativeLayout>

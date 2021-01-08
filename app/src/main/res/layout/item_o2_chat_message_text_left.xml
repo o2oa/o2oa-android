@@ -97,9 +97,9 @@
             </RelativeLayout>
             <RelativeLayout
                 android:id="@+id/rl_o2_chat_message_file_body"
-                android:layout_width="wrap_content"
                 android:layout_height="40dp"
                 android:visibility="gone"
+                android:layout_width="wrap_content"
                 android:orientation="horizontal">
                 <ImageView
                     android:id="@+id/image_o2_chat_message_file_icon"
@@ -115,8 +115,9 @@
                     android:padding="@dimen/spacing_tiny"
                     android:maxLines="1"
                     android:textSize="@dimen/font_small"
+                    android:maxWidth="175dp"
                     android:ellipsize="end"
-                    tools:text="这个" />
+                    tools:text="这个这个这个这个.jsp" />
             </RelativeLayout>
         </LinearLayout>
 
