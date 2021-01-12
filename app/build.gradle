@@ -300,7 +300,7 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.5'
 
     //GSYVideo播放器
-    implementation('com.shuyu:GSYVideoPlayer:6.0.3')
+    implementation('com.shuyu:GSYVideoPlayer:8.0.0')
 
 //            {
 //        exclude group: 'com.android.support', module: 'recyclerview-v7'
