@@ -254,23 +254,28 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 
     private fun updateMembers() {
         val users = conversationInfo?.personList ?: ArrayList<String>()
-        ActivityResult.of(this)
-                .className(ContactPickerActivity::class.java)
-                .params(ContactPickerActivity.startPickerBundle(pickerModes = arrayListOf(ContactPickerActivity.personPicker), multiple = true, initUserList = users))
-                .greenChannel().forResult { _, data ->
-                    val result = data?.getParcelableExtra<ContactPickerResult>(ContactPickerActivity.CONTACT_PICKED_RESULT)
-                    if (result != null && result.users.isNotEmpty()) {
-                        val a = arrayListOf<String>()
-                        a.addAll(result.users.map { it.distinguishedName })
-                        if (!a.any { it == O2SDKManager.instance().distinguishedName }) {
-                            a.add(O2SDKManager.instance().distinguishedName)
-                        }
-                        showLoadingDialog()
-                        mPresenter.updateConversationPeople(conversationId, a)
-                    }else {
-                        XLog.debug("没有选择人员！！！！")
-                    }
-                }
+
+        go<O2ChatGroupMemberActivity>(O2ChatGroupMemberActivity.openEditGroupMembers(conversationId, users))
+
+
+
+//        ActivityResult.of(this)
+//                .className(ContactPickerActivity::class.java)
+//                .params(ContactPickerActivity.startPickerBundle(pickerModes = arrayListOf(ContactPickerActivity.personPicker), multiple = true, initUserList = users))
+//                .greenChannel().forResult { _, data ->
+//                    val result = data?.getParcelableExtra<ContactPickerResult>(ContactPickerActivity.CONTACT_PICKED_RESULT)
+//                    if (result != null && result.users.isNotEmpty()) {
+//                        val a = arrayListOf<String>()
+//                        a.addAll(result.users.map { it.distinguishedName })
+//                        if (!a.any { it == O2SDKManager.instance().distinguishedName }) {
+//                            a.add(O2SDKManager.instance().distinguishedName)
+//                        }
+//                        showLoadingDialog()
+//                        mPresenter.updateConversationPeople(conversationId, a)
+//                    }else {
+//                        XLog.debug("没有选择人员！！！！")
+//                    }
+//                }
     }
 
 
