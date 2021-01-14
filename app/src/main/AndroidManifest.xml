@@ -48,6 +48,7 @@
         <activity android:name=".app.im.O2LocationActivity" />
         <activity android:name=".app.im.O2InstantMessageActivity" />
         <activity android:name=".app.im.O2ChatActivity" />
+        <activity android:name=".app.im.O2ChatGroupMemberActivity" />
         <activity android:name=".app.VideoPlayerActivity" />
         <activity
             android:name=".app.clouddrive.v2.viewer.BigImageViewActivity"

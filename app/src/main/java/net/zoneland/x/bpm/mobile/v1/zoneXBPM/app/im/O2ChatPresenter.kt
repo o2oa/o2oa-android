@@ -77,6 +77,10 @@ class O2ChatPresenter : BasePresenterImpl<O2ChatContract.View>(), O2ChatContract
             mView?.updateFail("参数不正确，无法修改")
             return
         }
+        if (users.size < 3) {
+            mView?.updateFail("成员不能少于3人")
+            return
+        }
         val service = getMessageCommunicateService(mView?.getContext())
         val form = IMConversationUpdateForm()
         form.id = id
