@@ -345,6 +345,10 @@ class FileFolderListFragment : BaseMVPFragment<FileFolderListContract.View, File
                     }
                 }
             }
+
+            override fun onShareClick(share: CloudDiskItem.ShareItem) {
+
+            }
         }
         adapter.onCheckChangeListener = object : CloudDiskItemAdapter.OnCheckChangeListener {
             override fun onChange() {

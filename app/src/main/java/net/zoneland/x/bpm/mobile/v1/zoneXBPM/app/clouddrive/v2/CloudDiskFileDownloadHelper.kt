@@ -41,6 +41,7 @@ class CloudDiskFileDownloadHelper(val activity: Activity) {
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(object : Observer<Boolean>{
                     override fun onError(e: Throwable?) {
+                        XLog.error("", e)
                         result(null)
                     }
 

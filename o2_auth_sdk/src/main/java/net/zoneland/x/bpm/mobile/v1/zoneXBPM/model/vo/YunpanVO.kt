@@ -72,4 +72,19 @@ sealed class CloudDiskItem(open var id: String, open var name: String) {
                      var folderCount: Int,
                      var status: String,
                      var fileId: String ): CloudDiskItem(id, name)
+    class ShareItem(override var id: String, override var name: String,
+                    var createTime: String,
+                    var updateTime: String,
+                    var fileId: String = "", //分享对象的时候这个代表文件原始id
+                    var fileType: String = "", //folder attachment
+                    var person: String = "",
+                    var extension: String = "",
+                    var length: Long = 0,
+                    var contentType: String = "",
+                    var shareType: String = "", //member  password
+                    var validTime: String = "",
+                    var shareUserList: List<String> = ArrayList(),
+                    var shareOrgList: List<String> = ArrayList(),
+                    var shieldUserList: List<String> = ArrayList()
+                    ): CloudDiskItem(id, name)
 }

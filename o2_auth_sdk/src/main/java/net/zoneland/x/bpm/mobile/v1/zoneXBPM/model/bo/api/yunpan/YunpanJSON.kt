@@ -77,6 +77,31 @@ data class FolderJson(var id: String = "",
 }
 
 /**
+ * 分享对象
+ */
+data class ShareJson(var id: String = "",
+                      var createTime: String = "",
+                      var updateTime: String = "",
+                      var name: String = "",
+                      var fileId: String = "", //分享对象的时候这个代表文件原始id
+                      var fileType: String = "", //folder attachment
+                      var person: String = "",
+                      var extension: String = "",
+                      var length: Long = 0,
+                      var contentType: String = "",
+                      var shareType: String = "", //member  password
+                      var validTime: String = "",
+                      var shareUserList: List<String> = ArrayList(),
+                      var shareOrgList: List<String> = ArrayList(),
+                      var shieldUserList: List<String> = ArrayList()
+) {
+    fun copyToItem(): CloudDiskItem.ShareItem {
+        return CloudDiskItem.ShareItem(id, name, createTime, updateTime, fileId, fileType, person,
+                extension, length, contentType, shareType, validTime, shareUserList, shareOrgList, shieldUserList)
+    }
+}
+
+/**
  * 云盘接收到的数据对象
  */
 data class YunpanJson(

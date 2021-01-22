@@ -15,7 +15,6 @@
     <string name="app_error">应用异常</string>
 
 
-
     <string name="launch_start">准备中&#8230;</string>
     <string name="launch_network_is_not_connected">网络未连接，请检查网络连接情况！</string>
     <string name="launch_check_bind">正在连接O2云&#8230;</string>
@@ -188,6 +187,7 @@
     <string name="yunpan_move">移动</string>
     <string name="yunpan_menu_list">列表展现</string>
     <string name="yunpan_menu_pick_top">选择顶层</string>
+    <string name="yunpan_menu_share">我分享的</string>
     <string name="yunpan_menu_grid">网格展现</string>
     <string name="title_activity_picture_viewer">图片查看器</string>
     <string name="yunpan_category_image">图片</string>
@@ -198,6 +198,8 @@
     <string name="yunpan_category_share">分享</string>
 
     <string name="yunpan_all_file">全部文件</string>
+    <string name="yunpan_share_cancel">取消分享</string>
+    <string name="yunpan_share_shield">屏蔽</string>
 
     <string name="share_file_menu_test">测试</string>
 
