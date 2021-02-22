@@ -11,6 +11,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.VideoPlayerActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.f.FileFolderListFragment
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.share.CloudShareActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.type.CloudDiskFileTypeActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.type.FileTypeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
@@ -47,7 +48,7 @@ class CloudDiskActivity : BaseMVPActivity<CloudDiskContract.View, CloudDiskContr
         tv_disk_video.setOnClickListener { CloudDiskFileTypeActivity.start(this, FileTypeEnum.movie.key) }
         tv_disk_other.setOnClickListener { CloudDiskFileTypeActivity.start(this, FileTypeEnum.other.key) }
         tv_disk_image.setOnClickListener { CloudDiskFileTypeActivity.start(this, FileTypeEnum.image.key) }
-        tv_disk_share.setOnClickListener {  }
+        tv_disk_share.setOnClickListener { go<CloudShareActivity>(CloudShareActivity.openShareToMe()) }
     }
 
     override fun finish() {

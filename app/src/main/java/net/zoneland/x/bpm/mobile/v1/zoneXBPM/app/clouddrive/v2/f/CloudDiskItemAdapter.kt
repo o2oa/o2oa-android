@@ -24,7 +24,7 @@ class CloudDiskItemAdapter : RecyclerView.Adapter<CommonRecyclerViewHolder>() {
     var onCheckChangeListener: OnCheckChangeListener?= null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CommonRecyclerViewHolder {
-        val inflater: LayoutInflater = LayoutInflater.from(parent?.context)
+        val inflater: LayoutInflater = LayoutInflater.from(parent.context)
         return CommonRecyclerViewHolder(inflater.inflate(R.layout.item_file_list_v2, parent, false))
     }
 
@@ -49,6 +49,23 @@ class CloudDiskItemAdapter : RecyclerView.Adapter<CommonRecyclerViewHolder>() {
                 size.visibility = View.VISIBLE
                 size.text = item.length.friendlyFileLength()
             }
+            is CloudDiskItem.ShareItem -> { //分享数据
+                if (item.fileType == "folder") { //文件夹
+                    holder.setImageViewResource(R.id.file_list_icon_id, R.mipmap.icon_folder)
+                            .setText(R.id.file_list_name_id, item.name)
+                            .setText(R.id.tv_file_list_time, item.updateTime)
+                    val size = holder.getView<TextView>(R.id.tv_file_list_size)
+                    size.visibility = View.GONE
+                } else { // 文件
+                    val resId = FileExtensionHelper.getImageResourceByFileExtension(item.extension)
+                    holder.setImageViewResource(R.id.file_list_icon_id, resId)
+                            .setText(R.id.file_list_name_id, item.name)
+                            .setText(R.id.tv_file_list_time, item.updateTime)
+                    val size = holder.getView<TextView>(R.id.tv_file_list_size)
+                    size.visibility = View.VISIBLE
+                    size.text = item.length.friendlyFileLength()
+                }
+            }
         }
         val checkBox = holder.getView<CheckBox>(R.id.file_list_choose_id)
         checkBox.isChecked = false
@@ -67,6 +84,7 @@ class CloudDiskItemAdapter : RecyclerView.Adapter<CommonRecyclerViewHolder>() {
             when(item) {
                 is CloudDiskItem.FileItem -> onItemClickListener?.onFileClick(item)
                 is CloudDiskItem.FolderItem -> onItemClickListener?.onFolderClick(item)
+                is CloudDiskItem.ShareItem -> onItemClickListener?.onShareClick(item)
             }
         }
     }
@@ -88,6 +106,7 @@ class CloudDiskItemAdapter : RecyclerView.Adapter<CommonRecyclerViewHolder>() {
     interface OnItemClickListener {
         fun onFolderClick(folder: CloudDiskItem.FolderItem)
         fun onFileClick(file: CloudDiskItem.FileItem)
+        fun onShareClick(share: CloudDiskItem.ShareItem)
     }
     interface OnCheckChangeListener {
         fun onChange()

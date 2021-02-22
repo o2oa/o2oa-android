@@ -186,6 +186,27 @@ public class FileExtensionHelper {
     }
 
     /**
+     * 是否视频文件
+     * @param extension 扩展名 mp4等
+     * @return
+     */
+    public static boolean isVideoFromExtension(String extension) {
+        if(TextUtils.isEmpty(extension)){
+            return false;
+        }
+        extension = extension.toLowerCase();
+        switch (extension){
+            case "mp4":
+            case "avi":
+            case "mov":
+            case "rm":
+            case "mkv":
+                return true;
+        }
+        return false;
+    }
+
+    /**
      * 文件扩展 返回图标
      * @param extension
      * @return

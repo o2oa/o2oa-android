@@ -1,8 +1,5 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM
 
-import android.content.Context
-import android.content.Intent
-
 /**
  * Created by fancy on 2017/6/5.
  */
