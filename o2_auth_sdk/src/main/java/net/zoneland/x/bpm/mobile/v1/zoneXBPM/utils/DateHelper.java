@@ -184,6 +184,32 @@ public class DateHelper {
     }
 
     /**
+     * 判断给定的start 是否小于或者等于 end
+     * @param start
+     * @param end
+     * @param format
+     * @return
+     * @throws ParseException
+     */
+    public static boolean lsOrEq(String start, String end, String format) throws ParseException {
+        Calendar startCal = gc(start, format);
+        Calendar endCal = gc(end, format);
+        return lsOrEq(startCal, endCal);
+    }
+
+    /**
+     * 判断给定的start 是否小于或者等于 end
+     * @param start
+     * @param end
+     * @return
+     * @throws ParseException
+     */
+    public static boolean lsOrEq(String start, String end) throws ParseException {
+        String format = "yyyy-MM-dd HH:mm:ss";
+        return lsOrEq(start, end, format);
+    }
+
+    /**
      * 获取当前时间，默认格式的时间字符串
      *
      * @return

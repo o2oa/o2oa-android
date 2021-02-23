@@ -5,10 +5,10 @@ import android.view.View
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_fluid_login_phone.*
 import net.muliba.changeskin.FancySkinManager
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2App
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPFragment
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.login.LoginActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.APIDistributeData
@@ -17,8 +17,10 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectUnitData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.StringUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goThenKill
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.hideSoftInput
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CountDownButtonHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
 /**
  * Created by fancy on 2017/6/8.
@@ -67,7 +69,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
 
     override fun receiveUnitList(list: List<CollectUnitData>) {
         if (list.isEmpty()) {
-            XToast.toastShort(activity, "没有获取到绑定服务器列表！")
+            XToast.toastShort(activity, "当前手机号码没有绑定的服务器！")
             return
         }
         if (list.size == 1) {
@@ -79,7 +81,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
     }
 
     override fun receiveUnitFail() {
-        XToast.toastShort(activity, "没有获取到绑定服务器列表！")
+        XToast.toastLong(activity, "获取绑定服务器列表失败，请确认您的手机号码和验证码是否正确！")
     }
 
     override fun bindSuccess(distributeData: APIDistributeData) {
@@ -90,7 +92,42 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
 
     override fun bindFail() {
         hideLoadingDialog()
-        XToast.toastShort(activity, "绑定服务器失败！")
+//        XToast.toastShort(activity, "绑定服务器失败！")
+        O2DialogSupport.openConfirmDialog(activity, "绑定服务器失败，请检查当前服务器配置是否正确？您也可以先绑定到O2OA演示服务器进行体验！", { _ ->
+            bind2SampleServer()
+        }, positiveText = "演示服务器")
+    }
+
+    /**
+     * 绑定到sample服务器
+     */
+    private fun bind2SampleServer() {
+        val unit = CollectUnitData()
+        unit.id = "61a4d035-81ee-44a6-af3b-ab3d374ee24d"
+        unit.name = "演示站点"
+        unit.pinyin = "yanshizhandian"
+        unit.pinyinInitial = "yszd"
+        unit.centerHost = "sample.o2oa.net"
+        unit.centerPort = 40030
+        unit.centerContext = "/x_program_center"
+        unit.httpProtocol = "https"
+        //绑定成功写入本地存储
+        O2SDKManager.instance().bindUnit(unit, phone, (activity as BindPhoneActivity).loadDeviceId())
+        val url = APIAddressHelper.instance().getCenterUrl(unit.centerHost,
+                unit.centerContext, unit.centerPort)
+        showLoadingDialog()
+        mPresenter.getDistribute(url, unit.centerHost)
+    }
+
+    override fun distribute(distributeData: APIDistributeData) {
+        hideLoadingDialog()
+        APIAddressHelper.instance().setDistributeData(distributeData)
+        activity?.goThenKill<LoginActivity>()
+    }
+
+    override fun err(msg: String) {
+        hideLoadingDialog()
+        XToast.toastShort(activity, msg)
     }
 
     override fun noDeviceId() {

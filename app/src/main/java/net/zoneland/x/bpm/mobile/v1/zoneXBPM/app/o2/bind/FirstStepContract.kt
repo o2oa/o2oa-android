@@ -20,6 +20,8 @@ object FirstStepContract {
 
         fun loginSuccess(data: AuthenticationInfoJson)
         fun loginFail()
+        fun distribute(distributeData: APIDistributeData)
+        fun err(msg:String)
     }
     interface Presenter: BasePresenter<View> {
         fun getVerificationCode(phoneNumber: String)
@@ -29,5 +31,6 @@ object FirstStepContract {
          * 登录
          */
         fun login(userName: String, code: String)
+        fun getDistribute(url: String, host: String)
     }
 }

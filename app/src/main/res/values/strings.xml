@@ -44,7 +44,7 @@
     <string name="scan_login_confirm_title">扫码登录</string>
     <string name="scan_login_title">扫描二维码结果</string>
     <string name="scan_login_confirm">确认登录</string>
-    <string name="scan_login_desc">即将在电脑上登录O2网页版</string>
+    <string name="scan_login_desc">即将在电脑上登录O2OA网页版</string>
     <string name="scan_login_cancel">取消登录</string>
     <string name="share">分享</string>
     <string name="share_copy_link">已复制链接到剪切板</string>
@@ -61,7 +61,7 @@
 
     <!-- demo alert -->
     <string name="demo_alert_top">您当前绑定连接的是O2OA的官方演示系统。如果您需要连接自己的服务器按如下操作：</string>
-    <string name="demo_alert_no1">1. 到我们的官网 www.o2oa.io 产品下载区下载O2server到本地，安装启动等相关操作说明可以在下载区找到。</string>
+    <string name="demo_alert_no1">1. 到我们的官网 www.o2oa.net 产品下载区下载O2server到本地，安装启动等相关操作说明可以在下载区找到。</string>
     <string name="demo_alert_no2">2. 启动O2server后在浏览器访问，并使用xadmin账户登录，在系统设置>移动办公配置 模块中连接到O2云中。</string>
     <string name="demo_alert_no3">3. 在组织管理中添加您的用户信息，需填写正确的手机号码。</string>
     <string name="demo_alert_no4">4. 在手机端，进入 设置>帐号与安全>重新绑定手机号码 ，就可以重新绑定您的应用到自己的服务器上了。</string>
@@ -111,6 +111,9 @@
 
 
     <!-- login activity -->
+    <string name="login_sample_alert_1">当前绑定服务器是：演示服务器。</string>
+    <string name="login_sample_alert_2">试用账号：办公室机要、办公室初核、办公室主任\n 密码统一为：o2</string>
+    <string name="login_sample_alert_3">请切换密码方式进行登录</string>
     <string name="activity_login_username">用户名或手机号码</string>
     <string name="login_phone">输入手机号码</string>
     <string name="login_code">验证码</string>
@@ -215,7 +218,7 @@
     <string name="activity_im_tribe_name">群名称</string>
     <string name="activity_im_tribe_name_hint">取个群名称方便后续查询</string>
     <string name="activity_im_tribe_member">群成员</string>
-    <string name="activity_im_tribe_member_explain">(需要添加的成员必须使用过O2移动端应用的用户)</string>
+    <string name="activity_im_tribe_member_explain">(需要添加的成员必须使用过O2OA移动端应用的用户)</string>
     <string name="activity_im_tribe_notice_label">群公告</string>
     <string name="activity_im_tribe_notice_hint">可以在此输入公告内容</string>
     <string name="activity_im_tribe_save">保      存</string>
@@ -1151,6 +1154,7 @@
 
 
     <string name="chat_input_message">请输入消息…</string>
+
 
 
 </resources>

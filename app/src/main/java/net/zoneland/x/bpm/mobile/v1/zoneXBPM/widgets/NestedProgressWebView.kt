@@ -64,6 +64,7 @@ class NestedProgressWebView : WebView, NestedScrollingChild {
         initSettings()
         webChromeClient = ProgressWebChromeClient()
 
+
     }
 
     @SuppressLint("SetJavaScriptEnabled")
@@ -71,7 +72,7 @@ class NestedProgressWebView : WebView, NestedScrollingChild {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             settings.safeBrowsingEnabled = false
         }
-
+        settings.userAgentString = settings.userAgentString + " O2OA"
         settings.javaScriptEnabled = true
         settings.allowFileAccess = true
         settings.setAppCacheEnabled(true)

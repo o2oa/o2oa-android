@@ -144,11 +144,11 @@ class O2IMConversationFragment : BaseMVPViewPagerFragment<O2IMConversationContra
     override fun myConversationList(list: List<IMConversationInfo>) {
         if (list.isEmpty()) {
             tv_null_conversation.visible()
-            ll_o2_im_message_list.gone()
+            rv_o2_im_conversation.gone()
             setUnreadNumber(0)
         } else {
             tv_null_conversation.gone()
-            ll_o2_im_message_list.visible()
+            rv_o2_im_conversation.visible()
             cList.clear()
             cList.addAll(list)
             adapter.notifyDataSetChanged()
@@ -165,6 +165,7 @@ class O2IMConversationFragment : BaseMVPViewPagerFragment<O2IMConversationContra
 
     override fun myInstantMessageList(instantList: List<InstantMessage>) {
          if (instantList.isNotEmpty()) {
+             tv_null_conversation.gone()
              this.instantList.clear()
              this.instantList.addAll(instantList)
              ll_o2_instant_message.visible()
