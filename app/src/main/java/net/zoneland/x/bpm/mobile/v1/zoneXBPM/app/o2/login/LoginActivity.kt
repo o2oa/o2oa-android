@@ -187,6 +187,8 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
 
     override fun onResume() {
         super.onResume()
+        //是否是sample服务器
+        checkShowSampleAlert()
         //清除用户名密码
         login_edit_username_id.setText("")
         login_edit_password_id.setText("")
@@ -251,6 +253,13 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
                 showLoadingDialog()
                 mPresenter.getCaptcha()
             }
+        }
+    }
+
+    private fun checkShowSampleAlert() {
+        val unit = O2SDKManager.instance().prefs().getString(O2.PRE_CENTER_HOST_KEY, "")
+        if (!TextUtils.isEmpty(unit) && unit == "sample.o2oa.net") {
+            login_sample_alert.visible()
         }
     }
 

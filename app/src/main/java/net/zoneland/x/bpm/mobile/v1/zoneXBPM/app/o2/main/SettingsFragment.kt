@@ -74,7 +74,7 @@ class SettingsFragment : BaseMVPViewPagerFragment<SettingsContract.View, Setting
             R.id.setting_button_common_set_id -> {
                 O2DialogSupport.openConfirmDialog(activity, "确认要清除缓存吗？", {
                     HttpCacheUtil.clearCache(activity, 0)
-                }, O2AlertIconEnum.CLEAR)
+                }, icon = O2AlertIconEnum.CLEAR)
             }
             R.id.setting_button_customer_service_id -> shareDialog.show()
 //            R.id.setting_button_feedback_id -> startFeedBack()

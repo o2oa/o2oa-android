@@ -6,6 +6,7 @@ import java.io.File
 import java.io.FileOutputStream
 import java.net.HttpURLConnection
 import java.net.URL
+import java.util.*
 
 
 /**
@@ -14,6 +15,27 @@ import java.net.URL
  */
 
 object O2FileDownloadHelper {
+
+    /**
+     * 文件是否需要下载
+     * 比较附件的更新时间判断是否需要下载
+     * @param updateTime 附件对象最后更新时间 yyyy-MM-dd HH:mm:ss
+     * @param path 文件本地路径
+     */
+    fun fileNeedDownload(updateTime:String,  path: String): Boolean {
+        XLog.debug("更新时间 $updateTime")
+        val file = File(path)
+        return if (file.exists()) {
+            val time = file.lastModified()
+            val date =  Date()
+            date.time = time
+            val dateString = DateHelper.getDateTime(date)
+            XLog.debug("文件时间 $dateString")
+            !DateHelper.lsOrEq(updateTime, dateString)
+        }else {
+            true
+        }
+    }
 
     fun download(downloadUrl: String, outputFilePath: String): Observable<Boolean> {
         XLog.debug("准备下载文件 网络下载url: $downloadUrl 本地路径: $outputFilePath")

@@ -113,7 +113,7 @@ class SecondStepFragment: BaseMVPFragment<SecondStepContract.View, SecondStepCon
 
     override fun bindFail() {
         hideLoadingDialog()
-        XToast.toastShort(activity, "绑定服务器失败！")
+        XToast.toastLong(activity, "绑定服务器失败，请检查当前服务器配置是否正确？")
         (activity as BindPhoneActivity).removeFragment()
     }
 

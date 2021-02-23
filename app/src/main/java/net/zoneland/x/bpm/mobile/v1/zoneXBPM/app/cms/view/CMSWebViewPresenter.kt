@@ -5,11 +5,8 @@ import net.muliba.accounting.app.ExceptionHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.APIDistributeTypeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.IdData
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.cms.CMSDocumentAttachmentJson
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.AttachmentItemVO
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2FileDownloadHelper
@@ -18,14 +15,10 @@ import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
 import rx.Observable
-import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.functions.Action1
 import rx.schedulers.Schedulers
-import java.io.DataInputStream
-import java.io.DataOutputStream
 import java.io.File
-import java.io.FileOutputStream
 
 class CMSWebViewPresenter : BasePresenterImpl<CMSWebViewContract.View>(), CMSWebViewContract.Presenter {
 
@@ -103,14 +96,18 @@ class CMSWebViewPresenter : BasePresenterImpl<CMSWebViewContract.View>(), CMSWeb
                     .flatMap { res->
                         val attachInfo = res.data
                         if (attachInfo != null) {
-
                             val filePath = FileExtensionHelper.getXBPMCMSAttachFolder(mView?.getContext()) + File.separator + attachInfo.name
-                            val downloadUrl = APIAddressHelper.instance()
-                                    .getCommonDownloadUrl(APIDistributeTypeEnum.x_cms_assemble_control, "jaxrs/fileinfo/download/document/$attachmentId/stream")
-                            O2FileDownloadHelper.download(downloadUrl, filePath)
-                                    .flatMap {
-                                        Observable.just(File(filePath))
-                                    }
+                            if (O2FileDownloadHelper.fileNeedDownload(attachInfo.updateTime, filePath)) {
+                                val downloadUrl = APIAddressHelper.instance()
+                                        .getCommonDownloadUrl(APIDistributeTypeEnum.x_cms_assemble_control, "jaxrs/fileinfo/download/document/$attachmentId/stream")
+                                O2FileDownloadHelper.download(downloadUrl, filePath)
+                                        .flatMap {
+                                            Observable.just(File(filePath))
+                                        }
+                            }else {
+                                Observable.just(File(filePath))
+                            }
+
 
 
 //                            val file = File(filePath)

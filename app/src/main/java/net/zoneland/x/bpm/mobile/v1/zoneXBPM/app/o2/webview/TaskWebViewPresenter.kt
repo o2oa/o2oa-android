@@ -2,7 +2,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview
 
 import android.text.TextUtils
 import net.muliba.accounting.app.ExceptionHandler
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2App
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
@@ -12,9 +11,11 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.IdData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AttachmentInfo
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ReadData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.TaskData
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.WorkLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.WorkPostResult
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileUtil
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2FileDownloadHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import okhttp3.MediaType
 import okhttp3.MultipartBody
@@ -24,10 +25,7 @@ import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
 import rx.functions.Action1
 import rx.schedulers.Schedulers
-import java.io.DataInputStream
-import java.io.DataOutputStream
 import java.io.File
-import java.io.FileOutputStream
 
 class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), TaskWebViewContract.Presenter {
 
@@ -208,12 +206,17 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                         val info: AttachmentInfo? = response.data
                         if (info != null) {
                             val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(info.name, mView?.getContext())
-                            val downloadUrl = APIAddressHelper.instance()
-                                    .getCommonDownloadUrl(APIDistributeTypeEnum.x_processplatform_assemble_surface, "jaxrs/attachment/download/$attachmentId/work/$workId/stream")
-                            O2FileDownloadHelper.download(downloadUrl, path)
-                                    .flatMap {
-                                        Observable.just(File(path))
-                                    }
+                            if (O2FileDownloadHelper.fileNeedDownload(info.updateTime, path)) {
+                                val downloadUrl = APIAddressHelper.instance()
+                                        .getCommonDownloadUrl(APIDistributeTypeEnum.x_processplatform_assemble_surface, "jaxrs/attachment/download/$attachmentId/work/$workId/stream")
+                                O2FileDownloadHelper.download(downloadUrl, path)
+                                        .flatMap {
+                                            Observable.just(File(path))
+                                        }
+                            } else {
+                                Observable.just(File(path))
+                            }
+
 
 
 //                            val file = File(path)
@@ -284,13 +287,17 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                         val info: AttachmentInfo? = response.data
                         if (info != null) {
                             val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(info.name, mView?.getContext())
+                            if (O2FileDownloadHelper.fileNeedDownload(info.updateTime, path)) {
+                                val downloadUrl = APIAddressHelper.instance()
+                                        .getCommonDownloadUrl(APIDistributeTypeEnum.x_processplatform_assemble_surface, "jaxrs/attachment/download/$attachmentId/workcompleted/$workCompleted/stream")
+                                O2FileDownloadHelper.download(downloadUrl, path)
+                                        .flatMap {
+                                            Observable.just(File(path))
+                                        }
+                            }else {
+                                Observable.just(File(path))
+                            }
 
-                            val downloadUrl = APIAddressHelper.instance()
-                                    .getCommonDownloadUrl(APIDistributeTypeEnum.x_processplatform_assemble_surface, "jaxrs/attachment/download/$attachmentId/workcompleted/$workCompleted/stream")
-                            O2FileDownloadHelper.download(downloadUrl, path)
-                                    .flatMap {
-                                        Observable.just(File(path))
-                                    }
 
 
 //                            val file = File(path)

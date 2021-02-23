@@ -37,11 +37,32 @@ object O2DialogSupport {
                 .onNegativeListener(negativeListener)
                 .show()
     }
+//
+//    /**
+//     * 确认dialog
+//     */
+//    fun openConfirmDialog(context: Context?, content:String, listener: ((O2AlertDialogBuilder.O2Dialog) -> Unit),
+//                          icon: O2AlertIconEnum = O2AlertIconEnum.ALERT,
+//                          negativeListener: ((O2AlertDialogBuilder.O2Dialog) -> Unit) = { _->  }) {
+//        context?.let {
+//            O2AlertDialogBuilder(it)
+//                    .title(R.string.confirm)
+//                    .icon(icon)
+//                    .content(content)
+//                    .positive(R.string.positive)
+//                    .negative(R.string.cancel)
+//                    .onPositiveListener(listener)
+//                    .onNegativeListener(negativeListener)
+//                    .show()
+//        }
+//    }
 
     /**
      * 确认dialog
      */
     fun openConfirmDialog(context: Context?, content:String, listener: ((O2AlertDialogBuilder.O2Dialog) -> Unit),
+                          positiveText: String = "确    定",
+                          negativeText:  String = "取    消",
                           icon: O2AlertIconEnum = O2AlertIconEnum.ALERT,
                           negativeListener: ((O2AlertDialogBuilder.O2Dialog) -> Unit) = { _->  }) {
         context?.let {
@@ -49,15 +70,13 @@ object O2DialogSupport {
                     .title(R.string.confirm)
                     .icon(icon)
                     .content(content)
-                    .positive(R.string.positive)
-                    .negative(R.string.cancel)
+                    .positive(positiveText)
+                    .negative(negativeText)
                     .onPositiveListener(listener)
                     .onNegativeListener(negativeListener)
                     .show()
         }
-
     }
-
 
 
     /**
