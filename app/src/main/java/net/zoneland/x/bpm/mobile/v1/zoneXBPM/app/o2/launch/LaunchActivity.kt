@@ -153,8 +153,9 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
             XToast.toastShort(this, getString(R.string.launch_network_is_not_connected))
         }else{
             mCheckNetwork = true
-            // 是否使用蒲公英 launch()
+            // 是否检查更新
             checkAppUpdate()
+//            launch()
         }
     }
 
