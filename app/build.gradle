@@ -234,7 +234,8 @@ dependencies {
     implementation 'net.muliba.fancyfilepickerlibrary:fancyfilepickerlibrary:4.0.0'
     implementation 'net.muliba.changeskin:changeskin:1.2.2'
     implementation 'io.o2oa:signatureview:1.0.0'
-    implementation 'net.zoneland.o2.calendarview:library:1.1.2'
+    //
+    implementation 'com.github.fancylou:CalendarView:v1.2.0'
     implementation 'com.readystatesoftware.systembartint:systembartint:1.0.3'
     implementation 'com.facebook.shimmer:shimmer:0.1.0@aar'
     implementation 'com.borax12.materialdaterangepicker:library:1.9'
