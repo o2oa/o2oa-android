@@ -406,7 +406,11 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             if (persons != null && persons.isNotEmpty()) {
                 val person = persons.firstOrNull { it != O2SDKManager.instance().distinguishedName }
                 if (person != null) {
-                    title = person.substring(0, person.indexOf("@"))
+                    title = if (person.indexOf("@") > 0) {
+                        person.substring(0, person.indexOf("@"))
+                    }else {
+                        person
+                    }
                 }
             }
         } else if (O2IM.conversation_type_group == conversationInfo?.type) {
@@ -884,12 +888,18 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     }
 
 
-    private lateinit var sensorManager: SensorManager
-    private lateinit var sensor: Sensor
+    ///////////////////// 距离监听 手机是否靠近耳朵
+    private  var sensorManager: SensorManager? = null
+    private  var sensor: Sensor? = null
     private fun sensorListen() {
         sensorManager = getSystemService(SENSOR_SERVICE) as SensorManager
-        sensor = sensorManager.getDefaultSensor(Sensor.TYPE_PROXIMITY)
-        sensorManager.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+        if (sensorManager != null) {
+            sensor = sensorManager?.getDefaultSensor(Sensor.TYPE_PROXIMITY)
+            if (sensor != null) {
+                sensorManager?.registerListener(this, sensor, SensorManager.SENSOR_DELAY_NORMAL)
+            }
+        }
+
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
@@ -902,13 +912,13 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         val value = event?.values?.get(0)
         if (value != null) {
             if (O2MediaPlayerManager.instance().isPlaying()) {
-                if (value == sensor.maximumRange) {
+                if (value == sensor?.maximumRange) {
                     O2MediaPlayerManager.instance().changeToSpeaker()
                 } else {
                     O2MediaPlayerManager.instance().changeToReceiver()
                 }
             }else {
-                if(value == sensor.maximumRange){
+                if(value == sensor?.maximumRange){
                     O2MediaPlayerManager.instance().changeToSpeaker()
                 }
             }

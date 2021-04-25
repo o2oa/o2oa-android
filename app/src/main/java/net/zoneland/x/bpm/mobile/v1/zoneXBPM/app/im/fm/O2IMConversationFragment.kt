@@ -52,7 +52,11 @@ class O2IMConversationFragment : BaseMVPViewPagerFragment<O2IMConversationContra
                             val url = APIAddressHelper.instance().getPersonAvatarUrlWithId(person)
                             val avatar = holder.getView<CircleImageView>(R.id.image_o2_im_con_avatar)
                             O2ImageLoaderManager.instance().showImage(avatar, url)
-                            val name = person.substring(0, person.indexOf("@"))
+                            val name = if (person.indexOf("@") > 0) {
+                                person.substring(0, person.indexOf("@"))
+                            }else {
+                                person
+                            }
                             holder.setText(R.id.tv_o2_im_con_title, name)
                         }
                     }else if(O2IM.conversation_type_group == t.type) {
