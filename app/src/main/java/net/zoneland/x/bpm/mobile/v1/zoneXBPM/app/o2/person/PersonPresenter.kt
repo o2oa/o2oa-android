@@ -1,6 +1,7 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.person
 
 import net.muliba.accounting.app.ExceptionHandler
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.realm.RealmDataService
@@ -18,8 +19,8 @@ class PersonPresenter : BasePresenterImpl<PersonContract.View>(), PersonContract
             service.person(name)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(ResponseHandler<PersonJson>({ person -> mView?.loadPersonInfo(person) }),
-                            ExceptionHandler(mView?.getContext(), { e -> mView?.loadPersonInfoFail() }))
+                    .subscribe(ResponseHandler { person -> mView?.loadPersonInfo(person) },
+                            ExceptionHandler(mView?.getContext()) { _ -> mView?.loadPersonInfoFail() })
         }
     }
 
@@ -63,12 +64,12 @@ class PersonPresenter : BasePresenterImpl<PersonContract.View>(), PersonContract
                             if (it.data!= null) {
                                 mView?.createConvSuccess(it.data)
                             }else{
-                                mView?.createConvFail("创建会话失败！")
+                                mView?.createConvFail(mView?.getContext()?.getString(R.string.message_create_conversation_fail) ?: "创建会话失败！")
                             }
                         }
                         onError { e, _ ->
                             XLog.error("", e)
-                            mView?.createConvFail("创建会话失败！${e?.message}")
+                            mView?.createConvFail(mView?.getContext()?.getString(R.string.message_create_conversation_fail) ?: "创建会话失败！${e?.message}")
                         }
                     }
         }

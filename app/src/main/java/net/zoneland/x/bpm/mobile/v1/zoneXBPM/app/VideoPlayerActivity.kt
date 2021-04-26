@@ -37,7 +37,7 @@ class VideoPlayerActivity : AppCompatActivity() {
         if (url != null && url.isNotEmpty()) {
             init(url, title)
         }else {
-            XToast.toastShort(this, "播放地址为空！")
+            XToast.toastShort(this, getString(R.string.message_have_no_play_url))
             finish()
         }
     }

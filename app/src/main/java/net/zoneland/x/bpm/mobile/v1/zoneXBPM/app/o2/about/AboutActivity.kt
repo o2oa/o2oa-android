@@ -100,7 +100,8 @@ class AboutActivity : AppCompatActivity() {
                 versionName = version.versionName
                 downloadUrl = version.downloadUrl
                 XLog.info("versionName:$versionName, downloadUrl:$downloadUrl")
-                O2DialogSupport.openConfirmDialog(this@AboutActivity,"版本 $versionName 更新："+version.content, listener = { _ ->
+                val tips = getString(R.string.message_update_tips, versionName)
+                O2DialogSupport.openConfirmDialog(this@AboutActivity,tips + version.content, listener = { _ ->
                     XLog.info("notification is true..........")
                     callbackContinue?.invoke(true)
                 }, icon = O2AlertIconEnum.UPDATE, negativeListener = {_->
@@ -110,7 +111,7 @@ class AboutActivity : AppCompatActivity() {
 
             override fun onNoneUpdate(error: String) {
                 XLog.info(error)
-                XToast.toastShort(this@AboutActivity, "已经是最新版本了！")
+                XToast.toastShort(this@AboutActivity, getString(R.string.message_update_already))
                 callbackContinue?.invoke(false)
             }
 

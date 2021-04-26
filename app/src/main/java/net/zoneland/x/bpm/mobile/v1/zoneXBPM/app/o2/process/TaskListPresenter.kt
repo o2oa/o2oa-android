@@ -14,7 +14,7 @@ class TaskListPresenter : BasePresenterImpl<TaskListContract.View>(), TaskListCo
             service.getTaskApplicationList()
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(ResponseHandler<List<TaskApplicationData>> { list -> mView?.findTaskApplicationList(list) },
+                    .subscribe(ResponseHandler { list -> mView?.findTaskApplicationList(list) },
                             ExceptionHandler(mView?.getContext()) { e -> mView?.findTaskApplicationListFail() })
         }
     }

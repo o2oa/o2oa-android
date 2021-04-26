@@ -245,7 +245,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
                 getVerificationCode()
             }
             R.id.tv_rebind_btn -> {
-                O2DialogSupport.openConfirmDialog(this@LoginActivity, "确定要重新绑定手机号码吗？", { _ ->
+                O2DialogSupport.openConfirmDialog(this@LoginActivity, getString(R.string.dialog_msg_rebind_phone), { _ ->
                     reBindService()
                 })
             }
@@ -266,13 +266,13 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
     //切换登录方式
     private fun showChangeLoginTypeMenu() {
         val listItems = ArrayList<String>()
-        val title = if(loginType == 0) "密码登录" else "验证码登录"
+        val title = if(loginType == 0) getString(R.string.login_type_password) else getString(R.string.login_type_code)
         listItems.add(title)
         if (canBioAuth) {
-            listItems.add("指纹识别登录")
+            listItems.add(getString(R.string.login_type_fingerprint))
         }
         BottomSheetMenu(this)
-                .setTitle("切换登录方式")
+                .setTitle(getString(R.string.login_change_type))
                 .setItems(listItems, ContextCompat.getColor(this, R.color.z_color_text_primary)) { index ->
                     if (index == 0) {
                         changeLoginType()
@@ -342,19 +342,19 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
     }
 
     override fun loginFail() {
-        XToast.toastShort(this,  "登录失败, 请检查您的输入的用户名或密码是否正确！")
+        XToast.toastShort(this,  getString(R.string.message_login_fail))
         hideLoadingDialog()
     }
 
     override fun getCodeError() {
-        XToast.toastShort(this, "获取手机验证码失败，请检查您输入的用户名是否正确！")
+        XToast.toastShort(this, getString(R.string.message_login_validate_code_fail))
     }
 
     private fun submitLogin() {
         val credential = login_edit_username_id.text.toString()
         val code = login_edit_password_id.text.toString()
         if (TextUtils.isEmpty(credential)) {
-            XToast.toastShort(this, "用户名或手机号码 不能为空！")
+            XToast.toastShort(this, getString(R.string.message_login_username_can_not_empty))
             return
         }
         if (TextUtils.isEmpty(code)) {
@@ -367,7 +367,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
                     getString(R.string.activity_login_password)
                 }
             }
-            XToast.toastShort(this, "$label 不能为空！")
+            XToast.toastShort(this, getString(R.string.message_login_something_can_not_empty, label))
             return
         }
         if (useCaptcha) {
@@ -375,11 +375,11 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
 //                mPresenter.loginByPassword(credential, code)
                 val captchaCode = edit_login_captcha_input.text.toString()
                 if (TextUtils.isEmpty(captchaCode)) {
-                    XToast.toastShort(this, "图片验证码 不能为空！")
+                    XToast.toastShort(this, getString(R.string.message_login_image_code_can_not_empty))
                     return
                 }
                 if (captcha == null) {
-                    XToast.toastShort(this, "图片验证码 不能为空！")
+                    XToast.toastShort(this, getString(R.string.message_login_image_code_can_not_empty))
                     return
                 }
                 val form = LoginWithCaptchaForm()
@@ -397,11 +397,11 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
 //                    mPresenter.loginByPassword(credential, code)
                     val captchaCode = edit_login_captcha_input.text.toString()
                     if (TextUtils.isEmpty(captchaCode)) {
-                        XToast.toastShort(this, "图片验证码 不能为空！")
+                        XToast.toastShort(this, getString(R.string.message_login_image_code_can_not_empty))
                         return
                     }
                     if (captcha == null) {
-                        XToast.toastShort(this, "图片验证码 不能为空！")
+                        XToast.toastShort(this, getString(R.string.message_login_image_code_can_not_empty))
                         return
                     }
                     val form = LoginWithCaptchaForm()
@@ -442,7 +442,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
     private fun getVerificationCode() {
         val credential = login_edit_username_id.text.toString()
         if (TextUtils.isEmpty(credential)) {
-            XToast.toastShort(this, "请输入用户名！")
+            XToast.toastShort(this, getString(R.string.message_login_input_username))
             return
         }
         // 发送验证码
@@ -508,7 +508,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
      */
     private fun bioAuthLogin() {
         if(!bioManager.isBiometricPromptEnable()){
-            XToast.toastShort(this, "指纹识别模块未启用，请检查手机是否开启")
+            XToast.toastShort(this, getString(R.string.message_login_fingerprint_disabled))
         }else {
 
 
@@ -534,7 +534,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
                     }
                     if (userId.isBlank()) {
                         XLog.error("用户名为空 无法登录。。。。")
-                        XToast.toastShort(this@LoginActivity, "服务器验证登录失败，请尝试使用其它方式登录")
+                        XToast.toastShort(this@LoginActivity, getString(R.string.message_login_server_error))
                     }else {
                         mPresenter.ssoLogin(userId)
                     }

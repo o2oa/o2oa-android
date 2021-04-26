@@ -41,7 +41,7 @@ class PortalWebViewActivity : BaseMVPActivity<PortalWebViewContract.View, Portal
         portalId = intent.extras?.getString(PORTAL_ID_KEY) ?: ""
         portalName = intent.extras?.getString(PORTAL_NAME_KEY) ?: ""
         if (TextUtils.isEmpty(portalId)) {
-            XToast.toastShort(this, "缺少参数门户ID！！")
+            XToast.toastShort(this, getString(R.string.message_portal_need_id))
             finish()
         }else {
             setupToolBar(portalName)

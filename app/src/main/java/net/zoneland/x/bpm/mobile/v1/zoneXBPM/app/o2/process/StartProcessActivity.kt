@@ -31,7 +31,7 @@ class StartProcessActivity : AppCompatActivity() {
         toolbar?.setNavigationIcon(R.mipmap.ic_back_mtrl_white_alpha)
         toolbar?.setNavigationOnClickListener { removeFragment() }
 
-        if (supportFragmentManager.fragments == null || supportFragmentManager.fragments.isEmpty()) {
+        if (supportFragmentManager.fragments.isEmpty()) {
             addFragment(StartProcessStepOneFragment())
         }
 

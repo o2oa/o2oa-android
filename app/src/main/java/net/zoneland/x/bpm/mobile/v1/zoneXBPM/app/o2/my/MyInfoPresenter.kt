@@ -33,10 +33,10 @@ class MyInfoPresenter : BasePresenterImpl<MyInfoContract.View>(), MyInfoContract
                     .subscribeOn(Schedulers.io())
                     .flatMap { service.getCurrentPersonInfo() }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(ResponseHandler<PersonJson>({ data -> mView?.loadMyInfoSuccess(data) }),
-                            ExceptionHandler(mView?.getContext(), { e ->
+                    .subscribe(ResponseHandler<PersonJson> { data -> mView?.loadMyInfoSuccess(data) },
+                            ExceptionHandler(mView?.getContext()) { _ ->
                                 mView?.updateMyInfoFail()
-                            }))
+                            })
         }
     }
 

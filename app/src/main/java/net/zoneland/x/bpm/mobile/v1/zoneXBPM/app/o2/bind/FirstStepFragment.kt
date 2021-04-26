@@ -69,7 +69,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
 
     override fun receiveUnitList(list: List<CollectUnitData>) {
         if (list.isEmpty()) {
-            XToast.toastShort(activity, "当前手机号码没有绑定的服务器！")
+            XToast.toastShort(activity, getString(R.string.message_phone_no_bind))
             return
         }
         if (list.size == 1) {
@@ -81,7 +81,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
     }
 
     override fun receiveUnitFail() {
-        XToast.toastLong(activity, "获取绑定服务器列表失败，请确认您的手机号码和验证码是否正确！")
+        XToast.toastLong(activity, getString(R.string.message_get_o2collect_unit_list_fail))
     }
 
     override fun bindSuccess(distributeData: APIDistributeData) {
@@ -93,9 +93,9 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
     override fun bindFail() {
         hideLoadingDialog()
 //        XToast.toastShort(activity, "绑定服务器失败！")
-        O2DialogSupport.openConfirmDialog(activity, "绑定服务器失败，请检查当前服务器配置是否正确？您也可以先绑定到O2OA演示服务器进行体验！", { _ ->
+        O2DialogSupport.openConfirmDialog(activity, getString(R.string.dialog_msg_bind_to_server_fail), { _ ->
             bind2SampleServer()
-        }, positiveText = "演示服务器")
+        }, positiveText = getString(R.string.dialog_title_sample_server))
     }
 
     /**
@@ -104,7 +104,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
     private fun bind2SampleServer() {
         val unit = CollectUnitData()
         unit.id = "61a4d035-81ee-44a6-af3b-ab3d374ee24d"
-        unit.name = "演示站点"
+        unit.name = getString(R.string.dialog_title_sample_server)
         unit.pinyin = "yanshizhandian"
         unit.pinyinInitial = "yszd"
         unit.centerHost = "sample.o2oa.net"
@@ -132,7 +132,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
 
     override fun noDeviceId() {
         hideLoadingDialog()
-        XToast.toastShort(activity, "没有获取到您的设备号，请检查应用的权限设置！")
+        XToast.toastShort(activity, getString(R.string.message_can_not_get_device_number))
     }
 
     override fun onClick(v: View?) {
@@ -141,15 +141,15 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                 val phone = edit_login_phone.text.toString()
                 val code = edit_login_code.text.toString()
                 if (TextUtils.isEmpty(phone)) {
-                    XToast.toastShort(activity, "请输入手机号码！")
+                    XToast.toastShort(activity, getString(R.string.message_need_input_right_cellphone))
                     return
                 }
                 if (!StringUtil.isPhoneWithHKandMACAO(phone)) {
-                    XToast.toastShort(activity, "请输入正确的手机号码！")
+                    XToast.toastShort(activity, getString(R.string.message_need_input_right_cellphone))
                     return
                 }
                 if (TextUtils.isEmpty(code)) {
-                    XToast.toastShort(activity, "短信验证码不能为空！")
+                    XToast.toastShort(activity, getString(R.string.message_code_can_not_empty))
                     return
                 }
                 activity?.hideSoftInput()
@@ -160,11 +160,11 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
             R.id.button_login_phone_code -> {
                 val phone = edit_login_phone.text.toString()
                 if (TextUtils.isEmpty(phone)) {
-                    XToast.toastShort(activity, "请输入手机号码！")
+                    XToast.toastShort(activity, getString(R.string.message_need_input_right_cellphone))
                     return
                 }
                 if (!StringUtil.isPhoneWithHKandMACAO(phone)) {
-                    XToast.toastShort(activity, "请输入正确的手机号码！")
+                    XToast.toastShort(activity, getString(R.string.message_need_input_right_cellphone))
                     return
                 }
                 // 发送验证码
@@ -207,7 +207,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
 
     private fun redirectToSecondStep(json: String?) {
         if (TextUtils.isEmpty(json)){
-            XToast.toastShort(activity, "绑定服务对象解析异常！")
+            XToast.toastShort(activity, getString(R.string.message_bind_list_data_error))
         }else {
             val fragment = SecondStepFragment.newInstance(json!!, phone, code)
             (activity as BindPhoneActivity).addFragment(fragment)

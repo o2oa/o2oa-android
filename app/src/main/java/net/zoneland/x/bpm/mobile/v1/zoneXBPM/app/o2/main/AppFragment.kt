@@ -131,9 +131,9 @@ class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Pre
 
     override fun onPrepareOptionsMenu(menu: Menu) {
         if (isEdit) {
-            menu.findItem(R.id.menu_app_edit)?.title = "完成"
+            menu.findItem(R.id.menu_app_edit)?.title = getString(R.string.completed)
         } else {
-            menu.findItem(R.id.menu_app_edit)?.title = "编辑"
+            menu.findItem(R.id.menu_app_edit)?.title = getString(R.string.edit)
         }
         if (activity is MainActivity) {
             (activity as MainActivity).refreshMenu()

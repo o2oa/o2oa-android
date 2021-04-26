@@ -6,6 +6,7 @@ import android.text.TextUtils
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.ValueCallback
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.download.DownloadProgressHandler
@@ -92,13 +93,13 @@ class DownloadDocument(val context: Activity) {
                         if (TextUtils.isEmpty(result)) {
                             openFileWithTBS(result, "")
                         } else {
-                            XToast.toastShort(context, "下载文档失败！")
+                            XToast.toastShort(context, context.getString(R.string.message_download_document_fail))
                         }
                         finishCallback()
                     }
                     onError { e, _ ->
                         XLog.error("下文档失败", e)
-                        XToast.toastShort(context, "下载文档失败！")
+                        XToast.toastShort(context, context.getString(R.string.message_download_document_fail))
                         finishCallback()
                     }
                 }

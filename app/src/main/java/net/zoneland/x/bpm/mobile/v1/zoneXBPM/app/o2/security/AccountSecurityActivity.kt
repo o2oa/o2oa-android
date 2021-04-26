@@ -45,7 +45,7 @@ class AccountSecurityActivity : BaseMVPActivity<AccountSecurityContract.View, Ac
         }
 
         val unitHost = O2SDKManager.instance().prefs().getString(O2.PRE_CENTER_HOST_KEY, "")
-        tv_account_security_unit_name.text = "当前绑定服务器：$unitHost"
+        tv_account_security_unit_name.text = getString(R.string.setting_bind_server_host, unitHost)
 
         initBiometryAuthView()
 
@@ -72,13 +72,13 @@ class AccountSecurityActivity : BaseMVPActivity<AccountSecurityContract.View, Ac
     }
 
     override fun updateMyPasswordSuccess() {
-        XToast.toastShort(this, "修改密码成功！")
+        XToast.toastShort(this, getString(R.string.message_setting_update_password_success))
     }
 
     private val bioManager: BiometryManager by lazy { BiometryManager(this) }
     private fun initBiometryAuthView() {
 
-        tv_account_security_biometry_name.text = "指纹识别登录"
+        tv_account_security_biometry_name.text = getString(R.string.login_type_fingerprint)
         val bioAuthUser = O2SDKManager.instance().prefs().getString(BioConstants.O2_bio_auth_user_id_prefs_key, "") ?: ""
         var isAuthed = false
         //判断是否当前绑定的服务器的
@@ -107,7 +107,7 @@ class AccountSecurityActivity : BaseMVPActivity<AccountSecurityContract.View, Ac
 
                     override fun onSucceeded() {
                         XLog.debug("指纹识别验证成功")
-                        XToast.toastShort(this@AccountSecurityActivity, "验证成功")
+                        XToast.toastShort(this@AccountSecurityActivity, getString(R.string.biometric_dialog_state_succeeded))
                         setBioAuthResult()
                     }
 
@@ -129,29 +129,29 @@ class AccountSecurityActivity : BaseMVPActivity<AccountSecurityContract.View, Ac
             }
 
         }else {
-            tv_account_security_biometry_name.text = "指纹识别登录不可用"
+            tv_account_security_biometry_name.text = getString(R.string.message_login_type_fingerprint_disabled)
             image_btn_account_security_biometry_enable.setImageResource(R.mipmap.icon_toggle_off_29dp)
             image_btn_account_security_biometry_enable.setOnClickListener {
-                XToast.toastShort(this, "指纹识别不可用或未启用！")
+                XToast.toastShort(this,  getString(R.string.message_login_type_fingerprint_disabled))
             }
         }
     }
 
     private fun changeMyPassword() {
-        O2DialogSupport.openCustomViewDialog(this, "修改密码", R.layout.dialog_password_modify) { dialog ->
+        O2DialogSupport.openCustomViewDialog(this, getString(R.string.change_password), R.layout.dialog_password_modify) { dialog ->
             val old = dialog.findViewById<EditText>(R.id.dialog_password_old_edit_id).text.toString()
             if (TextUtils.isEmpty(old)) {
-                XToast.toastShort(this@AccountSecurityActivity, "旧密码不能为空")
+                XToast.toastShort(this@AccountSecurityActivity, getString(R.string.message_old_password_can_not_empty))
                 return@openCustomViewDialog
             }
             val newpwd = dialog.findViewById<EditText>(R.id.dialog_password_new_edit_id).text.toString()
             if (TextUtils.isEmpty(newpwd)) {
-                XToast.toastShort(this@AccountSecurityActivity, "新密码不能为空")
+                XToast.toastShort(this@AccountSecurityActivity, getString(R.string.message_new_password_can_not_empty))
                 return@openCustomViewDialog
             }
             val newpwdAgain = dialog.findViewById<EditText>(R.id.dialog_password_confirm_edit_id).text.toString()
             if (newpwd != newpwdAgain) {
-                XToast.toastShort(this@AccountSecurityActivity, "新密码和确认新密码不一样")
+                XToast.toastShort(this@AccountSecurityActivity, getString(R.string.message_new_old_password_not_same))
                 return@openCustomViewDialog
             }
             mPresenter.updateMyPassword(old, newpwd, newpwdAgain)
@@ -187,7 +187,7 @@ class AccountSecurityActivity : BaseMVPActivity<AccountSecurityContract.View, Ac
 
 
     private fun changeMobile() {
-        O2DialogSupport.openConfirmDialog(this, "确定要重新绑定手机号码吗,该操作会清空当前登录信息，需要重新登录？", {
+        O2DialogSupport.openConfirmDialog(this, getString(R.string.dialog_msg_need_rebind_phone_number), {
             val deviceId = O2SDKManager.instance().prefs().getString(O2.PRE_BIND_PHONE_TOKEN_KEY, "") ?: ""
             mPresenter.logout(deviceId)
         })

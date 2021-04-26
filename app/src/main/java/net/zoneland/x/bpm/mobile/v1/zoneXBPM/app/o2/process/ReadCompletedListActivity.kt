@@ -3,9 +3,9 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process
 
 import android.graphics.BitmapFactory
 import android.os.Bundle
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.view.View
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_read_complete.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2CustomStyle

@@ -39,7 +39,7 @@ class TaskFragment : BaseMVPViewPagerFragment<TaskContract.View, TaskContract.Pr
         object : SwipeRefreshCommonRecyclerViewAdapter<TaskData>(activity, taskDatas, R.layout.item_todo_list) {
             override fun convert(holder: CommonRecyclerViewHolder?, data: TaskData?) {
                 val time = data?.startTime?.substring(0, 10) ?: ""
-                val title = if (TextUtils.isEmpty(data?.title)) { "无标题" } else { data?.title }
+                val title = if (TextUtils.isEmpty(data?.title)) { getString(R.string.no_title) } else { data?.title }
                 holder?.setText(R.id.todo_card_view_title_id, title)
                         ?.setText(R.id.todo_card_view_content_id, "【${data?.processName}】")
                         ?.setText(R.id.todo_card_view_node_id, data?.activityName)
@@ -118,7 +118,7 @@ class TaskFragment : BaseMVPViewPagerFragment<TaskContract.View, TaskContract.Pr
     }
 
     override fun findTaskListFail() {
-        XToast.toastShort(activity, "获取任务列表失败")
+        XToast.toastShort(activity, getString(R.string.message_get_todo_list_error))
         taskDatas.clear()
         adapter.notifyDataSetChanged()
         tv_no_data.visible()

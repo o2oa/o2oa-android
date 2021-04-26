@@ -45,7 +45,7 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
 
     override var mPresenter: MyInfoContract.Presenter = MyInfoPresenter()
 
-    val avatarMenuList: ArrayList<String> = arrayListOf("拍照", "从手机相册选择")
+    val avatarMenuList: ArrayList<String> = arrayListOf(getString(R.string.take_photo), getString(R.string.take_from_album))
     val avatarMenu: CommonMenuPopupWindow by lazy { CommonMenuPopupWindow(avatarMenuList, this) }
 
     var person: PersonJson? = null
@@ -186,13 +186,13 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
 
     override fun loadMyInfoFail() {
         hideLoadingDialog()
-        XToast.toastShort(this, "获取个人信息失败！")
+        XToast.toastShort(this, getString(R.string.message_my_info_get_fail))
         finish()
     }
 
     override fun updateMyInfoFail() {
         hideLoadingDialog()
-        XToast.toastShort(this, "更新个人信息失败！")
+        XToast.toastShort(this, getString(R.string.message_my_info_update_fail))
         switchStatus(false)
     }
 
@@ -301,7 +301,7 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
                     onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
                         XLog.info("granted:$granted , shouldShowRequest:$shouldShowRequestPermissionRationale, denied:$deniedPermissions")
                         if (!granted) {
-                            O2DialogSupport.openAlertDialog(this@MyInfoActivity, "非常抱歉，相机权限没有开启，无法使用相机！")
+                            O2DialogSupport.openAlertDialog(this@MyInfoActivity, getString(R.string.message_my_no_camera_permission))
                         } else {
                             openCamera()
                         }
@@ -331,7 +331,7 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
     }
 
     private fun logout() {
-        O2DialogSupport.openConfirmDialog(this, "确定要退出登录吗？", {
+        O2DialogSupport.openConfirmDialog(this, getString(R.string.dialog_msg_logout), {
             mPresenter.logout()
         })
     }
@@ -362,7 +362,7 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
                 mPresenter.updateMyInfo(person!!)
             } else {
                 XLog.error("my info  is null.......")
-                XToast.toastShort(this, "我的信息对象为空无法修改！")
+                XToast.toastShort(this, getString(R.string.message_my_info_obj_is_null))
             }
 
         } else {

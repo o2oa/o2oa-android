@@ -35,7 +35,7 @@ class GroupActivity : BaseMVPActivity<GroupContract.View, GroupContract.Presente
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         val name = intent.extras?.getString(GROUP_NAME_KEY, "") ?: ""
         if (TextUtils.isEmpty(name)) {
-            XToast.toastShort(this, "没有群组名称，无法获取群组信息！")
+            XToast.toastShort(this, getString(R.string.message_group_name_is_empty))
             finish()
             return
         }

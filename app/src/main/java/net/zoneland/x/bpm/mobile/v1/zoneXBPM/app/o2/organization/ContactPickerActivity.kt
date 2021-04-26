@@ -85,7 +85,7 @@ class ContactPickerActivity : BaseMVPActivity<ContactPickerActivityContract.View
 
     private val fragments = ArrayList<Fragment>()
     private var currentSelect = 0
-    private var pickerTitle = "选择器"
+    private var pickerTitle = getString(R.string.picker)
 
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
@@ -172,7 +172,7 @@ class ContactPickerActivity : BaseMVPActivity<ContactPickerActivityContract.View
                 val count = mSelectDepartments.size + mSelectIdentities.size + mSelectGroups.size + mSelectUsers.size
                 XLog.debug("选择了$count")
                 if (count < 1) {
-                    XToast.toastShort(this, "请至少选择一条数据！")
+                    XToast.toastShort(this, getString(R.string.message_select_at_least_one))
                     return true
                 }
                 val result = ContactPickerResult(mSelectDepartments, mSelectIdentities, mSelectGroups, mSelectUsers)
@@ -283,7 +283,7 @@ class ContactPickerActivity : BaseMVPActivity<ContactPickerActivityContract.View
     fun addSelectedValue(value: NewContactListVO) {
         val count = mSelectDepartments.size + mSelectIdentities.size + mSelectGroups.size + mSelectUsers.size
         if (maxNumber in 1..count) {
-           XToast.toastShort(this, "不能添加更多了！")
+           XToast.toastShort(this, getString(R.string.message_select_can_not_add_more))
             return
         }
         when(value) {
@@ -328,7 +328,7 @@ class ContactPickerActivity : BaseMVPActivity<ContactPickerActivityContract.View
     private fun createFragment(mode: String, index: Int, isShowTab:Boolean) {
         when(mode) {
             departmentPicker -> {
-                if (index == 0) {pickerTitle = "组织选择"}
+                if (index == 0) {pickerTitle = getString(R.string.contact_org_picker)}
                 val f = ContactUnitAndIdentityPicker.startPicker(
                         ContactUnitAndIdentityPicker.ORG_PICK_MODE,
                         topList = topList,
@@ -338,10 +338,10 @@ class ContactPickerActivity : BaseMVPActivity<ContactPickerActivityContract.View
                         duty = duty
                 )
                 fragments.add(f)
-                if (isShowTab) {toolbar_snippet_tab_layout.addTab(toolbar_snippet_tab_layout.newTab().setText("组织选择"))}
+                if (isShowTab) {toolbar_snippet_tab_layout.addTab(toolbar_snippet_tab_layout.newTab().setText(getString(R.string.contact_org_picker)))}
             }
             identityPicker -> {
-                if (index == 0) {pickerTitle = "身份选择"}
+                if (index == 0) {pickerTitle = getString(R.string.contact_identity_picker)}
                 val f = ContactUnitAndIdentityPicker.startPicker(
                         ContactUnitAndIdentityPicker.IDENTITY_PICK_MODE,
                         topList = topList,
@@ -351,20 +351,20 @@ class ContactPickerActivity : BaseMVPActivity<ContactPickerActivityContract.View
                         duty = duty
                 )
                 fragments.add(f)
-                if (isShowTab) {toolbar_snippet_tab_layout.addTab(toolbar_snippet_tab_layout.newTab().setText("身份选择"))}
+                if (isShowTab) {toolbar_snippet_tab_layout.addTab(toolbar_snippet_tab_layout.newTab().setText(getString(R.string.contact_identity_picker)))}
             }
             groupPicker -> {
-                if (index == 0) {pickerTitle = "群组选择"}
+                if (index == 0) {pickerTitle = getString(R.string.contact_group_picker)}
                 val f = ContactPersonGroupPicker.startPicker(
                         ContactPersonGroupPicker.GROUP_PICK_MODE,
                         multiple,
                         maxNumber
                 )
                 fragments.add(f)
-                if (isShowTab) {toolbar_snippet_tab_layout.addTab(toolbar_snippet_tab_layout.newTab().setText("群组选择"))}
+                if (isShowTab) {toolbar_snippet_tab_layout.addTab(toolbar_snippet_tab_layout.newTab().setText(getString(R.string.contact_group_picker)))}
             }
             personPicker -> {
-                if (index == 0) {pickerTitle = "人员选择"}
+                if (index == 0) {pickerTitle = getString(R.string.contact_person_picker)}
                 val f =  ContactUnitAndIdentityPicker.startPicker(
                         ContactUnitAndIdentityPicker.PERSON_PICK_MODE,
                         topList = topList,
@@ -372,7 +372,7 @@ class ContactPickerActivity : BaseMVPActivity<ContactPickerActivityContract.View
                         multiple = multiple
                 )
                 fragments.add(f)
-                if (isShowTab) {toolbar_snippet_tab_layout.addTab(toolbar_snippet_tab_layout.newTab().setText("人员选择"))}
+                if (isShowTab) {toolbar_snippet_tab_layout.addTab(toolbar_snippet_tab_layout.newTab().setText(getString(R.string.contact_person_picker)))}
             }
         }
     }
@@ -406,7 +406,7 @@ class ContactPickerActivity : BaseMVPActivity<ContactPickerActivityContract.View
         }
         setupToolBar(pickerTitle, true, isCloseBackIcon = true)
         if (fragments.isEmpty()) {
-            XToast.toastShort(this, "传入的选择器类型不正确！")
+            XToast.toastShort(this, getString(R.string.contact_picker_type_error))
             finish()
         }else {
             addFragment(fragments[0])

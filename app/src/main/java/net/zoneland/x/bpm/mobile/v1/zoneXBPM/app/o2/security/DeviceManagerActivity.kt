@@ -33,18 +33,19 @@ class DeviceManagerActivity : BaseMVPActivity<DeviceManagerContract.View, Device
             override fun convert(holder: CommonRecyclerViewHolder?, t: CollectDeviceData?) {
                 val textView = holder?.getView<TextView>(R.id.tv_item_device_title)
                 val deviceTitle = if (TextUtils.isEmpty(t?.deviceType)) {
-                    "未知设备"
+                    getString(R.string.setting_unknown_device)
                 }else {
-                    "${t?.deviceType} 设备"
+                    getString(R.string.setting_device_type, t?.deviceType?:"")
+//                    "${t?.deviceType} 设备"
                 }
                 textView?.text = deviceTitle
 
                 val btn = holder?.getView<TextView>(R.id.tv_item_device_unbind_btn)
                 if (deviceToken == t?.name) { //当前设备
-                    btn?.text = "本机"
+                    btn?.text = getString(R.string.setting_device_self)
                     btn?.setTextColor(ContextCompat.getColor(this@DeviceManagerActivity, R.color.z_color_accent))
                 }else {
-                    btn?.text = "解除绑定"
+                    btn?.text = getString(R.string.setting_unbind_device)
                     btn?.setTextColor(ContextCompat.getColor(this@DeviceManagerActivity, R.color.icon_blue))
                 }
             }
@@ -54,17 +55,19 @@ class DeviceManagerActivity : BaseMVPActivity<DeviceManagerContract.View, Device
 
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
-        setupToolBar("常用设备管理", true)
+        setupToolBar(getString(R.string.setting_device_manager), true)
         adapter.setOnItemClickListener { _, position ->
             XLog.debug("点击了第 $position 行！")
             val data = list[position]
             if (deviceToken != data.name) {
                 val deviceTitle = if (TextUtils.isEmpty(data.deviceType)) {
-                    "未知设备"
+                    getString(R.string.setting_unknown_device)
                 }else {
-                    "${data.deviceType} 设备"
+//                    "${data.deviceType} 设备"
+                    getString(R.string.setting_device_type, data.deviceType?:"")
                 }
-                O2DialogSupport.openConfirmDialog(this, "确定要解绑 $deviceTitle ?", {
+                val msg = getString(R.string.message_setting_unbind, deviceTitle)
+                O2DialogSupport.openConfirmDialog(this, msg, {
                     mPresenter.unbind(data.name)
                 })
             }

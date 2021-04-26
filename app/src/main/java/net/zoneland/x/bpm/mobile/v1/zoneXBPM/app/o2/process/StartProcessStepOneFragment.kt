@@ -98,7 +98,7 @@ class StartProcessStepOneFragment : BaseMVPFragment<StartProcessStepOneContract.
     }
 
     override fun loadApplicationListFail() {
-        XToast.toastShort(activity, "获取应用列表失败！")
+        XToast.toastShort(activity, getString(R.string.message_get_application_fail))
         appList.clear()
         linear_start_process_content?.gone()
         tv_start_process_empty?.visible()
@@ -111,7 +111,7 @@ class StartProcessStepOneFragment : BaseMVPFragment<StartProcessStepOneContract.
     }
 
     override fun loadProcessListFail() {
-        XToast.toastShort(activity, "获取流程列表失败！")
+        XToast.toastShort(activity, getString(R.string.message_get_process_fail))
         processList.clear()
         processAdapter.notifyDataSetChanged()
     }
@@ -130,18 +130,18 @@ class StartProcessStepOneFragment : BaseMVPFragment<StartProcessStepOneContract.
             }
         }else {
             hideLoadingDialog()
-            XToast.toastShort(activity, "没有获取到当前用户的身份！")
+            XToast.toastShort(activity, getString(R.string.message_get_current_identity_fail))
         }
     }
 
     override fun loadCurrentPersonIdentityFail() {
         hideLoadingDialog()
-        XToast.toastShort(activity, "没有获取到当前用户的身份，无法启动流程！")
+        XToast.toastShort(activity, getString(R.string.message_get_current_identity_fail))
     }
 
     override fun startProcessSuccess(workId: String) {
         hideLoadingDialog()
-        val name = if (clickProcess != null && !TextUtils.isEmpty(clickProcess?.name)){ clickProcess?.name?: "拟稿"}else{"拟稿"}
+        val name = if (clickProcess != null && !TextUtils.isEmpty(clickProcess?.name)){ clickProcess?.name?: getString(R.string.create_manuscript)}else{getString(R.string.create_manuscript)}
         (activity as StartProcessActivity).go<TaskWebViewActivity>(TaskWebViewActivity.start(workId, "", name))
         (activity as StartProcessActivity).finish()
     }

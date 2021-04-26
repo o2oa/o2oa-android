@@ -277,7 +277,7 @@ class NewOrganizationActivity : BaseMVPActivity<NewOrganizationContract.View, Ne
         }
         edit_toolbar_organization_search.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
-                var result = s?.toString() ?: ""
+                val result = s?.toString() ?: ""
                 if (TextUtils.isEmpty(result)) {
                     clearSearchList()
                 } else {
@@ -339,7 +339,7 @@ class NewOrganizationActivity : BaseMVPActivity<NewOrganizationContract.View, Ne
                 when (mode) {
                     MULTI_IDENTITY_CHOOSE_MODE -> {
                         if (mSelectIdentitySet.isEmpty()) {
-                            XToast.toastShort(this, "请至少选择一个身份！")
+                            XToast.toastShort(this, getString(R.string.message_select_at_least_one))
                             return true
                         }
                         val list = ArrayList<String>()
@@ -367,7 +367,7 @@ class NewOrganizationActivity : BaseMVPActivity<NewOrganizationContract.View, Ne
                             }
                             else -> {
                                 if (mSelectPersonSet.isEmpty()) {
-                                    XToast.toastShort(this, "请至少选择一个人员！")
+                                    XToast.toastShort(this, getString(R.string.message_select_at_least_one))
                                     return true
                                 }
                                 val list = ArrayList<String>()

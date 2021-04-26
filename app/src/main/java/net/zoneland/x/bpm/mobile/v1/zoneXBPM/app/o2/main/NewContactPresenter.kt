@@ -26,7 +26,7 @@ class NewContactPresenter : BasePresenterImpl<NewContactContract.View>(), NewCon
             val identityList = ArrayList<NewContactFragmentVO>()
             val list = response.data
             if (list != null && list.isNotEmpty()) {
-                val header = NewContactFragmentVO.GroupHeader("我的部门", R.mipmap.icon_contact_my_company)
+                val header = NewContactFragmentVO.GroupHeader(mView?.getContext()?.getString(R.string.contact_my_department) ?: "我的部门", R.mipmap.icon_contact_my_company)
                 identityList.add(header)
                 list.filter { !TextUtils.isEmpty(it.unit) }.map {
                     identityList.add(it.copyToVO())
@@ -53,7 +53,7 @@ class NewContactPresenter : BasePresenterImpl<NewContactContract.View>(), NewCon
             val topList = ArrayList<NewContactFragmentVO>()
             val unit = response.data
             if (unit != null) {
-                val header = NewContactFragmentVO.GroupHeader("组织结构", R.mipmap.icon_contact_my_department)
+                val header = NewContactFragmentVO.GroupHeader(mView?.getContext()?.getString(R.string.contact_org_structure) ?: "组织结构", R.mipmap.icon_contact_my_department)
                 topList.add(header)
                 val u = unit.copyToVO() as NewContactFragmentVO.MyDepartment
                 u.hasChildren = true
@@ -76,7 +76,7 @@ class NewContactPresenter : BasePresenterImpl<NewContactContract.View>(), NewCon
         val usuallyObservable = RealmDataService().loadUsuallyPersonByOwner(O2SDKManager.instance().distinguishedName).map { usuallyPersons ->
             val usList = ArrayList<NewContactFragmentVO>()
             if (usuallyPersons.isNotEmpty()) {
-                usList.add(NewContactFragmentVO.GroupHeader("常用联系人", R.mipmap.icon_contact_my_collect))
+                usList.add(NewContactFragmentVO.GroupHeader(mView?.getContext()?.getString(R.string.contact_common_use) ?: "常用联系人", R.mipmap.icon_contact_my_collect))
                 usuallyPersons.map {
                     usList.add(NewContactFragmentVO.MyCollect(it.person ?: "",
                             it.personDisplay ?: "",

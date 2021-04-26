@@ -33,16 +33,16 @@ class GroupPresenter : BasePresenterImpl<GroupContract.View>(), GroupContract.Pr
                     service.getPersonInfoData(person!!)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(ResponseHandler<PersonInfoData>({ personData ->
-                        if (person.equals(mobileTv.tag)){
+                    .subscribe(ResponseHandler<PersonInfoData> { personData ->
+                        if (person == mobileTv.tag) {
                             mobileTv.text = personData.mobile ?: ""
                         }
-                        if (person.equals(deptTv.tag)) {
-                            if (personData.identityList!=null && !personData.identityList.isEmpty()) {
+                        if (person == deptTv.tag) {
+                            if (personData.identityList != null && !personData.identityList.isEmpty()) {
                                 deptTv.text = personData.identityList[0].department ?: ""
                             }
                         }
-                    }), Action1<Throwable>{ e-> XLog.error("", e)})
+                    }, Action1<Throwable>{ e-> XLog.error("", e)})
         }
     }
 }

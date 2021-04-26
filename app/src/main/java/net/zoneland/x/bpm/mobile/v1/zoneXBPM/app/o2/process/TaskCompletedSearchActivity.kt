@@ -154,7 +154,7 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
             cleanResultList()
             return
         } else {
-            XLog.debug("查询已办 key：" + key)
+            XLog.debug("查询已办 key：$key")
             searchKey = key
             searchTaskCompleted(true)
         }

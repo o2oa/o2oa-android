@@ -3,6 +3,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.security
 import android.text.TextUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
@@ -19,11 +20,11 @@ class DeviceManagerPresenter: BasePresenterImpl<DeviceManagerContract.View>(),De
     override fun unbind(unbindToken: String) {
         val service = getCollectService(mView?.getContext())
         if (service == null) {
-            mView?.unbindBack(false, "服务不存在！")
+            mView?.unbindBack(false, mView?.getContext()?.getString(R.string.message_no_server) ?: "服务不存在！")
             return
         }
         if (TextUtils.isEmpty(unbindToken)) {
-            mView?.unbindBack(false, "没有获取到设备Id，无法解绑！")
+            mView?.unbindBack(false, mView?.getContext()?.getString(R.string.message_can_not_unbind_no_device_id) ?: "没有获取到设备Id，无法解绑！")
             return
         }
         service.unBindDevice(unbindToken).subscribeOn(Schedulers.io())
@@ -33,7 +34,7 @@ class DeviceManagerPresenter: BasePresenterImpl<DeviceManagerContract.View>(),De
                         mView?.unbindBack(true, "")
                     }
                     onError { e, _ ->
-                        mView?.unbindBack(false, "解绑失败 ${e?.message ?: ""}")
+                        mView?.unbindBack(false, mView?.getContext()?.getString(R.string.message_unbind_fail) ?: "解绑失败 ${e?.message ?: ""}")
                     }
                 }
     }

@@ -4,6 +4,7 @@ import android.text.TextUtils
 import net.muliba.accounting.app.ExceptionHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
@@ -97,7 +98,7 @@ class FirstStepPresenter : BasePresenterImpl<FirstStepContract.View>(), FirstSte
                     }
                     onError { e, _ ->
                         XLog.error("", e)
-                        mView?.err("服务器连接不上！")
+                        mView?.err(mView?.getContext()?.getString(R.string.message_can_not_connect_to_server) ?: "")
                     }
                 }
         }
@@ -105,8 +106,8 @@ class FirstStepPresenter : BasePresenterImpl<FirstStepContract.View>(), FirstSte
 
     override fun login(userName: String, code: String) {
         val params: HashMap<String, String> = HashMap()
-        params.put("credential", userName)
-        params.put("codeAnswer", code)
+        params["credential"] = userName
+        params["codeAnswer"] = code
         getAssembleAuthenticationService(mView?.getContext())?.let { service ->
             service.loginWithPhoneCode(params)
                     .subscribeOn(Schedulers.io())

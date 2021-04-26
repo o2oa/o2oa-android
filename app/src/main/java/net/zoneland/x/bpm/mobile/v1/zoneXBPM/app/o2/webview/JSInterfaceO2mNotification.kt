@@ -121,8 +121,8 @@ class JSInterfaceO2mNotification  private constructor (val activity: Activity?) 
             var buttonLabels = alert.data?.buttonLabels
             if (buttonLabels==null || buttonLabels.isEmpty()) {
                 buttonLabels = ArrayList<String>()
-                buttonLabels[0] = "确定"
-                buttonLabels[1] = "取消"
+                buttonLabels[0] = activity.getString(R.string.positive)
+                buttonLabels[1] = activity.getString(R.string.cancel)
             }
             if (buttonLabels.size != 2) {
                 XLog.error("按钮个数不等于2。。。。。")
@@ -162,8 +162,8 @@ class JSInterfaceO2mNotification  private constructor (val activity: Activity?) 
             var buttonLabels = alert.data?.buttonLabels
             if (buttonLabels==null || buttonLabels.isEmpty()) {
                 buttonLabels = ArrayList<String>()
-                buttonLabels[0] = "确定"
-                buttonLabels[1] = "取消"
+                buttonLabels[0] = activity.getString(R.string.positive)
+                buttonLabels[1] = activity.getString(R.string.cancel)
             }
             if (buttonLabels.size != 2) {
                 XLog.error("按钮个数不等于2。。。。。")
@@ -234,7 +234,7 @@ class JSInterfaceO2mNotification  private constructor (val activity: Activity?) 
         if (activity != null) {
             val callback = alert.callback
             val title = alert.data?.title ?: ""
-            val cancelBtn = alert.data?.cancelButton ?: "取消"
+            val cancelBtn = alert.data?.cancelButton ?: activity.getString(R.string.cancel)
             val buttons = alert.data?.otherButtons
             if (buttons == null || buttons.isEmpty()) {
                 XLog.error("按钮列表为空！！！")

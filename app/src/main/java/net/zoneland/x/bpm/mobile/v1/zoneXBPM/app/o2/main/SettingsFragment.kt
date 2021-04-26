@@ -72,7 +72,7 @@ class SettingsFragment : BaseMVPViewPagerFragment<SettingsContract.View, Setting
             R.id.setting_button_skin -> activity?.go<SkinManagerActivity>()
             R.id.setting_button_remind_setting_id -> activity?.go<NoticeSettingActivity>()
             R.id.setting_button_common_set_id -> {
-                O2DialogSupport.openConfirmDialog(activity, "确认要清除缓存吗？", {
+                O2DialogSupport.openConfirmDialog(activity, getString(R.string.dialog_msg_clean_cache), {
                     HttpCacheUtil.clearCache(activity, 0)
                 }, icon = O2AlertIconEnum.CLEAR)
             }
@@ -98,7 +98,7 @@ class SettingsFragment : BaseMVPViewPagerFragment<SettingsContract.View, Setting
     }
 
     private fun logout() {
-        O2DialogSupport.openConfirmDialog(activity, "确定要退出登录吗？", {
+        O2DialogSupport.openConfirmDialog(activity, getString(R.string.dialog_msg_logout), {
             if (BuildConfig.InnerServer) {
                 val token = JPushInterface.getRegistrationID(activity)
                 mPresenter.jPushUnBindDevice(token)

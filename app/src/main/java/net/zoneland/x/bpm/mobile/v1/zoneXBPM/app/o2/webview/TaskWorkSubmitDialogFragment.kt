@@ -87,7 +87,7 @@ class TaskWorkSubmitDialogFragment: DialogFragment(), TaskWorkSubmitDialogContra
         try {
             taskData = O2SDKManager.instance().gson.fromJson(task, TaskData::class.java)
         } catch (e: Exception) {
-            XToast.toastShort(activity, "解析数据异常！")
+            XToast.toastShort(activity, getString(R.string.message_data_parse_fail))
             closeSelf()
         }
 
@@ -120,7 +120,7 @@ class TaskWorkSubmitDialogFragment: DialogFragment(), TaskWorkSubmitDialogContra
             val sign = signature_view_task_work_submit_opinion.getSignatureBitmap()
             val radio = radio_group_task_work_submit_routers.findViewById<RadioButton>(radio_group_task_work_submit_routers.checkedRadioButtonId)
             if (radio == null) {
-                XToast.toastShort(activity, "请选择决策！")
+                XToast.toastShort(activity, getString(R.string.message_need_choose_decision))
             }else {
                 val routeName = radio.text.toString()
                 val opinion =  edit_task_work_submit_approve_opinion.text.toString()
@@ -140,7 +140,7 @@ class TaskWorkSubmitDialogFragment: DialogFragment(), TaskWorkSubmitDialogContra
                             }
 
                         }else {
-                            XToast.toastShort(activity, "表单校验不通过！")
+                            XToast.toastShort(activity, getString(R.string.message_check_form))
                             closeSelf()
                         }
                     }
@@ -183,7 +183,7 @@ class TaskWorkSubmitDialogFragment: DialogFragment(), TaskWorkSubmitDialogContra
             }
             closeSelf()
         }else {
-            XToast.toastShort(activity, "提交失败！")
+            XToast.toastShort(activity, getString(R.string.message_form_submit_fail))
         }
     }
 

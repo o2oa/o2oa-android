@@ -118,7 +118,7 @@ class TaskCompletedFragment : BaseMVPViewPagerFragment<TaskCompletedContract.Vie
     }
 
     override fun findTaskCompletedListFail() {
-        XToast.toastShort(activity, "获取已办列表失败")
+//        XToast.toastShort(activity, "获取已办列表失败")
         taskDatas.clear()
         adapter.notifyDataSetChanged()
         tv_no_data.visible()

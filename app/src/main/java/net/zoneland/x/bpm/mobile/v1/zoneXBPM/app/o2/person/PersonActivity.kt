@@ -47,16 +47,16 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
     var personId = ""
     var genderName = ""
     var hasCollection = false
-    val mobileMenuItemList: ArrayList<String> = arrayListOf("拨打电话", "发送短信", "复制")
+    val mobileMenuItemList: ArrayList<String> = arrayListOf(getString(R.string.call), getString(R.string.sms), getString(R.string.copy))
     val mobileClickMenu: CommonMenuPopupWindow by lazy { CommonMenuPopupWindow(mobileMenuItemList, this) }
-    val emailMenuItemList: ArrayList<String> = arrayListOf("发送邮件","复制")
+    val emailMenuItemList: ArrayList<String> = arrayListOf(getString(R.string.send_email), getString(R.string.copy))
     val emailClickMenu: CommonMenuPopupWindow by lazy { CommonMenuPopupWindow(emailMenuItemList, this) }
 //    private var canTalkTo = false
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         personId = intent.extras?.getString(PERSON_NAME_KEY, "")?:""
         if (TextUtils.isEmpty(personId)) {
-            XToast.toastShort(this, "没有传入人员帐号，无法获取人员信息！")
+            XToast.toastShort(this, getString(R.string.message_no_person_id_error))
             finish()
             return
         }
@@ -144,7 +144,7 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
                     0 -> email(emailAddress)
                     1 ->  {
                         AndroidUtils.copyTextToClipboard(emailAddress, this@PersonActivity)
-                        XToast.toastShort(this@PersonActivity, "邮箱地址复制成功！")
+                        XToast.toastShort(this@PersonActivity, getString(R.string.message_copy_email_success))
                     }
                 }
                 emailClickMenu.dismiss()
@@ -168,7 +168,7 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
                     1 -> sendSMS(phone)
                     2 -> {
                         AndroidUtils.copyTextToClipboard(phone, this@PersonActivity)
-                        XToast.toastShort(this@PersonActivity, "手机号码复制成功！")
+                        XToast.toastShort(this@PersonActivity, getString(R.string.message_copy_phone_number_success))
                     }
                 }
                 mobileClickMenu.dismiss()
@@ -205,7 +205,7 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
         }
         genderName = GenderTypeEnums.getNameByKey(personInfo.genderType)
         if (!TextUtils.isEmpty(personInfo.signature)) {
-            tv_person_sign.text = "个人签名: ".plus(personInfo.signature)
+            tv_person_sign.text = getString(R.string.person_sign).plus(personInfo.signature)
         }
         tv_person_name.text = personInfo.name
         tv_person_name_2.text = personInfo.name
@@ -244,6 +244,6 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
 
     override fun createConvFail(message: String) {
         XLog.error(message)
-        XToast.toastShort(this, "无法发起聊天，创建会话失败！")
+        XToast.toastShort(this, getString(R.string.message_start_im_fail))
     }
 }

@@ -121,7 +121,7 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
         tv_launch_status.text = getString(R.string.launch_start) //开始启动
         circleProgressBar_launch.visible()
         if (CheckRoot.isDeviceRooted()) {
-            O2DialogSupport.openAlertDialog(this, "当前是Root环境，App禁止使用！")
+            O2DialogSupport.openAlertDialog(this, getString(R.string.dialog_msg_root_refuse))
         }else {
             PermissionRequester(this)
                     .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
@@ -129,7 +129,7 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
                         onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
                             Log.d("LaunchActivity", "granted:$granted, show:$shouldShowRequestPermissionRationale, deniedList:$deniedPermissions")
                             if (!granted) {
-                                O2DialogSupport.openAlertDialog(this@LaunchActivity, "非常抱歉，应用需要存储权限才能正常运行， 马上去设置", { permissionSetting() })
+                                O2DialogSupport.openAlertDialog(this@LaunchActivity, getString(R.string.dialog_msg_go_to_set_storage_permission), { permissionSetting() })
                             } else {
                                 checkNetwork()
                             }
@@ -220,7 +220,8 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
                 versionName = version.versionName
                 downloadUrl = version.downloadUrl
                 XLog.info("versionName:$versionName, downloadUrl:$downloadUrl")
-                O2DialogSupport.openConfirmDialog(this@LaunchActivity,"版本 $versionName 更新："+version.content, listener = { _ ->
+                val tips = getString(R.string.message_update_tips, versionName)
+                O2DialogSupport.openConfirmDialog(this@LaunchActivity,tips + version.content, listener = { _ ->
                     XLog.info("notification is true..........")
                     callbackContinue?.invoke(true)
                 }, icon = O2AlertIconEnum.UPDATE, negativeListener = {_->
@@ -260,8 +261,8 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
 //                XToast.toastShort(this, "缺少配置文件！")
                 O2AlertDialogBuilder(this)
                         .icon(O2AlertIconEnum.ALERT)
-                        .content("缺少配置文件，请联系App开发人员！")
-                        .positive("关闭")
+                        .content(getString(R.string.dialog_msg_need_server_json))
+                        .positive(getString(R.string.close))
                         .onPositiveListener{ _ ->
                             finish()
                         }
@@ -323,8 +324,8 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
                         if (BuildConfig.InnerServer) {
                             O2AlertDialogBuilder(this)
                                     .icon(O2AlertIconEnum.ALERT)
-                                    .content("未知异常！")
-                                    .positive("关闭")
+                                    .content(getString(R.string.unknown_error))
+                                    .positive(getString(R.string.close))
                                     .onPositiveListener { _ ->
                                         finish()
                                     }
@@ -333,9 +334,9 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
                             O2AlertDialogBuilder(this)
                                     .title(R.string.confirm)
                                     .icon(O2AlertIconEnum.ALERT)
-                                    .content("未知异常！")
-                                    .positive("重新绑定")
-                                    .negative("关闭")
+                                    .content(getString(R.string.unknown_error))
+                                    .positive(getString(R.string.login_button_rebind))
+                                    .negative(getString(R.string.close))
                                     .onPositiveListener { _ ->
                                         gotoBindLogin()
                                     }

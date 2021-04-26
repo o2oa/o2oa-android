@@ -13,6 +13,26 @@
     <string name="bind_phone_validate_number">验证手机</string>
     <string name="bind_phone_choose_company">选择单位</string>
     <string name="app_error">应用异常</string>
+    <string name="unknown_error">未知异常</string>
+    <string name="close">关闭</string>
+    <string name="completed">完成</string>
+    <string name="edit">编辑</string>
+    <string name="no_title">无标题</string>
+    <string name="all_app">全部应用</string>
+    <string name="app_edit_title">我的应用编辑</string>
+    <string name="take_photo">拍照</string>
+    <string name="upload_photo">上传照片</string>
+    <string name="take_from_album">从手机相册选择</string>
+    <string name="picker">选择器</string>
+    <string name="call">拨打电话</string>
+    <string name="sms">发送短信</string>
+    <string name="copy">复制</string>
+    <string name="send_email">发送邮件</string>
+    <string name="create_manuscript">拟稿</string>
+    <string name="all">全部</string>
+    <string name="ok">确定</string>
+    <string name="file_preview">文件预览</string>
+
 
 
     <string name="launch_start">准备中&#8230;</string>
@@ -132,6 +152,15 @@
     <string name="login_button_user_fallback">其他方式登录</string>
     <string name="activity_login_save">保存</string>
     <string name="activity_login_remember_login">记住我</string>
+    <string name="login_type_password">密码登录</string>
+    <string name="login_type_code">验证码登录</string>
+    <string name="login_type_fingerprint">指纹识别登录</string>
+    <string name="message_login_type_fingerprint_disabled">指纹识别登录不可用</string>
+    <string name="login_change_type">切换登录方式</string>
+    <string name="message_login_success">登录成功！</string>
+    <string name="message_login_fail_scan">登录失败！</string>
+    <string name="message_login_fail_sign">签到失败！</string>
+    <string name="message_login_success_sign">签到成功！</string>
     <string-array name="login_facepp_trackig_mode_array">
         <item>Fast</item>
         <item>Robust</item>
@@ -156,6 +185,16 @@
     <string name="activity_contact_search_hint">姓名、拼音</string>
     <string name="contact_fragment_search_hint">请输入姓名、拼音</string>
     <string name="search_contact">搜索联系人</string>
+    <string name="contact_my_department">我的部门</string>
+    <string name="contact_org_structure">组织结构</string>
+    <string name="contact_common_use">常用联系人</string>
+    <string name="contact_message_org_server_not_exist">组织模块异常</string>
+    <string name="contact_message_org_get_fail">查询数据异常</string>
+    <string name="contact_org_picker">组织选择</string>
+    <string name="contact_identity_picker">身份选择</string>
+    <string name="contact_group_picker">群组选择</string>
+    <string name="contact_person_picker">人员选择</string>
+    <string name="contact_picker_type_error">传入的选择器类型不正确！</string>
 
 
     <!--person info activity -->
@@ -175,6 +214,7 @@
     <string name="person_collect">收藏</string>
     <string name="person_collect_cancel">取消收藏</string>
     <string name="warn_phone_permission">应用没有被授予拨打电话的权限，请到手机应用管理里面开启此权限！</string>
+    <string name="person_sign">个人签名: </string>
 
     <!--yunpan activity -->
     <string name="title_activity_yunpan">云盘</string>
@@ -209,7 +249,7 @@
     <!--chat activity -->
     <string name="title_activity_chat">实时消息</string>
     <string name="activity_chat_send_btn_label">发送</string>
-    <string name="chat_please_enter">请输入...</string>
+    <string name="chat_please_enter">请输入…</string>
     <string name="menu_single_create">发起单聊</string>
     <string name="menu_tribe_create">发起群聊</string>
     <string name="activity_im_person_config_label">聊天设置</string>
@@ -238,6 +278,10 @@
     <string name="menu_save">保存</string>
     <string name="clip_avatar_save">保存</string>
     <string name="choose_picture">图片选择器</string>
+    <string name="message_my_info_get_fail">获取个人信息失败！</string>
+    <string name="message_my_info_update_fail">更新个人信息失败！</string>
+    <string name="message_my_no_camera_permission">非常抱歉，相机权限没有开启，无法使用相机！</string>
+    <string name="message_my_info_obj_is_null">我的信息对象为空无法修改！</string>
 
     <!-- AccountSecurityActivity -->
     <string name="title_activity_account_security">账号与安全</string>
@@ -248,6 +292,18 @@
     <string name="notice_setting_message_receive">接收新消息通知</string>
     <string name="notice_setting_sound_open">声音</string>
     <string name="notice_setting_vibrate_open">震动</string>
+    <string name="setting_bind_server_host">当前绑定服务器: %1$s</string>
+    <string name="message_setting_update_password_success">修改密码成功！</string>
+    <string name="setting_unknown_device">未知设备</string>
+    <string name="setting_device_type">%1$s 设备</string>
+    <string name="setting_device_self">本机</string>
+    <string name="setting_unbind_device">解除绑定</string>
+    <string name="setting_device_manager">常用设备管理</string>
+    <string name="message_setting_unbind">确定要解绑 %1$s ？</string>
+    <string name="message_no_server">服务不存在！</string>
+    <string name="message_can_not_unbind_no_device_id">没有获取到设备Id，无法解绑！</string>
+    <string name="message_unbind_fail">解绑失败！</string>
+    <string name="message_change_skin_will_reboot">确认要切换皮肤吗，切换会重启应用？</string>
 
     <!-- group activity -->
     <string name="title_activity_group">我的群组</string>
@@ -258,6 +314,8 @@
     <string name="title_activity_read_list">待阅列表</string>
     <string name="title_activity_read_complete">已阅列表</string>
     <string name="activity_task_completed_search_hint">关键字</string>
+    <string name="activity_task_work_detail">文件于 %1$s 流转至 %2$s ，处理人：%3$s</string>
+    <string name="activity_task_workcompleted_detail">%1$s 文件于 %2$s 流转完成"</string>
 
     <!-- work web form  -->
     <string name="title_activity_work_web_view">工作处理</string>
@@ -722,14 +780,14 @@
     <string name="skin_manager_using">使用中</string>
     <string name="skin_puppy2018">Puppy2018</string>
     <string name="skin_show_use">使用皮肤</string>
-    <string name="skin_show_downloading">下载中...</string>
-    <string name="skin_show_installing">安装中...</string>
+    <string name="skin_show_downloading">下载中…</string>
+    <string name="skin_show_installing">安装中…</string>
 
 
     <!-- 指纹识别-->
     <string name="biometric_dialog_cancel">取消</string>
     <string name="biometric_dialog_title">验证</string>
-    <string name="biometric_dialog_subtitle">正在指纹识别中...</string>
+    <string name="biometric_dialog_subtitle">正在指纹识别中…</string>
     <string name="biometric_dialog_state_normal">指纹识别</string>
     <string name="biometric_dialog_state_failed">识别失败，请重试</string>
     <string name="biometric_dialog_state_error">验证失败，请使用其他方式验证</string>
@@ -744,6 +802,90 @@
     <string name="delete_conv_for_news_fragment">确定要删除该聊天？</string>
     <string name="null_conversation">暂无会话</string>
     <string name="conversation_log_error">聊天服务器登录异常 ，请联系管理员！</string>
+
+
+    <!--  message  -->
+    <string name="message_can_not_connect_to_server">服务器连接不上！</string>
+    <string name="message_no_voice">你的手机好像没有开启声音，请打开声音！</string>
+    <string name="message_phone_no_bind">当前手机号码没有绑定的服务器！</string>
+    <string name="message_bind_list_data_error">绑定服务对象解析异常！</string>
+    <string name="message_get_o2collect_unit_list_fail">获取绑定服务器列表失败，请确认您的手机号码和验证码是否正确！</string>
+    <string name="message_can_not_get_device_number">没有获取到您的设备号，请检查应用的权限设置！</string>
+    <string name="message_need_input_right_cellphone">请输入正确的手机号码！</string>
+    <string name="message_code_can_not_empty">短信验证码不能为空！</string>
+    <string name="message_can_not_get_unit_info">没有获得单位信息！</string>
+    <string name="message_group_name_is_empty">没有群组名称，无法获取群组信息！</string>
+    <string name="message_update_tips">版本 %1$s 更新：</string>
+    <string name="message_update_already">已经是最新版本了！</string>
+    <string name="message_login_fail">登录失败, 请检查您的输入的用户名或密码是否正确！</string>
+    <string name="message_login_validate_code_fail">获取手机验证码失败，请检查您输入的用户名是否正确！</string>
+    <string name="message_login_username_can_not_empty">用户名或手机号码 不能为空！</string>
+    <string name="message_login_something_can_not_empty">%1$s 不能为空！</string>
+    <string name="message_login_image_code_can_not_empty">图片验证码 不能为空！</string>
+    <string name="message_login_input_username">请输入用户名！</string>
+    <string name="message_login_fingerprint_disabled">指纹识别模块未启用，请检查手机是否开启！</string>
+    <string name="message_login_server_error">服务器验证登录失败，请尝试使用其它方式登录！</string>
+    <string name="message_login_captcha_get_fail">没有获取到图片验证码！</string>
+    <string name="message_login_ai_permission_error">非常抱歉，AI助手需要的权限没有开启，无法使用该功能，请到手机应用设置中开启权限！</string>
+    <string name="message_scan_permission_error">需要摄像头权限才能进行扫一扫功能！</string>
+    <string name="message_location_permission_error">需要定位权限获取您当前的位置信息！</string>
+    <string name="message_portal_need_id">缺少参数门户ID！</string>
+    <string name="message_no_pictures">没有获取到需要裁剪的图片！</string>
+    <string name="message_no_pictures_error">没有获取到图片！</string>
+    <string name="message_select_at_least_one">请至少选择一条数据！</string>
+    <string name="message_select_can_not_add_more">不能添加更多了！</string>
+    <string name="message_no_person_id_error">没有传入人员帐号，无法获取人员信息！</string>
+    <string name="message_copy_email_success">邮箱地址复制成功！</string>
+    <string name="message_copy_phone_number_success">手机号码复制成功！</string>
+    <string name="message_start_im_fail">无法发起聊天，创建会话失败！</string>
+    <string name="message_create_conversation_fail">创建会话失败！</string>
+    <string name="message_get_application_fail">获取应用列表失败！</string>
+    <string name="message_get_process_fail">获取流程列表失败！</string>
+    <string name="message_get_current_identity_fail">没有获取到当前用户的身份！</string>
+    <string name="message_start_process_fail">传入参数为空，无法启动流程, identity:%1$s,processId:%2$s</string>
+    <string name="message_start_process_back_data_error">返回数据异常！%1$s</string>
+    <string name="message_start_process_fail_with_error">启动流程失败, %1$s</string>
+    <string name="message_open_draft_error">打开草稿异常！</string>
+    <string name="message_get_workcompleted_list_error">获取已办详细数据异常！</string>
+    <string name="message_get_todo_list_error">获取任务列表失败！</string>
+    <string name="message_can_not_scan_anything">没有扫描到任何信息！</string>
+    <string name="message_old_password_can_not_empty">旧密码不能为空！</string>
+    <string name="message_new_password_can_not_empty">新密码不能为空！</string>
+    <string name="message_new_old_password_not_same">新密码和确认新密码不一样！</string>
+    <string name="message_update_fail">修改失败！</string>
+    <string name="message_download_document_fail">下载文档失败！</string>
+    <string name="message_download_fail">下载失败！</string>
+    <string name="message_upload_fail">文件上传异常！</string>
+    <string name="message_arg_error">传入参数不正确！</string>
+    <string name="message_file_not_exist">文件不存在！</string>
+    <string name="message_file_server_error">文件模块接入异常！</string>
+    <string name="message_save_success">保存成功！</string>
+    <string name="message_withdraw_success">撤回成功！</string>
+    <string name="message_withdraw_fail">撤回失败！</string>
+    <string name="message_delete_success">删除成功！</string>
+    <string name="message_delete_fail">删除失败！</string>
+    <string name="message_task_data_load_fail">任务数据获取不到！</string>
+    <string name="message_data_parse_fail">解析数据异常！</string>
+    <string name="message_need_choose_decision">请选择决策！</string>
+    <string name="message_check_form">请检查表单填写是否正确！</string>
+    <string name="message_form_data_empty">没有获取到表单数据！</string>
+    <string name="message_form_submit_fail">提交失败！</string>
+    <string name="message_file_type_cannot_be_previewed">该文件类型无法预览！</string>
+    <string name="message_use_other_application_open_file">用其它应用打开文件</string>
+    <string name="message_have_no_play_url">播放地址为空!</string>
+
+<!--    dialog -->
+    <string name="dialog_msg_bind_to_server_fail">绑定服务器失败，请检查当前服务器配置是否正确？您也可以先绑定到O2OA演示服务器进行体验！</string>
+    <string name="dialog_title_sample_server">演示服务器</string>
+    <string name="dialog_msg_root_refuse">当前是Root环境，App禁止使用！</string>
+    <string name="dialog_msg_go_to_set_storage_permission">非常抱歉，应用需要存储权限才能正常运行， 马上去设置</string>
+    <string name="dialog_msg_need_server_json">缺少配置文件，请联系App开发人员！</string>
+    <string name="dialog_msg_rebind_phone">确定要重新绑定手机号码吗？</string>
+    <string name="dialog_msg_clean_cache">确认要清除缓存吗？</string>
+    <string name="dialog_msg_logout">确定要退出登录吗？</string>
+    <string name="dialog_msg_need_rebind_phone_number">确定要重新绑定手机号码吗,该操作会清空当前登录信息，需要重新登录？</string>
+
+
 
     <!-- ReLogin/login/register界面中使用到的字符串 -->
     <string name="change_user_btn">切换账号</string>
@@ -1135,7 +1277,7 @@
     <string name="unknow_size">未知大小</string>
     <string name="picker_image_send_select">发送（%d）</string>
     <string name="picker_image_preview_original_select">发送原图（%s）</string>
-    <string name="ok">确定</string>
+
     <string name="image_compressed_size">该原始图片大小为: %1$s,</string>
     <string name="is_send_image">是否发送该原始图片？</string>
     <string name="multi_image_compressed_size">原始图片总大小为: %1$s,</string>

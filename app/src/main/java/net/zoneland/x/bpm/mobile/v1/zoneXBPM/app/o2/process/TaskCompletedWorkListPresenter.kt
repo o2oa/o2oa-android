@@ -20,7 +20,7 @@ class TaskCompletedWorkListPresenter: BasePresenterImpl<TaskCompletedWorkListCon
             service.getTaskCompleteInfoWithControl(id).subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ResponseHandler<TaskCompleteInfoDataWithControl> { task -> mView?.loadWorkCompletedInfo(task) },
-                            ExceptionHandler(mView?.getContext(), { e -> mView?.loadWorkCompletedInfoFail() }))
+                            ExceptionHandler(mView?.getContext()) { mView?.loadWorkCompletedInfoFail() })
         }
     }
 }

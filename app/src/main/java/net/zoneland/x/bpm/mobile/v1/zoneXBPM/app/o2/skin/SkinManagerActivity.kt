@@ -59,7 +59,7 @@ class SkinManagerActivity : AppCompatActivity() {
     }
 
     private fun changeSkinConfirm(callBack:()->Unit) {
-        O2DialogSupport.openConfirmDialog(this, "确认要切换皮肤吗，切换会重启应用", { _->
+        O2DialogSupport.openConfirmDialog(this, getString(R.string.message_change_skin_will_reboot), { _->
             callBack.invoke()
         })
     }

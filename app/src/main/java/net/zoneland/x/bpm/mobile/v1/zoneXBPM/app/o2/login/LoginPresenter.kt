@@ -4,6 +4,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.login
 import android.text.TextUtils
 import net.muliba.accounting.app.ExceptionHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.LoginWithCaptchaForm
@@ -51,12 +52,12 @@ class LoginPresenter : BasePresenterImpl<LoginContract.View>(), LoginContract.Pr
                             if (it.data != null) {
                                 mView?.showCaptcha(it.data)
                             }else {
-                                mView?.getCaptchaError("没有获取到图片验证码")
+                                mView?.getCaptchaError(mView?.getContext()?.getString(R.string.message_login_captcha_get_fail) ?: "")
                             }
                         }
                         onError { e, _ ->
                             XLog.error("获取图片验证码错误,", e)
-                            mView?.getCaptchaError("没有获取到图片验证码")
+                            mView?.getCaptchaError(mView?.getContext()?.getString(R.string.message_login_captcha_get_fail) ?: "")
                         }
                     }
         }

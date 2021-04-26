@@ -29,10 +29,10 @@ class LocalImageViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_local_image_view)
-        title = intent.extras?.getString(local_image_view_title_key) ?: "图片查看"
+        title = intent.extras?.getString(local_image_view_title_key) ?: getString(R.string.title_activity_picture_viewer)
         filePath = intent.extras?.getString(local_image_view_file_path_key) ?: ""
         if (TextUtils.isEmpty(filePath)) {
-            XToast.toastShort(this, "传入参数不正确！")
+            XToast.toastShort(this, getString(R.string.message_arg_error))
             finish()
             return
         }

@@ -62,8 +62,8 @@ class SecondStepPresenter : BasePresenterImpl<SecondStepContract.View>(), Second
 
     override fun login(userName: String, code: String) {
         val params: HashMap<String, String> = HashMap()
-        params.put("credential", userName)
-        params.put("codeAnswer", code)
+        params["credential"] = userName
+        params["codeAnswer"] = code
         getAssembleAuthenticationService(mView?.getContext())?.let {service->
             service.loginWithPhoneCode(params)
                     .subscribeOn(Schedulers.io())

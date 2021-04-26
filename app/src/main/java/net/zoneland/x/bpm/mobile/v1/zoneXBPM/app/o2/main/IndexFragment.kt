@@ -58,6 +58,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequeste
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.zxing.activity.CaptureActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.DividerItemDecoration
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
+import kotlin.math.max
+import kotlin.math.min
 
 /**
  * Created by fancy on 2017/6/9.
@@ -97,14 +99,14 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
                                 onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
                                     XLog.info("granted:$granted , shouldShowRequest:$shouldShowRequestPermissionRationale, denied:$deniedPermissions")
                                     if (!granted) {
-                                        O2DialogSupport.openAlertDialog(activity, "非常抱歉，AI助手需要的权限没有开启，无法使用该功能，请到手机应用设置中开启权限！")
+                                        O2DialogSupport.openAlertDialog(activity, activity.getString(R.string.message_login_ai_permission_error))
                                     } else {
                                         activity.go<O2AIActivity>()
                                     }
                                 }
                                 onError { e, _ ->
                                     XLog.error("检查权限出错", e)
-                                    O2DialogSupport.openAlertDialog(activity, "非常抱歉，AI助手需要的权限没有开启，无法使用该功能，请到手机应用设置中开启权限！")
+                                    O2DialogSupport.openAlertDialog(activity, activity.getString(R.string.message_login_ai_permission_error))
                                 }
                             }
 
@@ -159,7 +161,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
                                                                     _: @ParameterName(name = "oldScrollX") Int,
                                                                     oldScrollY: @ParameterName(name = "oldScrollY") Int ->
             val height: Int = cBannerHeight - relative_todo_main_action_bar.height
-            val ratio: Float = Math.min(Math.max(scrollY, 0), height).toFloat().div(height.toFloat())
+            val ratio: Float = min(max(scrollY, 0), height).toFloat().div(height.toFloat())
             val newAlpha: Int = (ratio * 255).toInt()
             mActionBarBackgroundDrawable.alpha = newAlpha
             if (newAlpha >= 250) {
@@ -249,7 +251,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
                     onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
                         XLog.info("granted:$granted , shouldShowRequest:$shouldShowRequestPermissionRationale, denied:$deniedPermissions")
                         if (!granted) {
-                            O2DialogSupport.openAlertDialog(activity, "需要摄像头权限才能进行扫一扫功能！")
+                            O2DialogSupport.openAlertDialog(activity, getString(R.string.message_scan_permission_error))
                         } else {
                             activity?.go<CaptureActivity>()
                         }
@@ -277,7 +279,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
 
 
     override fun loadTaskListFail() {
-        XToast.toastShort(activity, "获取任务列表失败！")
+//        XToast.toastShort(activity, "获取任务列表失败！")
         if (isRefreshTaskList) {
             taskList.clear()
             isRefreshTaskList = false
@@ -307,7 +309,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
     }
 
     override fun loadNewsListFail() {
-        XToast.toastShort(activity, "获取信息列表失败！")
+//        XToast.toastShort(activity, "获取信息列表失败！")
         if (isRefreshNewsList) {
             newsList.clear()
             isRefreshNewsList = false
@@ -344,7 +346,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
     private val adapter: CommonRecycleViewAdapter<ToDoFragmentListViewItemVO> by lazy {
         object : CommonRecycleViewAdapter<ToDoFragmentListViewItemVO>(activity, itemList, R.layout.item_todo_fragment_list) {
             override fun convert(holder: CommonRecyclerViewHolder?, t: ToDoFragmentListViewItemVO?) {
-                val title = if (TextUtils.isEmpty(t?.title)) { "无标题" } else { t?.title }
+                val title = if (TextUtils.isEmpty(t?.title)) { getString(R.string.no_title) } else { t?.title }
                 holder?.setText(R.id.tv_todo_fragment_task_title, title)
                         ?.setText(R.id.tv_todo_fragment_task_type, t?.type ?: "")
                         ?.setText(R.id.tv_todo_fragment_task_date, t?.time ?: "")

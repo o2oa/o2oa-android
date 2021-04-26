@@ -38,9 +38,11 @@ class TaskCompletedWorkListFragment : DialogFragment(), TaskCompletedWorkListCon
             override fun convert(holder: CommonRecyclerViewHolder?, t: WorkVO?) {
                 if (t != null) {
                     val content = if (t is Work) {
-                        "文件于 ${t.startTime} 流转至 ${t.activityName} ，处理人：${t.manualTaskIdentityText ?: ""}"
+                        getString(R.string.activity_task_work_detail, t.startTime?: "", t.activityName?: "", t.manualTaskIdentityText ?: "")
+//                        "文件于 ${t.startTime} 流转至 ${t.activityName} ，处理人：${t.manualTaskIdentityText ?: ""}"
                     } else if (t is WorkCompleted) {
-                        "${t.title} 文件于 ${t.completedTime} 流转完成"
+                        getString(R.string.activity_task_workcompleted_detail, t.title?: "", t.completedTime?: "")
+//                        "${t.title} 文件于 ${t.completedTime} 流转完成"
                     } else {
                         ""
                     }
@@ -136,7 +138,7 @@ class TaskCompletedWorkListFragment : DialogFragment(), TaskCompletedWorkListCon
 
 
     override fun loadWorkCompletedInfoFail() {
-        XToast.toastShort(activity, "获取已办详细数据异常！")
+        XToast.toastShort(activity, getString(R.string.message_get_workcompleted_list_error))
         closeSelf()
     }
 

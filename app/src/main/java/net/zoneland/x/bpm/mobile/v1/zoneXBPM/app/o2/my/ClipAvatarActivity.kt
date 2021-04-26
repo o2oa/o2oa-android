@@ -42,17 +42,17 @@ class ClipAvatarActivity : AppCompatActivity() {
 
         val uri: Uri? = intent.extras?.getParcelable(AVATAR_URL)
         if (uri == null) {
-            XToast.toastShort(this, "没有获取到需要裁剪的图片！")
+            XToast.toastShort(this, getString(R.string.message_no_pictures))
             finish()
         }else {
             val cr = this.contentResolver
             try {
-                val input = cr.openInputStream(uri) ?: throw Exception("没有获取到图片")
+                val input = cr.openInputStream(uri) ?: throw Exception(getString(R.string.message_no_pictures_error))
                 val bitmap = BitmapUtil.getFitSampleBitmap(input, screenWidth(), screenHeight())
                 clip_avatar_layout.setSrc(bitmap)
             } catch (e: Exception) {
                 XLog.error("", e)
-                XToast.toastShort(this, "没有获取到需要裁剪的图片！")
+                XToast.toastShort(this, getString(R.string.message_no_pictures))
                 finish()
             }
             toolbar_snippet_top_bar.title = ""

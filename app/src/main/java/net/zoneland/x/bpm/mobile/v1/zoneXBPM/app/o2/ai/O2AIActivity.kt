@@ -87,7 +87,7 @@ class O2AIActivity : AppCompatActivity(), O2AIContract.View {
         tv_o2_ai_voice_transaction.text = ""
         val audioService = getSystemService(Context.AUDIO_SERVICE) as AudioManager
         if (audioService.ringerMode != AudioManager.RINGER_MODE_NORMAL) {
-            XToast.toastShort(this, "你的手机好像没有开启声音，请打开声音！")
+            XToast.toastShort(this, getString(R.string.message_no_voice))
         }
     }
 

@@ -105,7 +105,7 @@ class MyAppActivity : BaseMVPActivity<MyAppContract.View,MyAppContract.Presenter
     })
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
-        setupToolBar("全部应用",true,false)
+        setupToolBar(getString(R.string.all_app), setupBackButton = true, isCloseBackIcon = false)
         initAllApp()
         initMyApp()
         //绑定拖拽事件
@@ -161,9 +161,9 @@ class MyAppActivity : BaseMVPActivity<MyAppContract.View,MyAppContract.Presenter
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         if (isEdit) {
-            menu?.findItem(R.id.menu_app_edit)?.title = "完成"
+            menu?.findItem(R.id.menu_app_edit)?.title = getString(R.string.completed)
         } else {
-            menu?.findItem(R.id.menu_app_edit)?.title = "编辑"
+            menu?.findItem(R.id.menu_app_edit)?.title = getString(R.string.edit)
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -171,7 +171,7 @@ class MyAppActivity : BaseMVPActivity<MyAppContract.View,MyAppContract.Presenter
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         isEdit = when (isEdit) {
             false -> {
-                setupToolBar("我的应用编辑",true,false)
+                setupToolBar(getString(R.string.app_edit_title), setupBackButton = true, isCloseBackIcon = false)
                 my_app_text_view.visibility = View.VISIBLE
                 edit_ll_view.visibility = View.VISIBLE
                 my_app_rv.visibility = View.GONE
@@ -180,7 +180,7 @@ class MyAppActivity : BaseMVPActivity<MyAppContract.View,MyAppContract.Presenter
                 true
             }
             true -> {
-                setupToolBar("全部应用",true,false)
+                setupToolBar(getString(R.string.all_app), setupBackButton = true, isCloseBackIcon = false)
                 my_app_text_view.visibility = View.GONE
                 edit_ll_view.visibility = View.GONE
                 my_app_rv.visibility = View.VISIBLE
@@ -203,7 +203,7 @@ class MyAppActivity : BaseMVPActivity<MyAppContract.View,MyAppContract.Presenter
             my_app_text_view.visibility = View.GONE
             allAppAdapter.notifyDataSetChanged()
             myAppAdapter.notifyDataSetChanged()
-            setupToolBar("全部应用",true,false)
+            setupToolBar(getString(R.string.all_app), setupBackButton = true, isCloseBackIcon = false)
             isEdit = false
             invalidateOptionsMenu()
         } else {

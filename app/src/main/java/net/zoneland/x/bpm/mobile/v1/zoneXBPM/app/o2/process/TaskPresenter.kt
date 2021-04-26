@@ -15,14 +15,14 @@ class TaskPresenter : BasePresenterImpl<TaskContract.View>(), TaskContract.Prese
                 service.getTaskListByPage(lastId, limit)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(ResponseHandler<List<TaskData>>{list->mView?.findTaskList(list)},
-                                ExceptionHandler(mView?.getContext()){e->mView?.findTaskListFail()})
+                        .subscribe(ResponseHandler { list->mView?.findTaskList(list)},
+                                ExceptionHandler(mView?.getContext()){mView?.findTaskListFail()})
             }else {
                 service.getTaskListByPageWithApplication(lastId, limit, applicationId)
                         .subscribeOn(Schedulers.io())
                         .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(ResponseHandler<List<TaskData>>{list->mView?.findTaskList(list)},
-                                ExceptionHandler(mView?.getContext()){e->mView?.findTaskListFail()})
+                        .subscribe(ResponseHandler { list->mView?.findTaskList(list)},
+                                ExceptionHandler(mView?.getContext()){mView?.findTaskListFail()})
             }
         }
     }

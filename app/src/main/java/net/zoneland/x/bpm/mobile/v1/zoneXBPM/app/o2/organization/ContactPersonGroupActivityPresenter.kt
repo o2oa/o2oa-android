@@ -1,6 +1,7 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization
 
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.NewContactListVO
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
@@ -19,7 +20,7 @@ class ContactPersonGroupActivityPresenter: BasePresenterImpl<ContactPersonGroupA
     override fun findListByPage(mode: String, lastId: String) {
         val service =  getOrganizationAssembleControlApi(mView?.getContext())
         if (service == null) {
-            mView?.backError("组织模块异常")
+            mView?.backError(mView?.getContext()?.getString(R.string.contact_message_org_server_not_exist) ?: "组织模块异常")
             return
         }
         if (mode == ContactPersonGroupPicker.GROUP_PICK_MODE) {
@@ -39,7 +40,7 @@ class ContactPersonGroupActivityPresenter: BasePresenterImpl<ContactPersonGroupA
                         }
                         onError { e, isNetworkError ->
                             XLog.error("$isNetworkError ", e)
-                            mView?.backError("查询数据异常")
+                            mView?.backError(mView?.getContext()?.getString(R.string.contact_message_org_get_fail) ?: "查询数据异常")
                         }
                     }
 
@@ -60,7 +61,7 @@ class ContactPersonGroupActivityPresenter: BasePresenterImpl<ContactPersonGroupA
                         }
                         onError { e, isNetworkError ->
                             XLog.error("$isNetworkError ", e)
-                            mView?.backError("查询数据异常")
+                            mView?.backError(mView?.getContext()?.getString(R.string.contact_message_org_get_fail) ?: "查询数据异常")
                         }
                     }
         }

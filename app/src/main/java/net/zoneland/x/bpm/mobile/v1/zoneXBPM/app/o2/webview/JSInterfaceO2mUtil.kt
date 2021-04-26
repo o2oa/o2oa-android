@@ -15,6 +15,7 @@ import com.baidu.location.LocationClientOption
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.wugang.activityresult.library.ActivityResult
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.bbs.view.BBSWebViewSubjectActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.view.CMSWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.O2LocationActivity
@@ -346,7 +347,7 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
                             onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
                                 XLog.info("granted:$granted , shouldShowRequest:$shouldShowRequestPermissionRationale, denied:$deniedPermissions")
                                 if (!granted) {
-                                    O2DialogSupport.openAlertDialog(activity, "需要摄像头权限才能进行扫一扫功能！")
+                                    O2DialogSupport.openAlertDialog(activity, activity.getString(R.string.message_scan_permission_error))
                                 } else {
                                     ActivityResult.of(activity)
                                             .className(CaptureActivity::class.java)
@@ -407,7 +408,7 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
                             onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
                                 XLog.info("定位权限 granted:$granted , shouldShowRequest:$shouldShowRequestPermissionRationale, denied:$deniedPermissions")
                                 if (!granted) {
-                                    O2DialogSupport.openAlertDialog(activity, "需要定位权限获取您当前的位置信息！")
+                                    O2DialogSupport.openAlertDialog(activity, activity.getString(R.string.message_location_permission_error))
                                 } else {
                                     locationAndCallback(callback)
                                 }

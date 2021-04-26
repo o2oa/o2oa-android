@@ -61,7 +61,7 @@ class SecondStepFragment: BaseMVPFragment<SecondStepContract.View, SecondStepCon
             code = arguments!!.getString(LOGIN_UNIT_CODE_KEY, "")
         }
         if (TextUtils.isEmpty(json)) {
-            XToast.toastShort(activity, "没有获得单位信息！")
+            XToast.toastShort(activity, getString(R.string.message_can_not_get_unit_info))
             (activity as BindPhoneActivity).removeFragment()
             return
         }else {
@@ -113,13 +113,13 @@ class SecondStepFragment: BaseMVPFragment<SecondStepContract.View, SecondStepCon
 
     override fun bindFail() {
         hideLoadingDialog()
-        XToast.toastLong(activity, "绑定服务器失败，请检查当前服务器配置是否正确？")
+        XToast.toastLong(activity, getString(R.string.dialog_msg_bind_to_server_fail))
         (activity as BindPhoneActivity).removeFragment()
     }
 
     override fun noDeviceId() {
         hideLoadingDialog()
-        XToast.toastShort(activity, "没有获取到您的设备号，请检查应用的权限设置！")
+        XToast.toastShort(activity, getString(R.string.message_can_not_get_device_number))
         (activity as BindPhoneActivity).removeFragment()
     }
 

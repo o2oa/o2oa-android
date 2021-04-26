@@ -67,8 +67,8 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
     override fun initUI() {
         portalId = arguments?.getString(PORTAL_ID_KEY) ?: ""
         if (TextUtils.isEmpty(portalId)) {
-            XToast.toastShort(activity, "缺少参数门户ID！！")
-            web_view_portal_content.loadData("缺少参数门户ID！！", "text/plain", "UTF-8")
+            XToast.toastShort(activity, getString(R.string.message_portal_need_id))
+            web_view_portal_content.loadData(getString(R.string.message_portal_need_id), "text/plain", "UTF-8")
         } else {
             portalUrl = APIAddressHelper.instance().getPortalWebViewUrl(portalId)
             XLog.debug("portal url : $portalUrl")

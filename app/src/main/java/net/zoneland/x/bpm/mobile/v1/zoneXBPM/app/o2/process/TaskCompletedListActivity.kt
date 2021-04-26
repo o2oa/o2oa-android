@@ -53,7 +53,7 @@ class TaskCompletedListActivity : BaseMVPActivity<TaskCompletedListContract.View
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         val all = TaskApplicationData()
-        all.name = "全部"
+        all.name = getString(R.string.all)
         all.value = "-1"
         all.count = 0
         applications.add(all)
@@ -126,7 +126,7 @@ class TaskCompletedListActivity : BaseMVPActivity<TaskCompletedListContract.View
     }
 
     override fun findTaskCompletedApplicationListFail() {
-        XToast.toastShort(this, "查询流程应用失败!")
+        XToast.toastShort(this, getString(R.string.message_get_application_fail))
         hideLoadingDialog()
         finish()
     }

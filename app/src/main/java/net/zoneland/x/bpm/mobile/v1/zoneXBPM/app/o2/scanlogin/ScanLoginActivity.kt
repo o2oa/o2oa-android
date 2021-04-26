@@ -4,6 +4,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.scanlogin
 import android.os.Bundle
 import android.text.TextUtils
 import kotlinx.android.synthetic.main.activity_scan_login.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
@@ -35,7 +36,7 @@ class ScanLoginActivity : BaseMVPActivity<ScanLoginContract.View, ScanLoginContr
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         result =  intent.extras?.getString(SCAN_RESULT_KEY) ?: ""
         if (TextUtils.isEmpty(result)) {
-            XToast.toastShort(this, "没有扫描到任何信息！")
+            XToast.toastShort(this, getString(R.string.message_can_not_scan_anything))
             finish()
             return
         }
@@ -48,12 +49,12 @@ class ScanLoginActivity : BaseMVPActivity<ScanLoginContract.View, ScanLoginContr
     }
 
     override fun confirmSuccess() {
-        XToast.toastShort(this, "登录成功！")
+        XToast.toastShort(this, getString(R.string.message_login_success))
         finish()
     }
 
     override fun confirmFail() {
-        XToast.toastShort(this, "登录失败！")
+        XToast.toastShort(this, getString(R.string.message_login_fail_scan))
         finish()
     }
 
@@ -87,7 +88,7 @@ class ScanLoginActivity : BaseMVPActivity<ScanLoginContract.View, ScanLoginContr
                 override fun onFailure(call: Call, e: IOException) {
                     XLog.error("", e)
                     runOnUiThread {
-                        XToast.toastShort(this@ScanLoginActivity, "签到失败")
+                        XToast.toastShort(this@ScanLoginActivity, getString(R.string.message_login_fail_sign))
                         finish()
                     }
 
@@ -97,7 +98,7 @@ class ScanLoginActivity : BaseMVPActivity<ScanLoginContract.View, ScanLoginContr
                     val result = response.body()?.string()
                     XLog.debug(result)
                     runOnUiThread {
-                        XToast.toastShort(this@ScanLoginActivity, "签到成功")
+                        XToast.toastShort(this@ScanLoginActivity, getString(R.string.message_login_success_sign))
                         finish()
                     }
 
@@ -119,7 +120,7 @@ class ScanLoginActivity : BaseMVPActivity<ScanLoginContract.View, ScanLoginContr
             XLog.debug("$array")
             if (array.size > 1) {
                 val paramArray = array[1].split("&")
-                paramArray.filter { "meta".equals(it.split("=")[0]) }.map { meta = it.split("=")[1] }
+                paramArray.filter { "meta" == it.split("=")[0] }.map { meta = it.split("=")[1] }
             }
         }catch (e: Exception){XLog.error("", e)}
     }

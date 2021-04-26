@@ -469,7 +469,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                 showPictureChooseMenu()
 
             }else {
-                XToast.toastShort(this, "没有传入对象")
+                XToast.toastShort(this, getString(R.string.message_arg_error))
             }
         }
     }
@@ -488,7 +488,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
         XLog.debug("savesucess.........")
         evaluateJavascriptAfterSave {
             hideLoadingDialog()
-            XToast.toastShort(this, "保存成功！")
+            XToast.toastShort(this, getString(R.string.message_save_success))
         }
     }
     override fun submitSuccess() {
@@ -503,24 +503,24 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 
     override fun retractSuccess() {
         hideLoadingDialog()
-        XToast.toastShort(this, "撤回成功！")
+        XToast.toastShort(this, getString(R.string.message_withdraw_success))
         finish()
     }
 
     override fun retractFail() {
         hideLoadingDialog()
-        XToast.toastShort(this, "撤回失败！")
+        XToast.toastShort(this, getString(R.string.message_withdraw_fail))
     }
 
     override fun deleteSuccess() {
         hideLoadingDialog()
-        XToast.toastShort(this, "删除成功！")
+        XToast.toastShort(this, getString(R.string.message_delete_success))
         finish()
     }
 
     override fun deleteFail() {
         hideLoadingDialog()
-        XToast.toastShort(this, "删除失败！")
+        XToast.toastShort(this, getString(R.string.message_delete_fail))
     }
 
     override fun uploadAttachmentSuccess(attachmentId: String, site: String) {
@@ -553,7 +553,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     }
 
     override fun invalidateArgs() {
-        XToast.toastShort(this, "缺少传入参数！")
+        XToast.toastShort(this, getString(R.string.message_arg_error))
     }
 
     override fun downloadFail(message: String) {
@@ -781,17 +781,17 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                     try {
                         XLog.debug("submitData，TaskData:$task")
                         if (TextUtils.isEmpty(task)) {
-                            XToast.toastShort(this@TaskWebViewActivity, "任务数据获取不到！")
+                            XToast.toastShort(this@TaskWebViewActivity, getString(R.string.message_task_data_load_fail))
                         }else {
                             openTaskWorkSubmitDialog(task)
                         }
                     } catch (e: Exception) {
                         XLog.error("", e)
-                        XToast.toastShort(this@TaskWebViewActivity, "解析数据异常！")
+                        XToast.toastShort(this@TaskWebViewActivity, getString(R.string.message_data_parse_fail))
                     }
                 }
             } else {
-                XToast.toastShort(this@TaskWebViewActivity, "请检查表单填写是否正确！")
+                XToast.toastShort(this@TaskWebViewActivity, getString(R.string.message_check_form))
             }
         }
     }
@@ -857,7 +857,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                 if (formData == null || "" == formData) {
                     XLog.debug("formData is null")
                     hideLoadingDialog()
-                    XToast.toastShort(this@TaskWebViewActivity, "没有获取到表单数据！")
+                    XToast.toastShort(this@TaskWebViewActivity, getString(R.string.message_form_data_empty))
                 }else {
                     evaluateJavascriptBeforeSave {
                         mPresenter.save(workId, formData!!)
@@ -910,14 +910,14 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 
     private fun showPictureChooseMenu() {
         BottomSheetMenu(this)
-                .setTitle("上传照片")
-                .setItem("从相册选择", resources.getColor(R.color.z_color_text_primary)) {
+                .setTitle(getString(R.string.upload_photo))
+                .setItem(getString(R.string.take_from_album), resources.getColor(R.color.z_color_text_primary)) {
                     takeFromPictures()
                 }
-                .setItem("拍照", resources.getColor(R.color.z_color_text_primary)) {
+                .setItem(getString(R.string.take_photo), resources.getColor(R.color.z_color_text_primary)) {
                     takeFromCamera()
                 }
-                .setCancelButton("取消", resources.getColor(R.color.z_color_text_hint)) {
+                .setCancelButton(getString(R.string.cancel), resources.getColor(R.color.z_color_text_hint)) {
                     XLog.debug("取消。。。。。")
                 }
                 .show()
@@ -937,7 +937,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                     onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
                         XLog.info("granted:$granted , shouldShowRequest:$shouldShowRequestPermissionRationale, denied:$deniedPermissions")
                         if (!granted) {
-                            O2DialogSupport.openAlertDialog(this@TaskWebViewActivity, "非常抱歉，相机权限没有开启，无法使用相机！")
+                            O2DialogSupport.openAlertDialog(this@TaskWebViewActivity, getString(R.string.message_my_no_camera_permission))
                         } else {
                             openCamera()
                         }
@@ -973,7 +973,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             mPresenter.upload2FileStorage(filePath, imageUploadData!!.referencetype, imageUploadData!!.reference)
         }else {
             finishLoading()
-            XToast.toastShort(this, "上传文件参数为空！！！")
+            XToast.toastShort(this, getString(R.string.message_arg_error))
         }
     }
 

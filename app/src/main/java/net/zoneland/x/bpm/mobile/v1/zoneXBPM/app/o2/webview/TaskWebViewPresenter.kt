@@ -3,6 +3,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview
 import android.text.TextUtils
 import net.muliba.accounting.app.ExceptionHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
@@ -267,7 +268,7 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                     }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ file -> mView?.downloadAttachmentSuccess(file) }, { e ->
-                        mView?.downloadFail( "下载附件失败，${e.message}")
+                        mView?.downloadFail(mView?.getContext()?.getString(R.string.message_download_fail) ?:  "下载附件失败，${e.message}")
                     })
         }
     }
@@ -339,18 +340,16 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
 
 
                         } else {
-                            Observable.create(object : Observable.OnSubscribe<File> {
-                                override fun call(t: Subscriber<in File>?) {
-                                    t?.onError(Exception("没有获取到附件信息，无法下载附件！"))
-                                    t?.onCompleted()
-                                }
-                            })
+                            Observable.create { t ->
+                                t?.onError(Exception("没有获取到附件信息，无法下载附件！"))
+                                t?.onCompleted()
+                            }
                         }
 
                     }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe({ file -> mView?.downloadAttachmentSuccess(file) }, { e ->
-                        mView?.downloadFail( "下载附件失败，${e.message}")
+                        mView?.downloadFail( mView?.getContext()?.getString(R.string.message_download_fail) ?: "下载附件失败，${e.message}")
                     })
         }
     }
@@ -359,12 +358,12 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
     override fun upload2FileStorage(filePath: String, referenceType: String, reference: String, scale: Int) {
         XLog.debug("上传图片，filePath:$filePath, referenceType:$referenceType, reference:$reference, scale:$scale")
         if (filePath.isEmpty() || reference.isEmpty() || referenceType.isEmpty()) {
-            mView?.upload2FileStorageFail("传入参数不正确！")
+            mView?.upload2FileStorageFail(mView?.getContext()?.getString(R.string.message_arg_error) ?: "传入参数不正确！")
             return
         }
         val file = File(filePath)
         if (!file.exists()) {
-            mView?.upload2FileStorageFail("文件不存在！！！")
+            mView?.upload2FileStorageFail(mView?.getContext()?.getString(R.string.message_file_not_exist) ?: "文件不存在！！！")
             return
         }
         val fileService = getFileAssembleControlService(mView?.getContext())
@@ -380,9 +379,9 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                     },
                             ExceptionHandler(mView?.getContext()) { e ->
                                 XLog.error("$e")
-                                mView?.upload2FileStorageFail("文件上传异常") })
+                                mView?.upload2FileStorageFail(mView?.getContext()?.getString(R.string.message_upload_fail) ?: "文件上传异常") })
         }else {
-            mView?.upload2FileStorageFail("文件模块接入异常！")
+            mView?.upload2FileStorageFail(mView?.getContext()?.getString(R.string.message_file_server_error) ?: "文件模块接入异常！")
         }
 
     }

@@ -160,7 +160,7 @@ class ContactPersonGroupPicker : BaseMVPFragment<ContactPersonGroupActivityContr
     }
 
     override fun backError(error: String) {
-        XToast.toastShort(activity, "获取任务列表失败")
+        XToast.toastShort(activity, error)
         itemList.clear()
         adapter.notifyDataSetChanged()
         finishAnimation()

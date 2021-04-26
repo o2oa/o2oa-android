@@ -40,7 +40,7 @@ class FileReaderActivity : BaseO2BindActivity() {
     }
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
-        setupToolBar("文件预览", true)
+        setupToolBar(getString(R.string.file_preview), true)
         mTbsReaderView = TbsReaderView(this) { arg, arg1, arg2 ->
             XLog.info("arg:$arg, 1:$arg1, 2:$arg2")
         }
@@ -69,10 +69,10 @@ class FileReaderActivity : BaseO2BindActivity() {
             mTbsReaderView?.openFile(bund)
         }else {
             XLog.error("type is error , $type")
-            XToast.toastShort(this, "该文件类型无法预览！")
+            XToast.toastShort(this, getString(R.string.message_file_type_cannot_be_previewed))
             fl_file_reader_container.removeAllViews()
             val btn = Button(this)
-            btn.text = "用其它应用打开文件"
+            btn.text = getString(R.string.message_use_other_application_open_file)
             val param = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
             param.gravity = Gravity.CENTER
             fl_file_reader_container.addView(btn, param)

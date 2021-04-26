@@ -2,6 +2,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.security
 
 import android.text.TextUtils
 import net.muliba.accounting.app.ExceptionHandler
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.exception.O2ResponseException
@@ -83,7 +84,7 @@ class AccountSecurityPresenter : BasePresenterImpl<AccountSecurityContract.View>
                             if (e is O2ResponseException) {
                                 e.message?.let { mView?.updateMyPasswordFail(it) }
                             }else {
-                                mView?.updateMyPasswordFail("修改失败！")
+                                mView?.updateMyPasswordFail(mView?.getContext()?.getString(R.string.message_update_fail) ?: "修改失败！")
                             }
                         }
                     }

@@ -99,18 +99,18 @@ class StartProcessStepTwoFragment : BaseMVPFragment<StartProcessStepTwoContract.
     }
 
     override fun loadCurrentPersonIdentityFail() {
-        XToast.toastShort(activity, "没有查询到当前用户的身份信息，无法启动流程！")
+        XToast.toastShort(activity, getString(R.string.message_get_current_identity_fail))
         (activity as StartProcessActivity).removeFragment()
     }
 
     override fun startProcessSuccess(workId: String) {
         hideLoadingDialog()
-        val name = if (!TextUtils.isEmpty(processName)){ processName}else{"拟稿"}
+        val name = if (!TextUtils.isEmpty(processName)){ processName}else{getString(R.string.create_manuscript)}
         (activity as StartProcessActivity).goThenKill<TaskWebViewActivity>(TaskWebViewActivity.start(workId, "", name))
     }
 
     override fun startProcessFail(message:String) {
-        XToast.toastShort(activity, "启动流程失败, $message")
+        XToast.toastShort(activity, getString(R.string.message_start_process_fail_with_error, message))
         hideLoadingDialog()
     }
 
