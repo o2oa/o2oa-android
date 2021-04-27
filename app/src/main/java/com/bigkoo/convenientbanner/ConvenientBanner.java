@@ -104,6 +104,15 @@ public class ConvenientBanner<T> extends LinearLayout {
         initViewPagerScroll();
 
         adSwitchTask = new AdSwitchTask(this);
+
+        setCorner();
+    }
+
+    private void setCorner() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            ViewStyleSetter viewStyleSetter = new ViewStyleSetter(this);
+            viewStyleSetter.setRound(20);
+        }
     }
 
     static class AdSwitchTask implements Runnable {

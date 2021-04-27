@@ -3,20 +3,45 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:paddingTop="8dp"
-    android:paddingBottom="8dp"
-    android:background="?android:attr/selectableItemBackground">
+    android:layout_height="75dp"
+    android:background="@drawable/background_white_radius_10">
+
+
+    <TextView
+        android:id="@+id/tv_todo_fragment_task_title"
+        android:layout_width="wrap_content"
+        android:maxWidth="240dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_normal"
+        tools:text="这个是待办标题这个是"
+        android:textSize="@dimen/font_large"
+        android:textColor="@color/z_color_text_primary_dark"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
     <TextView
         android:id="@+id/tv_todo_fragment_task_type"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         tools:text="【车辆审批】"
-        android:textSize="15sp"
-        android:textColor="@color/z_color_text_primary_dark"
+        android:textSize="@dimen/font_normal"
+        android:textColor="@color/z_color_text_primary"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_todo_fragment_task_title"
+        android:layout_marginTop="@dimen/spacing_tiny"
+        android:layout_marginStart="@dimen/spacing_small"
         />
+
+    <ImageView
+        android:id="@+id/image_todo_fragment_task_new"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        app:srcCompat="@mipmap/icon_new"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:visibility="visible"/>
+
     <TextView
         android:id="@+id/tv_todo_fragment_task_date"
         android:layout_width="wrap_content"
@@ -24,35 +49,9 @@
         tools:text="2017-01-12"
         android:textSize="@dimen/font_small"
         android:textColor="@color/z_color_text_hint"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintRight_toRightOf="parent"
-        />
-    <TextView
-        android:id="@+id/tv_todo_fragment_task_title"
-        android:layout_width="wrap_content"
-        android:maxWidth="240dp"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/spacing_tiny"
-        android:layout_marginTop="@dimen/spacing_tiny"
-        tools:text="这个是待办标题这个是"
-        android:textSize="@dimen/font_normal"
-        android:textColor="@color/z_color_text_primary"
-        app:layout_constraintTop_toBottomOf="@+id/tv_todo_fragment_task_type"
-        app:layout_constraintLeft_toLeftOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintHorizontal_weight="1"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintVertical_bias="0.0"
-        app:layout_constraintRight_toRightOf="parent" />
-
-    <ImageView
-        android:id="@+id/image_todo_fragment_task_new"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        app:srcCompat="@mipmap/icon_new"
-        app:layout_constraintLeft_toRightOf="@+id/tv_todo_fragment_task_title"
-        android:layout_marginLeft="@dimen/spacing_tiny"
-        android:layout_marginTop="@dimen/spacing_tiny"
-        app:layout_constraintTop_toBottomOf="@+id/tv_todo_fragment_task_type"
-        android:visibility="gone"/>
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        />
 </androidx.constraintlayout.widget.ConstraintLayout>

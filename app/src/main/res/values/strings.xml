@@ -32,6 +32,7 @@
     <string name="all">全部</string>
     <string name="ok">确定</string>
     <string name="file_preview">文件预览</string>
+    <string name="create">新建</string>
 
 
 
@@ -1296,7 +1297,7 @@
 
 
     <string name="chat_input_message">请输入消息…</string>
-
+    <string name="search_taskcompleted">搜索已办工作</string>
 
 
 </resources>

@@ -24,12 +24,13 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:padding="2dp">
             <ImageView
                 android:id="@+id/image_icon_main_bottom_news"
                 android:layout_centerHorizontal="true"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@mipmap/icon_main_news"/>
             <TextView
                 android:id="@+id/tv_icon_main_bottom_news"
@@ -60,12 +61,13 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:padding="2dp">
             <ImageView
                 android:id="@+id/image_icon_main_bottom_contact"
                 android:layout_centerHorizontal="true"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@mipmap/icon_main_contact"/>
             <TextView
                 android:id="@+id/tv_icon_main_bottom_contact"
@@ -92,13 +94,13 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:padding="2dp">
             <ImageView
                 android:id="@+id/image_icon_main_bottom_app"
                 android:layout_centerHorizontal="true"
-                android:layout_width="33dp"
-                android:layout_height="33dp"
-                android:layout_marginTop="2dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@mipmap/icon_main_app"/>
             <TextView
                 android:id="@+id/tv_icon_main_bottom_app"
@@ -117,12 +119,13 @@
             android:layout_width="0dp"
             android:layout_weight="1"
             android:layout_height="match_parent"
+            android:gravity="center"
             android:padding="2dp">
             <ImageView
                 android:id="@+id/image_icon_main_bottom_setting"
                 android:layout_centerHorizontal="true"
-                android:layout_width="35dp"
-                android:layout_height="35dp"
+                android:layout_width="24dp"
+                android:layout_height="24dp"
                 android:src="@mipmap/icon_main_setting"/>
             <TextView
                 android:id="@+id/tv_icon_main_bottom_setting"

@@ -2,35 +2,30 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main
 
 import android.Manifest
 import android.app.Activity
-import android.graphics.BitmapFactory
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import androidx.core.widget.NestedScrollView
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.core.widget.NestedScrollView
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bigkoo.convenientbanner.ConvenientBanner
-import io.flutter.app.FlutterActivity
 import kotlinx.android.synthetic.main.fragment_main_todo.*
 import kotlinx.android.synthetic.main.snippet_shimmer_content.*
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2CustomStyle
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.attendance.main.AttendanceMainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPViewPagerFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.bbs.main.BBSMainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.bbs.view.BBSWebViewSubjectActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.calendar.CalendarMainActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.CloudDriveActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.index.CMSIndexActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.view.CMSWebViewActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.O2ChatActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.main.MeetingMainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.ai.O2AIActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.*
@@ -50,16 +45,14 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.persistence.MyAppListObject
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.ToDoFragmentListViewItemVO
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderOptions
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.zxing.activity.CaptureActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.DividerItemDecoration
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.SpacesItemDecoration
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
-import kotlin.math.max
-import kotlin.math.min
 
 /**
  * Created by fancy on 2017/6/9.
@@ -127,11 +120,11 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
     }
 
     lateinit var cBannerView: ConvenientBanner<HotPictureOutData>
-    lateinit var mActionBarBackgroundDrawable: Drawable
+//    lateinit var mActionBarBackgroundDrawable: Drawable
     val screenWidth: Int by lazy { activity?.screenWidth() ?: 200 }
     val cBannerHeight: Int by lazy { screenWidth / 2 }
     val appList = ArrayList<MyAppListObject>()
-    val itemDecoration: DividerItemDecoration by lazy { DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST) }
+    val itemDecoration: SpacesItemDecoration by lazy { SpacesItemDecoration(20) }
     val itemList = ArrayList<ToDoFragmentListViewItemVO>()
     val taskList = ArrayList<TaskData>()
     val newsList = ArrayList<CMSDocumentInfoJson>()
@@ -152,27 +145,26 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
                 R.color.z_color_refresh_red, R.color.z_color_refresh_purple, R.color.z_color_refresh_orange)
         swipe_refresh_todo_fragment.setOnRefreshListener { lazyLoad() }
         XLog.debug("cBanner width:$screenWidth, height:$cBannerHeight")
-        mActionBarBackgroundDrawable = ColorDrawable(FancySkinManager.instance().getColor(activity!!, R.color.z_color_primary))
-        mActionBarBackgroundDrawable.alpha = 0 //透明
-        relative_todo_main_action_bar.background = mActionBarBackgroundDrawable
+//        mActionBarBackgroundDrawable = ColorDrawable(FancySkinManager.instance().getColor(activity!!, R.color.z_color_primary))
+//        mActionBarBackgroundDrawable.alpha = 0 //透明
         nested_scroll_todo_main_content.setOnScrollChangeListener { _: @ParameterName(name = "v") NestedScrollView?,
                                                                     _: @ParameterName(name = "scrollX") Int,
                                                                     scrollY: @ParameterName(name = "scrollY") Int,
                                                                     _: @ParameterName(name = "oldScrollX") Int,
                                                                     oldScrollY: @ParameterName(name = "oldScrollY") Int ->
             val height: Int = cBannerHeight - relative_todo_main_action_bar.height
-            val ratio: Float = min(max(scrollY, 0), height).toFloat().div(height.toFloat())
-            val newAlpha: Int = (ratio * 255).toInt()
-            mActionBarBackgroundDrawable.alpha = newAlpha
-            if (newAlpha >= 250) {
-                if (currentType == BUSINESS_TYPE_MESSAGE_CENTER) {
-                    tv_todo_fragment_title.text = getString(R.string.tab_todo_new_message_center)
-                } else {
-                    tv_todo_fragment_title.text = getString(R.string.tab_todo_new_task_center)
-                }
-            } else {
-                tv_todo_fragment_title.text = ""
-            }
+//            val ratio: Float = min(max(scrollY, 0), height).toFloat().div(height.toFloat())
+//            val newAlpha: Int = (ratio * 255).toInt()
+//            mActionBarBackgroundDrawable.alpha = newAlpha
+//            if (newAlpha >= 250) {
+//                if (currentType == BUSINESS_TYPE_MESSAGE_CENTER) {
+//                    tv_todo_fragment_title.text = getString(R.string.tab_todo_new_message_center)
+//                } else {
+//                    tv_todo_fragment_title.text = getString(R.string.tab_todo_new_task_center)
+//                }
+//            } else {
+//                tv_todo_fragment_title.text = ""
+//            }
             if (scrollY > height) {
                 image_todo_main_to_top.visible()
             } else {
@@ -188,6 +180,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
         tv_todo_fragment_publish.setOnClickListener(this)
         linear_main_todo_new_message_center_button.setOnClickListener(this)
         linear_main_todo_new_task_center_button.setOnClickListener(this)
+        ll_todo_fragment_search.setOnClickListener(this)
 
         initBanner(screenWidth, cBannerHeight)
         initAppList()
@@ -240,6 +233,9 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
                 currentType = BUSINESS_TYPE_WORK_CENTER
 //                isRedPointShow = false
                 refreshRecyclerView()
+            }
+            R.id.ll_todo_fragment_search -> {
+                activity?.go<TaskCompletedSearchActivity>()
             }
         }
     }
@@ -504,7 +500,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
 
 
     private fun refreshRecyclerView() {
-        shimmer_snippet_content?.gone()
+//        shimmer_snippet_content?.gone()
         itemList.clear()
         if (currentType == BUSINESS_TYPE_MESSAGE_CENTER) {
             tv_no_data?.text = getString(R.string.recycler_no_data_cool)
