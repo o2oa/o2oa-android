@@ -26,7 +26,6 @@ class LogRecord2FileTask(val context: Context,
         } else {
             try {
                 val filePath = getLogFile()
-                Log.e("LogRecord2FileTask", filePath)
                 val todayFile = File(filePath)
                 if (!todayFile.exists()) {
                     SDCardHelper.generateNewFile(filePath)

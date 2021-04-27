@@ -35,10 +35,6 @@ class MyAppPresenter : BasePresenterImpl<MyAppContract.View>(), MyAppContract.Pr
                         obj.appTitle = it.name
                         result.add(obj)
                     }
-//                    val newCloudDiskApp = MyAppListObject()
-//                    newCloudDiskApp.appId = ApplicationEnum.clouddisk.key
-//                    newCloudDiskApp.appTitle = ApplicationEnum.clouddisk.appName
-//                    result.add(newCloudDiskApp)
                     service.findAllPortalList()
                 }
                 ?.flatMap { list ->
@@ -66,10 +62,6 @@ class MyAppPresenter : BasePresenterImpl<MyAppContract.View>(), MyAppContract.Pr
                                             obj.appTitle = it.name
                                             result.add(obj)
                                         }
-//                                        val newCloudDiskApp = MyAppListObject()
-//                                        newCloudDiskApp.appId = ApplicationEnum.clouddisk.key
-//                                        newCloudDiskApp.appTitle = ApplicationEnum.clouddisk.appName
-//                                        result.add(newCloudDiskApp)
                                         portalList.filter { portal -> portal.enable }.map {
                                             val obj = MyAppListObject()
                                             obj.appId = it.id
@@ -98,6 +90,100 @@ class MyAppPresenter : BasePresenterImpl<MyAppContract.View>(), MyAppContract.Pr
                 }
 
 
+    }
+
+
+    override fun getNativeAppList() {
+        val result = ArrayList<MyAppListObject>()
+        service.findAllNativeApp()
+                ?.subscribeOn(Schedulers.io())
+                ?.flatMap { list ->
+                    XLog.info("native app list from realm database : ${list?.size}")
+                    list.filter { app -> app.enable }.map {
+                        val obj = MyAppListObject()
+                        obj.appId = it.key
+                        obj.appTitle = it.name
+                        result.add(obj)
+                    }
+                    if (result.isEmpty()) {
+                        val url = O2SDKManager.instance().prefs().getString(O2.PRE_CENTER_URL_KEY, "") ?: ""
+                        getApiService(mView?.getContext(), url)
+                                ?.getCustomStyle()
+                                ?.subscribeOn(Schedulers.immediate())
+                                ?.flatMap { response ->
+                                    val data = response.data
+                                    XLog.info("customStyle:$data")
+                                    if (data != null) {
+                                        val nativeAppList = data.nativeAppList
+                                        nativeAppList.filter { app -> app.enable }.map {
+                                            val obj = MyAppListObject()
+                                            obj.appId = it.key
+                                            obj.appTitle = it.name
+                                            result.add(obj)
+                                        }
+                                        storageNativeList(nativeAppList)
+                                    }
+                                    Observable.just(true)
+                                }
+                    } else {
+                        Observable.just(true)
+                    }
+                }?.observeOn(AndroidSchedulers.mainThread())?.o2Subscribe {
+                    onNext {
+                        mView?.setNativeAppList(result)
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.setNativeAppList(result)
+                    }
+                }
+    }
+
+    override fun getPortalAppList() {
+        val result = ArrayList<MyAppListObject>()
+        service.findAllPortalList()
+                ?.subscribeOn(Schedulers.io())
+                ?.flatMap { list ->
+                    XLog.info("portal app list from realm database : ${list?.size}")
+                    list.filter { portal -> portal.enable }.map {
+                        val obj = MyAppListObject()
+                        obj.appId = it.id
+                        obj.appTitle = it.name
+                        result.add(obj)
+                    }
+                    if (result.isEmpty()) {
+                        val url = O2SDKManager.instance().prefs().getString(O2.PRE_CENTER_URL_KEY, "") ?: ""
+                        getApiService(mView?.getContext(), url)
+                                ?.getCustomStyle()
+                                ?.subscribeOn(Schedulers.immediate())
+                                ?.flatMap { response ->
+                                    val data = response.data
+                                    XLog.info("customStyle:$data")
+                                    if (data != null) {
+                                        val portalList = data.portalList
+
+                                        portalList.filter { portal -> portal.enable }.map {
+                                            val obj = MyAppListObject()
+                                            obj.appId = it.id
+                                            obj.appTitle = it.name
+                                            result.add(obj)
+                                        }
+                                        storagePortalList(portalList)
+                                    }
+                                    Observable.just(true)
+                                }
+                    } else {
+                        Observable.just(true)
+                    }
+                }?.observeOn(AndroidSchedulers.mainThread())?.o2Subscribe {
+                    onNext {
+                        mView?.setPortalAppList(result)
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.setPortalAppList(result)
+                    }
+                }
     }
 
     override fun getMyAppList() {

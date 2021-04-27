@@ -12,12 +12,16 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.persistence.MyAppListObject
 object MyAppContract {
     interface View : BaseView {
         fun setAllAppList(allList: ArrayList<MyAppListObject>)
+        fun setNativeAppList(allList: ArrayList<MyAppListObject>)
+        fun setPortalAppList(allList: ArrayList<MyAppListObject>)
         fun setMyAppList(myAppList: ArrayList<MyAppListObject>)
         fun addAndDelMyAppList(isSuccess: Boolean)
     }
 
     interface Presenter: BasePresenter<View> {
         fun getAllAppList()
+        fun getNativeAppList()
+        fun getPortalAppList()
         fun getMyAppList()
         fun addAndDelMyAppList(delAppList: ArrayList<MyAppListObject>,addAppList: ArrayList<MyAppListObject>)
     }

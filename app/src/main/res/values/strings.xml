@@ -19,7 +19,10 @@
     <string name="edit">编辑</string>
     <string name="no_title">无标题</string>
     <string name="all_app">全部应用</string>
+    <string name="native_app">原生应用</string>
+    <string name="portal_app">门户应用</string>
     <string name="app_edit_title">我的应用编辑</string>
+    <string name="my_app">我的应用</string>
     <string name="take_photo">拍照</string>
     <string name="upload_photo">上传照片</string>
     <string name="take_from_album">从手机相册选择</string>
