@@ -87,6 +87,7 @@ class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Pre
     private fun initNativeApp(){
         native_app_recycler_view.layoutManager = GridLayoutManager(activity, 5)
         native_app_recycler_view.adapter = nativeAppAdapter
+        native_app_recycler_view.isNestedScrollingEnabled = false
         nativeAppAdapter.setOnItemClickListener { _, position ->
             if (isEdit) {
                 if (!nativeAppBeanList[position].isClick) {
@@ -102,6 +103,7 @@ class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Pre
     }
 
     private fun initPortalApp() {
+        rv_portal_app.isNestedScrollingEnabled = false
         rv_portal_app.layoutManager = GridLayoutManager(activity, 5)
         rv_portal_app.adapter = portalAppAdapter
         portalAppAdapter.setOnItemClickListener { _, position ->
@@ -120,6 +122,7 @@ class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Pre
     }
 
     private fun initMyApp(){
+        my_app_recycler_view.isNestedScrollingEnabled = false
         my_app_recycler_view.layoutManager = GridLayoutManager(activity, 5)
         my_app_recycler_view.adapter = myAppEditAdapter
         myAppEditAdapter.setOnItemClickListener { _, position ->

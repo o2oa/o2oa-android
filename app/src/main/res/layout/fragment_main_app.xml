@@ -82,7 +82,7 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_marginTop="@dimen/meeting_padding"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -97,6 +97,7 @@
             android:background="@drawable/background_white_radius_10">
 
             <TextView
+                android:id="@+id/tv_portal_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textStyle="bold"
@@ -107,11 +108,12 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_portal_app"
+                android:layout_below="@+id/tv_portal_title"
                 android:layout_marginTop="@dimen/spacing_small"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"/>
 
-        </LinearLayout>
+        </RelativeLayout>
 
 
 
