@@ -291,6 +291,8 @@
     <string name="title_activity_account_security">账号与安全</string>
     <!-- notice setting -->
     <string name="title_activity_notice_setting">新消息通知</string>
+    <string name="title_clean_cache_setting">清除缓存</string>
+    <string name="title_share_setting">分享下载</string>
     <string name="notice_setting_message_receive_help">手机新消息通知设置</string>
     <string name="title_notice_setting_message_receive_help">帮助-手机新消息通知设置</string>
     <string name="notice_setting_message_receive">接收新消息通知</string>

@@ -8,9 +8,11 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPViewPagerFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.about.AboutActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.login.LoginActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.my.MyInfoActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.notice.NoticeSettingActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.security.AccountSecurityActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.skin.SkinManagerActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.BitmapUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.HttpCacheUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
@@ -18,6 +20,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goAndClearBefore
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderOptions
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.AndroidShareDialog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2AlertIconEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
@@ -41,6 +45,7 @@ class SettingsFragment : BaseMVPViewPagerFragment<SettingsContract.View, Setting
     }
 
     override fun initUI() {
+        rl_settings_button_my_info.setOnClickListener(this)
         setting_button_account_security_id.setOnClickListener(this)
         setting_button_skin.setOnClickListener(this)
         setting_button_about_id.setOnClickListener(this)
@@ -58,6 +63,14 @@ class SettingsFragment : BaseMVPViewPagerFragment<SettingsContract.View, Setting
 //        setting_button_feedback_id.setOnClickListener(this)
         myInfo_logout_btn_id.setOnClickListener(this)
 
+
+        //用户头像等信息
+        val url = APIAddressHelper.instance().getPersonAvatarUrlWithId(O2SDKManager.instance().distinguishedName)
+        O2ImageLoaderManager.instance().showImage(image_settings_my_avatar, url, O2ImageLoaderOptions(isSkipCache = true))
+        tv_settings_my_name.text = O2SDKManager.instance().cName
+        tv_settings_my_sign.text = O2SDKManager.instance().cSignature
+
+
         val path = O2CustomStyle.setupAboutImagePath(activity)
         if (!TextUtils.isEmpty(path)) {
             BitmapUtil.setImageFromFile(path!!, setting_image_about_icon)
@@ -68,6 +81,7 @@ class SettingsFragment : BaseMVPViewPagerFragment<SettingsContract.View, Setting
     val shareDialog: AndroidShareDialog by lazy { AndroidShareDialog(activity, O2.O2_DOWNLOAD_URL, null) }
     override fun onClick(v: View?) {
         when (v?.id) {
+            R.id.rl_settings_button_my_info -> activity?.go<MyInfoActivity>()
             R.id.setting_button_account_security_id -> activity?.go<AccountSecurityActivity>()
             R.id.setting_button_skin -> activity?.go<SkinManagerActivity>()
             R.id.setting_button_remind_setting_id -> activity?.go<NoticeSettingActivity>()

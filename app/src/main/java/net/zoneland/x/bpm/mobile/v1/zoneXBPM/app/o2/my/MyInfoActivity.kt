@@ -45,11 +45,11 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
 
     override var mPresenter: MyInfoContract.Presenter = MyInfoPresenter()
 
-    val avatarMenuList: ArrayList<String> = arrayListOf(getString(R.string.take_photo), getString(R.string.take_from_album))
+    private val avatarMenuList: ArrayList<String> by lazy { arrayListOf(getString(R.string.take_photo), getString(R.string.take_from_album)) }
     val avatarMenu: CommonMenuPopupWindow by lazy { CommonMenuPopupWindow(avatarMenuList, this) }
 
     var person: PersonJson? = null
-    val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
+    private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
     var isEdit = false
 
     //软键盘

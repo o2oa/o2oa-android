@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:background="@color/z_color_background">
 
     <ScrollView
@@ -13,81 +15,122 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
+
+
+<!--            人员信息-->
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:background="@android:color/white"
                 android:orientation="vertical">
 
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@drawable/background_white_radius_10"
+                    android:paddingStart="@dimen/spacing_small"
+                    android:paddingEnd="@dimen/spacing_small"
                     android:layout_marginLeft="@dimen/spacing_normal"
                     android:layout_marginRight="@dimen/spacing_normal">
 
                     <!--账号安全-->
                     <RelativeLayout
+                        android:id="@+id/rl_settings_button_my_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="@dimen/spacing_normal"
+                        android:layout_marginBottom="@dimen/spacing_normal">
+
+                        <net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
+                            android:id="@+id/image_settings_my_avatar"
+                            android:layout_width="48dp"
+                            android:layout_height="48dp"
+                            android:src="@mipmap/icon_avatar_men"
+                            android:layout_centerVertical="true"
+                            android:layout_alignParentStart="true" />
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toEndOf="@id/image_settings_my_avatar"
+                            android:layout_centerVertical="true"
+                            android:layout_marginStart="10dp"
+                            android:orientation="vertical">
+                            <TextView
+                                android:id="@+id/tv_settings_my_name"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:text="楼国栋"
+                                android:textSize="16sp"
+                                android:textColor="@color/z_color_text_primary_dark"/>
+                            <TextView
+                                android:id="@+id/tv_settings_my_sign"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                tools:text="签名"
+                                android:textSize="14sp"
+                                android:textColor="@color/z_color_text_primary"/>
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="22dp"
+                            android:layout_height="22dp"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:src="@mipmap/icon_arrow_22dp"/>
+                    </RelativeLayout>
+
+                </LinearLayout>
+
+            </LinearLayout>
+
+<!--            账号安全-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:background="@drawable/background_white_radius_10"
+                    android:paddingStart="@dimen/spacing_small"
+                    android:paddingEnd="@dimen/spacing_small"
+                    android:layout_marginLeft="@dimen/spacing_normal"
+                    android:layout_marginRight="@dimen/spacing_normal">
+
+                    <RelativeLayout
                         android:id="@+id/setting_button_account_security_id"
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
-                        android:background="@drawable/white_background_selector">
+                        android:layout_marginTop="@dimen/spacing_tiny"
+                        android:layout_marginBottom="@dimen/spacing_tiny">
                         <ImageView
                             android:id="@+id/setting_image_security_icon"
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:layout_centerVertical="true"
                             android:src="@mipmap/icon_setting_security_22dp"
-                            android:layout_alignParentLeft="true"/>
+                            android:layout_alignParentStart="true"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/setting_image_security_icon"
+                            android:layout_toEndOf="@id/setting_image_security_icon"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="10dp"
-                            android:text="账号与安全"
-                            android:textSize="15sp"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/title_activity_account_security"
+                            android:textSize="16sp"
                             android:textColor="@color/z_color_text_primary_dark"/>
                         <ImageView
                             android:layout_width="22dp"
                             android:layout_height="22dp"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:src="@mipmap/icon_arrow_22dp"/>
                     </RelativeLayout>
-                    <!--<View-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="1dp"-->
-                        <!--android:background="@color/z_color_split_line_ddd"></View>-->
-                    <!--<RelativeLayout-->
-                        <!--android:id="@+id/setting_button_ai_bluetooth"-->
-                        <!--android:layout_width="match_parent"-->
-                        <!--android:layout_height="44dp"-->
-                        <!--android:background="@drawable/white_background_selector">-->
-                        <!--<ImageView-->
-                            <!--android:id="@+id/setting_image_ai_bluetooth_icon"-->
-                            <!--android:layout_width="22dp"-->
-                            <!--android:layout_height="22dp"-->
-                            <!--android:layout_centerVertical="true"-->
-                            <!--android:src="@mipmap/icon_setting_security_22dp"-->
-                            <!--android:layout_alignParentLeft="true"/>-->
-                        <!--<TextView-->
-                            <!--android:layout_width="match_parent"-->
-                            <!--android:layout_height="wrap_content"-->
-                            <!--android:layout_toRightOf="@id/setting_image_ai_bluetooth_icon"-->
-                            <!--android:layout_centerVertical="true"-->
-                            <!--android:layout_marginLeft="10dp"-->
-                            <!--android:text="AI设备连接"-->
-                            <!--android:textSize="15sp"-->
-                            <!--android:textColor="@color/z_color_text_primary_dark"/>-->
-                        <!--<ImageView-->
-                            <!--android:layout_width="22dp"-->
-                            <!--android:layout_height="22dp"-->
-                            <!--android:layout_alignParentRight="true"-->
-                            <!--android:layout_centerVertical="true"-->
-                            <!--android:src="@mipmap/icon_arrow_22dp"/>-->
-                    <!--</RelativeLayout>-->
+
                 </LinearLayout>
 
             </LinearLayout>
@@ -97,7 +140,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_small"
-                android:background="@android:color/white"
                 android:orientation="vertical">
 
 
@@ -105,6 +147,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@drawable/background_white_radius_10"
+                    android:paddingStart="@dimen/spacing_small"
+                    android:paddingEnd="@dimen/spacing_small"
                     android:layout_marginLeft="@dimen/spacing_normal"
                     android:layout_marginRight="@dimen/spacing_normal">
                     <!--皮肤-->
@@ -112,96 +157,99 @@
                         android:id="@+id/setting_button_skin"
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
-                        android:background="@drawable/white_background_selector">
+                        android:layout_marginTop="@dimen/spacing_tiny"
+                        android:layout_marginBottom="@dimen/spacing_tiny">
                         <ImageView
                             android:id="@+id/setting_image_skin_icon"
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:layout_centerVertical="true"
                             android:src="@mipmap/icon_setting_skin_22dp"
-                            android:layout_alignParentLeft="true"/>
+                            android:layout_alignParentStart="true"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/setting_image_skin_icon"
+                            android:layout_toEndOf="@id/setting_image_skin_icon"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:text="@string/skin_manager"
-                            android:textSize="15sp"
+                            android:textSize="16sp"
                             android:textColor="@color/z_color_text_primary_dark"/>
                         <ImageView
                             android:layout_width="22dp"
                             android:layout_height="22dp"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:src="@mipmap/icon_arrow_22dp"/>
                     </RelativeLayout>
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/z_color_split_line_ddd"></View>
+                        android:layout_height="1px"
+                        android:background="@color/z_color_split_line_ddd" />
                     <!--消息与提醒-->
                     <RelativeLayout
                         android:id="@+id/setting_button_remind_setting_id"
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
-                        android:background="@drawable/white_background_selector">
+                        android:layout_marginTop="@dimen/spacing_tiny"
+                        android:layout_marginBottom="@dimen/spacing_tiny">
                         <ImageView
                             android:id="@+id/setting_image_notice_icon"
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:layout_centerVertical="true"
                             android:src="@mipmap/icon_setting_notice_22dp"
-                            android:layout_alignParentLeft="true"/>
+                            android:layout_alignParentStart="true"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/setting_image_notice_icon"
+                            android:layout_toEndOf="@id/setting_image_notice_icon"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="10dp"
-                            android:text="新消息通知"
-                            android:textSize="15sp"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/title_activity_notice_setting"
+                            android:textSize="16sp"
                             android:textColor="@color/z_color_text_primary_dark"/>
                         <ImageView
                             android:layout_width="22dp"
                             android:layout_height="22dp"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:src="@mipmap/icon_arrow_22dp"/>
                     </RelativeLayout>
 
                     <View
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
-                        android:background="@color/z_color_split_line_ddd"></View>
+                        android:layout_height="1px"
+                        android:background="@color/z_color_split_line_ddd" />
 
                     <!--清除聊天记录-->
                     <RelativeLayout
                         android:id="@+id/setting_button_common_set_id"
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
-                        android:background="@drawable/white_background_selector">
+                        android:layout_marginTop="@dimen/spacing_tiny"
+                        android:layout_marginBottom="@dimen/spacing_tiny">
                         <ImageView
                             android:id="@+id/setting_image_common_icon"
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:layout_centerVertical="true"
                             android:src="@mipmap/icon_setting_clear_cache_22dp"
-                            android:layout_alignParentLeft="true"/>
+                            android:layout_alignParentStart="true"/>
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/setting_image_common_icon"
+                            android:layout_toEndOf="@id/setting_image_common_icon"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="10dp"
-                            android:text="清除缓存"
-                            android:textSize="15sp"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/title_clean_cache_setting"
+                            android:textSize="16sp"
                             android:textColor="@color/z_color_text_primary_dark"/>
                         <ImageView
                             android:layout_width="22dp"
                             android:layout_height="22dp"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:src="@mipmap/icon_arrow_22dp"/>
                     </RelativeLayout>
@@ -209,35 +257,36 @@
                     <View
                         android:id="@+id/id_setting_button_customer_service_split"
                         android:layout_width="match_parent"
-                        android:layout_height="1dp"
+                        android:layout_height="1px"
                         android:background="@color/z_color_split_line_ddd" />
                     <!--分享-->
                     <RelativeLayout
                         android:id="@+id/setting_button_customer_service_id"
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
-                        android:background="@drawable/white_background_selector">
+                        android:layout_marginTop="@dimen/spacing_tiny"
+                        android:layout_marginBottom="@dimen/spacing_tiny">
                         <ImageView
                             android:id="@+id/setting_image_service_icon"
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:layout_centerVertical="true"
                             android:src="@mipmap/icon_setting_share_22dp"
-                            android:layout_alignParentLeft="true"/>
+                            android:layout_alignParentStart="true"/>
 
                         <TextView
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/setting_image_service_icon"
+                            android:layout_toEndOf="@id/setting_image_service_icon"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="10dp"
-                            android:text="分享下载"
-                            android:textSize="15sp"
+                            android:layout_marginStart="10dp"
+                            android:text="@string/title_share_setting"
+                            android:textSize="16sp"
                             android:textColor="@color/z_color_text_primary_dark" />
                         <ImageView
                             android:layout_width="22dp"
                             android:layout_height="22dp"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:src="@mipmap/icon_arrow_22dp"
                             android:visibility="visible"/>
@@ -287,7 +336,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/spacing_small"
-                android:background="@android:color/white"
                 android:orientation="vertical">
 
 
@@ -295,6 +343,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical"
+                    android:background="@drawable/background_white_radius_10"
+                    android:paddingStart="@dimen/spacing_small"
+                    android:paddingEnd="@dimen/spacing_small"
                     android:layout_marginLeft="@dimen/spacing_normal"
                     android:layout_marginRight="@dimen/spacing_normal">
 
@@ -303,28 +354,29 @@
                         android:id="@+id/setting_button_about_id"
                         android:layout_width="match_parent"
                         android:layout_height="44dp"
-                        android:background="@drawable/white_background_selector">
+                        android:layout_marginTop="@dimen/spacing_tiny"
+                        android:layout_marginBottom="@dimen/spacing_tiny">
                         <ImageView
                             android:id="@+id/setting_image_about_icon"
                             android:layout_width="22dp"
                             android:layout_height="22dp"
                             android:layout_centerVertical="true"
                             android:src="@mipmap/setup_about_logo"
-                            android:layout_alignParentLeft="true"/>
+                            android:layout_alignParentStart="true"/>
                         <TextView
                             android:id="@+id/tv_setting_about"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
-                            android:layout_toRightOf="@id/setting_image_about_icon"
+                            android:layout_toEndOf="@id/setting_image_about_icon"
                             android:layout_centerVertical="true"
-                            android:layout_marginLeft="10dp"
+                            android:layout_marginStart="10dp"
                             android:text="@string/app_about"
-                            android:textSize="15sp"
+                            android:textSize="16sp"
                             android:textColor="@color/z_color_text_primary_dark"/>
                         <ImageView
                             android:layout_width="22dp"
                             android:layout_height="22dp"
-                            android:layout_alignParentRight="true"
+                            android:layout_alignParentEnd="true"
                             android:layout_centerVertical="true"
                             android:src="@mipmap/icon_arrow_22dp"/>
                     </RelativeLayout>
