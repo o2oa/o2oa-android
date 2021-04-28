@@ -54,7 +54,7 @@ abstract class BaseMVPActivity<in V: BaseView, T: BasePresenter<V>>: AppCompatAc
         //防止截屏
 //        window.addFlags(WindowManager.LayoutParams.FLAG_SECURE)
         // 沉浸式状态栏
-        ImmersedStatusBarUtils.setImmersedStatusBar(this)
+//        ImmersedStatusBarUtils.setImmersedStatusBar(this)
 
         mPresenter.attachView(this as V)
         afterSetContentView(savedInstanceState)

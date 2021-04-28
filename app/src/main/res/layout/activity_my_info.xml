@@ -2,16 +2,17 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/z_color_primary"
+    android:id="@+id/rl_my_info_outer"
+    android:background="@mipmap/pic_person_bg_6"
     tools:context=".app.o2.my.MyInfoActivity">
 
     <ScrollView
         android:id="@+id/scroll_myInfo"
-        android:layout_width="fill_parent"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@android:color/white"
         android:fadingEdge="vertical"
         android:scrollbars="vertical">
 
@@ -23,8 +24,7 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_myInfo_top_bar"
                 android:layout_width="match_parent"
-                android:layout_height="230dp"
-                android:background="@mipmap/pic_person_info_top_bar_bg">
+                android:layout_height="230dp">
 
                 <net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
                     android:id="@+id/image_myInfo_avatar"
@@ -47,11 +47,11 @@
                     android:layout_marginTop="10dp"
                     android:layout_marginRight="8dp"
                     android:textColor="@android:color/white"
-                    android:textSize="15sp"
+                    android:textSize="18sp"
                     app:layout_constraintLeft_toLeftOf="parent"
                     app:layout_constraintRight_toRightOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/image_myInfo_avatar"
-                    tools:text="刘振兴" />
+                    tools:text="XXX" />
 
                 <TextView
                     android:id="@+id/tv_myInfo_sign"
@@ -82,9 +82,13 @@
                 android:id="@+id/relative_myInfo_operation_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-
+                android:background="@drawable/background_white_a9_radius_10"
                 android:layout_marginTop="@dimen/spacing_small"
-                android:layout_marginBottom="@dimen/spacing_small">
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_marginEnd="@dimen/spacing_normal"
+                android:layout_marginBottom="@dimen/spacing_small"
+                android:paddingTop="@dimen/spacing_small"
+                android:paddingBottom="@dimen/spacing_small">
 
                 <RelativeLayout
                     android:id="@+id/linear_myInfo_gender_men_button"
@@ -107,7 +111,7 @@
                         android:layout_below="@id/image_myInfo_gender_men"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
-                        android:text="男"
+                        android:text="@string/man"
                         android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="14sp" />
 
@@ -142,7 +146,7 @@
                         android:layout_below="@id/image_myInfo_gender_women"
                         android:layout_centerHorizontal="true"
                         android:layout_marginTop="5dp"
-                        android:text="女"
+                        android:text="@string/woman"
                         android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="14sp" />
 
@@ -151,7 +155,7 @@
                         android:layout_width="22dp"
                         android:layout_height="22dp"
                         android:layout_alignParentTop="true"
-                        android:layout_alignParentRight="true"
+                        android:layout_alignParentEnd="true"
                         android:visibility="gone"
                         app:srcCompat="@mipmap/icon_radio_primary_on" />
                 </RelativeLayout>
@@ -159,85 +163,6 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/relative_myInfo_gap"
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/z_color_background">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_alignParentTop="true"
-                    android:background="@color/z_color_split_line_ddd" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/z_color_split_line_ddd" />
-            </RelativeLayout>
-
-
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="44dp"
-                android:layout_marginLeft="15dp"
-                android:layout_marginRight="15dp"
-                android:gravity="center_vertical"
-                android:orientation="horizontal">
-
-                <TextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:text="个性签名"
-                    android:textColor="@color/z_color_text_primary_dark"
-                    android:textSize="15sp" />
-
-                <TextView
-                    android:id="@+id/tv_myInfo_sign_edit"
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="2"
-                    android:textColor="@color/z_color_text_primary"
-                    android:textSize="@dimen/font_normal"
-                    android:visibility="visible" />
-
-                <EditText
-                    android:id="@+id/edit_myInfo_sign"
-                    android:layout_width="0dp"
-                    android:layout_height="32dp"
-                    android:layout_weight="2"
-                    android:background="@drawable/input_background_bottom_line"
-                    android:hint="请填入个性签名"
-                    android:maxLines="1"
-                    android:lines="1"
-                    android:imeOptions="actionNext"
-                    android:inputType="text"
-                    android:textColor="@color/z_color_text_primary"
-                    android:textSize="@dimen/font_normal"
-                    android:visibility="gone" />
-
-            </LinearLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/z_color_background">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_alignParentTop="true"
-                    android:background="@color/z_color_split_line_ddd" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/z_color_split_line_ddd" />
-            </RelativeLayout>
 
             <!-- 基本信息 -->
             <LinearLayout
@@ -245,7 +170,68 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
+                android:paddingTop="@dimen/spacing_small"
+                android:paddingBottom="@dimen/spacing_small"
+                android:paddingStart="@dimen/spacing_normal"
+                android:paddingEnd="@dimen/spacing_normal"
+                android:background="@drawable/background_white_a9_radius_10"
                 android:orientation="vertical">
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:layout_marginBottom="@dimen/spacing_small"
+                    android:gravity="center"
+                    android:text="@string/person_enterprise_info"
+                    android:textColor="@color/z_color_text_primary_dark"
+                    android:textSize="18sp"
+                    android:textStyle="bold"
+                    />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/sign"
+                        android:textColor="@color/z_color_text_primary"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tv_myInfo_sign_edit"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:textColor="@color/z_color_text_primary_dark"
+                        android:textSize="@dimen/font_normal"
+                        android:visibility="visible" />
+
+                    <EditText
+                        android:id="@+id/edit_myInfo_sign"
+                        android:layout_width="0dp"
+                        android:layout_height="32dp"
+                        android:layout_weight="2"
+                        android:background="@null"
+                        android:hint="@string/sign_hint"
+                        android:maxLines="1"
+                        android:lines="1"
+                        android:imeOptions="actionNext"
+                        android:inputType="text"
+                        android:textColor="@color/z_color_text_primary_dark"
+                        android:textSize="@dimen/font_normal"
+                        android:visibility="gone" />
+
+                </LinearLayout>
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/z_color_split_line_ddd" />
 
                 <LinearLayout
                     android:id="@+id/myInfo_mobile_id"
@@ -258,8 +244,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="手机号码"
-                        android:textColor="@color/z_color_text_primary_dark"
+                        android:text="@string/person_phone"
+                        android:textColor="@color/z_color_text_primary"
                         android:textSize="15sp" />
 
                     <TextView
@@ -267,7 +253,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal" />
 
                     <EditText
@@ -275,13 +261,13 @@
                         android:layout_width="0dp"
                         android:layout_height="32dp"
                         android:layout_weight="2"
-                        android:background="@drawable/input_background_bottom_line"
-                        android:hint="请填入手机号码"
+                        android:background="@null"
+                        android:hint="@string/person_phone_hint"
                         android:maxLines="1"
                         android:lines="1"
                         android:imeOptions="actionNext"
                         android:inputType="phone"
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -302,8 +288,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="办公电话"
-                        android:textColor="@color/z_color_text_primary_dark"
+                        android:text="@string/person_telephone"
+                        android:textColor="@color/z_color_text_primary"
                         android:textSize="15sp" />
 
                     <TextView
@@ -311,7 +297,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal" />
 
                     <EditText
@@ -319,13 +305,13 @@
                         android:layout_width="0dp"
                         android:layout_height="32dp"
                         android:layout_weight="2"
-                        android:background="@drawable/input_background_bottom_line"
-                        android:hint="请填入办公电话"
+                        android:background="@null"
+                        android:hint="@string/person_telephone_hint"
                         android:maxLines="1"
                         android:lines="1"
                         android:imeOptions="actionNext"
                         android:inputType="phone"
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -346,8 +332,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="电子邮件"
-                        android:textColor="@color/z_color_text_primary_dark"
+                        android:text="@string/person_email"
+                        android:textColor="@color/z_color_text_primary"
                         android:textSize="15sp" />
 
                     <TextView
@@ -355,7 +341,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal" />
 
                     <EditText
@@ -363,13 +349,13 @@
                         android:layout_width="0dp"
                         android:layout_height="32dp"
                         android:layout_weight="2"
-                        android:background="@drawable/input_background_bottom_line"
-                        android:hint="请填入电子邮件"
+                        android:background="@null"
+                        android:hint="@string/person_email_hint"
                         android:maxLines="1"
                         android:lines="1"
                         android:imeOptions="actionNext"
                         android:inputType="textEmailAddress"
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -390,8 +376,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="QQ"
-                        android:textColor="@color/z_color_text_primary_dark"
+                        android:text="@string/person_qq"
+                        android:textColor="@color/z_color_text_primary"
                         android:textSize="15sp" />
 
                     <TextView
@@ -399,7 +385,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal" />
 
                     <EditText
@@ -407,13 +393,13 @@
                         android:layout_width="0dp"
                         android:layout_height="32dp"
                         android:layout_weight="2"
-                        android:background="@drawable/input_background_bottom_line"
-                        android:hint="请填入QQ"
+                        android:background="@null"
+                        android:hint="@string/person_qq_hint"
                         android:maxLines="1"
                         android:lines="1"
                         android:imeOptions="actionNext"
                         android:inputType="text"
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -434,8 +420,8 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
-                        android:text="微信"
-                        android:textColor="@color/z_color_text_primary_dark"
+                        android:text="@string/person_weixin"
+                        android:textColor="@color/z_color_text_primary"
                         android:textSize="15sp" />
 
                     <TextView
@@ -443,7 +429,7 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal" />
 
                     <EditText
@@ -451,13 +437,13 @@
                         android:layout_width="0dp"
                         android:layout_height="32dp"
                         android:layout_weight="2"
-                        android:background="@drawable/input_background_bottom_line"
-                        android:hint="请填入微信号"
+                        android:background="@null"
+                        android:hint="@string/person_weixin_hint"
                         android:maxLines="1"
                         android:lines="1"
                         android:imeOptions="actionNext"
                         android:inputType="text"
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal"
                         android:visibility="gone" />
                 </LinearLayout>
@@ -475,7 +461,7 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_alignParentTop="true"
-        android:background="@color/z_color_primary"
+        android:background="@color/transparent"
         android:paddingTop="@dimen/toolbar_padding_top">
 
         <ImageView
