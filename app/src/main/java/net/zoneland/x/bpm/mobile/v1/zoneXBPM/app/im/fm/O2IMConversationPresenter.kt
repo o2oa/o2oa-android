@@ -1,5 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.fm
 
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMConversationInfo
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
@@ -25,12 +26,12 @@ class O2IMConversationPresenter : BasePresenterImpl<O2IMConversationContract.Vie
                             if (it.data!= null) {
                                 mView?.createConvSuccess(it.data)
                             }else{
-                                mView?.createConvFail("创建会话失败！")
+                                mView?.createConvFail(mView?.getContext()?.getString(R.string.message_create_conversation_fail) ?: "创建会话失败！")
                             }
                         }
                         onError { e, _ ->
                             XLog.error("", e)
-                            mView?.createConvFail("创建会话失败！${e?.message}")
+                            mView?.createConvFail(mView?.getContext()?.getString(R.string.message_create_conversation_fail) ?: "创建会话失败！${e?.message}")
                         }
                     }
         }

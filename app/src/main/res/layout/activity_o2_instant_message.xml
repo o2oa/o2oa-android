@@ -4,6 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/z_color_background"
     tools:context=".app.im.O2InstantMessageActivity">
 
     <include layout="@layout/snippet_appbarlayout_toolbar" />

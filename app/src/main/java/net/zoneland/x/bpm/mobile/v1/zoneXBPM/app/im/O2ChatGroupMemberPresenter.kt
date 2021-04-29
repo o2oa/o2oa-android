@@ -1,5 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im
 
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMConversationUpdateForm
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
@@ -15,11 +16,11 @@ class O2ChatGroupMemberPresenter : BasePresenterImpl<O2ChatGroupMemberContract.V
 
     override fun updateConversationPeople(id: String, users: ArrayList<String>) {
         if (id.isEmpty() || users.isEmpty()) {
-            mView?.updateFail("参数不正确，无法修改")
+            mView?.updateFail(mView?.getContext()?.getString(R.string.message_arg_error) ?:"参数不正确，无法修改")
             return
         }
         if (users.size < 3) {
-            mView?.updateFail("成员不能少于3人")
+            mView?.updateFail(mView?.getContext()?.getString(R.string.message_members_cannot_less_three) ?:"成员不能少于3人")
             return
         }
         val service = getMessageCommunicateService(mView?.getContext())

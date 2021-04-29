@@ -72,7 +72,7 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
 
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
-        setupToolBar("通知消息", setupBackButton = true)
+        setupToolBar(getString(R.string.im_system_message), setupBackButton = true)
         val inList = intent?.extras?.getParcelableArrayList<InstantMessage>(messageListKey)
         if (inList != null && inList.isNotEmpty()) {
             instantList.clear()
@@ -91,7 +91,7 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
         if (!flag) {
             go<TaskWebViewActivity>(TaskWebViewActivity.start(workId, "", ""))
         }else {
-            XToast.toastShort(this, "工作已经结束！")
+            XToast.toastShort(this, getString(R.string.message_work_is_completed))
         }
     }
 

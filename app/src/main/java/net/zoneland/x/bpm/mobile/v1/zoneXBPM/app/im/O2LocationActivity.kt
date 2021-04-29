@@ -76,13 +76,13 @@ class O2LocationActivity : AppCompatActivity(), BDLocationListener {
         mode = intent.getIntExtra(mode_key, 0)
         locationData = intent.getParcelableExtra(location_data_key)
         if (mode == 0) {
-            setupToolBar("点击地图选择位置")
+            setupToolBar(getString(R.string.im_location_click_choose))
         }else {
             if (locationData == null) {
-                XToast.toastShort(this, "传入参数错误！")
+                XToast.toastShort(this, getString(R.string.message_arg_error))
                 finish()
             }
-            setupToolBar(locationData?.address ?: "位置")
+            setupToolBar(locationData?.address ?: getString(R.string.im_location))
         }
 
 
@@ -140,7 +140,7 @@ class O2LocationActivity : AppCompatActivity(), BDLocationListener {
         when(item?.itemId) {
             R.id.location_send -> {
                 if (locationData == null){
-                    XToast.toastShort(this, "请先选择一个位置！")
+                    XToast.toastShort(this, getString(R.string.message_please_choose_location))
                 }else {
                     intent.putExtra(RESULT_LOCATION_KEY, locationData)
                     setResult(RESULT_OK, intent)
@@ -150,7 +150,7 @@ class O2LocationActivity : AppCompatActivity(), BDLocationListener {
             }
             R.id.location_open -> {
                 BottomSheetMenu(this@O2LocationActivity).setItems(
-                        arrayListOf("百度地图", "高德地图", "腾讯地图"),
+                        arrayListOf(getString(R.string.baidu_map), getString(R.string.gaode_map), getString(R.string.tengxun_map)),
                         ContextCompat.getColor(this@O2LocationActivity, R.color.blue)){ index ->
                             when(index) {
                                 0 -> goToBaiduMap()
@@ -286,7 +286,7 @@ class O2LocationActivity : AppCompatActivity(), BDLocationListener {
             val intent = Intent("android.intent.action.VIEW", uri)
             startActivity(intent)
         } catch (e: Exception) {
-            XToast.toastShort(this, "未安装百度地图，无法打开")
+            XToast.toastShort(this, getString(R.string.baidu_map_error_message))
         }
     }
 
@@ -310,7 +310,7 @@ class O2LocationActivity : AppCompatActivity(), BDLocationListener {
             val intent = Intent("android.intent.action.VIEW", Uri.parse(stringBuffer.toString()))
             startActivity(intent)
         } catch (e: Exception) {
-            XToast.toastShort(this, "未安装高德地图，无法打开")
+            XToast.toastShort(this, getString(R.string.gaode_map_error_message))
         }
     }
 
@@ -326,7 +326,7 @@ class O2LocationActivity : AppCompatActivity(), BDLocationListener {
             val intent = Intent("android.intent.action.VIEW", Uri.parse(stringBuffer.toString()))
             startActivity(intent)
         } catch (e: Exception) {
-            XToast.toastShort(this, "未安装腾讯地图，无法打开")
+            XToast.toastShort(this, getString(R.string.tengxun_map_error_message))
         }
     }
 

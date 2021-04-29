@@ -4,12 +4,17 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginBottom="@dimen/spacing_small"
+    android:layout_marginStart="@dimen/spacing_normal"
+    android:layout_marginEnd="@dimen/spacing_normal"
+    android:background="@drawable/background_white_radius_10"
     android:orientation="vertical">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/spacing_small">
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginBottom="@dimen/spacing_small">
         <net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
             android:id="@+id/image_o2_im_con_avatar"
             app:layout_constraintStart_toStartOf="parent"
@@ -23,8 +28,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:maxWidth="250dp"
-            android:textSize="14sp"
-            android:textColor="@color/z_color_text_primary"
+            android:textSize="17sp"
+            android:textColor="@color/z_color_text_primary_dark"
             android:textAlignment="textStart"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toEndOf="@+id/image_o2_im_con_avatar"
@@ -46,8 +51,8 @@
             android:maxWidth="200dp"
             android:singleLine="true"
             android:textAlignment="textStart"
-            android:textColor="@color/z_color_text_hint"
-            android:textSize="12sp"
+            android:textColor="@color/z_color_text_primary"
+            android:textSize="14sp"
             android:visibility="gone"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
@@ -70,7 +75,7 @@
             android:id="@+id/tv_o2_im_con_last_message_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="14sp"
+            android:textSize="12sp"
             android:textColor="@color/z_color_text_hint"
             android:textAlignment="textEnd"
             app:layout_constraintTop_toTopOf="parent"
@@ -93,10 +98,5 @@
             android:visibility="gone"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
-    <View
-        android:layout_width="match_parent"
-        android:layout_height="1px"
-        android:background="@color/z_color_split_meeting_line"
-        android:layout_marginStart="60dp"
-        android:layout_marginTop="@dimen/spacing_small"/>
+
 </LinearLayout>

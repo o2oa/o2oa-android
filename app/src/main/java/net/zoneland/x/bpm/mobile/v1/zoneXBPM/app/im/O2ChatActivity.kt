@@ -480,8 +480,10 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                 if (s != null && !TextUtils.isEmpty(s)) {
                     btn_o2_chat_send.visible()
                     btn_o2_chat_emotion.gone()
+                    btn_o2_chat_plus.gone()
                 } else {
                     btn_o2_chat_emotion.visible()
+                    btn_o2_chat_plus.visible()
                     btn_o2_chat_send.gone()
                 }
             }
@@ -502,7 +504,10 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                 if (rv_o2_chat_emoji_box.visibility == View.VISIBLE) { // 表情打开状态下
                     rv_o2_chat_emoji_box.gone()
                 }
-                if (tv_o2_chat_audio_send_box.visibility == View.VISIBLE) { // 表情打开状态下
+                if (ll_o2_chat_tool_bar.visibility == View.VISIBLE) { // 按钮区域
+                    ll_o2_chat_tool_bar.gone()
+                }
+                if (tv_o2_chat_audio_send_box.visibility == View.VISIBLE) { // 语音按钮
                     tv_o2_chat_audio_send_box.gone()
                 }
             }
@@ -510,6 +515,9 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         btn_o2_chat_emotion.setOnClickListener {
             //关闭语音框
             tv_o2_chat_audio_send_box.gone()
+            //关闭操作按钮区域
+            ll_o2_chat_tool_bar.gone()
+            //
             if (rv_o2_chat_emoji_box_out.isKeyboardActive) { //输入法激活时
                 if (rv_o2_chat_emoji_box.visibility == View.GONE) {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING) //  不改变布局，隐藏键盘，emojiView弹出
@@ -528,6 +536,33 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                     rv_o2_chat_emoji_box.visibility = View.VISIBLE
                 } else {
                     rv_o2_chat_emoji_box.visibility = View.GONE
+                }
+            }
+        }
+        // 按钮区域按钮显示隐藏
+        btn_o2_chat_plus.setOnClickListener {
+            //关闭语音框
+            tv_o2_chat_audio_send_box.gone()
+            //关闭表情框
+            rv_o2_chat_emoji_box.gone()
+            if (rv_o2_chat_emoji_box_out.isKeyboardActive) { //输入法激活时
+                if (ll_o2_chat_tool_bar.visibility == View.GONE) {
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING) //  不改变布局，隐藏键盘，emojiView弹出
+                    val imm = it.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(et_o2_chat_input.applicationWindowToken, 0)
+                    ll_o2_chat_tool_bar.visibility = View.VISIBLE
+                } else {
+                    ll_o2_chat_tool_bar.visibility = View.GONE
+                    val imm = it.context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+                    imm.hideSoftInputFromWindow(et_o2_chat_input.applicationWindowToken, 0)
+                    window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+                }
+            }else {
+                window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE)
+                if (ll_o2_chat_tool_bar.visibility == View.GONE) {
+                    ll_o2_chat_tool_bar.visibility = View.VISIBLE
+                } else {
+                    ll_o2_chat_tool_bar.visibility = View.GONE
                 }
             }
 
@@ -554,6 +589,8 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                     }
             //关闭表情框
             rv_o2_chat_emoji_box.gone()
+            //关闭按钮区域
+            ll_o2_chat_tool_bar.gone()
             if (rv_o2_chat_emoji_box_out.isKeyboardActive) { //输入法激活时
                 if (tv_o2_chat_audio_send_box.visibility == View.GONE) {
                     window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_NOTHING) //  不改变布局，隐藏键盘，emojiView弹出

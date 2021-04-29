@@ -85,10 +85,11 @@ class ContactPickerActivity : BaseMVPActivity<ContactPickerActivityContract.View
 
     private val fragments = ArrayList<Fragment>()
     private var currentSelect = 0
-    private var pickerTitle = getString(R.string.picker)
+    private var pickerTitle = ""
 
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
+        pickerTitle = getString(R.string.picker)
         pickerModes = intent.extras?.getStringArrayList(PICKER_MODE_KEY) ?: arrayListOf()
         if (pickerModes.isEmpty()) {
             pickerModes.addAll( picker_mode_list.toList() )

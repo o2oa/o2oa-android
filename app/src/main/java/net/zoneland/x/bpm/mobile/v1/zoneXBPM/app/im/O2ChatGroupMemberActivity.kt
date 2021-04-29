@@ -31,7 +31,7 @@ class O2ChatGroupMemberActivity : BaseMVPActivity<O2ChatGroupMemberContract.View
     override var mPresenter: O2ChatGroupMemberContract.Presenter = O2ChatGroupMemberPresenter()
 
 
-    private val invitePersonAdd = "添加"
+    private var invitePersonAdd = "添加"
     private val groupMembers = ArrayList<String>()
     private var conversationId: String = ""
 
@@ -53,19 +53,20 @@ class O2ChatGroupMemberActivity : BaseMVPActivity<O2ChatGroupMemberContract.View
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         val cId = intent?.extras?.getString(conversationIdKey)
         if (TextUtils.isEmpty(cId)) {
-            XToast.toastShort(this, "错误参数")
+            XToast.toastShort(this, getString(R.string.message_arg_error))
             finish()
             return
         }
         conversationId = cId!!
         val members = intent?.extras?.getStringArrayList(groupMembersKey)
         if (members == null || members.isEmpty()) {
-            XToast.toastShort(this, "错误参数")
+            XToast.toastShort(this, getString(R.string.message_arg_error))
             finish()
             return
         }
+        invitePersonAdd = getString(R.string.person_add)
 
-        setupToolBar("管理成员", true)
+        setupToolBar(getString(R.string.im_manager_member), true)
 
         groupMembers.clear()
         groupMembers.add(invitePersonAdd)

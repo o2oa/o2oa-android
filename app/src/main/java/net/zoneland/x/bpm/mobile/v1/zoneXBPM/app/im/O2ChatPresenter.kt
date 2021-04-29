@@ -3,6 +3,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im
 import android.text.TextUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
@@ -46,7 +47,7 @@ class O2ChatPresenter : BasePresenterImpl<O2ChatContract.View>(), O2ChatContract
 
     override fun updateConversationTitle(id: String, title: String) {
         if (id.isEmpty() || title.isEmpty()) {
-            mView?.updateFail("参数不正确，无法修改")
+            mView?.updateFail(mView?.getContext()?.getString(R.string.message_arg_error) ?: "参数不正确，无法修改")
             return
         }
         val service = getMessageCommunicateService(mView?.getContext())
@@ -61,12 +62,12 @@ class O2ChatPresenter : BasePresenterImpl<O2ChatContract.View>(), O2ChatContract
                         if (it.data != null) {
                             mView?.updateSuccess(it.data)
                         } else {
-                            mView?.updateFail("修改失败！")
+                            mView?.updateFail(mView?.getContext()?.getString(R.string.message_update_fail) ?: "修改失败！")
                         }
                     }
                     onError { e, _ ->
                         XLog.error("", e)
-                        mView?.updateFail("修改失败！")
+                        mView?.updateFail(mView?.getContext()?.getString(R.string.message_update_fail) ?: "修改失败！")
                     }
                 }
 
@@ -74,11 +75,11 @@ class O2ChatPresenter : BasePresenterImpl<O2ChatContract.View>(), O2ChatContract
 
     override fun updateConversationPeople(id: String, users: ArrayList<String>) {
         if (id.isEmpty() || users.isEmpty()) {
-            mView?.updateFail("参数不正确，无法修改")
+            mView?.updateFail(mView?.getContext()?.getString(R.string.message_arg_error) ?: "参数不正确，无法修改")
             return
         }
         if (users.size < 3) {
-            mView?.updateFail("成员不能少于3人")
+            mView?.updateFail(mView?.getContext()?.getString(R.string.message_members_cannot_less_three) ?: "成员不能少于3人")
             return
         }
         val service = getMessageCommunicateService(mView?.getContext())
@@ -93,12 +94,12 @@ class O2ChatPresenter : BasePresenterImpl<O2ChatContract.View>(), O2ChatContract
                         if (it.data != null) {
                             mView?.updateSuccess(it.data)
                         } else {
-                            mView?.updateFail("修改失败！")
+                            mView?.updateFail(mView?.getContext()?.getString(R.string.message_update_fail) ?: "修改失败！")
                         }
                     }
                     onError { e, _ ->
                         XLog.error("", e)
-                        mView?.updateFail("修改失败！")
+                        mView?.updateFail(mView?.getContext()?.getString(R.string.message_update_fail) ?: "修改失败！")
                     }
                 }
     }
@@ -226,7 +227,7 @@ class O2ChatPresenter : BasePresenterImpl<O2ChatContract.View>(), O2ChatContract
                         }
                         onError { e, _ ->
                             XLog.error("", e)
-                            mView?.downloadFileFail("获取文件异常, ${e?.message}")
+                            mView?.downloadFileFail(mView?.getContext()?.getString(R.string.message_download_fail) ?: "获取文件异常, ${e?.message}")
                         }
                     }
 

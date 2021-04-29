@@ -274,6 +274,20 @@
     <string name="activity_location_open">打开</string>
     <string name="menu_im_tribe_name_update">修改群名</string>
     <string name="menu_im_tribe_member_update">修改成员</string>
+    <string name="im_system_message">通知消息</string>
+    <string name="im_manager_member">管理成员</string>
+    <string name="im_location_click_choose">点击地图选择位置</string>
+    <string name="im_location">位置</string>
+    <string name="im_file">文件</string>
+    <string name="im_camera">拍摄</string>
+    <string name="im_album">相册</string>
+    <string name="baidu_map">百度地图</string>
+    <string name="baidu_map_error_message">未安装百度地图，无法打开</string>
+    <string name="gaode_map">高德地图</string>
+    <string name="gaode_map_error_message">未安装高德地图，无法打开</string>
+    <string name="tengxun_map">腾讯地图</string>
+    <string name="tengxun_map_error_message">未安装腾讯地图，无法打开</string>
+
 
     <!-- myinfo activity -->
     <string name="title_activity_my_info">我的资料</string>
@@ -878,7 +892,10 @@
     <string name="message_form_submit_fail">提交失败！</string>
     <string name="message_file_type_cannot_be_previewed">该文件类型无法预览！</string>
     <string name="message_use_other_application_open_file">用其它应用打开文件</string>
-    <string name="message_have_no_play_url">播放地址为空!</string>
+    <string name="message_have_no_play_url">播放地址为空！</string>
+    <string name="message_work_is_completed">工作已经结束！</string>
+    <string name="message_please_choose_location">请先选择一个位置！</string>
+    <string name="message_members_cannot_less_three">成员不能少于3人！</string>
 
 <!--    dialog -->
     <string name="dialog_msg_bind_to_server_fail">绑定服务器失败，请检查当前服务器配置是否正确？您也可以先绑定到O2OA演示服务器进行体验！</string>

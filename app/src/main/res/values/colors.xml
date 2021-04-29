@@ -53,8 +53,10 @@
 
 
     <!--im-->
-    <color name="z_color_im_right_bg">#E1F0FD</color>
+<!--    <color name="z_color_im_right_bg">#E1F0FD</color>-->
+    <color name="z_color_im_right_bg">#1AFB4747</color>
     <color name="z_color_im_left_bg">#F3F3F3</color>
+    <color name="z_color_im_chat_toolbar_bg">#F2F2F2</color>
 
 
     <!--chart -->
