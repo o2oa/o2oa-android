@@ -1,9 +1,11 @@
 <androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:fitsSystemWindows="true"
     android:id="@+id/main_content"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@mipmap/pic_person_bg_6"
     tools:context=".app.o2.person.PersonActivity">
 
 
@@ -15,13 +17,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical"
-            android:background="@android:color/white">
+            android:orientation="vertical">
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/layout_person_top_bar"
                 android:layout_width="match_parent"
-                android:layout_height="230dp"
-                android:background="@mipmap/pic_person_info_top_bar_bg">
+                android:layout_height="230dp">
 
                 <net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
                     android:id="@+id/image_person_avatar"
@@ -71,8 +71,13 @@
                 android:id="@+id/relative_person_operation_bar"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:background="@drawable/background_white_a9_radius_10"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_marginEnd="@dimen/spacing_normal"
                 android:layout_marginBottom="@dimen/spacing_small"
-                android:layout_marginTop="@dimen/spacing_small">
+                android:paddingTop="@dimen/spacing_small"
+                android:paddingBottom="@dimen/spacing_small">
 
                 <LinearLayout
                     android:id="@+id/linear_person_gender_men_button"
@@ -80,6 +85,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="90dp"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:layout_marginBottom="@dimen/spacing_small"
                     android:gravity="center_horizontal"
                     android:orientation="vertical">
 
@@ -95,7 +102,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="5dp"
-                        android:text="男"
+                        android:text="@string/man"
                         android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -106,6 +113,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentStart="true"
                     android:layout_marginStart="90dp"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:layout_marginBottom="@dimen/spacing_small"
                     android:gravity="center_horizontal"
                     android:visibility="gone"
                     android:orientation="vertical">
@@ -122,7 +131,7 @@
                         android:layout_height="wrap_content"
                         android:layout_gravity="center_horizontal"
                         android:layout_marginTop="5dp"
-                        android:text="女"
+                        android:text="@string/woman"
                         android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="14sp" />
                 </LinearLayout>
@@ -132,6 +141,8 @@
                     android:layout_width="60dp"
                     android:layout_height="wrap_content"
                     android:layout_alignParentEnd="true"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:layout_marginBottom="@dimen/spacing_small"
                     android:gravity="center_horizontal"
                     android:layout_marginEnd="90dp"
                     android:orientation="vertical">
@@ -156,24 +167,6 @@
 
             </RelativeLayout>
 
-            <RelativeLayout
-                android:id="@+id/relative_person_gap"
-                android:layout_width="match_parent"
-                android:layout_height="10dp"
-                android:background="@color/z_color_background">
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_alignParentTop="true"
-                    android:background="@color/z_color_split_line_ddd" />
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:layout_alignParentBottom="true"
-                    android:background="@color/z_color_split_line_ddd" />
-            </RelativeLayout>
 
             <!-- 公司信息 -->
             <LinearLayout
@@ -181,7 +174,17 @@
                 android:layout_height="wrap_content"
                 android:layout_marginLeft="15dp"
                 android:layout_marginRight="15dp"
-                android:background="@android:color/white"
+                android:paddingTop="@dimen/spacing_small"
+                android:paddingBottom="@dimen/spacing_small"
+                android:paddingStart="@dimen/spacing_normal"
+                android:paddingEnd="@dimen/spacing_normal"
+                android:background="@drawable/background_white_a9_radius_10"
+                android:orientation="vertical">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/spacing_normal"
+                android:layout_marginEnd="@dimen/spacing_normal"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -193,15 +196,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/company_info"
+                        android:layout_gravity="center"
+                        android:text="@string/person_enterprise_info"
                         android:textColor="@color/z_color_text_primary_dark"
-                        android:textSize="15sp" />
+                        android:textSize="18sp"
+                        android:textStyle="bold" />
                 </LinearLayout>
 
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="0.5dp"
-                    android:background="@color/z_color_split_line_ddd" />
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -214,7 +215,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/company_name_label"
-                        android:textColor="@color/z_color_text_primary_dark"
+                        android:textColor="@color/z_color_text_primary"
                         android:textSize="15sp" />
 
                     <TextView
@@ -223,7 +224,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:text=""
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal" />
                 </LinearLayout>
 
@@ -243,7 +244,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/company_employee_label"
-                        android:textColor="@color/z_color_text_primary_dark"
+                        android:textColor="@color/z_color_text_primary"
                         android:textSize="15sp" />
 
                     <TextView
@@ -252,7 +253,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:text=""
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal" />
                 </LinearLayout>
 
@@ -272,7 +273,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/company_unique_label"
-                        android:textColor="@color/z_color_text_primary_dark"
+                        android:textColor="@color/z_color_text_primary"
                         android:textSize="15sp" />
 
                     <TextView
@@ -281,7 +282,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         android:text="******"
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal" />
                 </LinearLayout>
 
@@ -302,7 +303,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/person_mobile_label"
-                        android:textColor="@color/z_color_text_primary_dark"
+                        android:textColor="@color/z_color_text_primary"
                         android:textSize="15sp" />
 
                     <TextView
@@ -311,7 +312,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         tools:text="13333333333"
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal" />
 
                     <ImageView
@@ -337,7 +338,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/person_email_label"
-                        android:textColor="@color/z_color_text_primary_dark"
+                        android:textColor="@color/z_color_text_primary"
                         android:textSize="15sp" />
 
                     <TextView
@@ -346,7 +347,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         tools:text="emal.com"
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal" />
 
                     <ImageView
@@ -372,7 +373,7 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="1"
                         android:text="@string/company_dept_label"
-                        android:textColor="@color/z_color_text_primary_dark"
+                        android:textColor="@color/z_color_text_primary"
                         android:textSize="15sp" />
 
                     <TextView
@@ -381,18 +382,14 @@
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
                         tools:text="emal.com"
-                        android:textColor="@color/z_color_text_primary"
+                        android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal" />
 
                 </LinearLayout>
-
+            </LinearLayout>
 
             </LinearLayout>
 
-            <View
-                android:layout_width="match_parent"
-                android:layout_height="0.5dp"
-                android:background="@color/z_color_split_line_ddd" />
 
             <Button
                 android:id="@+id/btn_begin_talk"
@@ -420,9 +417,9 @@
             android:id="@+id/image_person_back"
             android:layout_width="24dp"
             android:layout_height="24dp"
-            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginLeft="8dp"
+            android:layout_marginStart="8dp"
             android:src="@mipmap/ic_back_mtrl_white_alpha"
             />
 

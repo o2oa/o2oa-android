@@ -69,23 +69,23 @@
         android:layout_width="match_parent"
         android:layout_height="40dp"
         android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:background="@drawable/background_white_radius_10"
         android:orientation="vertical">
-        <View
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/z_color_split_line_ddd" />
         <HorizontalScrollView
             android:id="@+id/scroll_organization_breadcrumb_scroll"
             android:layout_width="match_parent"
-            android:layout_height="39dp"
-            android:background="@android:color/white">
+            android:layout_height="40dp"
+            android:paddingStart="15dp"
+            android:paddingEnd="8dp">
             <LinearLayout
                 android:id="@+id/linear_organization_breadcrumb_layout"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:gravity="center_vertical"
                 android:orientation="horizontal"
-                android:paddingLeft="15dp">
+                >
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
@@ -96,28 +96,15 @@
         </HorizontalScrollView>
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/shimmer_organization_layout"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:gravity="center"
-        android:orientation="vertical">
-        <include layout="@layout/snippet_shimmer_content" />
-    </LinearLayout>
-
-
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/swipe_refresh_organization_main"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1"
-        android:visibility="gone">
+        android:layout_weight="1">
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/list_organization_main"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:background="@android:color/white"></androidx.recyclerview.widget.RecyclerView>
+            android:layout_height="wrap_content" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </LinearLayout>

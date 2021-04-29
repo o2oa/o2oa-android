@@ -1,11 +1,14 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter
 
+import android.view.View
 import androidx.recyclerview.widget.RecyclerView
 import android.view.ViewGroup
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.NewContactFragmentVO
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.inflate
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 
 /**
  * Created by fancy on 2017/7/10.
@@ -27,18 +30,54 @@ abstract class NewContactFragmentAdapter(val items:List<NewContactFragmentVO>) :
         when(items[position]){
             is NewContactFragmentVO.GroupHeader -> {
                 val header = items[position] as NewContactFragmentVO.GroupHeader
-                holder?.setText(R.id.tv_item_contact_fragment_header_title, header.name)
-                        ?.setImageViewDrawable(R.id.image_item_contact_fragment_header_icon, FancySkinManager.instance().getDrawable(holder?.convertView.context, header.resId))
+                val isLast = if(position == items.size-1) {
+                    true
+                }else {
+                    val next = items[position+1]
+                    next is NewContactFragmentVO.GroupHeader
+                }
+                val bottom = holder.getView<View>(R.id.view_item_contact_fragment_header_bottom)
+                if (isLast) {
+                    bottom.visible()
+                }else {
+                    bottom.gone()
+                }
+                holder.setText(R.id.tv_item_contact_fragment_header_title, header.name)
+                        ?.setImageViewDrawable(R.id.image_item_contact_fragment_header_icon, FancySkinManager.instance().getDrawable(holder.convertView.context, header.resId))
             }
             is NewContactFragmentVO.MyDepartment -> {
                 val department = items[position] as NewContactFragmentVO.MyDepartment
+                val isLast = if (position == items.size-1) {
+                    true
+                }else {
+                    val next = items[position+1]
+                    next is NewContactFragmentVO.GroupHeader
+                }
+                val bottom = holder.getView<View>(R.id.view_item_contact_fragment_body_bottom)
+                if (isLast) {
+                    bottom.visible()
+                }else {
+                    bottom.gone()
+                }
                 bindMyDepartment(department, holder)
-                holder?.convertView?.setOnClickListener { clickMyDepartment(department) }
+                holder.convertView?.setOnClickListener { clickMyDepartment(department) }
             }
             else -> {
                 val collect = items[position] as NewContactFragmentVO.MyCollect
+                val isLast = if (position == items.size-1) {
+                    true
+                }else {
+                    val next = items[position+1]
+                    next is NewContactFragmentVO.GroupHeader
+                }
+                val bottom = holder.getView<View>(R.id.view_item_contact_fragment_body_collect_bottom)
+                if (isLast) {
+                    bottom.visible()
+                }else {
+                    bottom.gone()
+                }
                 bindMyCollect(collect, holder)
-                holder?.convertView?.setOnClickListener { clickMyCollect(collect) }
+                holder.convertView?.setOnClickListener { clickMyCollect(collect) }
             }
         }
     }

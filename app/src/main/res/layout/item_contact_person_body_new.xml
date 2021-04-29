@@ -3,36 +3,30 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/z_color_background"
+
+    android:layout_marginStart="@dimen/spacing_small"
+    android:layout_marginEnd="@dimen/spacing_small"
     android:orientation="vertical">
-    <RelativeLayout
-        android:id="@+id/relative_item_contact_person_body_top_gap"
-        android:visibility="gone"
+    <View
+        android:id="@+id/view_item_contact_person_body_top"
         android:layout_width="match_parent"
-        android:layout_height="10dp">
-        <View
-            android:layout_alignParentTop="true"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/z_color_split_line_ddd" />
-        <View
-            android:layout_alignParentBottom="true"
-            android:layout_width="match_parent"
-            android:layout_height="0.5dp"
-            android:background="@color/z_color_split_line_ddd" />
-    </RelativeLayout>
+        android:layout_height="10dp"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:background="@drawable/background_white_top_radius"
+        android:visibility="gone"
+        />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="60dp"
         android:background="@android:color/white"
         android:orientation="vertical"
-        android:paddingLeft="15dp"
-        android:paddingRight="8dp">
-
+        android:paddingStart="15dp"
+        android:paddingEnd="8dp">
         <View
-            android:id="@+id/view_item_contact_person_body_top_divider"
+            android:id="@+id/view_item_contact_person_body_top_line"
             android:layout_width="match_parent"
-            android:layout_height="0.5dp"
+            android:layout_height="1px"
             android:background="@color/z_color_split_line_ddd" />
 
         <RelativeLayout
@@ -44,7 +38,6 @@
                 android:id="@+id/image_item_contact_person_body_icon"
                 android:layout_width="40dp"
                 android:layout_height="40dp"
-                android:layout_alignParentLeft="true"
                 android:layout_alignParentStart="true"
                 android:layout_centerVertical="true"
                 android:src="@mipmap/icon_avatar_men" />
@@ -53,9 +46,9 @@
                 android:id="@+id/tv_item_contact_person_body_name"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="@dimen/spacing_small"
+                android:layout_marginStart="@dimen/spacing_small"
                 android:layout_centerVertical="true"
-                android:layout_toRightOf="@id/image_item_contact_person_body_icon"
+                android:layout_toEndOf="@id/image_item_contact_person_body_icon"
                 android:textColor="@color/z_color_text_primary_dark"
                 android:textSize="@dimen/font_normal"
                 tools:text="@string/contact_list_name" />
@@ -65,7 +58,7 @@
                 android:id="@+id/linear_item_contact_person_body_right_block"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_alignParentRight="true"
+                android:layout_alignParentEnd="true"
                 android:layout_centerVertical="true"
                 android:orientation="vertical">
                 <ImageView
@@ -86,13 +79,20 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_centerVertical="true"
-                android:layout_marginRight="@dimen/spacing_tiny"
-                android:layout_toLeftOf="@id/linear_item_contact_person_body_right_block"
+                android:layout_marginEnd="@dimen/spacing_tiny"
+                android:layout_toStartOf="@id/linear_item_contact_person_body_right_block"
                 android:text="@string/contact_list_no_mobile"
                 android:textColor="@color/z_color_text_primary"
                 android:textSize="13sp" />
 
         </RelativeLayout>
     </LinearLayout>
+
+    <View
+        android:id="@+id/view_item_contact_person_body_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:visibility="gone"
+        android:background="@drawable/background_white_bottom_radius"/>
 
 </LinearLayout>

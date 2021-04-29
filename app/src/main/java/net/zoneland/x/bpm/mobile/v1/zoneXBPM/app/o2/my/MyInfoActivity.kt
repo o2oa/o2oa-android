@@ -12,6 +12,7 @@ import android.os.Bundle
 import android.provider.MediaStore
 import android.text.TextUtils
 import android.view.*
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_my_info.*
 import net.muliba.fancyfilepickerlibrary.PicturePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
@@ -26,6 +27,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderOptions
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CommonMenuPopupWindow
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import org.jetbrains.anko.doAsync
@@ -44,8 +46,8 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
 
     override var mPresenter: MyInfoContract.Presenter = MyInfoPresenter()
 
-    private val avatarMenuList: ArrayList<String> by lazy { arrayListOf(getString(R.string.take_photo), getString(R.string.take_from_album)) }
-    val avatarMenu: CommonMenuPopupWindow by lazy { CommonMenuPopupWindow(avatarMenuList, this) }
+//    private val avatarMenuList: ArrayList<String> by lazy { arrayListOf(getString(R.string.take_photo), getString(R.string.take_from_album)) }
+//    val avatarMenu: CommonMenuPopupWindow by lazy { CommonMenuPopupWindow(avatarMenuList, this) }
 
     var person: PersonJson? = null
     private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
@@ -83,16 +85,16 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
         tv_myInfo_edit_save_btn.setOnClickListener(this)
         linear_myInfo_gender_men_button.setOnClickListener(this)
         linear_myInfo_gender_women_button.setOnClickListener(this)
-        avatarMenu.setOnDismissListener { ZoneUtil.lightOn(this@MyInfoActivity) }
-        avatarMenu.onMenuItemClickListener = object : CommonMenuPopupWindow.OnMenuItemClickListener {
-            override fun itemClick(position: Int) {
-                when (position) {
-                    0 -> takeFromCamera()
-                    1 -> takeFromPictures()
-                }
-                avatarMenu.dismiss()
-            }
-        }
+//        avatarMenu.setOnDismissListener { ZoneUtil.lightOn(this@MyInfoActivity) }
+//        avatarMenu.onMenuItemClickListener = object : CommonMenuPopupWindow.OnMenuItemClickListener {
+//            override fun itemClick(position: Int) {
+//                when (position) {
+//                    0 -> takeFromCamera()
+//                    1 -> takeFromPictures()
+//                }
+//                avatarMenu.dismiss()
+//            }
+//        }
 
         showLoadingDialog()
         mPresenter.loadMyInfo()
@@ -359,8 +361,17 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
     }
 
     private fun modifyAvatarMenuShow() {
-        avatarMenu.showAtLocation(image_myInfo_avatar, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 0)
-        ZoneUtil.lightOff(this)
+        if (isEdit) {
+            BottomSheetMenu(this).setItems(arrayListOf(getString(R.string.take_photo), getString(R.string.take_from_album)), ContextCompat.getColor(this, R.color.text_primary)) { i ->
+                when (i) {
+                    0 -> takeFromCamera()
+                    1 -> takeFromPictures()
+                }
+            }.show()
+        }
+
+//        avatarMenu.showAtLocation(image_myInfo_avatar, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 0)
+//        ZoneUtil.lightOff(this)
 
     }
 

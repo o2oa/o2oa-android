@@ -1,10 +1,14 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.person
 
 
+import android.graphics.Color
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
-import android.view.Gravity
 import android.view.View
+import android.view.Window
+import android.view.WindowManager
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_person_info.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
@@ -17,13 +21,12 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.person.PersonJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.ZoneUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.makeCallDial
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderOptions
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CommonMenuPopupWindow
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import org.jetbrains.anko.email
 import org.jetbrains.anko.sendSMS
 
@@ -47,20 +50,34 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
     var personId = ""
     var genderName = ""
     var hasCollection = false
-    val mobileMenuItemList: ArrayList<String> = arrayListOf(getString(R.string.call), getString(R.string.sms), getString(R.string.copy))
-    val mobileClickMenu: CommonMenuPopupWindow by lazy { CommonMenuPopupWindow(mobileMenuItemList, this) }
-    val emailMenuItemList: ArrayList<String> = arrayListOf(getString(R.string.send_email), getString(R.string.copy))
-    val emailClickMenu: CommonMenuPopupWindow by lazy { CommonMenuPopupWindow(emailMenuItemList, this) }
+//    val mobileMenuItemList: ArrayList<String> by lazy {  arrayListOf(getString(R.string.call), getString(R.string.sms), getString(R.string.copy)) }
+//    val mobileClickMenu: CommonMenuPopupWindow by lazy { CommonMenuPopupWindow(mobileMenuItemList, this) }
+//    val emailMenuItemList: ArrayList<String> by lazy {  arrayListOf(getString(R.string.send_email), getString(R.string.copy)) }
+//    val emailClickMenu: CommonMenuPopupWindow by lazy { CommonMenuPopupWindow(emailMenuItemList, this) }
+    private val backgroundList = arrayListOf(R.mipmap.pic_person_bg_1, R.mipmap.pic_person_bg_2, R.mipmap.pic_person_bg_3, R.mipmap.pic_person_bg_4, R.mipmap.pic_person_bg_5, R.mipmap.pic_person_bg_6)
 //    private var canTalkTo = false
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
+        //透明
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            //5.0 全透明实现
+            //getWindow.setStatusBarColor(Color.TRANSPARENT)
+            val window: Window = window
+            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+            window.statusBarColor = Color.TRANSPARENT
+        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            //4.4 全透明状态栏
+            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        }
         personId = intent.extras?.getString(PERSON_NAME_KEY, "")?:""
         if (TextUtils.isEmpty(personId)) {
             XToast.toastShort(this, getString(R.string.message_no_person_id_error))
             finish()
             return
         }
-
+        randomBg()
         linear_person_mobile_button.setOnClickListener(this)
         linear_person_email_button.setOnClickListener(this)
         linear_person_collection_button.setOnClickListener(this)
@@ -71,7 +88,12 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
         mPresenter.loadPersonInfo(personId)
         mPresenter.isUsuallyPerson(O2SDKManager.instance().distinguishedName, personId)
     }
-
+    // 随机背景图
+    private fun randomBg() {
+        val index = (0..5).random()
+        XLog.debug("背景图片 $index")
+        main_content.setBackgroundResource(backgroundList[index])
+    }
 
     override fun onClick(v: View?) {
         when (v?.id) {
@@ -86,24 +108,6 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
                 }else {
 
                 }
-//                if (O2App.instance._JMIsLogin()) {
-//                    if (canTalkTo && O2SDKManager.instance().cId != loadedPersonId) {
-//                        val intent = Intent(this, ChatActivity::class.java)
-//                        val user = O2App.instance._JMMyUserInfo()
-//                        val name = tv_person_name.text.toString()
-//                        XLog.info("current user: ${user?.userName}, ${user?.nickname}, ${user?.appKey}")
-//                        XLog.info("to user: $loadedPersonId, $name")
-//                        intent.putExtra(JIMConstant.CONV_TITLE, name)
-//                        intent.putExtra(JIMConstant.TARGET_ID, loadedPersonId)
-//                        intent.putExtra(JIMConstant.TARGET_APP_KEY, O2App.instance.JM_IM_APP_KEY)
-//                        startActivity(intent)
-//                    }else {
-//                        XToast.toastShort(this, "无法发起聊天，该用户没有启用聊天功能！")
-//                    }
-//
-//                }else {
-//                    XToast.toastShort(this, "无法聊天，没有连接到IM服务器！！")
-//                }
             }
         }
     }
@@ -137,21 +141,31 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
         if (TextUtils.isEmpty(emailAddress)) {
             return
         }
-        emailClickMenu.setOnDismissListener { ZoneUtil.lightOn(this@PersonActivity) }
-        emailClickMenu.onMenuItemClickListener = object : CommonMenuPopupWindow.OnMenuItemClickListener {
-            override fun itemClick(position: Int) {
-                when(position){
-                    0 -> email(emailAddress)
-                    1 ->  {
-                        AndroidUtils.copyTextToClipboard(emailAddress, this@PersonActivity)
-                        XToast.toastShort(this@PersonActivity, getString(R.string.message_copy_email_success))
-                    }
+        BottomSheetMenu(this).setItems(arrayListOf(getString(R.string.send_email), getString(R.string.copy)), ContextCompat.getColor(this, R.color.text_primary)) { i->
+            when(i) {
+                0 -> email(emailAddress)
+                1 ->  {
+                    AndroidUtils.copyTextToClipboard(emailAddress, this@PersonActivity)
+                    XToast.toastShort(this@PersonActivity, getString(R.string.message_copy_email_success))
                 }
-                emailClickMenu.dismiss()
             }
         }
-        emailClickMenu.showAtLocation(main_content, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 0)
-        ZoneUtil.lightOff(this)
+
+//        emailClickMenu.setOnDismissListener { ZoneUtil.lightOn(this@PersonActivity) }
+//        emailClickMenu.onMenuItemClickListener = object : CommonMenuPopupWindow.OnMenuItemClickListener {
+//            override fun itemClick(position: Int) {
+//                when(position){
+//                    0 -> email(emailAddress)
+//                    1 ->  {
+//                        AndroidUtils.copyTextToClipboard(emailAddress, this@PersonActivity)
+//                        XToast.toastShort(this@PersonActivity, getString(R.string.message_copy_email_success))
+//                    }
+//                }
+//                emailClickMenu.dismiss()
+//            }
+//        }
+//        emailClickMenu.showAtLocation(main_content, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 0)
+//        ZoneUtil.lightOff(this)
     }
 
     private fun callPhone() {
@@ -160,22 +174,34 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
         if (TextUtils.isEmpty(phone)) {
             return
         }
-        mobileClickMenu.setOnDismissListener { ZoneUtil.lightOn(this@PersonActivity) }
-        mobileClickMenu.onMenuItemClickListener = object : CommonMenuPopupWindow.OnMenuItemClickListener {
-            override fun itemClick(position: Int) {
-                when (position) {
-                    0 -> makeCallDial(phone)
-                    1 -> sendSMS(phone)
-                    2 -> {
-                        AndroidUtils.copyTextToClipboard(phone, this@PersonActivity)
-                        XToast.toastShort(this@PersonActivity, getString(R.string.message_copy_phone_number_success))
-                    }
+
+        BottomSheetMenu(this).setItems(arrayListOf(getString(R.string.call), getString(R.string.sms), getString(R.string.copy)), ContextCompat.getColor(this, R.color.text_primary)) { i ->
+            when(i) {
+                0 -> makeCallDial(phone)
+                1 -> sendSMS(phone)
+                2 -> {
+                    AndroidUtils.copyTextToClipboard(phone, this@PersonActivity)
+                    XToast.toastShort(this@PersonActivity, getString(R.string.message_copy_phone_number_success))
                 }
-                mobileClickMenu.dismiss()
             }
-        }
-        mobileClickMenu.showAtLocation(main_content, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 0)
-        ZoneUtil.lightOff(this)
+        }.show()
+
+//        mobileClickMenu.setOnDismissListener { ZoneUtil.lightOn(this@PersonActivity) }
+//        mobileClickMenu.onMenuItemClickListener = object : CommonMenuPopupWindow.OnMenuItemClickListener {
+//            override fun itemClick(position: Int) {
+//                when (position) {
+//                    0 -> makeCallDial(phone)
+//                    1 -> sendSMS(phone)
+//                    2 -> {
+//                        AndroidUtils.copyTextToClipboard(phone, this@PersonActivity)
+//                        XToast.toastShort(this@PersonActivity, getString(R.string.message_copy_phone_number_success))
+//                    }
+//                }
+//                mobileClickMenu.dismiss()
+//            }
+//        }
+//        mobileClickMenu.showAtLocation(main_content, Gravity.BOTTOM or Gravity.CENTER_HORIZONTAL, 0, 0)
+//        ZoneUtil.lightOff(this)
     }
 
     override fun isUsuallyPerson(flag: Boolean) {
@@ -225,13 +251,6 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
         val url = APIAddressHelper.instance().getPersonAvatarUrlWithId(personInfo.id)
         O2ImageLoaderManager.instance().showImage(image_person_avatar, url, O2ImageLoaderOptions(placeHolder = R.mipmap.icon_avatar_men))
 
-//        //IM 服务端获取用户信息
-//        JMessageClient.getUserInfo(loadedPersonId, object : GetUserInfoCallback(){
-//            override fun gotResult(responseCode: Int, responseMessage: String?, info: UserInfo?) {
-//                XLog.info("responseCode:$responseCode, responseMessage:$responseMessage ")
-//                canTalkTo = responseCode == 0
-//            }
-//        })
     }
 
     override fun loadPersonInfoFail() {

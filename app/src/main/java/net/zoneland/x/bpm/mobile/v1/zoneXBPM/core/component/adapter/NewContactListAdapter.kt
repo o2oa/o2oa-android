@@ -5,7 +5,9 @@ import android.view.View
 import android.view.ViewGroup
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.NewContactListVO
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.inflate
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 
 /**
  * Created by fancy on 2017/4/25.
@@ -21,11 +23,60 @@ abstract class NewContactListAdapter(var items: ArrayList<NewContactListVO>) : R
         when(items[position]) {
             is NewContactListVO.Department -> {
                 val department = items[position] as NewContactListVO.Department
+                val isLast = if (position == items.size-1) {
+                    true
+                }else {
+                    val next = items[position+1]
+                    next !is NewContactListVO.Department
+                }
+                val bottom = holder.getView<View>(R.id.view_item_contact_body_org_bottom)
+                if (isLast) {
+                    bottom.visible()
+                }else {
+                    bottom.gone()
+                }
+                val isFirst = position == 0
+                val top = holder.getView<View>(R.id.view_item_contact_body_org_top)
+                val topLine = holder.getView<View>(R.id.view_item_contact_body_org_top_line)
+                if (isFirst) {
+                    top.visible()
+                    topLine.gone()
+                }else {
+                    top.gone()
+                    topLine.visible()
+                }
                 bindDepartment(holder, department, position)
                 holder.convertView?.setOnClickListener { clickDepartment(department) }
             }
             else -> {
                 val identity = items[position] as NewContactListVO.Identity
+                val isLast = if (position == items.size-1) {
+                    true
+                }else {
+                    val next = items[position+1]
+                    next !is NewContactListVO.Identity
+                }
+                val bottom = holder.getView<View>(R.id.view_item_contact_person_body_bottom)
+                if (isLast) {
+                    bottom.visible()
+                }else {
+                    bottom.gone()
+                }
+                val isFirst = if (position == 0) {
+                    true
+                }else {
+                    val last = items[position - 1]
+                    last !is NewContactListVO.Identity
+                }
+                val top = holder.getView<View>(R.id.view_item_contact_person_body_top)
+                val topLine = holder.getView<View>(R.id.view_item_contact_person_body_top_line)
+                if (isFirst) {
+                    top.visible()
+                    topLine.gone()
+                }else {
+                    top.gone()
+                    topLine.visible()
+                }
                 bindIdentity(holder, identity, position)
                 holder.convertView?.setOnClickListener { view -> clickIdentity(view, identity) }
             }

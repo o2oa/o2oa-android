@@ -405,7 +405,6 @@ class NewOrganizationActivity : BaseMVPActivity<NewOrganizationContract.View, Ne
         mainItemList.clear()
         mainItemList.addAll(list)
         mainListAdapter.notifyDataSetChanged()
-        shimmer_organization_layout.gone()
         swipe_refresh_organization_main.visible()
         swipe_refresh_organization_main.isRefreshing = false
     }
@@ -416,7 +415,6 @@ class NewOrganizationActivity : BaseMVPActivity<NewOrganizationContract.View, Ne
         }
         mainItemList.clear()
         mainListAdapter.notifyDataSetChanged()
-        shimmer_organization_layout.gone()
         swipe_refresh_organization_main.visible()
         swipe_refresh_organization_main.isRefreshing = false
     }
@@ -426,7 +424,6 @@ class NewOrganizationActivity : BaseMVPActivity<NewOrganizationContract.View, Ne
         edit_toolbar_organization_search.gone()
         linear_organization_search_button.visible()
         linear_organization_breadcrumb_bar.visible()
-        shimmer_organization_layout.visible()
         swipe_refresh_organization_main.gone()
         refreshOrganizationMain()
     }
@@ -436,7 +433,6 @@ class NewOrganizationActivity : BaseMVPActivity<NewOrganizationContract.View, Ne
         edit_toolbar_organization_search.visible()
         linear_organization_search_button.gone()
         linear_organization_breadcrumb_bar.gone()
-        shimmer_organization_layout.gone()
         swipe_refresh_organization_main.visible()
         //获得焦点
         edit_toolbar_organization_search.isFocusable = true
@@ -456,7 +452,6 @@ class NewOrganizationActivity : BaseMVPActivity<NewOrganizationContract.View, Ne
         edit_toolbar_organization_search.gone()
         linear_organization_search_button.visible()
         linear_organization_breadcrumb_bar.visible()
-        shimmer_organization_layout.gone()
         swipe_refresh_organization_main.visible()
 
         //隐藏软键盘
@@ -472,7 +467,6 @@ class NewOrganizationActivity : BaseMVPActivity<NewOrganizationContract.View, Ne
         tv_toolbar_title_organization.gone()
         linear_organization_search_button.gone()
         linear_organization_breadcrumb_bar.gone()
-        shimmer_organization_layout.gone()
         swipe_refresh_organization_main.visible()
         edit_toolbar_organization_search.visible()
         edit_toolbar_organization_search.setText("")
