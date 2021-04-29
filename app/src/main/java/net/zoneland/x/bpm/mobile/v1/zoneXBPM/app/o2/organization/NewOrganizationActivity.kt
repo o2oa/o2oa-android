@@ -2,6 +2,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization
 
 
 import android.app.Activity
+import android.graphics.Typeface
 import android.os.Bundle
 import android.os.Handler
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -511,7 +512,8 @@ class NewOrganizationActivity : BaseMVPActivity<NewOrganizationContract.View, Ne
             val breadcrumbTitle = TextView(this)
             breadcrumbTitle.text = contactBreadcrumbBean.name
             breadcrumbTitle.tag = contactBreadcrumbBean.key
-            breadcrumbTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
+            breadcrumbTitle.setTextSize(TypedValue.COMPLEX_UNIT_SP, 18f)
+            breadcrumbTitle.typeface = Typeface.DEFAULT_BOLD
             breadcrumbTitle.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
             if (index == breadcrumbBeans.size - 1) {
                 breadcrumbTitle.setTextColor(FancySkinManager.instance().getColor(this, R.color.z_color_primary))

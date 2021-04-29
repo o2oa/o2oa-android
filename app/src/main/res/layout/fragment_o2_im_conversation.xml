@@ -40,8 +40,8 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:layout_marginBottom="@dimen/spacing_small">
+                    android:layout_marginTop="@dimen/spacing_normal"
+                    android:layout_marginBottom="@dimen/spacing_normal">
                     <net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
                         android:id="@+id/image_o2_in_con_avatar"
                         app:layout_constraintStart_toStartOf="parent"
