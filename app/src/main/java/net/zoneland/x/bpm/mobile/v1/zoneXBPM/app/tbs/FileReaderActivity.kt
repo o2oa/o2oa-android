@@ -1,12 +1,14 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs
 
-import androidx.lifecycle.ViewModelProviders
-import androidx.databinding.DataBindingUtil
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.Gravity
+import android.view.Menu
+import android.view.MenuItem
 import android.widget.Button
 import android.widget.FrameLayout
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.ViewModelProviders
 import com.tencent.smtt.sdk.TbsReaderView
 import kotlinx.android.synthetic.main.activity_file_reader.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
@@ -33,10 +35,12 @@ class FileReaderActivity : BaseO2BindActivity() {
         }
     }
 
+    var filePath = ""
+
     override fun bindView(savedInstanceState: Bundle?) {
         val bind = DataBindingUtil.setContentView<ActivityFileReaderBinding>(this, R.layout.activity_file_reader)
         bind.viewmodel = viewModel
-        bind.setLifecycleOwner(this)
+        bind.lifecycleOwner = this
     }
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
@@ -45,10 +49,23 @@ class FileReaderActivity : BaseO2BindActivity() {
             XLog.info("arg:$arg, 1:$arg1, 2:$arg2")
         }
         fl_file_reader_container.addView(mTbsReaderView, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
-        val filePath = intent.extras?.getString(file_reader_file_path_key) ?: ""
+        filePath = intent.extras?.getString(file_reader_file_path_key) ?: ""
         if (!TextUtils.isEmpty(filePath)) {
             openFileWithTBS(filePath)
         }
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        // todo 是否展现 后台需要一个配置
+        menuInflater.inflate(R.menu.menu_share, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        if (item?.itemId == R.id.menu_share) {
+            share()
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroy() {
@@ -56,10 +73,14 @@ class FileReaderActivity : BaseO2BindActivity() {
         super.onDestroy()
     }
 
+    private fun share() {
+        val file = File(filePath)
+        AndroidUtils.shareFile(this, file)
+
+    }
+
     private fun openFileWithTBS(file: String) {
         XLog.info("打开文件：$file")
-
-
         val type = getFileType(file)
         val b = mTbsReaderView?.preOpen(type, false)
         if (b == true) {

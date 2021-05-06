@@ -24,8 +24,7 @@ import java.io.FileReader
 import java.util.*
 import android.net.ConnectivityManager
 import android.net.NetworkInfo
-
-
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 
 
 /**
@@ -293,6 +292,29 @@ object AndroidUtils {
         } catch (e: Exception) {
             XLog.error("打开文件异常", e)
             XToast.toastShort(activity, "无法打开文件！")
+        }
+    }
+
+    /**
+     * 分享文件
+     */
+    fun shareFile(activity: Activity, file: File) {
+        if (file.exists()) {
+            val share = Intent(Intent.ACTION_SEND)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+                val contentUri = FileProvider.getUriForFile(activity, BuildConfig.APPLICATION_ID + ".fileProvider", file)
+                share.putExtra(Intent.EXTRA_STREAM, contentUri)
+                share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            } else {
+                share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file))
+            }
+            val type = FileUtil.getMIMEType(file)
+            share.type = type//此处可发送多种文件
+            share.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+            share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+            activity.startActivity(Intent.createChooser(share, activity.getString(R.string.yunpan_share_file)))
+        } else {
+            XToast.toastShort(activity, activity.getString(R.string.message_share_file_not_exist))
         }
     }
 
