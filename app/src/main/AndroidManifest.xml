@@ -45,6 +45,7 @@
         android:roundIcon="@mipmap/logo_round"
         android:theme="@style/XBPMTheme.NoActionBar"
         tools:replace="android:allowBackup">
+        <activity android:name=".app.o2.webview.O2WebViewActivity"></activity>
         <activity android:name=".app.clouddrive.v2.share.CloudShareActivity" />
         <activity android:name=".app.im.O2LocationActivity" />
         <activity android:name=".app.im.O2InstantMessageActivity" />

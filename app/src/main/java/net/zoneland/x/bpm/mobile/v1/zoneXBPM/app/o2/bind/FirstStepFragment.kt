@@ -9,6 +9,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.login.LoginActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.O2WebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.APIDistributeData
@@ -40,6 +41,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         countDownHelper.setOnFinishListener { XLog.debug("CountDownButtonHelper, finish.................."); }
         button_login_phone_next.setOnClickListener(this)
         button_login_phone_code.setOnClickListener(this)
+        tv_secret_login.setOnClickListener(this)
         edit_login_phone.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 view_bind_phone_step_one_number_bottom.setBackgroundColor(FancySkinManager.instance().getColor(activity!!, R.color.z_color_input_line_focus))
@@ -178,6 +180,11 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                 edit_login_code.isFocusableInTouchMode = true
                 edit_login_code.requestFocus()
                 edit_login_code.requestFocusFromTouch()
+            }
+            R.id.tv_secret_login -> {
+                activity?.let {
+                    O2WebViewActivity.openWebView(it, getString(R.string.secret), "https://www.o2oa.net/secret.html")
+                }
             }
             else -> XLog.error("no implements this view ,id:${v?.id}")
         }

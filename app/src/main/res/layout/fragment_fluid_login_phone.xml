@@ -44,7 +44,7 @@
             android:id="@+id/image_login_phone_icon"
             android:layout_width="20dp"
             android:layout_height="20dp"
-            android:layout_marginLeft="25dp"
+            android:layout_marginStart="25dp"
             android:layout_marginTop="20dp"
             android:src="@mipmap/icon_phone_focus"
             app:layout_constraintTop_toTopOf="parent"
@@ -54,8 +54,8 @@
             android:id="@+id/edit_login_phone"
             android:layout_width="0dp"
             android:layout_height="20dp"
-            android:layout_marginLeft="10dp"
-            android:layout_marginRight="25dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="25dp"
             android:layout_marginTop="20dp"
             android:background="@null"
             android:hint="@string/login_phone"
@@ -67,7 +67,7 @@
             android:gravity="center_vertical"
             app:layout_constraintLeft_toRightOf="@+id/image_login_phone_icon"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"></net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.ClearTextEdit>
+            app:layout_constraintTop_toTopOf="parent" />
 
         <View
             android:id="@+id/view_bind_phone_step_one_number_bottom"
@@ -123,7 +123,7 @@
             android:id="@+id/button_login_phone_code"
             android:layout_width="wrap_content"
             android:layout_height="20dp"
-            android:layout_marginLeft="20dp"
+            android:layout_marginStart="20dp"
             android:layout_marginTop="20dp"
             android:background="@null"
             android:text="@string/login_button_code"
@@ -161,6 +161,18 @@
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view_bind_phone_step_one_code_bottom"
              />
+
+        <TextView
+            android:id="@+id/tv_secret_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/secret"
+            android:textSize="16sp"
+            android:padding="@dimen/spacing_small"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/button_login_phone_next" />
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

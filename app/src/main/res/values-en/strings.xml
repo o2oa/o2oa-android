@@ -774,6 +774,7 @@
     <string name="btn_send">Send</string>
     <string name="chat_input_message">Please enter a message…</string>
     <string name="search_taskcompleted">Search for work done</string>
+    <string name="secret">Privacy policy</string>
 
 
 </resources>
