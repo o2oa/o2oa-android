@@ -607,10 +607,7 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="mystyle" parent="android:Animation">
-        <item name="android:windowEnterAnimation">@anim/dialog_enter</item>
-        <item name="android:windowExitAnimation">@anim/dialog_exit</item>
-    </style>
+
     <style name="WelcomeStyle" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:windowBackground">@drawable/loading</item>
         <item name="android:windowNoTitle">true</item>
@@ -646,23 +643,6 @@
         <item name="android:radius">5dp</item>
     </style>
 
-    <style name="jmui_chat_item_receiver_avatar_style">
-        <item name="android:layout_width">@dimen/item_head_icon_size</item>
-        <item name="android:layout_height">@dimen/item_head_icon_size</item>
-        <item name="android:layout_alignParentLeft">true</item>
-        <item name="android:layout_marginLeft">8dp</item>
-        <item name="android:src">@drawable/jmui_head_icon</item>
-        <item name="android:scaleType">fitXY</item>
-    </style>
-
-    <style name="jmui_chat_item_sender_avatar_style">
-        <item name="android:layout_width">@dimen/item_head_icon_size</item>
-        <item name="android:layout_height">@dimen/item_head_icon_size</item>
-        <item name="android:layout_alignParentRight">true</item>
-        <item name="android:layout_marginRight">8dp</item>
-        <item name="android:src">@drawable/jmui_head_icon</item>
-        <item name="android:scaleType">fitXY</item>
-    </style>
 
     <style name="Transparent">
         <item name="android:windowBackground">@color/transparent_background</item>
@@ -678,10 +658,7 @@
         <item name="android:windowBackground">@android:color/transparent</item>
     </style>
 
-    <style name="PopupAnimation" parent="android:Animation">
-        <item name="android:windowEnterAnimation">@anim/up_in</item>
-        <item name="android:windowExitAnimation">@anim/down_out</item>
-    </style>
+
 
     <style name="ChatDetailItem">
         <item name="android:layout_width">match_parent</item>
@@ -721,17 +698,6 @@
         <item name="android:background">@drawable/arrow</item>
     </style>
 
-    <style name="MeItemStyle">
-        <item name="android:layout_width">match_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingTop">15dp</item>
-        <item name="android:paddingBottom">15dp</item>
-        <item name="android:paddingLeft">15dp</item>
-        <item name="android:background">@drawable/jmui_list_item_bg</item>
-        <item name="android:clickable">true</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:orientation">horizontal </item>
-    </style>
     <style name="MeInfoItemContent">
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_height">wrap_content</item>

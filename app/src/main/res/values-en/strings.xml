@@ -8,21 +8,21 @@
     <string name="reserved">All right reserved.</string>
     <string name="version">Version: </string>
     <string name="check_update">Detection Update</string>
-    <string name="update">Update</string>
-    <string name="network_error_message">Network connection exception, please check your network connection is correct !</string>
+<!--    <string name="update">Update</string>-->
+<!--    <string name="network_error_message">Network connection exception, please check your network connection is correct !</string>-->
     <string name="launch_introduction_enter_button_label">Immediate experience</string>
     <string name="bind_phone_validate_number">Verify the phone</string>
     <string name="bind_phone_choose_company">Select unit</string>
-    <string name="app_error">Application exception</string>
+<!--    <string name="app_error">Application exception</string>-->
     <string name="unknown_error">Unknown anomaly</string>
     <string name="close">Close</string>
     <string name="completed">Completed</string>
     <string name="edit">Edit</string>
     <string name="no_title">notitle</string>
-    <string name="all_app">All Application</string>
+<!--    <string name="all_app">All Application</string>-->
     <string name="native_app">Native Application</string>
     <string name="portal_app">Portal Application</string>
-    <string name="app_edit_title">Edit My Application</string>
+<!--    <string name="app_edit_title">Edit My Application</string>-->
     <string name="my_app">My Application</string>
     <string name="take_photo">Camera</string>
     <string name="upload_photo">Upload Photo</string>
@@ -34,7 +34,7 @@
     <string name="send_email">Send Email</string>
     <string name="create_manuscript">Draft</string>
     <string name="all">All</string>
-    <string name="ok">OK</string>
+<!--    <string name="ok">OK</string>-->
     <string name="file_preview">File Preview</string>
     <string name="create">Create</string>
 
@@ -47,25 +47,25 @@
     <string name="launch_check_style">Checking configuration&#8230;</string>
     <string name="launch_download_style">Downloading configuration&#8230;</string>
     <string name="launch_auto_login">Logging in&#8230;</string>
-    <string name="launch_auto_login_im">IM connecting &#8230;</string>
+<!--    <string name="launch_auto_login_im">IM connecting &#8230;</string>-->
     <!-- RecyclerViewSwipeRefreshLayout -->
     <string name="rvs_pull_load">Loading&#8230;</string>
     <!-- common -->
     <string name="menu_choose">choice</string>
-    <string name="left_btn_label">Left</string>
-    <string name="right_btn_label">Right</string>
-    <string name="top_title_label">Title</string>
+<!--    <string name="left_btn_label">Left</string>-->
+<!--    <string name="right_btn_label">Right</string>-->
+<!--    <string name="top_title_label">Title</string>-->
     <string name="exit_click_double_back_btn">Click back again to exit the application</string>
     <string name="data_loading_label">Loading&#8230;</string>
-    <string name="data_load_failure_label">Sorry, data loading failed</string>
-    <string name="login_fail">Login failed</string>
-    <string name="login_overtime">Login information expired</string>
-    <string name="back_label">Back</string>
-    <string name="transition_person_img">transition_person_img</string>
+<!--    <string name="data_load_failure_label">Sorry, data loading failed</string>-->
+<!--    <string name="login_fail">Login failed</string>-->
+<!--    <string name="login_overtime">Login information expired</string>-->
+<!--    <string name="back_label">Back</string>-->
+<!--    <string name="transition_person_img">transition_person_img</string>-->
     <string name="recycler_no_data">No data was found !</string>
     <string name="recycler_no_data_cool">It is so cold here. There is nothing !</string>
     <string name="recycler_no_data_wonderful_work">Great. Your work is done !</string>
-    <string name="btn_next">Next</string>
+<!--    <string name="btn_next">Next</string>-->
     <string name="scan_login_confirm_title">Scan and login</string>
     <string name="scan_login_title">Scan QR code results</string>
     <string name="scan_login_confirm">Confirm login</string>
@@ -74,15 +74,15 @@
     <string name="share">Share</string>
     <string name="share_copy_link">Copied link to clipboard</string>
     <string name="share_wx">Weixin</string>
-    <string name="share_friends">Friends</string>
+<!--    <string name="share_friends">Friends</string>-->
     <string name="share_qq">QQ</string>
-    <string name="share_douban">Douban</string>
-    <string name="share_weibo">Weibo</string>
+<!--    <string name="share_douban">Douban</string>-->
+<!--    <string name="share_weibo">Weibo</string>-->
     <string name="share_copy">Copy</string>
     <string name="share_more">More</string>
     <string name="share_uninstall_app">Please install it first</string>
     <string name="share_to">Share to &#8230;</string>
-    <string name="menu_main_my_edit">Edit</string>
+<!--    <string name="menu_main_my_edit">Edit</string>-->
 
     <!-- demo alert -->
     <string name="demo_alert_top">您当前绑定连接的是O2OA的官方演示系统。如果您需要连接自己的服务器按如下操作：</string>
@@ -99,8 +99,8 @@
     <string name="tab_todo_more">All</string>
     <string name="tab_todo_new_task_center">Office Center</string>
     <string name="tab_todo_new_message_center">Information Center</string>
-    <string name="tab_todo_news_label">Latest announcement: </string>
-    <string name="tab_todo_publish">Create</string>
+<!--    <string name="tab_todo_news_label">Latest announcement: </string>-->
+<!--    <string name="tab_todo_publish">Create</string>-->
 
 
     <!-- yunpan tab -->
@@ -117,22 +117,22 @@
     <string name="tab_todo">Home page</string>
     <string name="tab_message">News</string>
     <string name="tab_contact">Contacts</string>
-    <string name="tab_my">Me</string>
+<!--    <string name="tab_my">Me</string>-->
     <string name="tab_settings">Settings</string>
     <string name="tab_app">Application</string>
 
     <!-- font awesome -->
     <string name="fa_angle_right">&#xf105;</string>
-    <string name="fa_reply">&#xf112;</string>
+<!--    <string name="fa_reply">&#xf112;</string>-->
 
     <!-- pull down refresh -->
-    <string name="pr_pull_to_refresh">Drop down to refresh</string>
-    <string name="pr_release_to_refresh">Release refresh now</string>
-    <string name="pr_refreshing">Refreshing…</string>
-    <string name="pr_not_updated_yet">Not updated yet</string>
-    <string name="pr_updated_at">Last updated before on %1$s </string>
-    <string name="pr_updated_just_now">Just updated</string>
-    <string name="pr_time_error">There is a problem with the time</string>
+<!--    <string name="pr_pull_to_refresh">Drop down to refresh</string>-->
+<!--    <string name="pr_release_to_refresh">Release refresh now</string>-->
+<!--    <string name="pr_refreshing">Refreshing…</string>-->
+<!--    <string name="pr_not_updated_yet">Not updated yet</string>-->
+<!--    <string name="pr_updated_at">Last updated before on %1$s </string>-->
+<!--    <string name="pr_updated_just_now">Just updated</string>-->
+<!--    <string name="pr_time_error">There is a problem with the time</string>-->
 
 
     <!-- login activity -->
@@ -147,16 +147,16 @@
     <string name="activity_login_submit">Login</string>
     <string name="activity_login_other">Other login methods</string>
     <string name="activity_login_fingerprint_click">Click to start authentication</string>
-    <string name="activity_login_face">Face recognition</string>
+<!--    <string name="activity_login_face">Face recognition</string>-->
     <string name="activity_logout">Log out</string>
     <string name="login_button_next">Next</string>
     <string name="login_button_bind">Bind</string>
     <string name="login_button_code">Send verification code</string>
-    <string name="login_button_code_disabled">Resend</string>
+<!--    <string name="login_button_code_disabled">Resend</string>-->
     <string name="login_button_rebind">Rebinding</string>
     <string name="login_button_user_fallback">Other ways to log in</string>
-    <string name="activity_login_save">Save</string>
-    <string name="activity_login_remember_login">Remember me</string>
+<!--    <string name="activity_login_save">Save</string>-->
+<!--    <string name="activity_login_remember_login">Remember me</string>-->
     <string name="login_type_password">Password login</string>
     <string name="login_type_code">Verification code login</string>
     <string name="login_type_fingerprint">Fingerprint identification login</string>
@@ -166,528 +166,372 @@
     <string name="message_login_fail_scan">Login failed！</string>
     <string name="message_login_fail_sign">Failed to sign in！</string>
     <string name="message_login_success_sign">Successful sign in！</string>
-    <string-array name="login_facepp_trackig_mode_array">
-        <item>Fast</item>
-        <item>Robust</item>
-        <item>Tracking_Rect</item>
-    </string-array>
+<!--    <string-array name="login_facepp_trackig_mode_array">-->
+<!--        <item>Fast</item>-->
+<!--        <item>Robust</item>-->
+<!--        <item>Tracking_Rect</item>-->
+<!--    </string-array>-->
 
 
     <!-- contact activity -->
-    <string name="title_activity_contact_search">搜索</string>
-    <string name="contact_icon_label">图标</string>
-    <string name="contact_list_name_text">组织名称</string>
-    <string name="contact_list_group">群组名称</string>
-    <string name="contact_list_name">姓名</string>
-    <string name="contact_list_depart">部门</string>
-    <string name="contact_list_no_mobile">还未填写手机号码</string>
-    <string name="contact_type_dept_title">部门人员</string>
-    <string name="contact_type_company_title">公司详细</string>
-    <string name="contact_right_arrow_string">进入</string>
-    <string name="contact_load_failure_label">非常抱歉，数据加载失败</string>
-    <string name="title_activity_contact">组织结构</string>
-    <string name="contact_btn_search_label">查询</string>
-    <string name="activity_contact_search_hint">姓名、拼音</string>
-    <string name="contact_fragment_search_hint">请输入姓名、拼音</string>
-    <string name="search_contact">搜索联系人</string>
-    <string name="contact_my_department">我的部门</string>
-    <string name="contact_org_structure">组织结构</string>
-    <string name="contact_common_use">常用联系人</string>
-    <string name="contact_message_org_server_not_exist">组织模块异常</string>
-    <string name="contact_message_org_get_fail">查询数据异常</string>
-    <string name="contact_org_picker">组织选择</string>
-    <string name="contact_identity_picker">身份选择</string>
-    <string name="contact_group_picker">群组选择</string>
-    <string name="contact_person_picker">人员选择</string>
-    <string name="contact_picker_type_error">传入的选择器类型不正确！</string>
+<!--    <string name="title_activity_contact_search">Search</string>-->
+    <string name="contact_icon_label">Icon</string>
+    <string name="contact_list_name_text">Organization name</string>
+    <string name="contact_list_group">Group name</string>
+    <string name="contact_list_name">Name</string>
+    <string name="contact_list_depart">Department</string>
+    <string name="contact_list_no_mobile">The mobile phone number has not been filled in yet</string>
+<!--    <string name="contact_type_dept_title">Department staff</string>-->
+<!--    <string name="contact_type_company_title">Company details</string>-->
+<!--    <string name="contact_right_arrow_string">get into</string>-->
+<!--    <string name="contact_load_failure_label">Sorry, data loading failed</string>-->
+    <string name="title_activity_contact">organization structure</string>
+    <string name="contact_btn_search_label">Search</string>
+    <string name="activity_contact_search_hint">Name, Pinyin</string>
+    <string name="contact_fragment_search_hint">Please input your name and Pinyin</string>
+<!--    <string name="search_contact">Search contacts</string>-->
+    <string name="contact_my_department">My department</string>
+    <string name="contact_org_structure">organization structure</string>
+    <string name="contact_common_use">Top contacts </string>
+    <string name="contact_message_org_server_not_exist">Organization module exception</string>
+    <string name="contact_message_org_get_fail">Query data exception</string>
+    <string name="contact_org_picker">Organization selection</string>
+    <string name="contact_identity_picker">Identity selection</string>
+    <string name="contact_group_picker">Group Picker</string>
+    <string name="contact_person_picker">Person Picker</string>
+    <string name="contact_picker_type_error">Incorrect selector type passed in !</string>
 
 
     <!--person info activity -->
-    <string name="title_activity_person_info">个人信息</string>
-    <string name="person_info">个人信息</string>
-    <string name="person_mobile_label">手机</string>
-    <string name="person_email_label">邮箱</string>
-    <string name="person_gender_label">性别</string>
-    <string name="person_qq_label">QQ</string>
-    <string name="person_weixin_label">微信</string>
-    <string name="company_info">企业信息</string>
-    <string name="company_employee_label">员工号</string>
-    <string name="company_name_label">姓名</string>
-    <string name="company_unique_label">唯一编码</string>
-    <string name="company_dept_label">部门</string>
-    <string name="person_info_sms_talk">发起聊天</string>
-    <string name="person_collect">收藏</string>
-    <string name="person_collect_cancel">取消收藏</string>
-    <string name="warn_phone_permission">应用没有被授予拨打电话的权限，请到手机应用管理里面开启此权限！</string>
-    <string name="person_sign">个人签名: </string>
+    <string name="title_activity_person_info">personal information</string>
+<!--    <string name="person_info">Personal information</string>-->
+    <string name="person_mobile_label">Mobile phone</string>
+    <string name="person_email_label">Email</string>
+<!--    <string name="person_gender_label">Gender</string>-->
+<!--    <string name="person_qq_label">QQ</string>-->
+<!--    <string name="person_weixin_label">WeChat</string>-->
+<!--    <string name="company_info">Enterprise information</string>-->
+    <string name="company_employee_label">Employee number</string>
+    <string name="company_name_label">Name</string>
+    <string name="company_unique_label">Unique code</string>
+    <string name="company_dept_label">Department</string>
+    <string name="person_info_sms_talk">Start chat</string>
+    <string name="person_collect">Collection</string>
+    <string name="person_collect_cancel">Cancel collection</string>
+<!--    <string name="warn_phone_permission">The app is not authorized to make a call. Please open this permission in the app management !</string>-->
+    <string name="person_sign">Personal signature: </string>
 
     <!--yunpan activity -->
-    <string name="title_activity_yunpan">云盘</string>
-    <string name="yunpan_menu_upload_file">上传文件</string>
-    <string name="yunpan_menu_create_folder">新建文件夹</string>
-    <string name="yunpan_menu_order_by_createTime">按修改时间排序</string>
-    <string name="yunpan_menu_choose">选择</string>
-    <string name="yunpan_menu_choose_cancel">取消选择</string>
-    <string name="yunpan_rename">重命名</string>
-    <string name="yunpan_delete">删除</string>
-    <string name="yunpan_share">分享</string>
-    <string name="yunpan_send">发送</string>
-    <string name="yunpan_move">移动</string>
-    <string name="yunpan_menu_list">列表展现</string>
-    <string name="yunpan_menu_pick_top">选择顶层</string>
-    <string name="yunpan_menu_share">我分享的</string>
-    <string name="yunpan_menu_grid">网格展现</string>
-    <string name="title_activity_picture_viewer">图片查看器</string>
-    <string name="yunpan_category_image">图片</string>
-    <string name="yunpan_category_doc">文档</string>
-    <string name="yunpan_category_music">音乐</string>
-    <string name="yunpan_category_video">视频</string>
-    <string name="yunpan_category_other">其它</string>
-    <string name="yunpan_category_share">分享</string>
-    <string name="yunpan_share_file">分享文件</string>
+    <string name="title_activity_yunpan">Cloud disk</string>
+    <string name="yunpan_menu_upload_file">Upload file</string>
+    <string name="yunpan_menu_create_folder">New folder</string>
+    <string name="yunpan_menu_order_by_createTime">Sort by modification time</string>
+    <string name="yunpan_menu_choose">Select</string>
+    <string name="yunpan_menu_choose_cancel">Deselect</string>
+    <string name="yunpan_rename">Rename</string>
+    <string name="yunpan_delete">Delete</string>
+    <string name="yunpan_share">Share</string>
+    <string name="yunpan_send">Send</string>
+    <string name="yunpan_move">Move</string>
+    <string name="yunpan_menu_list">List display</string>
+    <string name="yunpan_menu_pick_top">Select top level</string>
+    <string name="yunpan_menu_share">What I share</string>
+    <string name="yunpan_menu_grid">Grid display</string>
+    <string name="title_activity_picture_viewer">picture viewer </string>
+    <string name="yunpan_category_image">Picture</string>
+    <string name="yunpan_category_doc">Document</string>
+    <string name="yunpan_category_music">Music</string>
+    <string name="yunpan_category_video">Video</string>
+    <string name="yunpan_category_other">Other</string>
+    <string name="yunpan_category_share">Share</string>
+    <string name="yunpan_share_file">Share files</string>
 
-    <string name="yunpan_all_file">全部文件</string>
-    <string name="yunpan_share_cancel">取消分享</string>
-    <string name="yunpan_share_shield">屏蔽</string>
+    <string name="yunpan_all_file">All documents</string>
+    <string name="yunpan_share_cancel">Cancel sharing</string>
+    <string name="yunpan_share_shield">Shield</string>
 
-    <string name="share_file_menu_test">测试</string>
+<!--    <string name="share_file_menu_test">Test</string>-->
 
     <!--chat activity -->
-    <string name="title_activity_chat">实时消息</string>
-    <string name="activity_chat_send_btn_label">发送</string>
-    <string name="chat_please_enter">请输入…</string>
-    <string name="menu_single_create">发起单聊</string>
-    <string name="menu_tribe_create">发起群聊</string>
-    <string name="activity_im_person_config_label">聊天设置</string>
-    <string name="activity_im_tribe_create_label">创建群聊</string>
-    <string name="activity_im_tribe_update_label">群信息</string>
-    <string name="activity_im_tribe_name">群名称</string>
-    <string name="activity_im_tribe_name_hint">取个群名称方便后续查询</string>
-    <string name="activity_im_tribe_member">群成员</string>
-    <string name="activity_im_tribe_member_explain">(需要添加的成员必须使用过O2OA移动端应用的用户)</string>
-    <string name="activity_im_tribe_notice_label">群公告</string>
-    <string name="activity_im_tribe_notice_hint">可以在此输入公告内容</string>
-    <string name="activity_im_tribe_save">保      存</string>
-    <string name="activity_im_tribe_delete">删除并退出</string>
-    <string name="activity_im_tribe_update">更      新</string>
-    <string name="activity_im_audio_speak">按住说话</string>
-    <string name="activity_im_audio_speak_cancel">上滑取消发送</string>
-    <string name="activity_location_send">发送</string>
-    <string name="activity_location_open">打开</string>
-    <string name="menu_im_tribe_name_update">修改群名</string>
-    <string name="menu_im_tribe_member_update">修改成员</string>
-    <string name="im_system_message">通知消息</string>
-    <string name="im_manager_member">管理成员</string>
-    <string name="im_location_click_choose">点击地图选择位置</string>
-    <string name="im_location">位置</string>
-    <string name="im_file">文件</string>
-    <string name="im_camera">拍摄</string>
-    <string name="im_album">相册</string>
-    <string name="baidu_map">百度地图</string>
-    <string name="baidu_map_error_message">未安装百度地图，无法打开</string>
-    <string name="gaode_map">高德地图</string>
-    <string name="gaode_map_error_message">未安装高德地图，无法打开</string>
-    <string name="tengxun_map">腾讯地图</string>
-    <string name="tengxun_map_error_message">未安装腾讯地图，无法打开</string>
+<!--    <string name="title_activity_chat">Real time message</string>-->
+<!--    <string name="activity_chat_send_btn_label">Send</string>-->
+<!--    <string name="chat_please_enter">Please input…</string>-->
+    <string name="menu_single_create">Start single chat</string>
+    <string name="menu_tribe_create">Start group chat</string>
+<!--    <string name="activity_im_person_config_label">Chat settings</string>-->
+<!--    <string name="activity_im_tribe_create_label">Create group chat</string>-->
+<!--    <string name="activity_im_tribe_update_label">Group information</string>-->
+<!--    <string name="activity_im_tribe_name">Group name</string>-->
+<!--    <string name="activity_im_tribe_name_hint">Take a group name to facilitate subsequent queries</string>-->
+<!--    <string name="activity_im_tribe_member">Group members</string>-->
+<!--    <string name="activity_im_tribe_member_explain">(Members to be added must be users who have used o2oa mobile applications)</string>-->
+<!--    <string name="activity_im_tribe_notice_label">Group announcement</string>-->
+<!--    <string name="activity_im_tribe_notice_hint">You can enter the content of the announcement here</string>-->
+<!--    <string name="activity_im_tribe_save">Preservation</string>-->
+<!--    <string name="activity_im_tribe_delete">Delete and exit</string>-->
+<!--    <string name="activity_im_tribe_update">Update</string>-->
+    <string name="activity_im_audio_speak">Hold to talk</string>
+    <string name="activity_im_audio_speak_cancel">Slide up to cancel sending</string>
+    <string name="activity_location_send">Send</string>
+    <string name="activity_location_open">Open</string>
+    <string name="menu_im_tribe_name_update">Modify group name</string>
+    <string name="menu_im_tribe_member_update">Modify members</string>
+    <string name="im_system_message">Notification message</string>
+    <string name="im_manager_member">Managing members</string>
+    <string name="im_location_click_choose">Click on the map to select the location</string>
+    <string name="im_location">Location</string>
+    <string name="im_file">File</string>
+    <string name="im_camera">Camera</string>
+    <string name="im_album">Album</string>
+    <string name="baidu_map">Baidu Map</string>
+    <string name="baidu_map_error_message">Baidu map is not installed and cannot be opened</string>
+    <string name="gaode_map">Gaode map</string>
+    <string name="gaode_map_error_message">Gaode map is not installed and cannot be opened</string>
+    <string name="tengxun_map">Tencent map</string>
+    <string name="tengxun_map_error_message">Tencent map is not installed and cannot be opened</string>
 
 
     <!-- myinfo activity -->
-    <string name="title_activity_my_info">我的资料</string>
-    <string name="title_activity_clip_avatar">编辑头像</string>
-    <string name="menu_edit">编辑</string>
-    <string name="menu_save">保存</string>
-    <string name="clip_avatar_save">保存</string>
-    <string name="choose_picture">图片选择器</string>
-    <string name="message_my_info_get_fail">获取个人信息失败！</string>
-    <string name="message_my_info_update_fail">更新个人信息失败！</string>
-    <string name="message_my_no_camera_permission">非常抱歉，相机权限没有开启，无法使用相机！</string>
-    <string name="message_my_info_obj_is_null">我的信息对象为空无法修改！</string>
+    <string name="title_activity_my_info">My information</string>
+    <string name="title_activity_clip_avatar">Edit Avatar</string>
+    <string name="menu_edit">Edit</string>
+    <string name="menu_save">Save</string>
+    <string name="clip_avatar_save">Save</string>
+<!--    <string name="choose_picture">Picture picker</string>-->
+    <string name="message_my_info_get_fail">Failed to get personal information！</string>
+    <string name="message_my_info_update_fail">Failed to update personal information！</string>
+    <string name="message_my_no_camera_permission">I am very sorry, the camera permission is not turned on, so I can not use the camera！</string>
+    <string name="message_my_info_obj_is_null">My information object is empty and cannot be modified！</string>
 
     <!-- AccountSecurityActivity -->
-    <string name="title_activity_account_security">账号与安全</string>
+    <string name="title_activity_account_security">Account and security</string>
     <!-- notice setting -->
-    <string name="title_activity_notice_setting">新消息通知</string>
-    <string name="title_clean_cache_setting">清除缓存</string>
-    <string name="title_share_setting">分享下载</string>
-    <string name="notice_setting_message_receive_help">手机新消息通知设置</string>
-    <string name="title_notice_setting_message_receive_help">帮助-手机新消息通知设置</string>
-    <string name="notice_setting_message_receive">接收新消息通知</string>
-    <string name="notice_setting_sound_open">声音</string>
-    <string name="notice_setting_vibrate_open">震动</string>
-    <string name="setting_bind_server_host">当前绑定服务器: %1$s</string>
-    <string name="message_setting_update_password_success">修改密码成功！</string>
-    <string name="setting_unknown_device">未知设备</string>
-    <string name="setting_device_type">%1$s 设备</string>
-    <string name="setting_device_self">本机</string>
-    <string name="setting_unbind_device">解除绑定</string>
-    <string name="setting_device_manager">常用设备管理</string>
-    <string name="message_setting_unbind">确定要解绑 %1$s ？</string>
-    <string name="message_no_server">服务不存在！</string>
-    <string name="message_can_not_unbind_no_device_id">没有获取到设备Id，无法解绑！</string>
-    <string name="message_unbind_fail">解绑失败！</string>
-    <string name="message_change_skin_will_reboot">确认要切换皮肤吗，切换会重启应用？</string>
+    <string name="title_activity_notice_setting">New news notification</string>
+    <string name="title_clean_cache_setting">Clear cache</string>
+    <string name="title_share_setting">Share and download</string>
+    <string name="notice_setting_message_receive_help">Mobile new message notification settings</string>
+    <string name="title_notice_setting_message_receive_help">Help - Mobile new message notification settings</string>
+    <string name="notice_setting_message_receive">Receive new message notification</string>
+    <string name="notice_setting_sound_open">Voice</string>
+    <string name="notice_setting_vibrate_open">Shock</string>
+    <string name="setting_bind_server_host">Current binding server: %1$s</string>
+    <string name="message_setting_update_password_success">Password changed successfully！</string>
+    <string name="setting_unknown_device">unknown device</string>
+    <string name="setting_device_type">%1$s device</string>
+    <string name="setting_device_self">This machine</string>
+    <string name="setting_unbind_device">Unbind</string>
+    <string name="setting_device_manager">Common device management</string>
+    <string name="message_setting_unbind">Are you sure you want to unbind %1$s ？</string>
+    <string name="message_no_server">The service does not exist！</string>
+    <string name="message_can_not_unbind_no_device_id">The device ID was not obtained, unable to unbind！</string>
+    <string name="message_unbind_fail">Failed to unbind！</string>
+    <string name="message_change_skin_will_reboot">Are you sure you want to switch skin? Switching will restart the application？</string>
 
     <!-- group activity -->
-    <string name="title_activity_group">我的群组</string>
+    <string name="title_activity_group">My Groups </string>
 
     <!-- TaskListActivity -->
-    <string name="title_activity_task_list">待办列表</string>
-    <string name="title_activity_task_complete">已办列表</string>
-    <string name="title_activity_read_list">待阅列表</string>
-    <string name="title_activity_read_complete">已阅列表</string>
-    <string name="activity_task_completed_search_hint">关键字</string>
-    <string name="activity_task_work_detail">文件于 %1$s 流转至 %2$s ，处理人：%3$s</string>
-    <string name="activity_task_workcompleted_detail">%1$s 文件于 %2$s 流转完成"</string>
+    <string name="title_activity_task_list">To do list</string>
+    <string name="title_activity_task_complete">Completed list</string>
+    <string name="title_activity_read_list">Waiting list</string>
+    <string name="title_activity_read_complete">Read list</string>
+    <string name="activity_task_completed_search_hint">Keyword</string>
+    <string name="activity_task_work_detail">File transferred from %1$s to %2$s ,by: %3$s</string>
+    <string name="activity_task_workcompleted_detail">%1$s File %2$s Circulation completed"</string>
 
     <!-- work web form  -->
-    <string name="title_activity_work_web_view">工作处理</string>
-    <string name="work_form_save">保    存</string>
-    <string name="work_form_delete">删    除</string>
-    <string name="work_form_submit_button">提交</string>
-    <string name="work_form_cancel_button">取消</string>
-    <string name="work_form_retract_button">撤    回</string>
-    <string name="retract_confirm_message">您确定要撤回此文件吗？</string>
-    <string name="work_form_set_read_button">设为已阅</string>
-    <string name="read_complete_confirm_message">您确定要将此文件标记为已阅吗？</string>
-    <string name="delete_work_confirm_message">您确定要将此文件删除吗，删除之后无法恢复？</string>
-    <string name="work_form_submit">继续流转</string>
-    <string name="choose_router">选择决策</string>
-    <string name="dialog_opinion_label">填写意见</string>
-    <string name="dialog_opinion_input_label">请在下方填写意见</string>
-    <string name="dialog_opinion_sign_label">请在下方手写意见</string>
-    <string name="dialog_opinion_hint">请输入意见</string>
-    <string name="clear_sign">清除签名</string>
-    <string name="web_view_work_record">流程记录</string>
+    <string name="title_activity_work_web_view">Work processing</string>
+    <string name="work_form_save">Save</string>
+    <string name="work_form_delete">Delete</string>
+    <string name="work_form_submit_button">Submit</string>
+<!--    <string name="work_form_cancel_button">取消</string>-->
+    <string name="work_form_retract_button">Withdrawal</string>
+    <string name="retract_confirm_message">Are you sure you want to withdraw this file？</string>
+    <string name="work_form_set_read_button">Set as read</string>
+    <string name="read_complete_confirm_message">Are you sure you want to mark this file as read？</string>
+    <string name="delete_work_confirm_message">Are you sure you want to delete this file, It cannot be recovered after deletion？</string>
+    <string name="work_form_submit">Continue</string>
+    <string name="choose_router">Choice decision</string>
+<!--    <string name="dialog_opinion_label">填写意见</string>-->
+    <string name="dialog_opinion_input_label">Please fill in the comments below</string>
+    <string name="dialog_opinion_sign_label">Please write your comments below</string>
+    <string name="dialog_opinion_hint">Please input comments</string>
+<!--    <string name="clear_sign">清除签名</string>-->
+    <string name="web_view_work_record">Process record</string>
 
     <!-- start process activity -->
-    <string name="title_activity_start_process">选择流程</string>
-    <string name="back_button_label">返    回</string>
-    <string name="title_activity_start_process_step_two">启动流程</string>
-    <string name="title_please_enter_start_process_step_two">请输入标题</string>
-    <string name="start_process_step_two_title">文件标题:</string>
-    <string name="start_process_step_two_time">时间:</string>
-    <string name="start_process_step_two_identity">身份:</string>
-    <string name="start_process_step_two_department">启动部门:</string>
+    <string name="title_activity_start_process">Selection process</string>
+<!--    <string name="back_button_label">返    回</string>-->
+    <string name="title_activity_start_process_step_two">Start process</string>
+<!--    <string name="title_please_enter_start_process_step_two">请输入标题</string>-->
+<!--    <string name="start_process_step_two_title">文件标题:</string>-->
+    <string name="start_process_step_two_time">Time:</string>
+    <string name="start_process_step_two_identity">Identity:</string>
+    <string name="start_process_step_two_department">Dept:</string>
 
 
-    <string name="hint">提    示</string>
-    <string name="confirm">确    认</string>
-    <string name="positive">确    定</string>
-    <string name="submit">提    交</string>
-    <string name="cancel">取    消</string>
-    <string name="ignore">跳    过</string>
-    <string name="download">下    载</string>
-    <string name="downloading_begin">开始下载</string>
-    <string name="save">保    存</string>
-    <string name="data_loading">数据加载中&#8230;</string>
-    <string name="data_submit_ing">正在提交&#8230;</string>
-    <string name="alert_permission">权限通知</string>
-    <string name="permission_notification">没有开启通知权限，去开启？</string>
+    <string name="hint">Tips</string>
+    <string name="confirm">Confirmation</string>
+    <string name="positive">Determine</string>
+    <string name="submit">Submit</string>
+    <string name="cancel">Cancel</string>
+<!--    <string name="ignore">跳    过</string>-->
+<!--    <string name="download">下    载</string>-->
+<!--    <string name="downloading_begin">开始下载</string>-->
+    <string name="save">Save</string>
+<!--    <string name="data_loading">数据加载中&#8230;</string>-->
+<!--    <string name="data_submit_ing">正在提交&#8230;</string>-->
+<!--    <string name="alert_permission">权限通知</string>-->
+<!--    <string name="permission_notification">没有开启通知权限，去开启？</string>-->
 
-    <string name="title_activity_choose_person">人员选择器</string>
+<!--    <string name="title_activity_choose_person">人员选择器</string>-->
 
     <!-- 会议管理 -->
-    <string name="title_activity_meeting">会议管理</string>
-    <string name="title_activity_meeting_create">会议室</string>
-    <string name="create_meeting_button_label">申请会议</string>
+    <string name="title_activity_meeting">Management of meetings</string>
+    <string name="title_activity_meeting_create">Conference Room</string>
+<!--    <string name="create_meeting_button_label">申请会议</string>-->
     <string-array name="custom_weekdays">
-        <item>日</item>
-        <item>一</item>
-        <item>二</item>
-        <item>三</item>
-        <item>四</item>
-        <item>五</item>
-        <item>六</item>
+        <item>Sun</item>
+        <item>Mon</item>
+        <item>Tus</item>
+        <item>Wed</item>
+        <item>Thur</item>
+        <item>Fri</item>
+        <item>Sat</item>
     </string-array>
-    <string name="title_activity_meeting_create_form">申请会议</string>
-    <string name="meeting_add">申请会议</string>
-    <string name="meeting_name">会议标题</string>
-    <string name="meeting_name_hint">请输入会议名称</string>
-    <string name="meeting_desc">会议说明</string>
-    <string name="meeting_desc_hint">请输入会议说明</string>
-    <string name="meeting_start_day">日期</string>
-    <string name="meeting_start_day_hint">请选择日期</string>
-    <string name="meeting_start_time">开始时间</string>
-    <string name="meeting_start_time_hint">请选择开始时间</string>
-    <string name="meeting_end_day">结束日期</string>
-    <string name="meeting_end_time">结束时间</string>
-    <string name="meeting_end_time_hint">请选择结束时间</string>
-    <string name="meeting_room">会议室</string>
-    <string name="meeting_room_hint">请选择会议室</string>
-    <string name="meeting_invite_people">参会人员</string>
-    <string name="meeting_file">会议材料</string>
-    <string name="meeting_invite_people_hint">请选择与会人员</string>
-    <string name="accept_meeting">待确认会议</string>
-    <string name="accept_meeting_info_time">会议时间</string>
-    <string name="accept_meeting_info_room">会议室</string>
-    <string name="accept_meeting_info_subject">会议主题</string>
-    <string name="accept_meeting_btn_label">接受</string>
-    <string name="reject_meeting_btn_label">拒绝</string>
-    <string name="title_activity_meeting_accept_wait_list">会议邀请</string>
-    <string name="title_activity_meeting_edit_form">修改会议申请</string>
-    <string name="meeting_delete_label">取消会议</string>
-    <string name="meeting_room_filter">过滤：</string>
-    <string name="meeting_invited_list">会议列表</string>
-    <string name="meeting_tip_info">亲，您当前还没有会议哦！</string>
-    <string name="meeting_tip">点击增加按钮创建</string>
-    <string name="meeting_detail">会议详情</string>
-    <string name="meeting_people_sum">参会人数</string>
-    <string name="meeting_have_accepted">已接受</string>
-    <string name="meeting_have_not_accept">未接受</string>
-    <string name="meeting_accept_status">参会人员状态</string>
-    <string name="meeting_receive_list">收到的邀请</string>
-    <string name="meeting_originator_list">发起的邀请</string>
-    <string name="meeting_tips">会议开始前2小时会在消息栏提醒</string>
-    <string name="person_add">添加</string>
+    <string name="title_activity_meeting_create_form">Apply for meeting</string>
+    <string name="meeting_add">Apply for meeting</string>
+    <string name="meeting_name">Conference title</string>
+    <string name="meeting_name_hint">Please enter the name of the meeting</string>
+    <string name="meeting_desc">Meeting notes</string>
+    <string name="meeting_desc_hint">Please enter the meeting description</string>
+    <string name="meeting_start_day">Date</string>
+<!--    <string name="meeting_start_day_hint">请选择日期</string>-->
+<!--    <string name="meeting_start_time">开始时间</string>-->
+<!--    <string name="meeting_start_time_hint">请选择开始时间</string>-->
+<!--    <string name="meeting_end_day">结束日期</string>-->
+<!--    <string name="meeting_end_time">结束时间</string>-->
+<!--    <string name="meeting_end_time_hint">请选择结束时间</string>-->
+    <string name="meeting_room">Conference Room</string>
+    <string name="meeting_room_hint">Please select conference room</string>
+    <string name="meeting_invite_people">Participants</string>
+    <string name="meeting_file">Conference materials</string>
+<!--    <string name="meeting_invite_people_hint">请选择与会人员</string>-->
+<!--    <string name="accept_meeting">待确认会议</string>-->
+    <string name="accept_meeting_info_time">Meeting time</string>
+<!--    <string name="accept_meeting_info_room">会议室</string>-->
+<!--    <string name="accept_meeting_info_subject">会议主题</string>-->
+<!--    <string name="accept_meeting_btn_label">接受</string>-->
+<!--    <string name="reject_meeting_btn_label">拒绝</string>-->
+<!--    <string name="title_activity_meeting_accept_wait_list">会议邀请</string>-->
+    <string name="title_activity_meeting_edit_form">Modify meeting application</string>
+    <string name="meeting_delete_label">Cancel the meeting</string>
+<!--    <string name="meeting_room_filter">过滤：</string>-->
+<!--    <string name="meeting_invited_list">会议列表</string>-->
+    <string name="meeting_tip_info">Pro, you don not have a meeting yet！</string>
+<!--    <string name="meeting_tip">点击增加按钮创建</string>-->
+    <string name="meeting_detail">Meeting details</string>
+    <string name="meeting_people_sum">Number of participants</string>
+    <string name="meeting_have_accepted">Accepted</string>
+    <string name="meeting_have_not_accept">Not accepted</string>
+    <string name="meeting_accept_status">Status of participants</string>
+    <string name="meeting_receive_list">Invitation received</string>
+    <string name="meeting_originator_list">Initiated invitation</string>
+    <string name="meeting_tips">2 hours before the start of the meeting will be reminded in the message bar</string>
+    <string name="person_add">Add</string>
 
     <!-- 考勤管理 -->
-    <string name="title_activity_attendance">考勤明细列表</string>
-    <string name="title_activity_attendance_appeal">申诉</string>
-    <string name="title_activity_attendance_chart">我的考勤月报</string>
-    <string name="title_activity_attendance_appeal_approval">申诉审批</string>
-    <string name="title_activity_attendance_location_setting">工作场所设置</string>
-    <string name="menu_activity_attendance">明细</string>
-    <string name="menu_activity_attendance_appeal_approval">审批</string>
-    <string name="menu_activity_attendance_location_setting">设置</string>
-    <string name="tab_check_in">打卡</string>
-    <string name="tab_statistic">统计</string>
-    <string name="attendance_appeal_form_title">申诉申请单</string>
-    <string name="attendance_appeal_form_name">员工姓名</string>
-    <string name="attendance_appeal_form_record_date">考勤日期</string>
-    <string name="attendance_appeal_form_on_duty_time">上班打卡时间</string>
-    <string name="attendance_appeal_form_off_duty_time">下班打卡时间</string>
-    <string name="attendance_appeal_form_status">考勤状态</string>
-    <string name="attendance_appeal_form_reason">申诉原因</string>
-    <string name="attendance_appeal_form_department">所属部门</string>
-    <string name="attendance_appeal_form_type">请假类型</string>
-    <string name="attendance_appeal_form_address">地点</string>
-    <string name="attendance_appeal_form_time_day">日期</string>
-    <string name="attendance_appeal_form_start_time">开始时间</string>
-    <string name="attendance_appeal_form_end_time">结束时间</string>
-    <string name="attendance_appeal_form_desc">事由</string>
-    <string name="attendance_approval_agree">同意</string>
-    <string name="attendance_approval_disagree">不同意</string>
-    <string name="attendance_approval_reset">撤销</string>
-    <string name="attendance_no_data">没有考勤数据！</string>
-    <string name="attendance_approval_no_data">没有需要审批的数据！</string>
-    <string name="attendance_pie_title">考勤汇总</string>
-    <string name="attendance_check_in_title">考勤打卡</string>
-    <string name="attendance_check_in_time_label">打卡时间：</string>
-    <string name="attendance_check_in_knock">打卡</string>
-    <string name="attendance_check_in_knock_loading">打卡中&#8230;</string>
-    <string name="attendance_check_in_knock_on">上班打卡</string>
-    <string name="attendance_check_in_knock_on_icon">上</string>
-    <string name="attendance_check_in_knock_off">下班打卡</string>
-    <string name="attendance_check_in_knock_off_icon">下</string>
-    <string name="attendance_check_in_location">定位中&#8230;</string>
-    <string name="attendance_check_in_label">打卡记录时间和位置</string>
-    <string name="attendance_check_in_update">更新打卡</string>
-    <string name="attendance_work_place">工作场所</string>
-    <string name="attendance_work_place_hint">请输入工作场所名称</string>
-    <string name="attendance_work_place_error_range">打卡范围</string>
-    <string name="attendance_work_place_error_range_hint">请输入打卡范围，单位(米)</string>
-
-    <!--okr -->
-    <string name="okr_main_tab_home">首页</string>
-    <string name="okr_main_tab_todo">待办</string>
-    <string name="okr_main_tab_work">工作</string>
-    <string name="okr_main_tab_project">项目</string>
-    <string name="okr_main_tab_statistic">统计</string>
-    <string name="title_activity_okr_main">工作目标管理</string>
-    <string name="okr_main_work_deploy">工作部署</string>
-    <string name="okr_main_work_report">工作汇报</string>
-    <string name="okr_main_work_dynamic_state">工作动态</string>
-    <string name="okr_main_my_work_stat">我的工作概述</string>
-    <string name="okr_main_my_deploy">我部署的</string>
-    <string name="okr_main_my_responsibility">我负责的</string>
-    <string name="okr_main_my_cooperate">我协助的</string>
-    <string name="okr_main_processing_work">执行中</string>
-    <string name="okr_main_overtime_work">已过期</string>
-    <string name="okr_main_completed_work">已完成</string>
-    <string name="okr_main_percent_work">及时率(%)</string>
-    <string name="okr_main_menu_change_identity">切换身份</string>
-    <string name="title_activity_okr_deploy_work">工作部署</string>
-    <string name="okr_work_deploy_center">中心工作</string>
-    <string name="okr_work_deploy_detail">具体工作</string>
-
-    <string name="okr_create_center_work">部署中心工作</string>
-    <string name="okr_center_work_title">中心工作标题</string>
-    <string name="okr_center_work_audit_leader">汇报审核领导</string>
-    <string name="okr_center_work_type">工作类别</string>
-    <string name="okr_center_work_completed_time">工作完成时限</string>
-    <string name="okr_center_work_description">中心工作描述</string>
-    <string name="okr_create_detail_work">创建工作</string>
-    <string name="okr_confirm_deploy_work">确认部署</string>
-    <string name="okr_detail_work_list">工作列表</string>
-    <string name="okr_detail_work_completed_time">完成时限</string>
-    <string name="okr_detail_work_report_circle">汇报周期</string>
-    <string name="okr_detail_work_responsibility_dept">责任部门</string>
-    <string name="okr_detail_work_responsibility_employ">责任人</string>
-    <string name="okr_detail_work_cooperate_dept">协助部门</string>
-    <string name="okr_detail_work_cooperate_employ">协助人</string>
-    <string name="okr_detail_work_read_leader">阅知领导</string>
-    <string name="okr_detail_work_title">事项分解及描述</string>
-    <string name="okr_detail_work_action">具体行动举措</string>
-    <string name="okr_detail_work_result_label">里程碑</string>
-    <string name="okr_detail_work_result">预期里程碑（阶段性）结果标志</string>
-    <string name="okr_detail_work_no_data">您还未创建工作</string>
-    <string name="okr_detail_work_report_current_conditions">截至当前完成情况</string>
-    <string name="okr_detail_work_report_supervise">评价</string>
-    <string name="okr_detail_work_report_next_work">下一步工作要点及需求</string>
-    <string name="okr_detail_work_delegate_person">委派给</string>
-    <string name="okr_detail_work_delegate_opinion">委派意见</string>
-    <string name="okr_detail_work_delegate">委派工作</string>
-    <string name="okr_detail_work_attachment">附件</string>
-    <string name="okr_detail_work">工作详情</string>
-    <string name="okr_report_content">汇报内容</string>
-    <string name="okr_report_leader_opinion">领导批示</string>
-    <string name="okr_report_read">已  阅</string>
-
-
-    <string-array name="okr_work_status_list">
-        <item>TACKBACK</item>
-        <item>AUTHORIZECANCEL</item>
-        <item>RESPONSIBILITY</item>
-        <item>COOPERATE</item>
-        <item>READ</item>
-        <item>DEPLOY</item>
-        <item>VIEW</item>
-    </string-array>
-
-    <string-array name="okr_work_operation_list">
-        <item>EDIT</item>
-        <item>SPLIT</item>
-        <item>AUTHORIZE</item>
-        <item>TACKBACK</item>
-        <item>REPORT</item>
-        <item>DELETE</item>
-        <item>VIEW</item>
-    </string-array>
-
-
-    <string-array name="okr_work_main_tab_list">
-        <item>待办</item>
-        <item>工作</item>
-    </string-array>
-    <string-array name="okr_work_center_tab_list">
-        <item>已部署</item>
-        <item>草稿箱</item>
-    </string-array>
-    <string-array name="okr_work_report_tab_list">
-        <item>待处理汇报</item>
-        <item>已处理工作</item>
-        <item>草稿箱</item>
-    </string-array>
-    <string-array name="okr_work_detail_tab_list">
-        <item>全部工作</item>
-        <item>我部署的工作</item>
-        <item>我负责的工作</item>
-        <item>我协助的工作</item>
-        <item>我阅知的工作</item>
-        <item>我委派的工作</item>
-        <item>我的草稿</item>
-    </string-array>
-
-    <string-array name="okr_detail_work_cycle_list">
-        <item>每周汇报</item>
-        <item>每月汇报</item>
-    </string-array>
-    <string-array name="okr_detail_work_cycle_week_list">
-        <item>星期日</item>
-        <item>星期一</item>
-        <item>星期二</item>
-        <item>星期三</item>
-        <item>星期四</item>
-        <item>星期五</item>
-        <item>星期六</item>
-    </string-array>
-    <string-array name="okr_detail_work_cycle_month_list">
-        <item>一号</item>
-        <item>二号</item>
-        <item>三号</item>
-        <item>四号</item>
-        <item>五号</item>
-        <item>六号</item>
-        <item>七号</item>
-        <item>八号</item>
-        <item>九号</item>
-        <item>十号</item>
-        <item>十一号</item>
-        <item>十二号</item>
-        <item>十三号</item>
-        <item>十四号</item>
-        <item>十五号</item>
-        <item>十六号</item>
-        <item>十七号</item>
-        <item>十八号</item>
-        <item>十九号</item>
-        <item>二十号</item>
-        <item>二十一号</item>
-        <item>二十二号</item>
-        <item>二十三号</item>
-        <item>二十四号</item>
-        <item>二十五号</item>
-        <item>二十六号</item>
-        <item>二十七号</item>
-        <item>二十八号</item>
-        <item>二十九号</item>
-        <item>三十号</item>
-        <item>三十一号</item>
-    </string-array>
+    <string name="title_activity_attendance">Attendance details list</string>
+    <string name="title_activity_attendance_appeal">Appeal</string>
+    <string name="title_activity_attendance_chart">My monthly attendance report</string>
+    <string name="title_activity_attendance_appeal_approval">Appeal approval</string>
+    <string name="title_activity_attendance_location_setting">Workplace settings</string>
+    <string name="menu_activity_attendance">detailed</string>
+    <string name="menu_activity_attendance_appeal_approval">Approval</string>
+    <string name="menu_activity_attendance_location_setting">set up</string>
+    <string name="tab_check_in">Check in</string>
+    <string name="tab_statistic">Statistics</string>
+    <string name="attendance_appeal_form_title">Appeal application form</string>
+    <string name="attendance_appeal_form_name">Employee name</string>
+    <string name="attendance_appeal_form_record_date">Attendance date</string>
+    <string name="attendance_appeal_form_on_duty_time">Clock in time</string>
+    <string name="attendance_appeal_form_off_duty_time">Clock out time</string>
+    <string name="attendance_appeal_form_status">Attendance status</string>
+    <string name="attendance_appeal_form_reason">Reasons for appeal</string>
+    <string name="attendance_appeal_form_department">Department</string>
+    <string name="attendance_appeal_form_type">Leave type</string>
+    <string name="attendance_appeal_form_address">Place</string>
+    <string name="attendance_appeal_form_time_day">Date</string>
+    <string name="attendance_appeal_form_start_time">Start Time</string>
+    <string name="attendance_appeal_form_end_time">End Time</string>
+    <string name="attendance_appeal_form_desc">Reason</string>
+    <string name="attendance_approval_agree">Agree</string>
+    <string name="attendance_approval_disagree">Disagree</string>
+<!--    <string name="attendance_approval_reset">撤销</string>-->
+    <string name="attendance_no_data">No attendance data！</string>
+    <string name="attendance_approval_no_data">There is no data to approve！</string>
+    <string name="attendance_pie_title">Attendance summary</string>
+    <string name="attendance_check_in_title">Clock in</string>
+    <string name="attendance_check_in_time_label">Clock in time：</string>
+    <string name="attendance_check_in_knock">CheckIn</string>
+    <string name="attendance_check_in_knock_loading">Punch in&#8230;</string>
+<!--    <string name="attendance_check_in_knock_on">上班打卡</string>-->
+<!--    <string name="attendance_check_in_knock_on_icon">上</string>-->
+<!--    <string name="attendance_check_in_knock_off">下班打卡</string>-->
+<!--    <string name="attendance_check_in_knock_off_icon">下</string>-->
+<!--    <string name="attendance_check_in_location">定位中&#8230;</string>-->
+<!--    <string name="attendance_check_in_label">打卡记录时间和位置</string>-->
+<!--    <string name="attendance_check_in_update">更新打卡</string>-->
+    <string name="attendance_work_place">Workplace</string>
+    <string name="attendance_work_place_hint">Please enter the name of the workplace</string>
+    <string name="attendance_work_place_error_range">Punch range</string>
+    <string name="attendance_work_place_error_range_hint">Please enter the punch range in meters</string>
 
     <!-- bbs -->
-    <string name="bbs">论坛</string>
-    <string name="title_activity_bbs_section">论坛板块</string>
-    <string name="title_activity_bbs_publish_subject">发表帖子</string>
-    <string name="title_activity_bbs_view">看帖</string>
-    <string name="title_activity_bbs_reply">回帖</string>
-    <string name="bbs_publish">发表帖子</string>
-    <string name="bbs_publish_reply">发表</string>
-    <string name="bbs_publish_section_label">发帖板块</string>
-    <string name="bbs_publish_subject_type_label">主题分类</string>
-    <string name="bbs_subject_attach_list">附件列表</string>
-    <string name="bbs_publish_subject_type">请选择主题分类</string>
-    <string name="bbs_publish_subject_title_label">主题</string>
-    <string name="bbs_publish_subject_summary_label">摘要</string>
-    <string name="bbs_publish_subject_content_label">主题内容</string>
-    <string name="bbs_reply_subject_content_label">回复内容</string>
-    <string name="bbs_reply_subject_title">回复</string>
-    <string name="bbs_subject_attach">附件</string>
-    <string name="bbs_view_subject">帖子详情</string>
-    <string name="bbs_view_subject_publish_time">发表于</string>
-    <string name="bbs_section_collect">收藏</string>
-    <string name="bbs_section_cancel_collect">取消收藏</string>
-    <string name="bbs_main_collection_empty">将经常浏览的版块添加到收藏，进入版块页面点击右上角收藏按钮即可</string>
+    <string name="bbs">Forum</string>
+    <string name="title_activity_bbs_section">Forum section</string>
+    <string name="title_activity_bbs_publish_subject">Post</string>
+    <string name="title_activity_bbs_view">Read the post</string>
+    <string name="title_activity_bbs_reply">Reply</string>
+    <string name="bbs_publish">Post</string>
+    <string name="bbs_publish_reply">Publish</string>
+    <string name="bbs_publish_section_label">Post section</string>
+    <string name="bbs_publish_subject_type_label">Subject classification</string>
+    <string name="bbs_subject_attach_list">List of attachments</string>
+    <string name="bbs_publish_subject_type">Please select topic category</string>
+    <string name="bbs_publish_subject_title_label">Theme</string>
+    <string name="bbs_publish_subject_summary_label">Abstract</string>
+    <string name="bbs_publish_subject_content_label">Subject content</string>
+    <string name="bbs_reply_subject_content_label">Reply content</string>
+    <string name="bbs_reply_subject_title">Reply</string>
+<!--    <string name="bbs_subject_attach">附件</string>-->
+<!--    <string name="bbs_view_subject">帖子详情</string>-->
+    <string name="bbs_view_subject_publish_time">Published in</string>
+    <string name="bbs_section_collect">Collection</string>
+    <string name="bbs_section_cancel_collect">Cancel collection</string>
+    <string name="bbs_main_collection_empty">Add the frequently browsed section to the collection, enter the section page and click the collection button in the upper right corner</string>
     <string-array name="bbs_main_page_list">
-        <item>我的收藏</item>
-        <item>版块</item>
+        <item>My collection</item>
+        <item>Section</item>
     </string-array>
-    <string-array name="bbs_publish_subject_type_list">
-        <item>讨论</item>
-        <item>投票</item>
-        <item>新闻</item>
-        <item>悬赏</item>
-        <item>辩论</item>
-        <item>灌水</item>
-        <item>知识</item>
-        <item>动态</item>
-    </string-array>
+<!--    <string-array name="bbs_publish_subject_type_list">-->
+<!--        <item>讨论</item>-->
+<!--        <item>投票</item>-->
+<!--        <item>新闻</item>-->
+<!--        <item>悬赏</item>-->
+<!--        <item>辩论</item>-->
+<!--        <item>灌水</item>-->
+<!--        <item>知识</item>-->
+<!--        <item>动态</item>-->
+<!--    </string-array>-->
 
-
+<!-- 语音识别 只支持中文 -->
     <string-array name="ai_command_stop">
         <item>停止</item>
         <item>结束</item>
         <item>退出</item>
         <item>关闭</item>
         <item>退出工作</item>
-    </string-array>
-    <string-array name="ai_command_stop_work">
-        <item>停止</item>
-        <item>退出</item>
-        <item>结束</item>
-        <item>关闭</item>
-        <item>退出工作</item>
-        <item>结束工作</item>
     </string-array>
     <string-array name="ai_command_ignore">
         <item>跳过</item>
@@ -721,7 +565,6 @@
         <item>查一下我的代办</item>
         <item>处理代办</item>
     </string-array>
-
     <string-array name="ai_command_task_neural">
         <item>你来处理</item>
         <item>你帮我处理</item>
@@ -738,603 +581,199 @@
     </string-array>
 
     <!-- cms -->
-    <string name="cms">信息中心</string>
-    <string name="cms_create">新建</string>
-    <string name="title_cms_view">查看文章</string>
-    <string name="title_cms_application">栏目</string>
-    <string name="cms_start_create_title">文档标题：</string>
-    <string name="cms_start_create_title_hint">请输入文档标题</string>
-    <string name="cms_start_create_identity">身份：</string>
-    <string name="cms_work_form_publish">发    布</string>
-    <string name="cms_work_form_edit">编    辑</string>
-    <string name="cms_work_form_save">保    存</string>
+    <string name="cms">Information Center</string>
+    <string name="cms_create">Create</string>
+    <string name="title_cms_view">View Article</string>
+    <string name="title_cms_application">Application</string>
+    <string name="cms_start_create_title">Document title：</string>
+    <string name="cms_start_create_title_hint">Please enter document title</string>
+    <string name="cms_start_create_identity">Identity：</string>
+    <string name="cms_work_form_publish">Publish</string>
+    <string name="cms_work_form_edit">Edit</string>
+    <string name="cms_work_form_save">Save</string>
 
-
-    <!-- open im key -->
-    <string name="im_app_key">23391161</string>
 
     <!--calendar-->
-    <string name="calendar_name">日程安排</string>
-    <string name="calendar_menu_tool">工具</string>
-    <string name="calendar_menu_add">添加日程</string>
-    <string name="calendar_menu_add_calendar">创建新日历</string>
-    <string name="calendar_menu_calendar_list">我的日历</string>
-    <string name="calendar_menu_calendar_choose">选择日历</string>
-    <string name="calendar_type_choose">选择日历类型</string>
-    <string name="calendar_remind_choose">提醒</string>
-    <string name="calendar_repeat_choose">重复</string>
-    <string name="calendar_comment">添加说明</string>
-    <string name="calendar_event_title_hint">例如：开会</string>
-    <string name="calendar_title_hint">请输入日历名称</string>
-    <string name="calendar_menu_settings">设置</string>
-    <string name="calendar_all_day">全天</string>
-    <string name="calendar_is_open">是否公开</string>
-    <string name="calendar_jump_today">跳转到今天</string>
-    <string name="calendar_until_date">截至日期：</string>
-    <string name="calendar_store">日历广场</string>
-    <string name="calendar_update_type_title">请选择您要修改日程的类型</string>
-    <string name="calendar_update_type_single">只修改当前日程</string>
-    <string name="calendar_update_type_after">修改当前日程和之后的此重复日程</string>
-    <string name="calendar_update_type_all">修改所有此重复日程</string>
-    <string name="calendar_delete_type_title">请选择您要删除日程的类型</string>
-    <string name="calendar_delete_type_single">只删除当前日程</string>
-    <string name="calendar_delete_type_after">删除当前日程和之后的此重复日程</string>
-    <string name="calendar_delete_type_all">删除所有此重复日程</string>
-    <string name="calendar_delete_event">删除日程</string>
-    <string name="calendar_delete_calendar">删除日历</string>
-    <string name="calendar_follow">关注</string>
-    <string name="calendar_already_follow">已关注</string>
+    <string name="calendar_name">Schedule</string>
+    <string name="calendar_menu_tool">Tool</string>
+<!--    <string name="calendar_menu_add">添加日程</string>-->
+    <string name="calendar_menu_add_calendar">Create a new calendar</string>
+<!--    <string name="calendar_menu_calendar_list">我的日历</string>-->
+    <string name="calendar_menu_calendar_choose">Select calendar</string>
+    <string name="calendar_type_choose">Select calendar type</string>
+    <string name="calendar_remind_choose">Remind</string>
+    <string name="calendar_repeat_choose">Repeat</string>
+    <string name="calendar_comment">Add description</string>
+    <string name="calendar_event_title_hint">For example: Meeting</string>
+    <string name="calendar_title_hint">Please enter calendar name</string>
+<!--    <string name="calendar_menu_settings">设置</string>-->
+    <string name="calendar_all_day">All Day</string>
+    <string name="calendar_is_open">Is it open</string>
+    <string name="calendar_jump_today">Jump to today</string>
+    <string name="calendar_until_date">Deadline：</string>
+    <string name="calendar_store">Calendar square</string>
+    <string name="calendar_update_type_title">Please select the type of schedule you want to modify</string>
+    <string name="calendar_update_type_single">Modify current schedule only</string>
+    <string name="calendar_update_type_after">Modify the current schedule and the subsequent duplicate schedule</string>
+    <string name="calendar_update_type_all">Modify all this recurring schedule</string>
+    <string name="calendar_delete_type_title">Please select the type of schedule you want to delete</string>
+    <string name="calendar_delete_type_single">Delete current schedule only</string>
+    <string name="calendar_delete_type_after">Delete the current schedule and subsequent duplicate schedules</string>
+    <string name="calendar_delete_type_all">Delete all this duplicate schedule</string>
+    <string name="calendar_delete_event">Delete schedule</string>
+    <string name="calendar_delete_calendar">Delete calendar</string>
+    <string name="calendar_follow">Follow</string>
+    <string name="calendar_already_follow">Attention paid</string>
 
 
     <!--qrcode-->
-    <string name="str_scan_title">扫一扫</string>
-    <string name="str_open_light">开启闪光灯</string>
-    <string name="str_close_light">关闭闪光灯</string>
-    <string name="str_scan_by_photo">从相册选取二维码</string>
-    <string name="str_scan_hint">取景框对准二维码, 即可自动扫描</string>
+    <string name="str_scan_title">Scan</string>
+    <string name="str_open_light">Flash on</string>
+    <string name="str_close_light">Flash off </string>
+<!--    <string name="str_scan_by_photo">从相册选取二维码</string>-->
+    <string name="str_scan_hint">If the viewfinder is aligned with the QR code, it can scan automatically</string>
 
     <!--个性换肤-->
-    <string name="skin_manager">个性换肤</string>
-    <string name="skin_manager_official">官方推荐</string>
-    <string name="skin_manager_official_red">官方红</string>
-    <string name="skin_manager_official_blue">官方蓝</string>
-    <string name="skin_manager_online">在线皮肤</string>
-    <string name="skin_manager_using">使用中</string>
-    <string name="skin_puppy2018">Puppy2018</string>
-    <string name="skin_show_use">使用皮肤</string>
-    <string name="skin_show_downloading">下载中…</string>
-    <string name="skin_show_installing">安装中…</string>
+    <string name="skin_manager">Skin change</string>
+    <string name="skin_manager_official">Official recommendation</string>
+    <string name="skin_manager_official_red">Official red</string>
+    <string name="skin_manager_official_blue">Official Blue</string>
+<!--    <string name="skin_manager_online">在线皮肤</string>-->
+    <string name="skin_manager_using">Use in</string>
+<!--    <string name="skin_puppy2018">Puppy2018</string>-->
+<!--    <string name="skin_show_use">使用皮肤</string>-->
+    <string name="skin_show_downloading">Downloading…</string>
+<!--    <string name="skin_show_installing">安装中…</string>-->
 
 
     <!-- 指纹识别-->
-    <string name="biometric_dialog_cancel">取消</string>
-    <string name="biometric_dialog_title">验证</string>
-    <string name="biometric_dialog_subtitle">正在指纹识别中…</string>
-    <string name="biometric_dialog_state_normal">指纹识别</string>
-    <string name="biometric_dialog_state_failed">识别失败，请重试</string>
-    <string name="biometric_dialog_state_error">验证失败，请使用其他方式验证</string>
-    <string name="biometric_dialog_state_error_enable_process">验证识别，没有启用指纹识别</string>
-    <string name="biometric_dialog_state_succeeded">验证成功</string>
-    <string name="biometric_dialog_use_password">其他方式</string>
+    <string name="biometric_dialog_cancel">Cancel</string>
+    <string name="biometric_dialog_title">Verification</string>
+    <string name="biometric_dialog_subtitle">Fingerprint identification in progress…</string>
+    <string name="biometric_dialog_state_normal">fingerprint identification</string>
+    <string name="biometric_dialog_state_failed">Identification failed, please try again</string>
+    <string name="biometric_dialog_state_error">Verification failed, please use other methods to verify</string>
+<!--    <string name="biometric_dialog_state_error_enable_process">验证识别，没有启用指纹识别</string>-->
+    <string name="biometric_dialog_state_succeeded">Verification successful</string>
+    <string name="biometric_dialog_use_password">Other ways</string>
 
     <!--custom style -->
-    <string name="custom_style_install_label">正在从服务器端装载UI资源</string>
+    <string name="custom_style_install_label">Loading UI resources from server side</string>
 
     <!--聊天相关-->
-    <string name="delete_conv_for_news_fragment">确定要删除该聊天？</string>
-    <string name="null_conversation">暂无会话</string>
-    <string name="conversation_log_error">聊天服务器登录异常 ，请联系管理员！</string>
+<!--    <string name="delete_conv_for_news_fragment">确定要删除该聊天？</string>-->
+    <string name="null_conversation">No conversation</string>
+<!--    <string name="conversation_log_error">聊天服务器登录异常 ，请联系管理员！</string>-->
 
 
     <!--  message  -->
-    <string name="message_can_not_connect_to_server">服务器连接不上！</string>
-    <string name="message_no_voice">你的手机好像没有开启声音，请打开声音！</string>
-    <string name="message_phone_no_bind">当前手机号码没有绑定的服务器！</string>
-    <string name="message_bind_list_data_error">绑定服务对象解析异常！</string>
-    <string name="message_get_o2collect_unit_list_fail">获取绑定服务器列表失败，请确认您的手机号码和验证码是否正确！</string>
-    <string name="message_can_not_get_device_number">没有获取到您的设备号，请检查应用的权限设置！</string>
-    <string name="message_need_input_right_cellphone">请输入正确的手机号码！</string>
-    <string name="message_code_can_not_empty">短信验证码不能为空！</string>
-    <string name="message_can_not_get_unit_info">没有获得单位信息！</string>
-    <string name="message_group_name_is_empty">没有群组名称，无法获取群组信息！</string>
-    <string name="message_update_tips">版本 %1$s 更新：</string>
-    <string name="message_update_already">已经是最新版本了！</string>
-    <string name="message_login_fail">登录失败, 请检查您的输入的用户名或密码是否正确！</string>
-    <string name="message_login_validate_code_fail">获取手机验证码失败，请检查您输入的用户名是否正确！</string>
-    <string name="message_login_username_can_not_empty">用户名或手机号码 不能为空！</string>
-    <string name="message_login_something_can_not_empty">%1$s 不能为空！</string>
-    <string name="message_login_image_code_can_not_empty">图片验证码 不能为空！</string>
-    <string name="message_login_input_username">请输入用户名！</string>
-    <string name="message_login_fingerprint_disabled">指纹识别模块未启用，请检查手机是否开启！</string>
-    <string name="message_login_server_error">服务器验证登录失败，请尝试使用其它方式登录！</string>
-    <string name="message_login_captcha_get_fail">没有获取到图片验证码！</string>
-    <string name="message_login_ai_permission_error">非常抱歉，AI助手需要的权限没有开启，无法使用该功能，请到手机应用设置中开启权限！</string>
-    <string name="message_scan_permission_error">需要摄像头权限才能进行扫一扫功能！</string>
-    <string name="message_location_permission_error">需要定位权限获取您当前的位置信息！</string>
-    <string name="message_portal_need_id">缺少参数门户ID！</string>
-    <string name="message_no_pictures">没有获取到需要裁剪的图片！</string>
-    <string name="message_no_pictures_error">没有获取到图片！</string>
-    <string name="message_select_at_least_one">请至少选择一条数据！</string>
-    <string name="message_select_can_not_add_more">不能添加更多了！</string>
-    <string name="message_no_person_id_error">没有传入人员帐号，无法获取人员信息！</string>
-    <string name="message_copy_email_success">邮箱地址复制成功！</string>
-    <string name="message_copy_phone_number_success">手机号码复制成功！</string>
-    <string name="message_start_im_fail">无法发起聊天，创建会话失败！</string>
-    <string name="message_create_conversation_fail">创建会话失败！</string>
-    <string name="message_get_application_fail">获取应用列表失败！</string>
-    <string name="message_get_process_fail">获取流程列表失败！</string>
-    <string name="message_get_current_identity_fail">没有获取到当前用户的身份！</string>
-    <string name="message_start_process_fail">传入参数为空，无法启动流程, identity:%1$s,processId:%2$s</string>
-    <string name="message_start_process_back_data_error">返回数据异常！%1$s</string>
-    <string name="message_start_process_fail_with_error">启动流程失败, %1$s</string>
-    <string name="message_open_draft_error">打开草稿异常！</string>
-    <string name="message_get_workcompleted_list_error">获取已办详细数据异常！</string>
-    <string name="message_get_todo_list_error">获取任务列表失败！</string>
-    <string name="message_can_not_scan_anything">没有扫描到任何信息！</string>
-    <string name="message_old_password_can_not_empty">旧密码不能为空！</string>
-    <string name="message_new_password_can_not_empty">新密码不能为空！</string>
-    <string name="message_new_old_password_not_same">新密码和确认新密码不一样！</string>
-    <string name="message_update_fail">修改失败！</string>
-    <string name="message_download_document_fail">下载文档失败！</string>
-    <string name="message_download_fail">下载失败！</string>
-    <string name="message_upload_fail">文件上传异常！</string>
-    <string name="message_arg_error">传入参数不正确！</string>
-    <string name="message_file_not_exist">文件不存在！</string>
-    <string name="message_file_server_error">文件模块接入异常！</string>
-    <string name="message_save_success">保存成功！</string>
-    <string name="message_withdraw_success">撤回成功！</string>
-    <string name="message_withdraw_fail">撤回失败！</string>
-    <string name="message_delete_success">删除成功！</string>
-    <string name="message_delete_fail">删除失败！</string>
-    <string name="message_task_data_load_fail">任务数据获取不到！</string>
-    <string name="message_data_parse_fail">解析数据异常！</string>
-    <string name="message_need_choose_decision">请选择决策！</string>
-    <string name="message_check_form">请检查表单填写是否正确！</string>
-    <string name="message_form_data_empty">没有获取到表单数据！</string>
-    <string name="message_form_submit_fail">提交失败！</string>
-    <string name="message_file_type_cannot_be_previewed">该文件类型无法预览！</string>
-    <string name="message_use_other_application_open_file">用其它应用打开文件</string>
-    <string name="message_have_no_play_url">播放地址为空！</string>
-    <string name="message_work_is_completed">工作已经结束！</string>
-    <string name="message_please_choose_location">请先选择一个位置！</string>
-    <string name="message_members_cannot_less_three">成员不能少于3人！</string>
-    <string name="message_share_file_not_exist">分享文件不存在</string>
+    <string name="message_can_not_connect_to_server">The server can not connect！</string>
+    <string name="message_no_voice">It seems that your mobile phone doesn not turn on the sound. Please turn on the sound！</string>
+    <string name="message_phone_no_bind">There is no server bound to the current mobile phone number！</string>
+    <string name="message_bind_list_data_error">Binding service object resolution exception！</string>
+    <string name="message_get_o2collect_unit_list_fail">Failed to get the list of binding servers. Please confirm whether your mobile phone number and verification code are correct！</string>
+    <string name="message_can_not_get_device_number">Did not get your device number, please check the permission settings of the application！</string>
+    <string name="message_need_input_right_cellphone">Please enter the correct mobile phone number！</string>
+    <string name="message_code_can_not_empty">SMS verification code cannot be empty！</string>
+    <string name="message_can_not_get_unit_info">No company information！</string>
+    <string name="message_group_name_is_empty">No group name, unable to get group information！</string>
+    <string name="message_update_tips">Version %1$s update：</string>
+    <string name="message_update_already">It is the latest version！</string>
+    <string name="message_login_fail">Login failed. Please check whether your user name or password is correct！</string>
+    <string name="message_login_validate_code_fail">Failed to get mobile phone verification code. Please check whether the user name you entered is correct！</string>
+    <string name="message_login_username_can_not_empty">User name or mobile phone number cannot be empty！</string>
+    <string name="message_login_something_can_not_empty">%1$s Cannot be empty！</string>
+    <string name="message_login_image_code_can_not_empty">Picture captcha cannot be empty！</string>
+    <string name="message_login_input_username">Enter one user name！</string>
+    <string name="message_login_fingerprint_disabled">Fingerprint identification module is not enabled, please check whether the mobile phone is on！</string>
+    <string name="message_login_server_error">Server authentication login failed, please try to login in another way！</string>
+    <string name="message_login_captcha_get_fail">No picture captcha！</string>
+    <string name="message_login_ai_permission_error">I am very sorry, the permission required by AI assistant is not enabled. You can not use this function. Please open the permission in mobile app settings！</string>
+    <string name="message_scan_permission_error">You need camera permission to scan！</string>
+    <string name="message_location_permission_error">You need to locate permission to get your current location information！</string>
+    <string name="message_portal_need_id">Missing parameter portal ID！</string>
+    <string name="message_no_pictures">No image needed to be cropped！</string>
+    <string name="message_no_pictures_error">No pictures were obtained！</string>
+    <string name="message_select_at_least_one">Please select at least one piece of data！</string>
+    <string name="message_select_can_not_add_more">No more can be added！</string>
+    <string name="message_no_person_id_error">There is no personnel account, unable to get personnel information！</string>
+    <string name="message_copy_email_success">Email address copied successfully！</string>
+    <string name="message_copy_phone_number_success">Mobile phone number copied successfully！</string>
+    <string name="message_start_im_fail">Unable to initiate chat, failed to create session！</string>
+    <string name="message_create_conversation_fail">Failed to create session！</string>
+    <string name="message_get_application_fail">Failed to get application list！</string>
+    <string name="message_get_process_fail">Failed to get process list！</string>
+    <string name="message_get_current_identity_fail">The identity of the current user was not obtained！</string>
+    <string name="message_start_process_fail">The incoming parameter is empty, unable to start the process, identity:%1$s,processId:%2$s</string>
+    <string name="message_start_process_back_data_error">Return data exception！%1$s</string>
+    <string name="message_start_process_fail_with_error">Failed to start the process, %1$s</string>
+    <string name="message_open_draft_error">Open draft exception！</string>
+    <string name="message_get_workcompleted_list_error">Exception in getting detailed data！</string>
+    <string name="message_get_todo_list_error">Failed to get task list！</string>
+    <string name="message_can_not_scan_anything">No information was scanned！</string>
+    <string name="message_old_password_can_not_empty">Old password cannot be empty！</string>
+    <string name="message_new_password_can_not_empty">New password cannot be empty！</string>
+    <string name="message_new_old_password_not_same">The new password is not the same as confirming the new password！</string>
+    <string name="message_update_fail">Modification failed！</string>
+    <string name="message_download_document_fail">Failed to download document！</string>
+    <string name="message_download_fail">Download failed！</string>
+    <string name="message_upload_fail">File upload exception！</string>
+    <string name="message_arg_error">Incorrect incoming parameters！</string>
+    <string name="message_file_not_exist">File does not exist！</string>
+    <string name="message_file_server_error">Abnormal access of file module！</string>
+    <string name="message_save_success">Saved successfully！</string>
+    <string name="message_withdraw_success">Withdrawal successful！</string>
+    <string name="message_withdraw_fail">Withdrawal failed！</string>
+    <string name="message_delete_success">Successfully deleted！</string>
+    <string name="message_delete_fail">Deletion failed！</string>
+    <string name="message_task_data_load_fail">The task data cannot be obtained！</string>
+    <string name="message_data_parse_fail">Parsing data exception！</string>
+    <string name="message_need_choose_decision">Please choose a decision！</string>
+    <string name="message_check_form">Please check whether the form is filled in correctly！</string>
+    <string name="message_form_data_empty">No form data was obtained！</string>
+    <string name="message_form_submit_fail">Failed to submit！</string>
+    <string name="message_file_type_cannot_be_previewed">The file type cannot be previewed！</string>
+    <string name="message_use_other_application_open_file">Open files with other applications</string>
+    <string name="message_have_no_play_url">The playback address is empty！</string>
+    <string name="message_work_is_completed">The work is over！</string>
+    <string name="message_please_choose_location">Please select a location first！</string>
+    <string name="message_members_cannot_less_three">The number of members should not be less than 3！</string>
+    <string name="message_share_file_not_exist">The shared file does not exist</string>
 
     <!--    dialog -->
-    <string name="dialog_msg_bind_to_server_fail">绑定服务器失败，请检查当前服务器配置是否正确？您也可以先绑定到O2OA演示服务器进行体验！</string>
-    <string name="dialog_title_sample_server">演示服务器</string>
-    <string name="dialog_msg_root_refuse">当前是Root环境，App禁止使用！</string>
-    <string name="dialog_msg_go_to_set_storage_permission">非常抱歉，应用需要存储权限才能正常运行， 马上去设置</string>
-    <string name="dialog_msg_need_server_json">缺少配置文件，请联系App开发人员！</string>
-    <string name="dialog_msg_rebind_phone">确定要重新绑定手机号码吗？</string>
-    <string name="dialog_msg_clean_cache">确认要清除缓存吗？</string>
-    <string name="dialog_msg_logout">确定要退出登录吗？</string>
-    <string name="dialog_msg_need_rebind_phone_number">确定要重新绑定手机号码吗,该操作会清空当前登录信息，需要重新登录？</string>
+    <string name="dialog_msg_bind_to_server_fail">Failed to bind the server. Please check whether the current server configuration is correct? You can also bind to the o2oa demo server to experience！</string>
+    <string name="dialog_title_sample_server">Demo server</string>
+    <string name="dialog_msg_root_refuse">The current environment is root, app is forbidden to use！</string>
+    <string name="dialog_msg_go_to_set_storage_permission">I am very sorry, the application needs to store permissions to run normally, go to set it now</string>
+    <string name="dialog_msg_need_server_json">Missing configuration file, please contact app developer！</string>
+    <string name="dialog_msg_rebind_phone">Are you sure you want to rebind the mobile number？</string>
+    <string name="dialog_msg_clean_cache">Are you sure you want to clear the cache？</string>
+    <string name="dialog_msg_logout">Are you sure you want to log out？</string>
+    <string name="dialog_msg_need_rebind_phone_number">Are you sure you want to rebind the mobile phone number? This operation will clear the current login information and you need to login again？</string>
 
 
-
-    <!-- ReLogin/login/register界面中使用到的字符串 -->
-    <string name="change_user_btn">切换账号</string>
-    <string name="register">注册</string>
-    <string name="registering_hint">注册中</string>
-    <string name="register_failed_toast">注册失败</string>
-    <string name="login">登录</string>
-    <string name="login_hint">登录中</string>
-    <string name="user_not_exist_toast">该用户不存在</string>
-    <string name="jmui_user_already_exist_toast">该用户已存在</string>
-    <string name="user_add_self_toast">不能添加自己为好友</string>
-    <string name="register_username_hit">用户名(数字、字母、_ 组成)</string>
-    <string name="username_not_null_toast">用户名不能为空</string>
-    <string name="nickname_not_null_toast">昵称不能为空</string>
-    <string name="password_not_null_toast">密码不能为空</string>
-    <string name="password_length_illegal">密码长度要在4–128个字节之间</string>
-    <string name="password_same_to_previous">不能和原密码相同，请输入新密码</string>
-    <string name="all_images">全部图片</string>
-    <string name="select_limit">最多选择%1$s张图片</string>
-    <string name="folder_image_count">共%1$d张</string>
-    <string name="select_complete">完成(%1$s/%2$s)</string>
-    <string name="select_send">完成(%1$s/%2$s)</string>
-    <string name="preview_count">预览(%1$s)</string>
-    <string name="preview_image_count">%1$s/%2$s</string>
-    <string name="origin_size">原图(%1$s)</string>
-
-    <!-- fixProfile界面中使用到的字符串 -->
-    <string name="nickname_hit">昵称</string>
-    <string name="jmui_take_new_photo">拍摄照片</string>
-    <string name="jmui_take_photo">拍照</string>
-    <string name="jmui_pick_picture_from_local">选择图片</string>
-    <string name="get_photo">　使用照片</string>
-    <string name="updating_avatar_hint">正在上传头像</string>
-    <string name="avatar_modify_succeed_toast">头像修改成功</string>
-    <string name="later_setting">稍后设置</string>
-    <string name="saving_hint">正在保存</string>
-    <string name="nickname_save_failed">昵称保存失败</string>
-    <!--聊天相关-->
-    <string name="network_disconnected_hint">当前网络不可用, 请检查您的网络设置</string>
-    <string name="actionbar_msg">会话</string>
-    <string name="cross_app_key">跨应用</string>
-    <string name="actionbar_conversation">会话</string>
-    <string name="actionbar_contact">通讯录</string>
-    <string name="actionbar_me">我</string>
-    <string name="search_friend_hit">邮箱/用户名/ID</string>
-    <string name="search">搜索</string>
-    <string name="take_monent">稍等片刻</string>
-    <string name="add">添加</string>
-    <string name="add_friend">添加好友</string>
-    <string name="add_friend_without_confirm">添加好友</string>
-    <string name="fetch_user_info_failed">用户信息获取失败</string>
-    <string name="create_group">发起群聊</string>
-    <string name="creating_hint">创建中</string>
-    <string name="creating_msg">意见反馈中</string>
-    <string name="create_user">我们正在建立您的个人档案</string>
-    <string name="search_friend_title_bar">搜索好友</string>
-    <string name="friend_request_hit">请你输入你的添加好友请求</string>
-    <string name="friend_request_input_hit">我是</string>
-    <string name="send_request">发送请求</string>
-    <string name="jmui_copy">复制</string>
-    <string name="jmui_forward_msg">转发</string>
-    <string name="jmui_copy_toast">已复制</string>
-    <string name="jmui_delete">删除</string>
-    <string name="save_to_device">保存到手机</string>
-    <string name="picture_save_fail">图片保存失败</string>
-    <string name="picture_save_to">图片已保存到手机</string>
-    <string name="jmui_delete_conv">删除该聊天</string>
-    <string name="jmui_create_file_failed">创建文件失败</string>
-    <string name="jmui_record_voice_hint">按住 说话</string>
-    <string name="jmui_cancel_record_voice_hint">松开手指，取消发送</string>
-    <string name="jmui_send_voice_hint">松开 结束</string>
-    <string name="jmui_move_to_cancel_hint">手指上滑，取消发送</string>
-    <string name="jmui_rest_record_time_hint">还可以说%s秒</string>
-    <string name="combine_title">(%s)</string>
-    <string name="jmui_file_not_found_toast">文件丢失, 尝试重新获取</string>
-    <string name="not_select_photo">你没有选择照片，请重新选择</string>
-    <string name="picture_not_found">没有找到您想要的图片</string>
-    <string name="jmui_loading">正在加载</string>
-    <string name="load_failed_toast">加载失败</string>
-    <string name="info_null">未填写</string>
-    <string name="change_avatar">修改头像</string>
-    <string name="operation">操作</string>
-    <string name="origin_picture">原图</string>
-    <string name="choose">选择</string>
-    <string name="jmui_send">发送</string>
-    <string name="already_select">已选</string>
-    <string name="send_message">发消息</string>
-    <string name="sending_hint">正在发送</string>
-    <string name="jmui_resend_message_hint">重发该消息？</string>
-    <string name="jmui_resend_commit">重发</string>
-    <string name="jmui_cancel">取消</string>
-    <string name="picture_num_limit_toast">你最多只能同时发送9张图片</string>
-    <string name="load_origin_image">查看原图</string>
-    <string name="downloading_hint">正在下载</string>
-    <string name="download_completed_toast">下载完成</string>
-    <string name="choose_album_title">选择相册</string>
-    <string name="friend_opt_change_name">修改备注</string>
-    <string name="friend_opt_delete">删除好友</string>
-    <string name="friend_opt_detail">详细资料</string>
-    <string name="detail_info">个人资料</string>
-    <string name="jmui_voice_length">10"</string>
-    <string name="jmui_symbol_second">\"</string>
-    <string name="jmui_time_too_short_toast">时间太短！</string>
-    <string name="file_fetch_failed">文件获取失败</string>
-    <string name="jmui_record_voice_permission_denied">请在应用的权限管理中将使用录音选项设置为允许，
-        否则将无法使用录音功能</string>
-    <string name="jmui_record_voice_permission_request">若要使用语音功能，请选择允许录音</string>
-    <string name="jmui_voice_fetch_failed_toast">获取语音失败，请重试</string>
-    <string name="jmui_illegal_state_toast">录音状态异常,请稍后重试</string>
-    <string name="draft">[草稿]</string>
-    <string name="jmui_picture">图片</string>
-    <string name="type_picture">[图片]</string>
-    <string name="type_voice">[语音]</string>
-    <string name="type_location">[位置]</string>
-    <string name="type_file">[文件]</string>
-    <string name="type_smallvideo">[小视频]</string>
-    <string name="type_video">[视频]</string>
-    <string name="send_location">发送地理位置</string>
-    <string name="permission_should_allow">请允许使用位置权限，否则无法发送位置消息</string>
-    <string name="send_location_error">位置截图失败或会话为空</string>
-    <string name="jmui_video">视频</string>
-    <string name="jmui_location">位置</string>
-    <string name="jmui_business_card">名片</string>
-    <string name="group_notification">[群组消息]</string>
-    <string name="type_custom">[自定义消息]</string>
-    <string name="hundreds_of_unread_msgs">..\.</string>
-    <string name="jmui_time_format_year_month_day">yyyy年-MM月-dd日</string>
-    <string name="jmui_time_format_accuracy">yyyy-MM-dd HH:mm:ss </string>
-    <string name="jmui_time_format_hours">HH:mm</string>
-    <string name="jmui_yesterday">昨天</string>
-    <string name="jmui_before_yesterday">前天</string>
-    <string name="jmui_before_dawn">凌晨</string>
-    <string name="jmui_morning">早上</string>
-    <string name="jmui_afternoon">下午</string>
-    <string name="jmui_night">晚上</string>
-    <string name="jmui_monday">周一</string>
-    <string name="jmui_tuesday">周二</string>
-    <string name="jmui_wednesday">周三</string>
-    <string name="jmui_thursday">周四</string>
-    <string name="jmui_friday">周五</string>
-    <string name="jmui_saturday">周六</string>
-    <string name="jmui_sunday">周日</string>
-    <string name="year">年</string>
-    <string name="jmui_month">月</string>
-    <string name="jmui_day">日</string>
-    <string name="second">秒</string>
-    <string name="jmui_local_picture_not_found_toast">暂无外部存储，某些本地图片不可预览</string>
-    <string name="jmui_sdcard_not_exist_toast">暂无外部存储</string>
-    <string name="camera_not_prepared">摄像头尚未准备好</string>
-    <string name="sdcard_not_prepare_toast">sdcard尚未准备好</string>
-
-    <string name="select_friend_title">添加成员</string>
-    <string name="selected_num">(%s)</string>
-
-    <!-- 通讯录相关-->
-    <string name="switch_to_friendless_mode">切换到无好友模式</string>
-    <string name="switch_to_friend_mode">切换到好友模式</string>
-    <string name="switch_to_friend_mode_hint">在设置中切换到好友模式\n以启用通讯录功能</string>
-    <string name="friend_inviting">等待验证</string>
-    <string name="friend_verify_title">验证消息</string>
-    <string name="input_friend_username_hint">请输入您要查找的用户名</string>
-    <string name="sent_request">已成功发送请求</string>
-    <string name="accept">同意</string>
-    <string name="refuse">拒绝</string>
-    <string name="refused">已拒绝</string>
-    <string name="processing">正在处理</string>
-    <string name="send_refuse_reason_title">拒绝理由</string>
-    <string name="reason_is_empty_hint">理由不能为空</string>
-    <string name="decline_friend_invitation">对方已拒绝</string>
-    <string name="delete_friend_dialog_title">确定删除好友？</string>
-    <string name="friend_already_deleted_hint">已移除好友</string>
-
-    <!-- 发送文件 -->
-    <string name="file">文件</string>
-    <string name="document">文档</string>
-    <string name="album">相册</string>
-    <string name="audio">音频</string>
-    <string name="other">其他</string>
-    <string name="size_over_limit_hint">所选的文件数量不得超过5个</string>
-    <string name="file_size_over_limit_hint">所选的文件大小总和不得超过10M</string>
-    <string name="video_not_support_hint">暂不支持发送视频</string>
-    <string name="download_file_succeed">下载成功</string>
-    <string name="download_file_failed">下载失败</string>
-    <string name="file_not_support_hint">无法打开该类型的文件</string>
-    <string name="file_already_copy_hint">文件已保存到 sdcard/JChatDemo/recvFiles 目录下</string>
-
-    <!--设置相关-->
-    <string name="birthday">出生日期</string>
-    <string name="sex">性别</string>
-    <string name="area">地区</string>
-    <string name="sign">个性签名</string>
-    <string name="sign_hint">请填入个性签名</string>
-    <string name="person_enterprise_info">企业信息</string>
-    <string name="person_phone">手机号码</string>
-    <string name="person_phone_hint">请填入手机号码</string>
-    <string name="person_telephone">办公电话</string>
-    <string name="person_telephone_hint">请填入办公电话</string>
-    <string name="person_email">电子邮件</string>
-    <string name="person_email_hint">请填入电子邮件</string>
-    <string name="person_weixin">微信</string>
-    <string name="person_weixin_hint">请填入微信号</string>
+    <string name="choose">Choose</string>
+    <string name="sign">Personal signature</string>
+    <string name="sign_hint">Please fill in your personal signature</string>
+    <string name="person_enterprise_info">Enterprise information</string>
+    <string name="person_phone">Phone number</string>
+    <string name="person_phone_hint">Please fill in your mobile phone number</string>
+    <string name="person_telephone">Office telephone</string>
+    <string name="person_telephone_hint">Please fill in the office number</string>
+    <string name="person_email">E-mail</string>
+    <string name="person_email_hint">Please fill in the email</string>
+    <string name="person_weixin">WeChat</string>
+    <string name="person_weixin_hint">Please fill in the micro signal</string>
     <string name="person_qq">QQ</string>
-    <string name="person_qq_hint">请填入QQ</string>
-    <string name="commit">确认</string>
-    <string name="jmui_confirm">确定</string>
-    <string name="finish">完成</string>
-    <string name="upload_avatar_title">请选择上传头像方式</string>
-    <string name="setting">设置</string>
-    <string name="login_out">退出登录</string>
-    <string name="add_to_friend">加为好友</string>
-    <string name="setting_username_hit">昵称</string>
-    <string name="setting_username_big_hit">更改名字</string>
-    <string name="reset_nickname_hint">好名字可以让你的朋友更加容易记住你。</string>
-    <string name="note_name">备注名</string>
-    <string name="note_name_is_empty_hint">备注名为空</string>
-    <string name="description">描述</string>
-    <string name="setting_location_hit">地区</string>
-    <string name="input_location_title">输入地区</string>
-    <string name="input_area_error">请输入您所在的地区</string>
-    <string name="setting_location_big_hit">修改地区</string>
-    <string name="setting_signature_hit">个信签名</string>
-    <string name="input_signature_toast">请输入您的个性签名</string>
-    <string name="edit_signature_title">编辑个性签名</string>
-    <string name="edit_signature_count">30</string>
-    <string name="edit_friend_info_count">200</string>
-    <string name="man">男</string>
-    <string name="woman">女</string>
-    <string name="unknown">未知</string>
-    <string name="change_password">修改密码</string>
-    <string name="jmui_change_pwd_tip">修改密码前请输入原密码</string>
-    <string name="jmui_input_password_error_toast">输入密码错误，请重新输入</string>
-    <string name="change_password_title">设置密码</string>
-    <string name="change_old_password_hit">原密码</string>
-    <string name="password">密码</string>
-    <string name="hint_reset_password">请设置登录密码</string>
-    <string name="hint_confirm_password">请再次输入</string>
-    <string name="confirm_password">确认密码</string>
-    <string name="change_password_hit">填写密码</string>
-    <string name="change_password_re_hit">再次填写密码</string>
-    <string name="password_not_match_toast">两次输入的密码不一致</string>
-    <string name="password_change_success_toast">修改成功，请牢记新密码</string>
-    <string name="set_do_not_disturb">消息免打扰</string>
-    <string name="set_do_not_disturb_success_hint">成功加入免打扰</string>
-    <string name="remove_from_no_disturb_list_hint">已移除免打扰</string>
-    <string name="add_to_blacklist">加入黑名单</string>
-    <string name="add_to_blacklist_success_hint">成功加入黑名单</string>
-    <string name="remove_from_blacklist_hint">已从黑名单移除</string>
-    <string name="new_msg_remind_hit">新消息提醒</string>
-    <string name="receive_new_msg_notification_hit">接收新消息通知</string>
-    <string name="receive_new_msg_vibration_hit">震动</string>
-    <string name="receive_new_msg_voice_hit">声音</string>
-    <string name="background_msg_remind_time">后台消息免打扰时段</string>
-    <string name="no_disturb_global_hit">全局免打扰</string>
-    <string name="set_no_disturb_global_succeed">全局免打扰设置成功</string>
-    <string name="remove_no_disturb_global_succeed">已移除全局免打扰</string>
-    <string name="all_day_remind_hit">全天提醒</string>
-    <string name="close_all_day_remind">关闭全天提醒后，消息只在设定时间内提醒</string>
-    <string name="disturb_description">开启后，在设定时间段内收到新消息将不会响铃或震动</string>
-    <string name="begin_time">开始时间</string>
-    <string name="end_time">结束时间</string>
-    <string name="jmui_logout_confirm">确定退出登录？</string>
-    <string name="somebody_at_me">[有人@我]</string>
+    <string name="person_qq_hint">Please fill in QQ</string>
 
-    <string name="about">关于</string>
-    <string name="demo_version_name">demo版本号:%s</string>
-    <string name="sdk_version">\nsdk版本号:</string>
-    <string name="about_date">\n12月16日</string>
-    <string name="new_functions">\n增加通讯录功能，在设置中打开好友模式即可开启。
-        \n（无好友与好友模式的区别在于添加好友的时候是否需要验证，无好友模式添加完后可以直接进行会话）
-        \n 增加发送位置功能</string>
+    <string name="man">male</string>
+    <string name="woman">female</string>
+    <string name="change_password">Change Password</string>
 
-    <!--聊天详情-->
-    <string name="friend_request_title">新朋友</string>
-    <string name="friend_info">好友信息</string>
-    <string name="group">群聊</string>
-    <string name="unnamed">未命名</string>
-    <string name="undesc">无描述</string>
-    <string name="added">已添加</string>
-    <string name="chat_peoples_num">目前已有1名参与人</string>
-    <string name="chat_detail_add">添加</string>
-    <string name="chat_detail_title">聊天设置</string>
-    <string name="chat_detail_group_title">群组信息</string>
-    <string name="members_in_chat">聊天成员</string>
-    <string name="all_group_members">全部群成员</string>
-    <string name="group_name_hit">群名称</string>
-    <string name="group_name_not_null_toast">名称不能为空</string>
-    <string name="modify_success_toast">修改成功</string>
-    <string name="add_friend_to_group_title">添加好友到群组</string>
-    <string name="searching_user">正在查找</string>
-    <string name="adding_hint">正在添加</string>
-    <string name="modifying_hint">正在修改</string>
-    <string name="adding_group_member_hint">正在增加群成员</string>
-    <string name="deleting_group_member_hint">正在删除群成员</string>
-    <string name="jmui_delete_member_confirm_hint">确定删除此成员？</string>
-    <string name="jmui_delete_confirm_hint">确定删除？</string>
-    <string name="join_group_toast">加入了群聊</string>
-    <string name="exiting_group_toast">正在处理</string>
-    <string name="deleted_by_creator">你被请出了群聊</string>
-    <string name="delete_group_by_creator">群主解散了此群</string>
-    <string name="exit_group_by_creator">被请出了群聊</string>
-    <string name="exit_group_event">退出了群聊</string>
-    <string name="group_people_num_hit">群人数上限</string>
-    <string name="group_my_name_hit">我在本群昵称</string>
-    <string name="change_nickname_hint">修改此昵称只会在本群中显示</string>
-    <string name="group_chat_history_hit">查找聊天内容</string>
-    <string name="group_clear_history_hit">清空聊天记录</string>
-    <string name="jmui_clear_history_confirm_title">确定清空聊天记录？</string>
-    <string name="jmui_delete_group_confirm_title">确定删除并退出群聊？</string>
-    <string name="deleting_hint">删除中</string>
-    <string name="group_exit_btn">删除并退出</string>
-
-    <string name="crop_image_title">裁剪头像</string>
-
-    <!-- 下线提示 -->
-    <string name="user_logout_dialog_title">下线提示</string>
-    <string name="user_logout_dialog_message">您的账号已经在另一台设备上登录，您被迫下线</string>
-    <string name="user_delete_hint_message">您的账号已被删除，您被迫下线</string>
-    <string name="change_password_message">您的密码已被修改，请重新登录</string>
-
-    <string name="ac_search_no_result_pre">没有搜到</string>
-    <string name="ac_search_no_result_suffix">相关的信息</string>
-    <string name="server_abnormal_toast">服务器返回异常，请重试</string>
-    <string name="connect_failed_toast">连接服务器失败，请稍后重试</string>
-    <string name="server_return_error_toast">服务器返回格式错误</string>
-    <string name="unknown_error_toast">未知错误</string>
-    <string name="system_error_toast">系统内部错误，请稍候重试</string>
-    <string name="parameter_illegal">参数值不合法</string>
-    <!--以下为错误码提示-->
-    <string name="jmui_server_800002">AppKey信息为空</string>
-    <string name="jmui_server_800003">AppKey未注册</string>
-    <string name="jmui_server_800004">用户ID为空</string>
-    <string name="jmui_server_800005">用户ID未注册(AppKey无该UID)</string>
-    <string name="jmui_server_800006">用户ID不存在(数据库中无该UID)</string>
-    <string name="jmui_server_800012">请重新登录</string>
-    <string name="jmui_server_800013">您的账号已登出，请重新登录</string>
-    <string name="jmui_server_800014">发起的用户与目标用户appkey不匹配</string>
-    <string name="jmui_server_801003">用户名或密码错误</string>
-    <string name="jmui_server_802001">用户名为空</string>
-    <string name="jmui_server_801004">用户名或密码错误</string>
-    <string name="jmui_server_803001">发送消息失败，状态存储异常</string>
-    <string name="jmui_server_803002">发送消息失败，系统网络异常</string>
-    <string name="jmui_server_803003">发送失败，目标用户未注册或不存在</string>
-    <string name="jmui_server_803004">发送失败，此群已被删除</string>
-    <string name="jmui_server_803005">您已被请出此群，不能发送消息</string>
-    <string name="jmui_server_803008">消息已发出，但被对方拒收了。</string>
-    <string name="jmui_server_803009">发送失败,消息中包含敏感词。</string>
-    <string name="jmui_server_803010">发送消息的频率超过限制，发送失败</string>
-    <string name="jmui_server_805002">添加好友失败，双方已经是好友</string>
-    <string name="jmui_server_805003">删除好友失败，目标用户不是自己的好友</string>
-    <string name="jmui_server_808003">讨论组数量已达上限，创建失败</string>
-    <string name="jmui_server_808004">群组名长度超出上限</string>
-    <string name="jmui_server_810003">用户不属于该群组</string>
-    <string name="jmui_server_810005">要添加的用户尚未注册</string>
-    <string name="jmui_server_810007">用户已存在</string>
-    <string name="jmui_server_810008">讨论组的成员数量已达上限，添加失败</string>
-    <string name="jmui_server_810009">该用户拥有的讨论组数量已达上限，添加失败</string>
-    <string name="jmui_server_811003">用户不在该讨论组中，删除成员失败</string>
-    <string name="jmui_server_812002">您已被请出此群，不能修改相关信息</string>
-    <string name="jmui_server_818001">要添加的黑名单列表为空，添加失败</string>
-    <string name="jmui_server_818002">要添加的黑名单列表中有成员不存在，添加失败</string>
-    <string name="jmui_server_818003">要添加的黑名单列表中有成员不能被添加，添加失败</string>
-    <string name="jmui_server_818004">要添加的黑名单列表中有成员重复添加，添加失败</string>
-    <string name="jmui_sdk_http_899001">用户已存在</string>
-    <string name="sdk_http_899006">该群已被删除</string>
-    <string name="jmui_sdk_http_898005">uid不存在</string>
-    <string name="jmui_sdk_http_898006">此群已被删除</string>
-    <string name="jmui_sdk_http_898008">校验失败</string>
-    <string name="jmui_sdk_http_898009">APPKey不存在</string>
-    <string name="jmui_sdk_http_898010">请求失败，请稍候重试</string>
-    <string name="jmui_sdk_http_898030">系统繁忙，稍后重试</string>
-    <string name="jmui_sdk_87x_871104">服务器返回错误</string>
-    <string name="jmui_sdk_87x_871300">API调用发起者尚未登录</string>
-    <string name="jmui_sdk_87x_871303">用户名以数字或字母开头，可含有"数字 字母 下划线 . - @"</string>
-    <string name="jmui_sdk_87x_871304">密码长度要在4–128个字节之间</string>
-    <string name="jmui_sdk_87x_871305">名称长度须小于64个字节</string>
-    <string name="jmui_sdk_87x_871309">消息所含文件不存在</string>
-    <string name="jmui_sdk_87x_871310">网络已断开，请检查网络连接</string>
-    <string name="jmui_sdk_87x_871311">用户未设定头像，下载头像失败</string>
-    <string name="jmui_sdk_87x_871312">ImageContent创建失败</string>
-    <string name="jmui_sdk_87x_871319">消息发送失败</string>
-    <string name="jmui_sdk_87x_871403">第三方上传失败，请稍后重试</string>
-    <string name="jmui_sdk_87x_871404">下载失败，请稍后重试</string>
-    <string name="jmui_sdk_87x_871501">appkey与appid不匹配或者token无效</string>
-    <string name="jmui_sdk_87x_871502">appkey无效</string>
-    <string name="jmui_sdk_87x_871503">appkey与platform不匹配</string>
-    <string name="jmui_sdk_87x_871504">push注册还未完成，请稍后重试</string>
-    <string name="jmui_sdk_87x_871505">包名不存在</string>
-    <string name="jmui_sdk_87x_871506">imei无效</string>
-    <string name="jmui_sdk_87x_871201">请求超时，请检查您的网络</string>
-    <string name="gallery_invalid">未找到图库</string>
-    <string name="sdcard_not_enough_head_error">SD卡被拔出或存储空间不足</string>
-    <string name="sdcard_not_enough_error">存储空间不足</string>
-    <string name="picker_image_error">获取图片出错</string>
-    <string name="picker_image_preview">预览</string>
-    <string name="picker_image_folder">相机胶卷</string>
-    <string name="picker_image_preview_original">发送原图</string>
-    <string name="picker_image_album_loading">相册加载中…</string>
-    <string name="picker_image_album_empty">相册中没有图片！</string>
-    <string name="picker_image_folder_info">共%d张</string>
-    <string name="picker_image_exceed_max_image_select">最多选择%d张图片！</string>
-    <string name="unknow_size">未知大小</string>
-    <string name="picker_image_send_select">发送（%d）</string>
-    <string name="picker_image_preview_original_select">发送原图（%s）</string>
-
-    <string name="image_compressed_size">该原始图片大小为: %1$s,</string>
-    <string name="is_send_image">是否发送该原始图片？</string>
-    <string name="multi_image_compressed_size">原始图片总大小为: %1$s,</string>
-    <string name="is_send_multi_image">是否发送这些原始图片？</string>
-    <string name="waitfor_image_local">正在打开相册，请稍候\u2026</string>
-    <string name="picker_internalerror">发生错误</string>
-    <string name="set_block_succeed_hint">群消息屏蔽成功</string>
-    <string name="remove_block_succeed_hint">已移除群消息屏蔽</string>
-    <string name="btn_text_speak">按住录音</string>
-    <string name="btn_text_speak_over">松开结束</string>
-    <string name="btn_send">发送</string>
-    <string name="set_to_block">屏蔽群消息</string>
-    <string name="scan_barcode_title">条形码扫描</string>
-    <string name="scan_qrcode_title">返回</string>
-    <string name="scan_qrcode_hint">将取景框对准二维码，即可自动扫描</string>
-
-
-    <string name="chat_input_message">请输入消息…</string>
-    <string name="search_taskcompleted">搜索已办工作</string>
+    <string name="btn_send">Send</string>
+    <string name="chat_input_message">Please enter a message…</string>
+    <string name="search_taskcompleted">Search for work done</string>
 
 
 </resources>
