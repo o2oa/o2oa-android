@@ -125,6 +125,8 @@ object O2 {
     val PRE_BIND_PHONE_KEY = "PRE_BIND_PHONE_KEY"//绑定手机号码
     val PRE_BIND_PHONE_TOKEN_KEY = "PRE_BIND_PHONE_TOKEN_JPUSH_KEY"//绑定手机唯一编码 @date 2018-04-19 修改成极光推送
 
+    val PRE_DEMO_O2_KEY = "DemoO2UnitKey" // 手动绑定了sample服务器 true不验证绑定 false验证绑定
+
     val PRE_DEVICE_DPI_KEY = "PRE_DEVICE_DPI_KEY"//手机分辨率
 
     val PRE_LAUNCH_INTRODUCTION_KEY = "PRE_LAUNCH_INTRODUCTION_KEY"//启动页，首次安装介绍页面

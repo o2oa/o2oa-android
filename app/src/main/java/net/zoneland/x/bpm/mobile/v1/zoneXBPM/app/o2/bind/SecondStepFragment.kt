@@ -8,10 +8,12 @@ import android.widget.RadioButton
 import android.widget.RadioGroup
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_fluid_login_unit.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2App
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPFragment
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.login.LoginActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.APIDistributeData
@@ -19,6 +21,9 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AuthenticationInf
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectUnitData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goThenKill
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import org.jetbrains.anko.dip
 
 
@@ -108,13 +113,56 @@ class SecondStepFragment: BaseMVPFragment<SecondStepContract.View, SecondStepCon
 
     override fun bindSuccess(distributeData: APIDistributeData) {
         APIAddressHelper.instance().setDistributeData(distributeData)
+        O2SDKManager.instance().prefs().edit {
+            putBoolean(O2.PRE_DEMO_O2_KEY, false)
+        }
         mPresenter.login(phone, code)
     }
 
     override fun bindFail() {
         hideLoadingDialog()
-        XToast.toastLong(activity, getString(R.string.dialog_msg_bind_to_server_fail))
-        (activity as BindPhoneActivity).removeFragment()
+        O2DialogSupport.openConfirmDialog(activity, getString(R.string.dialog_msg_bind_to_server_fail), { _ ->
+            bind2SampleServer()
+        }, positiveText = getString(R.string.dialog_title_sample_server), negativeListener = {_ ->
+            (activity as BindPhoneActivity).removeFragment()
+        })
+//        XToast.toastLong(activity, getString(R.string.dialog_msg_bind_to_server_fail))
+    }
+
+    /**
+     * 绑定到sample服务器
+     */
+    private fun bind2SampleServer() {
+        val unit = CollectUnitData()
+        unit.id = "61a4d035-81ee-44a6-af3b-ab3d374ee24d"
+        unit.name = "演示站点"
+        unit.pinyin = "yanshizhandian"
+        unit.pinyinInitial = "yszd"
+        unit.centerHost = "sample.o2oa.net"
+        unit.centerPort = 40030
+        unit.centerContext = "/x_program_center"
+        unit.httpProtocol = "https"
+        //绑定成功写入本地存储
+        O2SDKManager.instance().bindUnit(unit, phone, (activity as BindPhoneActivity).loadDeviceId())
+        APIAddressHelper.instance().setHttpProtocol(unit.httpProtocol)
+        val url = APIAddressHelper.instance().getCenterUrl(unit.centerHost,
+                unit.centerContext, unit.centerPort)
+        XLog.debug(url)
+        showLoadingDialog()
+        mPresenter.getDistribute(url, unit.centerHost)
+    }
+    override fun distribute(distributeData: APIDistributeData) {
+        hideLoadingDialog()
+        APIAddressHelper.instance().setDistributeData(distributeData)
+        O2SDKManager.instance().prefs().edit {
+            putBoolean(O2.PRE_DEMO_O2_KEY, true)
+        }
+        activity?.goThenKill<LoginActivity>()
+    }
+
+    override fun err(msg: String) {
+        hideLoadingDialog()
+        XToast.toastShort(activity, msg)
     }
 
     override fun noDeviceId() {

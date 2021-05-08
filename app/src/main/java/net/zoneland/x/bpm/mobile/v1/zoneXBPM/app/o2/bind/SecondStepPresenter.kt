@@ -5,6 +5,7 @@ import net.muliba.accounting.app.ExceptionHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2App
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
@@ -14,6 +15,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectDeviceData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectUnitData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import rx.android.schedulers.AndroidSchedulers
 import rx.functions.Action1
 import rx.schedulers.Schedulers
@@ -58,6 +60,22 @@ class SecondStepPresenter : BasePresenterImpl<SecondStepContract.View>(), Second
                     })
         }
 
+    }
+
+    override fun getDistribute(url: String, host: String) {
+        getApiService(mView?.getContext(), url)?.getWebserverDistributeWithSource(host)?.let { service ->
+            service.subscribeOn(Schedulers.io())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .o2Subscribe {
+                        onNext {
+                            mView?.distribute(it.data)
+                        }
+                        onError { e, _ ->
+                            XLog.error("", e)
+                            mView?.err(mView?.getContext()?.getString(R.string.message_can_not_connect_to_server) ?: "")
+                        }
+                    }
+        }
     }
 
     override fun login(userName: String, code: String) {

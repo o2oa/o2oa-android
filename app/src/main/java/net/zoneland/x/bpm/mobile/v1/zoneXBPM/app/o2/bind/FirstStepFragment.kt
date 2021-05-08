@@ -5,6 +5,7 @@ import android.view.View
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_fluid_login_phone.*
 import net.muliba.changeskin.FancySkinManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPFragment
@@ -18,6 +19,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectUnitData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.StringUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goThenKill
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.hideSoftInput
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CountDownButtonHelper
@@ -88,7 +90,9 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
 
     override fun bindSuccess(distributeData: APIDistributeData) {
         APIAddressHelper.instance().setDistributeData(distributeData)
-
+        O2SDKManager.instance().prefs().edit {
+            putBoolean(O2.PRE_DEMO_O2_KEY, false)
+        }
         gotoLogin()
     }
 
@@ -106,7 +110,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
     private fun bind2SampleServer() {
         val unit = CollectUnitData()
         unit.id = "61a4d035-81ee-44a6-af3b-ab3d374ee24d"
-        unit.name = getString(R.string.dialog_title_sample_server)
+        unit.name = "演示站点"
         unit.pinyin = "yanshizhandian"
         unit.pinyinInitial = "yszd"
         unit.centerHost = "sample.o2oa.net"
@@ -115,8 +119,10 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         unit.httpProtocol = "https"
         //绑定成功写入本地存储
         O2SDKManager.instance().bindUnit(unit, phone, (activity as BindPhoneActivity).loadDeviceId())
+        APIAddressHelper.instance().setHttpProtocol(unit.httpProtocol)
         val url = APIAddressHelper.instance().getCenterUrl(unit.centerHost,
                 unit.centerContext, unit.centerPort)
+        XLog.debug(url)
         showLoadingDialog()
         mPresenter.getDistribute(url, unit.centerHost)
     }
@@ -124,6 +130,9 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
     override fun distribute(distributeData: APIDistributeData) {
         hideLoadingDialog()
         APIAddressHelper.instance().setDistributeData(distributeData)
+        O2SDKManager.instance().prefs().edit {
+            putBoolean(O2.PRE_DEMO_O2_KEY, true)
+        }
         activity?.goThenKill<LoginActivity>()
     }
 

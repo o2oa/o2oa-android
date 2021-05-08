@@ -18,7 +18,8 @@ object SecondStepContract {
 
         fun loginSuccess(data: AuthenticationInfoJson)
         fun loginFail()
-
+        fun distribute(distributeData: APIDistributeData)
+        fun err(msg:String)
     }
     interface Presenter: BasePresenter<View> {
         fun bindDevice(deviceId:String, phone:String, code: String, unitData: CollectUnitData)
@@ -26,6 +27,7 @@ object SecondStepContract {
          * 登录
          */
         fun login(userName: String, code: String)
+        fun getDistribute(url: String, host: String)
 
     }
 }

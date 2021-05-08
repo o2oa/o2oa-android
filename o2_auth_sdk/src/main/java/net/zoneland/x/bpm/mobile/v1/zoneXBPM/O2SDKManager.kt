@@ -156,7 +156,7 @@ class O2SDKManager private constructor()  {
             return
         }
         val phone = prefs().getString(O2.PRE_BIND_PHONE_KEY, "") ?: ""
-        val unit = prefs().getString(O2.PRE_BIND_UNIT_KEY, "") ?: ""
+        val unit = prefs().getString(O2.PRE_BIND_UNIT_ID_KEY, "") ?: ""
         if (TextUtils.isEmpty(phone) || TextUtils.isEmpty(unit)) {
             Log.e(TAG,"没有绑定手机号码。。。。")
             showState(LaunchState.NoBindError)
@@ -165,18 +165,43 @@ class O2SDKManager private constructor()  {
         try {
             val client = RetrofitClient.instance()
             showState(LaunchState.ConnectO2Collect)
-            client.collectApi().checkBindDeviceNew(deviceToken, phone, unit, O2.DEVICE_TYPE)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .o2Subscribe {
-                        onNext {collectUnitRes->
-                            saveCollectInfo(collectUnitRes.data, showState)
+            val demoKey = prefs().getBoolean(O2.PRE_DEMO_O2_KEY, false)
+            if (demoKey) { // 不验证
+                Observable.just(true)
+                        .subscribeOn(Schedulers.io())
+                        .flatMap {
+                            val demoUnit = CollectUnitData()
+                            demoUnit.id = prefs().getString(O2.PRE_BIND_UNIT_ID_KEY, "")
+                            demoUnit.httpProtocol = prefs().getString(O2.PRE_CENTER_HTTP_PROTOCOL_KEY, "")
+                            demoUnit.centerHost = prefs().getString(O2.PRE_CENTER_HOST_KEY, "")
+                            demoUnit.centerContext = prefs().getString(O2.PRE_CENTER_CONTEXT_KEY, "")
+                            demoUnit.centerPort = prefs().getInt(O2.PRE_CENTER_PORT_KEY, -1)
+                            demoUnit.name = prefs().getString(O2.PRE_BIND_UNIT_KEY, "")
+                            Observable.just(demoUnit)
+                        }.observeOn(AndroidSchedulers.mainThread())
+                        .o2Subscribe {
+                            onNext {
+                                saveCollectInfo(it, showState)
+                            }
+                            onError { e, _ ->
+                                Log.e(TAG, "未知异常", e)
+                                showState(LaunchState.NoBindError)
+                            }
                         }
-                        onError { e, _ ->
-                            Log.e(TAG, "检查绑定异常", e)
-                            showState(LaunchState.NoBindError)
+            }else {
+                client.collectApi().checkBindDeviceNew(deviceToken, phone, unit, O2.DEVICE_TYPE)
+                        .subscribeOn(Schedulers.io())
+                        .observeOn(AndroidSchedulers.mainThread())
+                        .o2Subscribe {
+                            onNext { collectUnitRes ->
+                                saveCollectInfo(collectUnitRes.data, showState)
+                            }
+                            onError { e, _ ->
+                                Log.e(TAG, "检查绑定异常", e)
+                                showState(LaunchState.NoBindError)
+                            }
                         }
-                    }
+            }
         }catch (e: RuntimeException) {
             Log.e(TAG, "catch到的异常", e)
             showState(LaunchState.UnknownError)
@@ -259,7 +284,7 @@ class O2SDKManager private constructor()  {
         APIAddressHelper.instance().setHttpProtocol(unit.httpProtocol)
         val host = unit.centerHost
         val newUrl = APIAddressHelper.instance().getCenterUrl(unit.centerHost, unit.centerContext, unit.centerPort)
-        O2SDKManager.instance().prefs().edit {
+        prefs().edit {
             putString(O2.PRE_BIND_UNIT_ID_KEY, unit.id)
             putString(O2.PRE_CENTER_URL_KEY, newUrl)
             putString(O2.PRE_CENTER_HTTP_PROTOCOL_KEY, unit.httpProtocol)

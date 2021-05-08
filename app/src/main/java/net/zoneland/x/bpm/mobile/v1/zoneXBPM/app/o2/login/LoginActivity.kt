@@ -54,7 +54,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
 
     companion object {
         const val REQUEST_PHONE_KEY = "REQUEST_PHONE_KEY"
-        fun startBundleData(phone:String): Bundle {
+        fun startBundleData(phone: String): Bundle {
             val bundle = Bundle()
             bundle.putString(REQUEST_PHONE_KEY, phone)
             return bundle
@@ -235,7 +235,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
             R.id.tv_bioauth_btn -> {
                 showChangeLoginTypeMenu()
             }
-            R.id.btn_bio_auth_login ->{
+            R.id.btn_bio_auth_login -> {
                 bioAuthLogin()
             }
             R.id.btn_login_submit -> {
@@ -292,7 +292,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
                 ll_login_captcha.gone()
             }
             login_edit_password_id.setHint(R.string.activity_login_password)
-            login_edit_password_id.inputType = InputType.TYPE_TEXT_VARIATION_PASSWORD
+            login_edit_password_id.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             button_login_phone_code.gone()
             loginType = 1
         }else {
@@ -342,7 +342,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
     }
 
     override fun loginFail() {
-        XToast.toastShort(this,  getString(R.string.message_login_fail))
+        XToast.toastShort(this, getString(R.string.message_login_fail))
         hideLoadingDialog()
     }
 
@@ -512,7 +512,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
         }else {
 
 
-            bioManager.authenticate(object : OnBiometryAuthCallback{
+            bioManager.authenticate(object : OnBiometryAuthCallback {
                 override fun onUseFallBack() {
                     XLog.error("点击了《其他方式》按钮。。。。。")
                     userFallback()
@@ -520,13 +520,15 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
 
                 override fun onSucceeded() {
                     showLoadingDialog()
-                    val bioAuthUser = O2SDKManager.instance().prefs().getString(BioConstants.O2_bio_auth_user_id_prefs_key, "") ?: ""
+                    val bioAuthUser = O2SDKManager.instance().prefs().getString(BioConstants.O2_bio_auth_user_id_prefs_key, "")
+                            ?: ""
                     var userId = ""
                     //判断是否当前绑定的服务器的
                     if (bioAuthUser.isNotBlank()) {
                         val array = bioAuthUser.split("^^")
                         if (array.isNotEmpty() && array.size == 2) {
-                            val unitId = O2SDKManager.instance().prefs().getString(O2.PRE_BIND_UNIT_ID_KEY, "") ?: ""
+                            val unitId = O2SDKManager.instance().prefs().getString(O2.PRE_BIND_UNIT_ID_KEY, "")
+                                    ?: ""
                             if (array[0] == unitId) {
                                 userId = array[1]
                             }
@@ -535,7 +537,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
                     if (userId.isBlank()) {
                         XLog.error("用户名为空 无法登录。。。。")
                         XToast.toastShort(this@LoginActivity, getString(R.string.message_login_server_error))
-                    }else {
+                    } else {
                         mPresenter.ssoLogin(userId)
                     }
                 }
