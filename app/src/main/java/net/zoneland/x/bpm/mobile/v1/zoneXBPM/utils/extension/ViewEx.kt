@@ -10,7 +10,9 @@ import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
+import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.FrameLayout
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.annotation.ColorRes
@@ -137,4 +139,33 @@ fun ContextCompat.getColor(context: Context?, @ColorRes colorRes: Int): Int {
     }else {
         colorRes
     }
+}
+
+/*
+ * 获取控件宽
+ */
+fun View.getSelfWidth(): Int {
+    val w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+    val h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+    this.measure(w, h)
+    return this.measuredWidth
+}
+/*
+ * 获取控件高
+ */
+fun View.getSelfHeight(): Int {
+    val w = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+    val h = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+    this.measure(w, h)
+    return this.measuredHeight
+}
+/*
+ * 设置控件所在的位置YY，并且不改变宽高，
+ * XY为绝对位置
+ */
+fun View.layoutSelf(x: Int, y: Int) {
+    val margin = ViewGroup.MarginLayoutParams(this.layoutParams)
+    margin.setMargins(x, y, 0, 0)
+    val layoutParams = FrameLayout.LayoutParams(margin)
+    this.layoutParams = layoutParams
 }

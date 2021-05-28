@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+
+<TextView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/tv_search_history_tag"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:background="@drawable/hot_words_select"
+    android:paddingStart="12dp"
+    android:paddingTop="7dp"
+    android:paddingEnd="12dp"
+    android:paddingBottom="7dp"
+    android:singleLine="true"
+    android:textColor="@color/z_color_text_primary_dark"
+    android:textSize="13sp"
+    tools:text="测叫姐姐斤斤计较" />

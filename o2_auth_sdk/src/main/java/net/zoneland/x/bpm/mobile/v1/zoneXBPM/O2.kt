@@ -140,6 +140,8 @@ object O2 {
 
     val PRE_ATTENDANCE_VERSION_KEY = "PRE_ATTENDANCE_VERSION_KEY" //考勤版本兼容问题的key  1表示新版本 其他表示老版本 切换打卡页面使用
 
+    val PRE_SEARCH_HISTORY_KEY = "PRE_SEARCH_HISTORY_KEY" //搜索历史的key
+
     val BUSINESS_TYPE_MESSAGE_CENTER = 0//信息中心
     val BUSINESS_TYPE_WORK_CENTER = 1//工作中心
 

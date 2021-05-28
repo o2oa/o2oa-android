@@ -235,7 +235,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
                 refreshRecyclerView()
             }
             R.id.ll_todo_fragment_search -> {
-                activity?.go<TaskCompletedSearchActivity>()
+                activity?.go<SearchActivity>()
             }
         }
     }

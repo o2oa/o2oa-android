@@ -347,6 +347,9 @@ class APIAddressHelper private constructor() {
         if(data.x_message_assemble_communicate != null) {
             apiDistribute[APIDistributeTypeEnum.x_message_assemble_communicate] = data.x_message_assemble_communicate
         }
+        if (data.x_query_assemble_surface != null) {
+            apiDistribute[APIDistributeTypeEnum.x_query_assemble_surface] = data.x_query_assemble_surface
+        }
 
     }
 

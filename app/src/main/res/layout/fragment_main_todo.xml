@@ -55,7 +55,7 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="center"
                 android:layout_marginStart="@dimen/spacing_tiny"
-                android:text="@string/search_taskcompleted"
+                android:text="@string/search_hint"
                 android:textColor="@color/z_color_text_primary"
                 android:textSize="@dimen/font_normal" />
         </LinearLayout>

@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/z_color_background"
+    tools:context=".app.o2.main.SearchActivity">
+    <!--    搜索工具栏 -->
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout_snippet"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:theme="@style/XBPMTheme.AppBarOverlay">
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbar_snippet_top_bar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@color/z_color_primary"
+            app:popupTheme="@style/XBPMTheme.PopupOverlay"
+            app:layout_scrollFlags="scroll|snap|enterAlways" >
+            <LinearLayout
+                android:id="@+id/ll_search_search"
+                android:layout_width="250dp"
+                android:layout_height="28dp"
+                android:layout_gravity="center"
+                android:background="@drawable/background_white_radius"
+                android:orientation="horizontal">
+                <ImageView
+                    android:layout_width="22dp"
+                    android:layout_height="22dp"
+                    android:layout_gravity="center"
+                    android:layout_marginStart="@dimen/spacing_small"
+                    android:src="@mipmap/icon_main_search"
+                    android:contentDescription="@string/search_taskcompleted" />
+                <net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.ClearTextEdit
+                    android:id="@+id/et_search_input"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_weight="1"
+                    android:layout_gravity="center"
+                    android:background="@null"
+                    android:layout_marginStart="@dimen/spacing_tiny"
+                    android:imeOptions="actionSearch"
+                    android:inputType="text"
+                    android:hint="@string/search_hint"
+                    android:textColorHint="@color/z_color_text_hint"
+                    android:textColor="@color/z_color_text_primary"
+                    android:textSize="@dimen/font_normal" />
+            </LinearLayout>
+        </androidx.appcompat.widget.Toolbar>
+    </com.google.android.material.appbar.AppBarLayout>
+
+    <!--    搜索历史 列表-->
+    <LinearLayout
+        android:id="@+id/ll_search_history"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout_snippet"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="vertical">
+        <LinearLayout
+            android:id="@+id/ll_search_delete_all_history_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:orientation="horizontal">
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@mipmap/icon_delete_sign"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="@dimen/spacing_small"
+                android:text="@string/search_delete_all_history"
+                android:textColor="@color/z_color_text_hint"
+                android:textSize="@dimen/font_small" />
+        </LinearLayout>
+        <FrameLayout
+            android:id="@+id/frame_search_history_list"
+            android:layout_marginTop="@dimen/spacing_normal"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:layout_marginStart="16dp">
+
+
+        </FrameLayout>
+
+    </LinearLayout>
+
+
+    <!--  搜索结果列表-->
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh_search_result"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/app_bar_layout_snippet"
+        android:visibility="gone">
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/recycler_search_result_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@color/z_color_background"
+            />
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+
+    <!--    搜索结果为空 -->
+    <LinearLayout
+        android:visibility="gone"
+        android:id="@+id/ll_search_no_results"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="260dp"
+            android:layout_height="163dp"
+            android:src="@mipmap/search_wu"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:text="@string/search_no_result"
+            android:textColor="#B3B3B3"
+            android:layout_gravity="center"
+            />
+    </LinearLayout>
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
