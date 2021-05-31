@@ -1,18 +1,25 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main
 
+import android.graphics.Color
 import android.os.Bundle
 import android.text.Editable
+import android.text.SpannableStringBuilder
+import android.text.Spanned
 import android.text.TextWatcher
+import android.text.style.ForegroundColorSpan
 import android.view.LayoutInflater
 import android.view.View
 import android.view.inputmethod.EditorInfo
 import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_search.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.view.CMSWebViewActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.TaskWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2SearchEntry
@@ -53,10 +60,14 @@ class SearchActivity : BaseMVPActivity<SearchContract.View, SearchContract.Prese
     private var searchKey = ""
     private val resultList: ArrayList<O2SearchEntry>  = arrayListOf()
 
+    private val resultTypeCMS = "cms"
+    private var isRefesh =  false
+    private var isLoadMore = false
+
     private  val adapter: CommonRecycleViewAdapter<O2SearchEntry> by lazy { object : CommonRecycleViewAdapter<O2SearchEntry>(this, resultList, R.layout.item_search_result_list) {
         override fun convert(holder: CommonRecyclerViewHolder?, t: O2SearchEntry?) {
             if (t != null && holder != null) {
-                if (t.type == "cms") {
+                if (t.type == resultTypeCMS) {
                     holder.setText(R.id.tv_search_result_app_name, t.appName)
                         .setText(R.id.tv_search_result_type_name, getString(R.string.search_cms_category))
                         .setText(R.id.tv_search_result_type_value, t.categoryName)
@@ -70,7 +81,24 @@ class SearchActivity : BaseMVPActivity<SearchContract.View, SearchContract.Prese
                     .setText(R.id.tv_search_result_summary, t.summary)
                     .setText(R.id.tv_search_result_dept, if (t.creatorUnit.contains("@")){t.creatorUnit.split("@")[0]}else{t.creatorUnit})
                     .setText(R.id.tv_search_result_person, if (t.creatorPerson.contains("@")){t.creatorPerson.split("@")[0]}else{t.creatorPerson})
-
+                if (t.title.isNotEmpty()) {
+                    val titleSp = SpannableStringBuilder(t.title)
+                    val index = t.title.indexOf(searchKey)
+                    if (index >= 0) {
+                        titleSp.setSpan(ForegroundColorSpan(Color.RED), index, (index+searchKey.length), Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+                    }
+                    val titleTV = holder.getView<TextView>(R.id.tv_search_result_title)
+                    titleTV.text = titleSp
+                }
+                if (t.summary.isNotEmpty()) {
+                    val summarySp = SpannableStringBuilder(t.summary)
+                    val index = t.summary.indexOf(searchKey)
+                    if (index >= 0) {
+                        summarySp.setSpan(ForegroundColorSpan(Color.RED), index, (index+searchKey.length), Spanned.SPAN_INCLUSIVE_EXCLUSIVE)
+                    }
+                    val summaryTV = holder.getView<TextView>(R.id.tv_search_result_summary)
+                    summaryTV.text = summarySp
+                }
             }
         }
     }}
@@ -81,21 +109,56 @@ class SearchActivity : BaseMVPActivity<SearchContract.View, SearchContract.Prese
             R.color.z_color_refresh_red, R.color.z_color_refresh_purple, R.color.z_color_refresh_orange)
         swipe_refresh_search_result.setOnRefreshListener {
             XLog.debug("下拉刷新")
+            isRefesh = true
+            search()
         }
         recycler_search_result_list.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         recycler_search_result_list.isNestedScrollingEnabled = false
         recycler_search_result_list.adapter = adapter
+        recycler_search_result_list.addOnScrollListener(object : RecyclerView.OnScrollListener() {
+            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
+                super.onScrolled(recyclerView, dx, dy)
+                val lm = recyclerView.layoutManager as? LinearLayoutManager
+                val lastP = lm?.findLastVisibleItemPosition()
+                if (lastP != null && lastP == resultList.size - 1 && !isRefesh && !isLoadMore && mPresenter.hasNexPage()) {
+                    XLog.debug("加载更多。。。。")
+                    isLoadMore = true
+                    showLoadingDialog()
+                    mPresenter.nextPage()
+                }
+            }
+        })
 
         adapter.setOnItemClickListener { _, position ->
             XLog.debug("点击了 position $position")
+            val item = resultList[position]
+            if (item.type == resultTypeCMS) {
+                gotoCMSWebView(item.reference, item.title)
+            } else {
+                gotoWorkActivity(item.reference, item.title)
+            }
         }
 
+    }
+
+    private fun gotoWorkActivity(workId: String, title: String) {
+        XLog.debug("goto task work web view page id:$workId , title: $title")
+        val bundle = Bundle()
+        bundle.putString(TaskWebViewActivity.WORK_WEB_VIEW_WORK, workId)
+        bundle.putString(TaskWebViewActivity.WORK_WEB_VIEW_TITLE, title)
+        go<TaskWebViewActivity>(bundle)
+
+    }
+
+    private fun gotoCMSWebView(docId: String, title: String) {
+        XLog.debug("goto cms web view page id:$docId , title: $title")
+        go<CMSWebViewActivity>(CMSWebViewActivity.startBundleData(docId, title))
     }
 
     private fun loadListener() {
         ll_search_delete_all_history_btn.setOnClickListener(this)
         // 输入框监听点击键盘搜索键的情况
-        et_search_input.setOnEditorActionListener { v, actionId, event ->
+        et_search_input.setOnEditorActionListener { _, actionId, _ ->
             if (actionId == EditorInfo.IME_ACTION_SEARCH ) {
                 XLog.debug("开始搜索")
                 val key = et_search_input.text.toString()
@@ -131,12 +194,19 @@ class SearchActivity : BaseMVPActivity<SearchContract.View, SearchContract.Prese
     }
 
     override fun nextPage(model: O2SearchPageModel) {
+        XLog.debug("next ${model.list.size} page ${model.page}  ${model.totalPage}")
+        isRefesh = false
+        isLoadMore = false
         hideLoadingDialog()
+        swipe_refresh_search_result.isRefreshing = false
         resultList.addAll(model.list)
         adapter.notifyDataSetChanged()
     }
 
     override fun searchResult(model: O2SearchPageModel) {
+        isRefesh = false
+        isLoadMore = false
+        swipe_refresh_search_result.isRefreshing = false
         hideLoadingDialog()
         if (model.list.isEmpty()) {
             ll_search_no_results.visible()
@@ -154,20 +224,23 @@ class SearchActivity : BaseMVPActivity<SearchContract.View, SearchContract.Prese
     }
 
     override fun error(err: String) {
+        isRefesh = false
+        isLoadMore = false
+        swipe_refresh_search_result.isRefreshing = false
         hideLoadingDialog()
         XToast.toastShort(this, err)
     }
 
     private fun search() {
-        XLog.debug("搜索内容 $searchKey")
-        et_search_input.clearFocus()
-        ZoneUtil.toggleSoftInput(et_search_input, false)
-        showLoadingDialog()
-        mPresenter.search(searchKey)
+        if (!isRefesh && !isLoadMore) {
+            et_search_input.clearFocus()
+            ZoneUtil.toggleSoftInput(et_search_input, false)
+            showLoadingDialog()
+            mPresenter.search(searchKey)
+        }
     }
 
     private fun cleanInput() {
-        XLog.debug("cleanInput ........")
         searchKey = ""
         loadHistory()
         ll_search_history.visible()
@@ -239,7 +312,7 @@ class SearchActivity : BaseMVPActivity<SearchContract.View, SearchContract.Prese
 
     private fun loadHistoryList() {
         historyList.clear()
-        var historys = O2SDKManager.instance().prefs().getStringSet(O2.PRE_SEARCH_HISTORY_KEY, setOf())
+        val historys = O2SDKManager.instance().prefs().getStringSet(O2.PRE_SEARCH_HISTORY_KEY, setOf())
         if (historys != null ) {
             historyList.addAll(historys.map { it })
         }

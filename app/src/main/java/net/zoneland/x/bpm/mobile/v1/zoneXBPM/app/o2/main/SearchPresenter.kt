@@ -69,8 +69,8 @@ class SearchPresenter : BasePresenterImpl<SearchContract.View>(), SearchContract
         val ids = if (idsList.isNotEmpty()) {
             val start = (page - 1) * O2.DEFAULT_PAGE_NUMBER
             var end = start + O2.DEFAULT_PAGE_NUMBER
-            if (end > totalPage) {
-                end = totalPage
+            if (end > (idsList.size - 1)) {
+                end = (idsList.size - 1)
             }
             idsList.subList(start, end)
         } else {
@@ -99,7 +99,7 @@ class SearchPresenter : BasePresenterImpl<SearchContract.View>(), SearchContract
                         pageModel.page = page
                         pageModel.totalPage = totalPage
                         pageModel.list = it.data
-                        mView?.searchResult(pageModel)
+                        mView?.nextPage(pageModel)
                     }
                     onError { e, _ ->
                         XLog.error("", e)
