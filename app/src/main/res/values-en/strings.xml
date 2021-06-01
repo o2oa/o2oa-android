@@ -276,6 +276,11 @@
     <string name="activity_location_open">Open</string>
     <string name="menu_im_tribe_name_update">Modify group name</string>
     <string name="menu_im_tribe_member_update">Modify members</string>
+    <string name="menu_im_report">report</string>
+    <string name="im_hint_input_tribe_name">Please enter the group name！</string>
+    <string name="im_tribe_name_cannot_empty">Group name cannot be empty！</string>
+    <string name="im_report_reason">report reason</string>
+    <string name="im_report_desc">detail description</string>
     <string name="im_system_message">Notification message</string>
     <string name="im_manager_member">Managing members</string>
     <string name="im_location_click_choose">Click on the map to select the location</string>

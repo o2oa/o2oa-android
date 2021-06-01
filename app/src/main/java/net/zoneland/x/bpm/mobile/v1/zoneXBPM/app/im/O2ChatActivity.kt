@@ -27,6 +27,7 @@ import android.view.*
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
 import android.widget.TextView
+import androidx.appcompat.widget.AppCompatEditText
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wugang.activityresult.library.ActivityResult
@@ -218,12 +219,18 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         menu?.clear()
         if (canUpdate) {
             menuInflater.inflate(R.menu.menu_chat, menu)
+        } else {
+            menuInflater.inflate(R.menu.menu_chat_no_update, menu)
         }
         return super.onPrepareOptionsMenu(menu)
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         when(item?.itemId) {
+            R.id.menu_chat_report -> {
+                openReportDialog()
+                return true
+            }
             R.id.menu_chat_update_title -> {
                 updateTitle()
                 return true
@@ -236,20 +243,41 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         return super.onOptionsItemSelected(item)
     }
 
+    private fun openReportDialog() {
+        O2DialogSupport.openCustomViewDialog(this, getString(R.string.menu_im_report), R.layout.dialog_im_report) { dialog ->
+            val reason = dialog.findViewById<AppCompatEditText>(R.id.et_im_report_dialog_reason)
+            val r = reason.text.toString()
+            XLog.info("举报 理由 ：$r")
+            val desc = dialog.findViewById<AppCompatEditText>(R.id.et_im_report_dialog_desc)
+            val d = desc.text.toString()
+            XLog.info("举报 详情 ：$d")
+            if (TextUtils.isEmpty(r)) {
+                XToast.toastShort(this, "举报理由不能为空！")
+                return@openCustomViewDialog
+            }
+            if (TextUtils.isEmpty(d)) {
+                XToast.toastShort(this, "详情描述不能为空！")
+                return@openCustomViewDialog
+            }
+
+            XToast.toastShort(this, "感谢您的提交，我们会尽快核实并处理！")
+        }
+    }
+
     private fun updateTitle() {
-        val dialog = O2DialogSupport.openCustomViewDialog(this, "修改群名", R.layout.dialog_name_modify) { dialog ->
+        val dialog = O2DialogSupport.openCustomViewDialog(this, getString(R.string.menu_im_tribe_name_update), R.layout.dialog_name_modify) { dialog ->
             val text = dialog.findViewById<EditText>(R.id.dialog_name_editText_id)
             val content = text.text.toString()
             dialog.dismiss()
             if (TextUtils.isEmpty(content)) {
-                XToast.toastShort(this@O2ChatActivity, "群名不能为空！")
+                XToast.toastShort(this@O2ChatActivity, getString(R.string.im_tribe_name_cannot_empty))
             } else {
                 showLoadingDialog()
                 mPresenter.updateConversationTitle(conversationId, content)
             }
         }
         val edit = dialog.findViewById<EditText>(R.id.dialog_name_editText_id)
-        edit.hint = "请输入群名！"
+        edit.hint = getString(R.string.im_hint_input_tribe_name)
     }
 
     private fun updateMembers() {

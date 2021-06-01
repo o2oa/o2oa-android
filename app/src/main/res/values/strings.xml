@@ -271,6 +271,9 @@
     <string name="activity_im_audio_speak_cancel">上滑取消发送</string>
     <string name="activity_location_send">发送</string>
     <string name="activity_location_open">打开</string>
+    <string name="menu_im_report">举报</string>
+    <string name="im_report_reason">举报理由</string>
+    <string name="im_report_desc">详情描述</string>
     <string name="menu_im_tribe_name_update">修改群名</string>
     <string name="menu_im_tribe_member_update">修改成员</string>
     <string name="im_system_message">通知消息</string>
@@ -280,6 +283,8 @@
     <string name="im_file">文件</string>
     <string name="im_camera">拍摄</string>
     <string name="im_album">相册</string>
+    <string name="im_hint_input_tribe_name">请输入群名！</string>
+    <string name="im_tribe_name_cannot_empty">群名不能为空！</string>
     <string name="baidu_map">百度地图</string>
     <string name="baidu_map_error_message">未安装百度地图，无法打开</string>
     <string name="gaode_map">高德地图</string>
