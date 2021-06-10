@@ -134,7 +134,7 @@
 
     <!-- login activity -->
     <string name="login_sample_alert_1">当前绑定服务器是：演示服务器。</string>
-    <string name="login_sample_alert_2">试用账号：办公室机要、办公室初核、办公室主任\n 密码统一为：o2</string>
+    <string name="login_sample_alert_2">试用账号：开发部经理、开发部员工2、财务部员工1\n 密码统一为：o2</string>
     <string name="login_sample_alert_3">请切换密码方式进行登录</string>
     <string name="activity_login_username">用户名或手机号码</string>
     <string name="login_phone">输入手机号码</string>

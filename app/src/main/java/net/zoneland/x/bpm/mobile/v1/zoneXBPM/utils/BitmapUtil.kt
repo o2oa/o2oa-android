@@ -3,7 +3,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils
 import android.content.res.Resources
 import android.graphics.*
 import android.widget.ImageView
-import kotlinx.android.synthetic.main.activity_login.*
 import java.io.ByteArrayOutputStream
 import java.io.InputStream
 
