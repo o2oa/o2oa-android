@@ -15,6 +15,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.DownloadAPKFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.DownloadAPKService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2AppUpdateBean
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2AlertIconEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
@@ -49,9 +51,13 @@ class AboutActivity : AppCompatActivity() {
         if (!TextUtils.isEmpty(path)) {
             BitmapUtil.setImageFromFile(path!!, image_about_logo)
         }
-
-        relative_about_check_version.setOnClickListener {
-            checkAppUpdate()
+        if (BuildConfig.NEED_UPDATE) {
+            relative_about_check_version.visible()
+            relative_about_check_version.setOnClickListener {
+                checkAppUpdate()
+            }
+        } else {
+            relative_about_check_version.gone()
         }
     }
 

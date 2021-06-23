@@ -33,7 +33,7 @@
                 android:id="@+id/file_list_name_id"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:maxWidth="200dp"
+                android:maxWidth="250dp"
                 android:layout_marginStart="8dp"
                 android:maxLines="1"
                 android:ellipsize="end"

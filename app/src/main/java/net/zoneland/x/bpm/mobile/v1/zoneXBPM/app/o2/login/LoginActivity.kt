@@ -95,13 +95,6 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
 
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
-        //获取加密key
-        mPresenter.getRSAPublicKey()
-        //获取图片验证码
-        mPresenter.getCaptcha()
-        //
-        mPresenter.getLoginMode()
-
         receivePhone = intent.extras?.getString(REQUEST_PHONE_KEY) ?: ""
         setDefaultLogo()
         login_edit_username_id.setText(receivePhone)
@@ -144,11 +137,12 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
         //是否开启了指纹识别登录
         checkBioAuthLogin()
         if (BuildConfig.InnerServer) {
+            loginType = 1 // 内部连接 默认用密码登录
             login_edit_password_id.setHint(R.string.activity_login_password)
             login_edit_password_id.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             button_login_phone_code.gone()
             tv_rebind_btn.gone()
-            tv_bioauth_btn.gone()
+            tv_bioauth_btn.visible()
             ll_login_captcha.visible()
         }else {
             tv_bioauth_btn.visible()
@@ -162,6 +156,12 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
             ll_login_captcha.gone()
         }
 
+        //获取加密key
+        mPresenter.getRSAPublicKey()
+        //获取图片验证码
+        mPresenter.getCaptcha()
+        // 登录模式检查 是否有验证码登录 短信登录这些
+        mPresenter.getLoginMode()
     }
 
 
@@ -308,12 +308,27 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
 
     override fun loginMode(mode: LoginModeData?) {
         if (mode != null) {
+            XLog.debug(mode.toString())
+            // 图片验证码
             useCaptcha = mode.captchaLogin
             if (useCaptcha) {
                 ll_login_captcha.visible()
             }else {
                 ll_login_captcha.gone()
             }
+            // 短信验证码登录
+            if (mode.codeLogin) {
+                loginType = 1
+                changeLoginType()
+            } else { // 用户密码登录
+                loginType = 0
+                tv_bioauth_btn.gone()
+                changeLoginType()
+            }
+        } else { // 用户密码登录
+            loginType = 0
+            tv_bioauth_btn.gone()
+            changeLoginType()
         }
     }
 
@@ -371,8 +386,11 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
             return
         }
         if (useCaptcha) {
-            if (BuildConfig.InnerServer) {
-//                mPresenter.loginByPassword(credential, code)
+            if (loginType == 0) {
+                showLoadingDialog()
+                mPresenter.login(credential, code)
+            }else {
+//                    mPresenter.loginByPassword(credential, code)
                 val captchaCode = edit_login_captcha_input.text.toString()
                 if (TextUtils.isEmpty(captchaCode)) {
                     XToast.toastShort(this, getString(R.string.message_login_image_code_can_not_empty))
@@ -389,50 +407,18 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
                 form.captchaAnswer = captchaCode
                 showLoadingDialog()
                 mPresenter.loginWithCaptcha(form)
-            }else {
-                if (loginType == 0) {
-                    showLoadingDialog()
-                    mPresenter.login(credential, code)
-                }else {
-//                    mPresenter.loginByPassword(credential, code)
-                    val captchaCode = edit_login_captcha_input.text.toString()
-                    if (TextUtils.isEmpty(captchaCode)) {
-                        XToast.toastShort(this, getString(R.string.message_login_image_code_can_not_empty))
-                        return
-                    }
-                    if (captcha == null) {
-                        XToast.toastShort(this, getString(R.string.message_login_image_code_can_not_empty))
-                        return
-                    }
-                    val form = LoginWithCaptchaForm()
-                    form.credential = credential
-                    form.password = code
-                    form.captcha = captcha!!.id
-                    form.captchaAnswer = captchaCode
-                    showLoadingDialog()
-                    mPresenter.loginWithCaptcha(form)
-                }
             }
         }else {
-            if (BuildConfig.InnerServer) {
-//                mPresenter.loginByPassword(credential, code)
+            if (loginType == 0) {
+                showLoadingDialog()
+                mPresenter.login(credential, code)
+            }else {
+//                    mPresenter.loginByPassword(credential, code)
                 val form = LoginWithCaptchaForm()
                 form.credential = credential
                 form.password = code
                 showLoadingDialog()
                 mPresenter.loginWithCaptcha(form)
-            }else {
-                if (loginType == 0) {
-                    showLoadingDialog()
-                    mPresenter.login(credential, code)
-                }else {
-//                    mPresenter.loginByPassword(credential, code)
-                    val form = LoginWithCaptchaForm()
-                    form.credential = credential
-                    form.password = code
-                    showLoadingDialog()
-                    mPresenter.loginWithCaptcha(form)
-                }
             }
         }
 

@@ -1,9 +1,7 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.launch
 
 import android.Manifest
-import android.app.Activity
 import android.content.Context
-import android.content.DialogInterface
 import android.content.Intent
 import android.content.IntentFilter
 import android.net.ConnectivityManager
@@ -12,8 +10,6 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.provider.Settings
-import androidx.viewpager.widget.PagerAdapter
-import androidx.viewpager.widget.ViewPager
 import android.text.TextUtils
 import android.util.Log
 import android.view.View
@@ -21,6 +17,9 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.LinearLayout
+import androidx.annotation.RequiresApi
+import androidx.viewpager.widget.PagerAdapter
+import androidx.viewpager.widget.ViewPager
 import cn.jpush.android.api.JPushInterface
 import kotlinx.android.synthetic.main.activity_launch.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
@@ -31,16 +30,15 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.login.LoginActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main.MainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.LaunchState
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.receiver.NetworkConnectStatusReceiver
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.DownloadAPKService
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2AppUpdateBean
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2AlertDialogBuilder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2AlertIconEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import org.jetbrains.anko.dip
-import androidx.annotation.RequiresApi
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.DownloadAPKService
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2AppUpdateBean
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 
 
 /**
@@ -154,8 +152,13 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
         }else{
             mCheckNetwork = true
             // 是否检查更新
-            checkAppUpdate()
-//            launch()
+            if (BuildConfig.NEED_UPDATE) {
+                Log.d("LaunchActivity","检查应用内更新")
+                checkAppUpdate()
+            } else {
+                Log.d("LaunchActivity","不需要应用内更新。。。。。。。")
+                launch()
+            }
         }
     }
 
