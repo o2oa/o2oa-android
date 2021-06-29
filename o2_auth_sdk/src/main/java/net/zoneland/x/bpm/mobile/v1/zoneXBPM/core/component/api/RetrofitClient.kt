@@ -204,7 +204,7 @@ class RetrofitClient private constructor() {
                     val original = chain.request()
                     val requestBuilder = original.newBuilder()
                     if (!TextUtils.isEmpty(xToken)) {
-                        requestBuilder.addHeader("x-token", xToken)
+                        requestBuilder.addHeader(O2SDKManager.instance().tokenName(), xToken)
                     }
                     val originalHttpUrl = original.url()
                     val url = originalHttpUrl.newBuilder().addQueryParameter("o", (Math.random()*100).toString()).build()

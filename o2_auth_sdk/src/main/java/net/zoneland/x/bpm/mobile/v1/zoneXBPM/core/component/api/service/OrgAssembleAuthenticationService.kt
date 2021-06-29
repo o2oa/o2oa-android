@@ -44,7 +44,7 @@ interface OrgAssembleAuthenticationService{
      * @return
      */
     @GET("jaxrs/authentication")
-    fun who(@Header("x-token") token: String): Observable<ApiResponse<AuthenticationInfoJson>>
+    fun who(): Observable<ApiResponse<AuthenticationInfoJson>>
 
     /**
      * 用手机验证码登录

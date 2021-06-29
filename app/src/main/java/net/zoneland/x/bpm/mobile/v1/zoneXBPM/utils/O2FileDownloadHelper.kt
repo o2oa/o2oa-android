@@ -50,9 +50,9 @@ object O2FileDownloadHelper {
                     val url = URL(downloadUrl)
                     val conn = url.openConnection() as HttpURLConnection
                     conn.setRequestProperty("Accept-Encoding", "identity")
-                    val newCookie = "x-token:" + O2SDKManager.instance().zToken
+                    val newCookie = O2SDKManager.instance().tokenName() + ":" + O2SDKManager.instance().zToken
                     conn.setRequestProperty("Cookie", newCookie)
-                    conn.setRequestProperty("x-token", O2SDKManager.instance().zToken)
+                    conn.setRequestProperty(O2SDKManager.instance().tokenName(), O2SDKManager.instance().zToken)
                     conn.connect()
                     val inputStream = conn.inputStream
                     var fileName = conn.getHeaderField("Content-Disposition")

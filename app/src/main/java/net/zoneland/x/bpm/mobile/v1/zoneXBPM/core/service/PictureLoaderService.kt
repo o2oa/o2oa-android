@@ -210,9 +210,9 @@ class PictureLoaderService(val context: Context) {
             connection.requestMethod = "GET"
             connection.readTimeout = 5000// 设置超时的时间
             connection.connectTimeout = 5000// 设置链接超时的时间
-            val newCookie = "x-token:" + O2SDKManager.instance().zToken
+            val newCookie = O2SDKManager.instance().tokenName() + ":" + O2SDKManager.instance().zToken
             connection.setRequestProperty("Cookie", newCookie)
-            connection.setRequestProperty("x-token", O2SDKManager.instance().zToken)
+            connection.setRequestProperty(O2SDKManager.instance().tokenName(), O2SDKManager.instance().zToken)
             // 获取响应的状态码 404 200 505 302
             val code = connection.responseCode
             if (code ==200) {
@@ -304,9 +304,9 @@ class PictureLoaderService(val context: Context) {
                 val url = URL(downloadUrl)
                 val conn = url.openConnection() as HttpURLConnection
                 conn.setRequestProperty("Accept-Encoding", "identity")
-                val newCookie = "x-token:" + O2SDKManager.instance().zToken
+                val newCookie = O2SDKManager.instance().tokenName() + ":" + O2SDKManager.instance().zToken
                 conn.setRequestProperty("Cookie", newCookie)
-                conn.setRequestProperty("x-token", O2SDKManager.instance().zToken)
+                conn.setRequestProperty(O2SDKManager.instance().tokenName(), O2SDKManager.instance().zToken)
                 conn.connect()
                 inputstream = conn.inputStream
         }catch (e: Exception){XLog.error("获取头像失败", e)}

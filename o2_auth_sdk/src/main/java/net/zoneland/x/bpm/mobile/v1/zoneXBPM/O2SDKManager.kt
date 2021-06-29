@@ -2,7 +2,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM
 
 import android.annotation.SuppressLint
 import android.content.Context
-import android.content.SharedPreferences
 import android.text.TextUtils
 import android.util.Log
 import com.google.gson.Gson
@@ -11,7 +10,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2.SECURITY_IS_UPDATE
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.LaunchState
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.exception.NoBindException
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.exception.NoLoginException
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ApiResponse
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AuthenticationInfoJson
@@ -24,8 +22,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.security.SecuritySharedPrefer
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import java.lang.Exception
-import java.lang.RuntimeException
 
 /**
  * Created by fancyLou on 2018/11/22.
@@ -144,6 +140,13 @@ class O2SDKManager private constructor()  {
 //    fun prefs(): SharedPreferences = spHelper.prefs()
 
     fun prefs(): SecuritySharedPreference = spHelper.securityPrefs()
+
+    /**
+     * 获取tokenName
+     */
+    fun tokenName(): String {
+        return prefs().getString(O2.PRE_TOKEN_NAME_KEY, "x-token") ?: "x-token"
+    }
 
     /**
      * 启动  整个启动过程，检查绑定 连接中心服务器 下载配置 登录
@@ -370,7 +373,7 @@ class O2SDKManager private constructor()  {
                     if (TextUtils.isEmpty(zToken)) {
                         Observable.error<ApiResponse<AuthenticationInfoJson>>(NoLoginException("没有登录！"))
                     }else {
-                        client.assembleAuthenticationApi().who(zToken)
+                        client.assembleAuthenticationApi().who()
                     }
                 }
                 .observeOn(AndroidSchedulers.mainThread())

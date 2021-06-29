@@ -103,7 +103,7 @@ class NestedProgressWebView : WebView, NestedScrollingChild {
         //设置cookie
         val domain = StringUtil.getTopDomain(url)
         XLog.info("domain:$domain")
-        val cookie = "x-token=" + O2SDKManager.instance().zToken
+        val cookie = O2SDKManager.instance().tokenName() + "=" + O2SDKManager.instance().zToken
         XLog.info("cookie:$cookie")
         val host = APIAddressHelper.instance().getWebViewHost()
         XLog.info("host:$host")

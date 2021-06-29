@@ -67,7 +67,7 @@ public class ProgressWebView extends WebView {
         //设置cookie
         String domain = StringUtil.getTopDomain(url);
         XLog.debug("domain:"+domain);
-        String cookie = "x-token="+ O2SDKManager.Companion.instance().getZToken();
+        String cookie = O2SDKManager.Companion.instance().tokenName() + "="+ O2SDKManager.Companion.instance().getZToken();
         XLog.debug("cookie:"+cookie);
         String host = APIAddressHelper.Companion.instance().getWebViewHost();
         XLog.debug("host:"+host);

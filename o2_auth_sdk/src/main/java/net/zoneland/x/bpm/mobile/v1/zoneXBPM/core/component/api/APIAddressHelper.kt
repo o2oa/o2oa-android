@@ -2,6 +2,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api
 
 import android.text.TextUtils
 import android.util.Log
+import android.view.TextureView
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.APIDistributeTypeEnum
@@ -248,10 +249,14 @@ class APIAddressHelper private constructor() {
     fun setDistributeData(distributeData: APIDistributeData) {
         val data = distributeData.assembles
         val webData = distributeData.webServer
+        val tokenName = if (TextUtils.isEmpty(distributeData.tokenName)) {"x-token"} else {distributeData.tokenName}
         if (data == null || webData == null) {
             throw RuntimeException("Assembles or webServer is null")
         }
-
+        // 添加tokenName
+        O2SDKManager.instance().prefs().edit {
+            putString(O2.PRE_TOKEN_NAME_KEY, tokenName)
+        }
         val dataJson = O2SDKManager.instance().gson.toJson(data)
         val webDataJson = O2SDKManager.instance().gson.toJson(webData)
         if (TextUtils.isEmpty(dataJson) || TextUtils.isEmpty(webDataJson)) {

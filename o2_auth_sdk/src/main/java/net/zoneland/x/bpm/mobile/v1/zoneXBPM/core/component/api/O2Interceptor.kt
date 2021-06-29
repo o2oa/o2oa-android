@@ -29,9 +29,11 @@ class O2Interceptor : Interceptor {
         val originalHttpUrl = original.url()
         val url = originalHttpUrl.newBuilder().addQueryParameter("o", (Math.random()*100).toString()).build()
         val xToken = O2SDKManager.instance().zToken
+        val tokenName = O2SDKManager.instance().tokenName()
         val requestBuilder = original.newBuilder()
+//        Log.d(TAG, "tokenName:$tokenName, token: $xToken")
         if (!TextUtils.isEmpty(xToken)) {
-            requestBuilder.addHeader("x-token", xToken)
+            requestBuilder.addHeader(tokenName, xToken)
         }
 //        Log.d(TAG, "url: $url")
         val request = requestBuilder.addHeader("x-client", O2.DEVICE_TYPE)
