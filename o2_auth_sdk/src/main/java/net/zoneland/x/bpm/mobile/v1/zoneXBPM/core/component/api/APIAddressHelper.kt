@@ -370,7 +370,8 @@ class APIAddressHelper private constructor() {
     fun webSocketUrl(): String {
         val bean = apiDistribute[APIDistributeTypeEnum.x_message_assemble_communicate]
         val xToken = O2SDKManager.instance().zToken
-        return bean?.let { "$webSocketHead${it.host}:${it.port}${it.context}/ws/collaboration?x-token=$xToken" } ?: ""
+        val tokenName = O2SDKManager.instance().tokenName()
+        return bean?.let { "$webSocketHead${it.host}:${it.port}${it.context}/ws/collaboration?$tokenName=$xToken" } ?: ""
     }
 
 }
