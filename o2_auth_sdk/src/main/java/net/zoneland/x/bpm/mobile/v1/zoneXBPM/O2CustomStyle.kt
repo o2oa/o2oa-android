@@ -31,6 +31,10 @@ object O2CustomStyle {
     // 移动端简易模式 key
     const val CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY = "customStyleSimpleModeKey"
 
+    // 通讯录权限查询视图key
+    const val CUSTOM_STYLE_CONTACT_PERMISSION_PREF_KEY = "customStyleContactPermissionViewKey"
+    const val CUSTOM_STYLE_CONTACT_PERMISSION_DEFAULT = "addressPowerView"
+
     const val extension_png = ".png"
 
     //MARK - 缓存图片key

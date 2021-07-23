@@ -43,7 +43,9 @@ public enum APIDistributeTypeEnum {
 
     x_message_assemble_communicate, //通信模块 消息收发 还有websocket
 
-    x_query_assemble_surface //查询模块包含 视图、统计、自定义表等
+    x_query_assemble_surface, //查询模块包含 视图、统计、自定义表等
+
+    x_organizationPermission //custom模块 通讯录 需要到应用市场下载安装
 
 
 }

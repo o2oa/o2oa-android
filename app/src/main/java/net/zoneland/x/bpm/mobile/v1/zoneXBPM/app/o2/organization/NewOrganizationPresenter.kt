@@ -60,7 +60,11 @@ class NewOrganizationPresenter : BasePresenterImpl<NewOrganizationContract.View>
                     val retList = ArrayList<NewContactListVO>()
                     val list = response.data
                     if (list != null && list.isNotEmpty()) {
-                        list.map { retList.add(it.copyToOrgVO()) }
+                        list.map {
+                            if (!OrganizationPermissionManager.instance().isExcludeUnit(it.distinguishedName)) { // 是否排除查询
+                                retList.add(it.copyToOrgVO())
+                            }
+                        }
                     }
                     retList
                 }
@@ -68,7 +72,11 @@ class NewOrganizationPresenter : BasePresenterImpl<NewOrganizationContract.View>
                     val retList = ArrayList<NewContactListVO>()
                     val list = response.data
                     if (list != null && list.isNotEmpty()) {
-                        list.map { retList.add(it.copyToOrgVO()) }
+                        list.map {
+                            if (!OrganizationPermissionManager.instance().isExcludePerson(it.distinguishedName)) {
+                                retList.add(it.copyToOrgVO())
+                            }
+                        }
                     }
                     retList
                 }
@@ -98,11 +106,13 @@ class NewOrganizationPresenter : BasePresenterImpl<NewOrganizationContract.View>
                             if (list != null && list.isNotEmpty()) {
                                 XLog.debug("size:${list.size}")
                                 list.map {
-                                    retList.add(NewContactListVO.Identity(
+                                    if (!OrganizationPermissionManager.instance().isExcludePerson(it.distinguishedName)) {
+                                        retList.add(NewContactListVO.Identity(
                                             name = it.name,
                                             person = it.id,
                                             distinguishedName = it.distinguishedName
-                                    ))
+                                        ))
+                                    }
                                 }
                             }
                             retList

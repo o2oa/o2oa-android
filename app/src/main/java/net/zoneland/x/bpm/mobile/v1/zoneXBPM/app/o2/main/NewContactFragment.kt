@@ -11,12 +11,14 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPViewPagerFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.NewOrganizationActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.OrganizationPermissionManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.person.PersonActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.NewContactFragmentAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.NewContactFragmentVO
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.MiscUtilK
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.inVisible
@@ -88,7 +90,14 @@ class NewContactFragment : BaseMVPViewPagerFragment<NewContactContract.View, New
         main_contact_refresh_layout_id.setColorSchemeResources(R.color.z_color_refresh_scuba_blue,
                 R.color.z_color_refresh_red, R.color.z_color_refresh_purple, R.color.z_color_refresh_orange)
         main_contact_refresh_layout_id.setOnRefreshListener { lazyLoad() }
-        linear_contact_fragment_search.setOnClickListener { activity?.go<NewOrganizationActivity>(NewOrganizationActivity.startBundleData(status = NewOrganizationActivity.SEARCH_STATUS)) }
+        linear_contact_fragment_search.setOnClickListener {
+            if (OrganizationPermissionManager.instance().isCurrentPersonCannotQueryAll() || OrganizationPermissionManager.instance().isCurrentPersonCannotQueryOuter()) {
+                XToast.toastShort(activity, R.string.message_contact_new_no_permission_for_search)
+            } else {
+                activity?.go<NewOrganizationActivity>(NewOrganizationActivity.startBundleData(status = NewOrganizationActivity.SEARCH_STATUS))
+            }
+
+        }
         MiscUtilK.swipeRefreshLayoutRun(main_contact_refresh_layout_id, activity)
 
         recycler_contact_fragment_list.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
