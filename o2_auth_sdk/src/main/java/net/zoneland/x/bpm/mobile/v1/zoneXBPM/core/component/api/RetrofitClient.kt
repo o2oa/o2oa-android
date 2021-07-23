@@ -285,6 +285,20 @@ class RetrofitClient private constructor() {
 
     }
 
+    /**
+     * custom模块 通讯录 需要到应用市场下载安装
+     */
+    fun organizationPermissionApi(): OrganizationPermissionService {
+        val url = helper.getAPIDistribute(APIDistributeTypeEnum.x_organizationPermission)
+        val retrofit = Retrofit.Builder()
+            .baseUrl(url)
+            .client(o2HttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+            .build()
+        return retrofit.create(OrganizationPermissionService::class.java)
+    }
+
 
     /**
      * 查询模块
@@ -300,7 +314,6 @@ class RetrofitClient private constructor() {
         return retrofit.create(QueryAssembleSurfaceService::class.java)
 
     }
-
 
 
     /**

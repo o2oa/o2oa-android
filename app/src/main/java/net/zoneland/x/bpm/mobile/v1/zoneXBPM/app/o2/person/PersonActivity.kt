@@ -14,6 +14,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.O2ChatActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.OrganizationPermissionManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.GenderTypeEnums
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMConversationInfo
@@ -97,7 +98,11 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.linear_person_mobile_button -> callPhone()
+            R.id.linear_person_mobile_button -> {
+                if (!OrganizationPermissionManager.instance().isHiddenMobile(loadedPersonDN)) {
+                    callPhone()
+                }
+            }
             R.id.linear_person_email_button -> sendEmail()
             R.id.linear_person_collection_button -> usuallyBtnClick()
             R.id.image_person_back -> finish()
@@ -138,6 +143,7 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
 
     private fun sendEmail() {
         val emailAddress = tv_person_email.text.toString()
+        XLog.debug("发送邮件：$emailAddress")
         if (TextUtils.isEmpty(emailAddress)) {
             return
         }
@@ -149,7 +155,7 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
                     XToast.toastShort(this@PersonActivity, getString(R.string.message_copy_email_success))
                 }
             }
-        }
+        }.show()
 
 //        emailClickMenu.setOnDismissListener { ZoneUtil.lightOn(this@PersonActivity) }
 //        emailClickMenu.onMenuItemClickListener = object : CommonMenuPopupWindow.OnMenuItemClickListener {
@@ -220,7 +226,12 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
         hideLoadingDialog()
         loadedPersonId = personInfo.id
         loadedPersonDN = personInfo.distinguishedName
-        tv_person_mobile.text = personInfo.mobile
+        if (OrganizationPermissionManager.instance().isHiddenMobile(loadedPersonDN)) {
+            tv_person_mobile.text = "***********"
+        } else {
+            tv_person_mobile.text = personInfo.mobile
+        }
+
         tv_person_email.text = personInfo.mail
         if (GenderTypeEnums.FEMALE.key == personInfo.genderType) {
             linear_person_gender_women_button.visible()

@@ -14,5 +14,6 @@ object MainContract {
 
     interface Presenter: BasePresenter<View> {
         fun checkAttendanceFeature()
+        fun loadOrganizationPermission()
     }
 }

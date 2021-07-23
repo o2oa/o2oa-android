@@ -1,10 +1,10 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main
 
 import android.text.TextUtils
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2App
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.OrganizationPermissionManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.realm.RealmDataService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ApiResponse
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.identity.IdentityLevelForm
@@ -87,13 +87,32 @@ class NewContactPresenter : BasePresenterImpl<NewContactContract.View>(), NewCon
             usList
         }
 
-        Observable.zip(identityListObservable, topUnitListObservable, usuallyObservable) { t1, t2, t3 ->
-            val list = ArrayList<NewContactFragmentVO>()
-            list.addAll(t1)
-            list.addAll(t2)
-            list.addAll(t3)
-            list
-        }.subscribeOn(Schedulers.io())
+        val isqueryAll = !OrganizationPermissionManager.instance().isCurrentPersonCannotQueryAll()
+        XLog.debug("是否能查询外部门！$isqueryAll")
+        val obs = if (isqueryAll) { // 当前用户不能查询通讯录
+            val isqueryOut = !OrganizationPermissionManager.instance().isCurrentPersonCannotQueryOuter()
+            XLog.debug("是否能查询外部门！$isqueryOut")
+            if (isqueryOut) {
+                Observable.zip(identityListObservable, topUnitListObservable, usuallyObservable) { t1, t2, t3 ->
+                    val list = ArrayList<NewContactFragmentVO>()
+                    list.addAll(t1)
+                    list.addAll(t2)
+                    list.addAll(t3)
+                    list
+                }
+            } else {
+                Observable.zip(identityListObservable, usuallyObservable) { t1, t2 ->
+                    val list = ArrayList<NewContactFragmentVO>()
+                    list.addAll(t1)
+                    list.addAll(t2)
+                    list
+                }
+            }
+        } else {
+            Observable.just(ArrayList<NewContactFragmentVO>())
+        }
+
+        obs.subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .o2Subscribe {
                     onNext { list ->

@@ -266,7 +266,17 @@ class NewOrganizationActivity : BaseMVPActivity<NewOrganizationContract.View, Ne
             linear_organization_search_button.gone()
         } else {
             linear_organization_search_button.visible()
-            linear_organization_search_button.setOnClickListener { changeStatusToSearch() }
+            linear_organization_search_button.setOnClickListener {
+                if (mode == DEFAULT_MODE) {
+                    if (OrganizationPermissionManager.instance().isCurrentPersonCannotQueryAll() || OrganizationPermissionManager.instance().isCurrentPersonCannotQueryOuter()) {
+                        XToast.toastShort(this, R.string.message_contact_new_no_permission_for_search)
+                    }else {
+                        changeStatusToSearch()
+                    }
+                } else {
+                    changeStatusToSearch()
+                }
+            }
         }
 
         swipe_refresh_organization_main.setColorSchemeResources(R.color.z_color_refresh_scuba_blue,

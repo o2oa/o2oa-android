@@ -1,42 +1,40 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main
 
-import android.Manifest
 import android.annotation.TargetApi
-import android.app.Activity
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.*
-import android.graphics.Bitmap
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
-import android.provider.MediaStore
-import androidx.fragment.app.Fragment
 import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.view.KeyEvent
 import android.view.View
+import androidx.fragment.app.Fragment
 import cn.jpush.android.api.JPushInterface
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main_bottom_bar_image.*
 import net.muliba.changeskin.FancySkinManager
-import net.muliba.fancyfilepickerlibrary.PicturePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.O2IM
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.fm.O2IMConversationFragment
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.my.ClipAvatarActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.MainActivityFragmentAdapter
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.ApplicationEnum
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.ClearTempFileJobService
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.PictureLoaderService
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.RestartSelfService
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.WebSocketService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMMessage
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.BitmapUtil
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2DoubleClickExit
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.addOnPageChangeListener
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import org.jetbrains.anko.doAsync
-import java.io.File
 
 
 /**
@@ -133,6 +131,11 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
             icon_main_bottom_index.setOnClickListener(this)
             icon_main_bottom_contact.setOnClickListener(this)
             icon_main_bottom_setting.setOnClickListener(this)
+
+            // 通讯录权限加载
+//            val data = OrganizationPermissionData(excludePerson = "楼国栋@237@P", excludeUnit = "产品运营组@320789019@U", hideMobilePerson = "周睿@233@P", limitQueryAll = "蔡艳红@204@P", limitQueryOuter = "金飞@207@P")
+//            OrganizationPermissionManager.instance().initData(data)
+            mPresenter.loadOrganizationPermission()
         }
 
 

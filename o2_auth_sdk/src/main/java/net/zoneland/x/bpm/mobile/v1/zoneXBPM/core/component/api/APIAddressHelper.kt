@@ -2,7 +2,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api
 
 import android.text.TextUtils
 import android.util.Log
-import android.view.TextureView
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.APIDistributeTypeEnum
@@ -354,6 +353,9 @@ class APIAddressHelper private constructor() {
         }
         if (data.x_query_assemble_surface != null) {
             apiDistribute[APIDistributeTypeEnum.x_query_assemble_surface] = data.x_query_assemble_surface
+        }
+        if (data.x_organizationPermission != null) {
+            apiDistribute[APIDistributeTypeEnum.x_organizationPermission] = data.x_organizationPermission
         }
 
     }

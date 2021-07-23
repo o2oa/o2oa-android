@@ -39,7 +39,16 @@ public class APIAssemblesData {
     private APIDataBean x_mind_assemble_control; //脑图
     private APIDataBean x_jpush_assemble_control; //极光推送服务
     private APIDataBean x_message_assemble_communicate; //通信模块 消息收发 还有websocket
+    private APIDataBean x_organizationPermission; //  custom模块 通讯录 需要到应用市场下载安装
 
+
+    public APIDataBean getX_organizationPermission() {
+        return x_organizationPermission;
+    }
+
+    public void setX_organizationPermission(APIDataBean x_organizationPermission) {
+        this.x_organizationPermission = x_organizationPermission;
+    }
 
     public APIDataBean getX_message_assemble_communicate() {
         return x_message_assemble_communicate;

@@ -1,5 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main
 
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2CustomStyle
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.portal.PortalData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.AppItemOnlineVo
 
@@ -10,13 +11,14 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.AppItemOnlineVo
 
 
 data class CustomStyleData(
-        var indexType: String = "default",
+    var indexType: String = "default",
 //        var indexId: String = "",
-        var indexPortal: String = "",
-        var simpleMode: Boolean = false,
-        var portalList: List<PortalData> = ArrayList(),
-        var nativeAppList: List<AppItemOnlineVo> = ArrayList(),
-        var images: ArrayList<ImageValue> = ArrayList()
+    var indexPortal: String = "",
+    var simpleMode: Boolean = false,
+    var contactPermissionView: String = O2CustomStyle.CUSTOM_STYLE_CONTACT_PERMISSION_DEFAULT,
+    var portalList: List<PortalData> = ArrayList(),
+    var nativeAppList: List<AppItemOnlineVo> = ArrayList(),
+    var images: ArrayList<ImageValue> = ArrayList()
 ) {
 
     data class ImageValue(var name: String = "",

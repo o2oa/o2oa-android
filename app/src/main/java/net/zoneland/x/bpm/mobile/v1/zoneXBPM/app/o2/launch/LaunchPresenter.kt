@@ -1,16 +1,10 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.launch
 
 import android.text.TextUtils
-import net.muliba.accounting.app.ExceptionHandler
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2CustomStyle
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.realm.RealmDataService
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.APIDistributeData
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AuthenticationInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.CustomStyleData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.portal.PortalData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.AppItemOnlineVo
@@ -19,7 +13,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import rx.Observable
-import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
 /**
@@ -120,6 +113,7 @@ class LaunchPresenter : BasePresenterImpl<LaunchContract.View>(), LaunchContract
                     ?: O2CustomStyle.INDEX_TYPE_DEFAULT)
             putString(O2CustomStyle.INDEX_ID_PREF_KEY, data?.indexPortal ?: "")
             putBoolean(O2CustomStyle.CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY, data?.simpleMode ?: false)
+            putString(O2CustomStyle.CUSTOM_STYLE_CONTACT_PERMISSION_PREF_KEY, data?.contactPermissionView ?: O2CustomStyle.CUSTOM_STYLE_CONTACT_PERMISSION_DEFAULT)
         }
     }
 

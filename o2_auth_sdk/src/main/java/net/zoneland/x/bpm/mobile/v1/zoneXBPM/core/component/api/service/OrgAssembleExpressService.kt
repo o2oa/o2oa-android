@@ -9,8 +9,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.person.PersonUnit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.unit.UnitJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.*
 import okhttp3.RequestBody
-import okhttp3.ResponseBody
-import retrofit2.Call
 import retrofit2.http.*
 import rx.Observable
 
@@ -146,6 +144,12 @@ interface OrgAssembleExpressService {
      */
     @GET("jaxrs/identity/list/person/{person}")
     fun personIdentityByPerson(@Path("person") person: String): Observable<ApiResponse<List<PersonIdentityData>>>
+
+    /**
+     * 批量人员DN获取身份DN
+     */
+    @POST("jaxrs/identity/list/person")
+    fun personIdentityByPersonList(@Body body: PersonListData): Observable<ApiResponse<PersonIdentityListData>>
 
 
     /**
