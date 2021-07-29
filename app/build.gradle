@@ -140,7 +140,7 @@ android {
             //apk包重命名
             applicationVariants.all { variant ->
                 variant.outputs.all {
-                    outputFileName = "${variant.productFlavors[0].name}-${variant.versionName}.apk"
+                    outputFileName = "sample-${variant.productFlavors[0].name}-${variant.versionName}.apk"
                 }
             }
 
