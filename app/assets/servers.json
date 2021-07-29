@@ -1,0 +1,18 @@
+[
+  {
+  "id" : "sample",
+  "name" : "演示环境",
+  "centerHost" : "sample.o2oa.net",
+  "centerContext" : "/x_program_center",
+  "centerPort" : 40030,
+  "httpProtocol" : "https"
+  },
+  {
+    "id" : "case1",
+    "name" : "政务环境",
+    "centerHost" : "case1.o2oa.net",
+    "centerContext" : "/x_program_center",
+    "centerPort" : 20030,
+    "httpProtocol" : "http"
+  }
+]

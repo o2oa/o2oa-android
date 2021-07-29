@@ -182,19 +182,20 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         pictureLoaderService = PictureLoaderService(this)
         changeBottomIcon(mCurrentSelectIndex)
         calDpi()
-        val unit = O2SDKManager.instance().prefs().getString(O2.PRE_CENTER_HOST_KEY, "")
-        if (!TextUtils.isEmpty(unit) && unit == "sample.o2oa.net") {
-            val day = O2SDKManager.instance().prefs().getString(O2.PRE_DEMO_ALERT_REMIND_DAY, "")
-            val today = DateHelper.nowByFormate("yyyy-MM-dd")
-            if (day != today) {
-                val demoDialog = DemoAlertFragment()
-                demoDialog.isCancelable = true
-                demoDialog.show(supportFragmentManager, "demo")
-                O2SDKManager.instance().prefs().edit {
-                    putString(O2.PRE_DEMO_ALERT_REMIND_DAY, today)
-                }
-            }
-        }
+        //演示版本不需要
+//        val unit = O2SDKManager.instance().prefs().getString(O2.PRE_CENTER_HOST_KEY, "")
+//        if (!TextUtils.isEmpty(unit) && unit == "sample.o2oa.net") {
+//            val day = O2SDKManager.instance().prefs().getString(O2.PRE_DEMO_ALERT_REMIND_DAY, "")
+//            val today = DateHelper.nowByFormate("yyyy-MM-dd")
+//            if (day != today) {
+//                val demoDialog = DemoAlertFragment()
+//                demoDialog.isCancelable = true
+//                demoDialog.show(supportFragmentManager, "demo")
+//                O2SDKManager.instance().prefs().edit {
+//                    putString(O2.PRE_DEMO_ALERT_REMIND_DAY, today)
+//                }
+//            }
+//        }
         //退出重新登录的情况下 重连webSocket
         if (webSocketService != null) {
             if (webSocketService?.isWebSocketOpen() == false) {

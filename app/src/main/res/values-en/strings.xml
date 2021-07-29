@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">O2OA</string>
-    <string name="app_about">About O2OA</string>
-    <string name="app_name_about">O2OA</string>
+    <string name="app_name">O2演示版</string>
+    <string name="app_about">About O2演示版</string>
+    <string name="app_name_about">O2演示版</string>
     <string name="activity_safe_warning">Has switched to the background run !</string>
     <string name="copy_right">&#169;</string>
     <string name="reserved">All right reserved.</string>
@@ -136,6 +136,7 @@
 
 
     <!-- login activity -->
+    <string name="login_bind_server">Current binding server</string>
     <string name="login_sample_alert_1">The current binding server is：演示服务器。</string>
     <string name="login_sample_alert_2">Trial account：开发部经理、开发部员工2、财务部员工1\n 密码统一为：o2</string>
     <string name="login_sample_alert_3">Please switch password to login</string>
@@ -166,6 +167,8 @@
     <string name="message_login_fail_scan">Login failed！</string>
     <string name="message_login_fail_sign">Failed to sign in！</string>
     <string name="message_login_success_sign">Successful sign in！</string>
+    <string name="account_security_change_unit_title">Switch access environment</string>
+    <string name="account_security_change_unit_dialog_alert">Are you sure you want to switch the access environment? The application will be restarted and the user password of the new environment is required to log in?</string>
 <!--    <string-array name="login_facepp_trackig_mode_array">-->
 <!--        <item>Fast</item>-->
 <!--        <item>Robust</item>-->

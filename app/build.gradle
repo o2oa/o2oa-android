@@ -31,13 +31,13 @@ def loadProperties() {
     project.signingConfigStorePassword = properties.getProperty("signingConfig.storePassword")
 
     //release key
-    project.jpushAppKey = properties.getProperty("JPUSH_APPKEY")
-    project.baiduSpeechAppId = properties.getProperty("BAIDU_SPEECH_APPID")
-    project.baiduSpeechSecret = properties.getProperty("BAIDU_SPEECH_SECRET")
-    project.baiduSpeechAppKey = properties.getProperty("BAIDU_SPEECH_APPKEY")
-    project.baiduMapAppKey = properties.getProperty("BAIDU_MAP_APPKEY")
+    project.jpushAppKey = project.property("JPUSH_APPKEY").toString()
+    project.baiduSpeechAppId = project.property("BAIDU_SPEECH_APPID").toString()
+    project.baiduSpeechSecret = project.property("BAIDU_SPEECH_SECRET").toString()
+    project.baiduSpeechAppKey = project.property("BAIDU_SPEECH_APPKEY").toString()
+    project.baiduMapAppKey = project.property("BAIDU_MAP_APPKEY").toString()
 
-    project.buglyAppId = properties.getProperty("BUGLY_APPID")
+    project.buglyAppId = project.property("BUGLY_APPID").toString()
 
 
 }
@@ -80,7 +80,7 @@ android {
     }
 
     defaultConfig {
-        applicationId "net.zoneland.x.bpm.mobile.v1.zoneXBPM"
+        applicationId "net.zoneland.x.bpm.mobile.v1.zoneXBPM.sample_edition"
         minSdkVersion 19
         targetSdkVersion 28
         versionCode project.property("o2.versionCode").toInteger()
@@ -122,7 +122,7 @@ android {
         }
         release {
             signingConfig signingConfigs.release
-            buildConfigField "Boolean", "InnerServer", "false"
+            buildConfigField "Boolean", "InnerServer", "true"
             buildConfigField "Boolean", "LOG_ENABLE", "false"
             buildConfigField "Boolean", "NEED_UPDATE", "true"
             buildConfigField "Boolean", "LOG_FILE", "true"

@@ -4,10 +4,12 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.security
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.EditText
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_account_security.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.bind.BindPhoneActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.launch.LaunchActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.my.MyInfoActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.MessageType
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
@@ -16,6 +18,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.biometric.BioConstants
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.biometric.BiometryManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.biometric.OnBiometryAuthCallback
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
 
@@ -44,8 +47,11 @@ class AccountSecurityActivity : BaseMVPActivity<AccountSecurityContract.View, Ac
             changeMyPassword()
         }
 
-        val unitHost = O2SDKManager.instance().prefs().getString(O2.PRE_CENTER_HOST_KEY, "")
+        val unitHost = O2SDKManager.instance().prefs().getString(O2.PRE_BIND_UNIT_KEY, "")
         tv_account_security_unit_name.text = getString(R.string.setting_bind_server_host, unitHost)
+        ll_account_security_unit_name.setOnClickListener {
+            chooseUnitInfo()
+        }
 
         initBiometryAuthView()
 
@@ -73,6 +79,33 @@ class AccountSecurityActivity : BaseMVPActivity<AccountSecurityContract.View, Ac
 
     override fun updateMyPasswordSuccess() {
         XToast.toastShort(this, getString(R.string.message_setting_update_password_success))
+    }
+
+    /**
+     * 选择访问环境
+     */
+    private fun chooseUnitInfo() {
+        val titles = SampleEditionManger.instance().getUnits().map { it.name }
+        BottomSheetMenu(this)
+            .setTitle(getString(R.string.account_security_change_unit_title))
+            .setItems(titles, ContextCompat.getColor(this, R.color.z_color_text_primary)) { index ->
+
+                O2DialogSupport.openConfirmDialog(this@AccountSecurityActivity, getString(R.string.account_security_change_unit_dialog_alert), {
+                    val unit = SampleEditionManger.instance().getUnits()[index]
+                    SampleEditionManger.instance().setCurrent(unit)
+                    clearAndreLaunch()
+                })
+
+            }.setCancelButton(getString(R.string.cancel)) {
+
+            }
+            .show()
+    }
+
+    private fun clearAndreLaunch() {
+        O2SDKManager.instance().clearBindUnit()
+        O2SDKManager.instance().logoutCleanCurrentPerson()
+        goAndClearBefore<LaunchActivity>()
     }
 
     private val bioManager: BiometryManager by lazy { BiometryManager(this) }

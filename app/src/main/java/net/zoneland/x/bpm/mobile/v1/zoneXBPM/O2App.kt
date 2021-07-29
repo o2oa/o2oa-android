@@ -98,6 +98,9 @@ class O2App : MultiDexApplication() {
         //录音
         RecordManager.getInstance().init(this, false)
 
+        // 初始化 演示版本服务器信息
+        SampleEditionManger.instance().initConfig(this)
+
         Log.i("O2app", "O2app init.....................................................")
         //stetho developer tool
 //        Stetho.initializeWithDefaults(this)

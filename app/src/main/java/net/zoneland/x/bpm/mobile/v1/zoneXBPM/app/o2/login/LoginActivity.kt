@@ -97,6 +97,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         receivePhone = intent.extras?.getString(REQUEST_PHONE_KEY) ?: ""
         setDefaultLogo()
+        tv_bind_unit_name.text = getString(R.string.login_bind_server) + " " + SampleEditionManger.instance().getCurrent().name
         login_edit_username_id.setText(receivePhone)
         tv_login_copyright.text = getString(R.string.copy_right).plus(" ")
                 .plus(DateHelper.nowByFormate("yyyy")).plus(" ")
@@ -188,7 +189,8 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
     override fun onResume() {
         super.onResume()
         //是否是sample服务器
-        checkShowSampleAlert()
+        // 演示版本不需要
+//        checkShowSampleAlert()
         //清除用户名密码
         login_edit_username_id.setText("")
         login_edit_password_id.setText("")

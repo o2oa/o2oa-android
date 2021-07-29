@@ -15,14 +15,17 @@
         android:orientation="vertical">
 
         <LinearLayout
+            android:id="@+id/ll_account_security_unit_name"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/spacing_small"
-            android:background="@android:color/white">
+            android:background="@android:color/white"
+            android:orientation="horizontal">
             <TextView
                 android:id="@+id/tv_account_security_unit_name"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
+                android:layout_weight="1"
                 android:layout_marginTop="@dimen/spacing_small"
                 android:layout_marginBottom="@dimen/spacing_small"
                 android:layout_marginLeft="@dimen/spacing_normal"
@@ -31,6 +34,12 @@
                 android:textColor="@color/z_color_text_primary"
                 tools:text="当前绑定服务器：dev.o2oa.io"
                 />
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:layout_marginTop="@dimen/spacing_small"
+                android:layout_marginEnd="@dimen/spacing_normal"
+                android:src="@mipmap/icon_arrow_22dp"/>
         </LinearLayout>
 
         <LinearLayout
