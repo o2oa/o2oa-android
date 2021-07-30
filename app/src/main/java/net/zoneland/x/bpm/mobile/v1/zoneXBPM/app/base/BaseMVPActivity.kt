@@ -1,12 +1,14 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base
 
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.widget.TextView
 import com.wugang.activityresult.library.ActivityResult
+import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.ContactPickerActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
@@ -58,14 +60,9 @@ abstract class BaseMVPActivity<in V: BaseView, T: BasePresenter<V>>: AppCompatAc
 
         mPresenter.attachView(this as V)
         afterSetContentView(savedInstanceState)
-    }
-
-    override fun onResume() {
-        super.onResume()
-    }
-
-    override fun onPause() {
-        super.onPause()
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
+            window.statusBarColor = FancySkinManager.instance().getColor(this, R.color.z_color_primary)
+        }
     }
 
     override fun onDestroy() {
