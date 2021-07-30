@@ -314,25 +314,29 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
      * 找到最近的打卡地点
      */
     private fun calNearestWorkplace() {
-        if (workplaceList.isNotEmpty() && myLocation!=null) {
-            var minDistance: Double = -1.0
-            XLog.debug("calNearestWorkplace...................")
-            workplaceList.map {
-                val p2 = LatLng(it.latitude.toDouble(), it.longitude.toDouble())
-                val position = LatLng(myLocation!!.latitude, myLocation!!.longitude)
-                val distance = DistanceUtil.getDistance(position, p2)
-                if (minDistance == -1.0) {
-                    minDistance = distance
-                    checkInPosition = it
-                } else {
-                    if (minDistance > distance) {
+        if ( myLocation!=null) {
+            if (workplaceList.isNotEmpty()) {
+                var minDistance: Double = -1.0
+                XLog.debug("calNearestWorkplace...................")
+                workplaceList.map {
+                    val p2 = LatLng(it.latitude.toDouble(), it.longitude.toDouble())
+                    val position = LatLng(myLocation!!.latitude, myLocation!!.longitude)
+                    val distance = DistanceUtil.getDistance(position, p2)
+                    if (minDistance == -1.0) {
                         minDistance = distance
                         checkInPosition = it
+                    } else {
+                        if (minDistance > distance) {
+                            minDistance = distance
+                            checkInPosition = it
+                        }
                     }
                 }
+                XLog.info("checkInposition:${checkInPosition?.placeName}")
+                checkIsInWorkplace()
+            } else {
+                tv_attendance_check_in_new_workplace.text = myLocation?.addrStr
             }
-            XLog.info("checkInposition:${checkInPosition?.placeName}")
-            checkIsInWorkplace()
         }
     }
 
