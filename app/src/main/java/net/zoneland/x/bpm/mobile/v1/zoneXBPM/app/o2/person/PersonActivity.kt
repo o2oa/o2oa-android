@@ -5,9 +5,13 @@ import android.graphics.Color
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.util.TypedValue
+import android.view.Gravity
 import android.view.View
 import android.view.Window
 import android.view.WindowManager
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_person_info.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
@@ -18,6 +22,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.OrganizationPer
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.GenderTypeEnums
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMConversationInfo
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.person.PersonAttributeJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.person.PersonJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
@@ -28,8 +33,10 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderOptions
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
+import org.jetbrains.anko.dip
 import org.jetbrains.anko.email
 import org.jetbrains.anko.sendSMS
+import org.jetbrains.anko.sp
 
 
 class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Presenter>(), PersonContract.View, View.OnClickListener {
@@ -57,6 +64,7 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
 //    val emailClickMenu: CommonMenuPopupWindow by lazy { CommonMenuPopupWindow(emailMenuItemList, this) }
     private val backgroundList = arrayListOf(R.mipmap.pic_person_bg_1, R.mipmap.pic_person_bg_2, R.mipmap.pic_person_bg_3, R.mipmap.pic_person_bg_4, R.mipmap.pic_person_bg_5, R.mipmap.pic_person_bg_6)
 //    private var canTalkTo = false
+    private var attributeList: ArrayList<PersonAttributeJson> = ArrayList()
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         //透明
@@ -226,6 +234,8 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
         hideLoadingDialog()
         loadedPersonId = personInfo.id
         loadedPersonDN = personInfo.distinguishedName
+        attributeList.clear()
+        attributeList.addAll( personInfo.woPersonAttributeList )
         if (OrganizationPermissionManager.instance().isHiddenMobile(loadedPersonDN)) {
             tv_person_mobile.text = "***********"
         } else {
@@ -259,8 +269,70 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
         }
         tv_person_employee.text = personInfo.employee
         tv_person_distinguishedName.text = personInfo.distinguishedName
+        tv_person_superior.text = personInfo.superior
+        tv_person_phone.text = personInfo.officePhone
+        tv_person_board_date.text = personInfo.boardDate
+        tv_person_describe.text = personInfo.description
+
+
         val url = APIAddressHelper.instance().getPersonAvatarUrlWithId(personInfo.id)
         O2ImageLoaderManager.instance().showImage(image_person_avatar, url, O2ImageLoaderOptions(placeHolder = R.mipmap.icon_avatar_men))
+
+        // 属性列表 添加到个人信息中
+        if (attributeList.isNotEmpty()) {
+            attributeList.forEach { attr ->
+                if (attr.name != "appBindDeviceList") {
+                    val divider = View(this@PersonActivity)
+                    divider.layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        this@PersonActivity.dip(0.5f)
+                    )
+                    divider.setBackgroundColor(
+                        ContextCompat.getColor(
+                            this@PersonActivity,
+                            R.color.z_color_split_line_ddd
+                        )
+                    )
+                    ll_person_form_box.addView(divider)
+                    val ll = LinearLayout(this@PersonActivity)
+                    ll.layoutParams = LinearLayout.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT,
+                        this@PersonActivity.dip(44f)
+                    )
+                    ll.gravity = Gravity.CENTER_VERTICAL
+                    ll.orientation = LinearLayout.HORIZONTAL
+                    ll_person_form_box.addView(ll)
+                    val label = TextView(this@PersonActivity)
+                    val layout =
+                        LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    layout.weight = 1f
+                    label.layoutParams = layout
+                    label.setTextColor(
+                        ContextCompat.getColor(
+                            this@PersonActivity,
+                            R.color.z_color_text_primary
+                        )
+                    )
+                    label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
+                    label.text = attr.name // 属性名称
+                    ll.addView(label)
+                    val tvValue = TextView(this@PersonActivity)
+                    val layout2 =
+                        LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
+                    layout2.weight = 2f
+                    tvValue.layoutParams = layout2
+                    tvValue.setTextColor(
+                        ContextCompat.getColor(
+                            this@PersonActivity,
+                            R.color.z_color_text_primary_dark
+                        )
+                    )
+                    tvValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+                    tvValue.text = attr.attributeList.joinToString()
+                    ll.addView(tvValue)
+                }
+            }
+        }
 
     }
 

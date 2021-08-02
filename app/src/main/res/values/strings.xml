@@ -212,6 +212,10 @@
     <string name="company_name_label">姓名</string>
     <string name="company_unique_label">唯一编码</string>
     <string name="company_dept_label">部门</string>
+    <string name="person_info_superior_label">汇报对象</string>
+    <string name="person_info_phone_label">电话</string>
+    <string name="person_info_desc_label">描述</string>
+    <string name="person_info_board_date_label">入职时间</string>
     <string name="person_info_sms_talk">发起聊天</string>
     <string name="person_collect">收藏</string>
     <string name="person_collect_cancel">取消收藏</string>

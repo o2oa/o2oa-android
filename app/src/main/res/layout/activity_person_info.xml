@@ -181,6 +181,7 @@
                 android:background="@drawable/background_white_a9_radius_10"
                 android:orientation="vertical">
             <LinearLayout
+                android:id="@+id/ll_person_form_box"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/spacing_normal"
@@ -361,7 +362,6 @@
                     android:layout_height="0.5dp"
                     android:background="@color/z_color_split_line_ddd" />
 
-
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="44dp"
@@ -381,11 +381,132 @@
                         android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:layout_weight="2"
-                        tools:text="emal.com"
+                        tools:text="部门"
                         android:textColor="@color/z_color_text_primary_dark"
                         android:textSize="@dimen/font_normal" />
-
                 </LinearLayout>
+
+<!--                汇报对象-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/z_color_split_line_ddd" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/person_info_superior_label"
+                        android:textColor="@color/z_color_text_primary"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tv_person_superior"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        tools:text="对象"
+                        android:textColor="@color/z_color_text_primary_dark"
+                        android:textSize="@dimen/font_normal" />
+                </LinearLayout>
+
+                <!--   电话-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/z_color_split_line_ddd" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/person_info_phone_label"
+                        android:textColor="@color/z_color_text_primary"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tv_person_phone"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        tools:text="0571-3333"
+                        android:textColor="@color/z_color_text_primary_dark"
+                        android:textSize="@dimen/font_normal" />
+                </LinearLayout>
+
+                <!--   入职时间-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/z_color_split_line_ddd" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/person_info_board_date_label"
+                        android:textColor="@color/z_color_text_primary"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tv_person_board_date"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        tools:text="2021"
+                        android:textColor="@color/z_color_text_primary_dark"
+                        android:textSize="@dimen/font_normal" />
+                </LinearLayout>
+
+                <!--   描述-->
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="0.5dp"
+                    android:background="@color/z_color_split_line_ddd" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="44dp"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:text="@string/person_info_desc_label"
+                        android:textColor="@color/z_color_text_primary"
+                        android:textSize="15sp" />
+
+                    <TextView
+                        android:id="@+id/tv_person_describe"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        tools:text="描述"
+                        android:textColor="@color/z_color_text_primary_dark"
+                        android:textSize="@dimen/font_normal" />
+                </LinearLayout>
+
+
             </LinearLayout>
 
             </LinearLayout>
