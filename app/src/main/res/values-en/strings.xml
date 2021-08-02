@@ -221,6 +221,10 @@
     <string name="person_info_sms_talk">Start chat</string>
     <string name="person_collect">Collection</string>
     <string name="person_collect_cancel">Cancel collection</string>
+    <string name="person_info_superior_label">Reporting object</string>
+    <string name="person_info_phone_label">Telephone</string>
+    <string name="person_info_desc_label">Describe</string>
+    <string name="person_info_board_date_label">Entry time</string>
 <!--    <string name="warn_phone_permission">The app is not authorized to make a call. Please open this permission in the app management !</string>-->
     <string name="person_sign">Personal signature: </string>
 
