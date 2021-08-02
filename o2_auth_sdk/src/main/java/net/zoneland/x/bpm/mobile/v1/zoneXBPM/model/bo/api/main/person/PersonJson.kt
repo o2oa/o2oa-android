@@ -30,6 +30,8 @@ data class PersonJson(
         var genderType: String = "",
         var changePasswordTime: String = "",
         var superior: String = "",//汇报对象.
+        var description: String = "",//描述
+        var boardDate: String = "",//入职时间
         var controllerList: List<String> = ArrayList(),//个人管理者.默认为创建者。
         var woIdentityList: List<WoIdentityListItem> = ArrayList(),
         var woRoleList: List<RoleJson> = ArrayList(),
