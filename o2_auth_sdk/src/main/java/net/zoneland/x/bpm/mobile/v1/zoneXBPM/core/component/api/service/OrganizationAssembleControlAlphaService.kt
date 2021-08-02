@@ -3,6 +3,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.service
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ApiResponse
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.group.O2Group
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.identity.IdentityJson
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.person.PersonAttributeJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.person.PersonJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.person.PersonListLikeForm
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.unit.UnitJson
@@ -92,5 +93,11 @@ interface OrganizationAssembleControlAlphaService {
      */
     @GET("jaxrs/person/list/{lastId}/next/{pageSize}")
     fun personListByPage(@Path("lastId") lastId: String, @Path("pageSize") pageSize: Int): Observable<ApiResponse<List<PersonJson>>>
+
+    /**
+     * 获取用户属性列表
+     */
+    @GET("jaxrs/personattribute/list/person/{personFlag}")
+    fun personIdentityListByPerson(@Path("personFlag") personFlag: String): Observable<ApiResponse<List<PersonAttributeJson>>>
 
 }
