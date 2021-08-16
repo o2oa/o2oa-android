@@ -3,11 +3,8 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
-import androidx.fragment.app.Fragment
-import androidx.core.content.ContextCompat
 import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
@@ -16,16 +13,20 @@ import android.webkit.WebChromeClient
 import android.webkit.WebView
 import android.widget.FrameLayout
 import android.widget.ProgressBar
+import androidx.core.content.ContextCompat
+import androidx.fragment.app.Fragment
 import net.muliba.fancyfilepickerlibrary.PicturePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import org.jetbrains.anko.dip
 import java.io.File
+import java.io.IOException
 
 /**
  * Created by fancyLou on 2019-04-29.
@@ -56,9 +57,6 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
         val drawable = ContextCompat.getDrawable(activity!!, R.drawable.web_view_progress_bar)
         if (drawable != null) {
             progressBar?.progressDrawable = drawable
-        }
-        if (activity != null) {
-            cameraImageUri = FileUtil.getUriFromFile(activity, File(FileExtensionHelper.getCameraCacheFilePath(activity)))
         }
     }
 
@@ -177,14 +175,33 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
     }
     private fun openCamera() {
         if (activity != null) {
-            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-            //return-data false 不是直接返回拍照后的照片Bitmap 因为照片太大会传输失败
-            intent.putExtra("return-data", false)
-            //改用Uri 传递
-            intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
-            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
-            intent.putExtra("noFaceDetection", true)
-            activity.startActivityForResult(intent, TAKE_FROM_CAMERA_KEY)
+//            val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//            //return-data false 不是直接返回拍照后的照片Bitmap 因为照片太大会传输失败
+//            intent.putExtra("return-data", false)
+//            //改用Uri 传递
+//            intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
+//            intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+//            intent.putExtra("noFaceDetection", true)
+//            activity.startActivityForResult(intent, TAKE_FROM_CAMERA_KEY)
+
+            Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+                // Ensure that there's a camera activity to handle the intent
+                takePictureIntent.resolveActivity(activity.packageManager)?.also {
+                    // Create the File where the photo should go
+                    val photoFile: File? = try {
+                        FileExtensionHelper.createImageFile(activity)
+                    } catch (ex: IOException) {
+                        XToast.toastShort(activity, activity.getString(R.string.message_camera_file_create_error))
+                        null
+                    }
+                    // Continue only if the File was successfully created
+                    photoFile?.also {
+                        cameraImageUri = FileUtil.getUriFromFile(activity, it)
+                        takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
+                        activity.startActivityForResult(takePictureIntent, TAKE_FROM_CAMERA_KEY)
+                    }
+                }
+            }
         }else {
             XLog.error("activity 不存在， 无法打开拍照功能!")
         }

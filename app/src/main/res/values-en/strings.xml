@@ -338,6 +338,7 @@
     <string name="message_can_not_unbind_no_device_id">The device ID was not obtained, unable to unbind！</string>
     <string name="message_unbind_fail">Failed to unbind！</string>
     <string name="message_change_skin_will_reboot">Are you sure you want to switch skin? Switching will restart the application？</string>
+    <string name="message_camera_file_create_error">Unable to take photos, unable to get the stored file!</string>
 
     <!-- group activity -->
     <string name="title_activity_group">My Groups </string>

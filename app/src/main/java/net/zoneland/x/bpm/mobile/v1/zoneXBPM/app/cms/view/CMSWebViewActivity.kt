@@ -36,6 +36,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.WebChromeClientWithProgressAndValueCallback
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import java.io.File
+import java.io.IOException
 
 
 class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewContract.Presenter>(), CMSWebViewContract.View {
@@ -67,7 +68,8 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
     private val jsBiz: JSInterfaceO2mBiz by lazy { JSInterfaceO2mBiz.with(this) }
 
     private val downloadDocument: DownloadDocument by lazy { DownloadDocument(this) }
-    private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
+//    private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
+    private var cameraImagePath: String? = null
     //上传附件
     private var site = ""
     //replace 附件
@@ -162,7 +164,10 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
                 TAKE_FROM_CAMERA_CODE -> {
                     //拍照
                     XLog.debug("拍照//// ")
-                    uploadImage2FileStorageStart(FileExtensionHelper.getCameraCacheFilePath(this))
+//                    uploadImage2FileStorageStart(FileExtensionHelper.getCameraCacheFilePath(this))
+                    if (!TextUtils.isEmpty(cameraImagePath)) {
+                        uploadImage2FileStorageStart(cameraImagePath!!)
+                    }
                 }
             }
         }
@@ -472,14 +477,33 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
     }
 
     private fun openCamera() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        //return-data false 不是直接返回拍照后的照片Bitmap 因为照片太大会传输失败
-        intent.putExtra("return-data", false)
-        //改用Uri 传递
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
-        intent.putExtra("noFaceDetection", true)
-        startActivityForResult(intent, TAKE_FROM_CAMERA_CODE)
+//        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//        //return-data false 不是直接返回拍照后的照片Bitmap 因为照片太大会传输失败
+//        intent.putExtra("return-data", false)
+//        //改用Uri 传递
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
+//        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+//        intent.putExtra("noFaceDetection", true)
+//        startActivityForResult(intent, TAKE_FROM_CAMERA_CODE)
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                // Create the File where the photo should go
+                val photoFile: File? = try {
+                    FileExtensionHelper.createImageFile(this)
+                } catch (ex: IOException) {
+                    XToast.toastShort(this, getString(R.string.message_camera_file_create_error))
+                    null
+                }
+                // Continue only if the File was successfully created
+                photoFile?.also {
+                    cameraImagePath = it.absolutePath
+                    val photoURI = FileUtil.getUriFromFile(this, it)
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, TAKE_FROM_CAMERA_CODE)
+                }
+            }
+        }
     }
 
     private fun uploadImage2FileStorageStart(filePath: String) {

@@ -4,7 +4,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.my
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
 import android.net.Uri
 import android.os.Build
@@ -28,11 +27,11 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderMana
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderOptions
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CommonMenuPopupWindow
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import org.jetbrains.anko.doAsync
 import org.jetbrains.anko.uiThread
 import java.io.File
+import java.io.IOException
 
 
 class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Presenter>(), MyInfoContract.View, View.OnClickListener {
@@ -50,7 +49,8 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
 //    val avatarMenu: CommonMenuPopupWindow by lazy { CommonMenuPopupWindow(avatarMenuList, this) }
 
     var person: PersonJson? = null
-    private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
+//    private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
+    private var cameraImageUri:Uri? = null
     var isEdit = false
     private val backgroundList = arrayListOf(R.mipmap.pic_person_bg_1, R.mipmap.pic_person_bg_2, R.mipmap.pic_person_bg_3, R.mipmap.pic_person_bg_4, R.mipmap.pic_person_bg_5, R.mipmap.pic_person_bg_6)
 
@@ -75,8 +75,6 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
             //4.4 全透明状态栏
             window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
         }
-        //初始化拍照地址等
-        SDCardHelper.generateNewFile(FileExtensionHelper.getCameraCacheFilePath(this))
         randomBg()
 
         image_myInfo_back.setOnClickListener(this)
@@ -126,15 +124,16 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
         super.onActivityResult(requestCode, resultCode, data)
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                TAKE_FROM_CAMERA_CODE -> startClipAvatar(cameraImageUri)
+                TAKE_FROM_CAMERA_CODE -> cameraImageUri?.also { startClipAvatar(it) }
 
                 TAKE_FROM_PICTURES_CODE -> {
                     XLog.debug("choose from pictures ...")
                     data?.let {
                         val result = it.extras?.getString(PicturePicker.FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY, "")
                         if (!TextUtils.isEmpty(result)) {
-                            val uri = Uri.fromFile(File(result!!))
-                            startClipAvatar(uri)
+//                            val uri = Uri.fromFile(File(result!!))
+                            val photoURI = FileUtil.getUriFromFile(this, File(result!!))
+                            startClipAvatar(photoURI)
                         }
                     }
                 }
@@ -335,14 +334,32 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
 
 
     private fun openCamera() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        //return-data false 不是直接返回拍照后的照片Bitmap 因为照片太大会传输失败
-        intent.putExtra("return-data", false)
-        //改用Uri 传递
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
-        intent.putExtra("noFaceDetection", true)
-        startActivityForResult(intent, TAKE_FROM_CAMERA_CODE)
+//        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//        //return-data false 不是直接返回拍照后的照片Bitmap 因为照片太大会传输失败
+//        intent.putExtra("return-data", false)
+//        //改用Uri 传递
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
+//        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+//        intent.putExtra("noFaceDetection", true)
+//        startActivityForResult(intent, TAKE_FROM_CAMERA_CODE)
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                // Create the File where the photo should go
+                val photoFile: File? = try {
+                    FileExtensionHelper.createImageFile(this)
+                } catch (ex: IOException) {
+                    XToast.toastShort(this, getString(R.string.message_camera_file_create_error))
+                    null
+                }
+                // Continue only if the File was successfully created
+                photoFile?.also {
+                    cameraImageUri = FileUtil.getUriFromFile(this, it)
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
+                    startActivityForResult(takePictureIntent, TAKE_FROM_CAMERA_CODE)
+                }
+            }
+        }
     }
 
 
