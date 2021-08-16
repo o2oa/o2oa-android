@@ -4,15 +4,10 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
 import android.graphics.Color
-import android.net.Uri
 import android.net.http.SslError
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
 import android.provider.MediaStore
-import androidx.core.content.ContextCompat
 import android.text.TextUtils
 import android.util.TypedValue.COMPLEX_UNIT_SP
 import android.view.Gravity
@@ -22,11 +17,10 @@ import android.webkit.SslErrorHandler
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.*
-import com.google.gson.reflect.TypeToken
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_work_web_view.*
 import net.muliba.fancyfilepickerlibrary.FilePicker
 import net.muliba.fancyfilepickerlibrary.PicturePicker
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2App
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
@@ -48,15 +42,9 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.WebChromeClientWithProgressAndValueCallback
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import org.jetbrains.anko.dip
-import org.jetbrains.anko.doAsync
-import rx.Observable
-import rx.Scheduler
-import rx.android.schedulers.AndroidSchedulers
-import rx.schedulers.Schedulers
 import java.io.File
+import java.io.IOException
 import java.net.URLEncoder
-import java.util.concurrent.CountDownLatch
-import java.util.concurrent.TimeUnit
 
 
 class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebViewContract.Presenter>(), TaskWebViewContract.View {
@@ -107,7 +95,9 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     private val routeNameList = ArrayList<String>()
 
     private val downloadDocument: DownloadDocument by lazy { DownloadDocument(this) }
-    private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
+//    private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
+    private var cameraImagePath: String? = null// 拍照的地址
+
     private val webChromeClient: WebChromeClientWithProgressAndValueCallback by lazy { WebChromeClientWithProgressAndValueCallback.with(this) }
     var imageUploadData: O2UploadImageData? = null
     private val jsNotification: JSInterfaceO2mNotification by lazy { JSInterfaceO2mNotification.with(this) }
@@ -231,7 +221,11 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                 TAKE_FROM_CAMERA_CODE -> {
                     //拍照
                     XLog.debug("拍照//// ")
-                    uploadImage2FileStorageStart(FileExtensionHelper.getCameraCacheFilePath(this))
+                    if (!TextUtils.isEmpty(cameraImagePath)){
+//                        uploadImage2FileStorageStart(FileExtensionHelper.getCameraCacheFilePath(this))
+                        uploadImage2FileStorageStart(cameraImagePath!!)
+                    }
+
                 }
             }
         }
@@ -947,14 +941,35 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 
 
     private fun openCamera() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        //return-data false 不是直接返回拍照后的照片Bitmap 因为照片太大会传输失败
-        intent.putExtra("return-data", false)
-        //改用Uri 传递
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
-        intent.putExtra("noFaceDetection", true)
-        startActivityForResult(intent, TAKE_FROM_CAMERA_CODE)
+//        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//        //return-data false 不是直接返回拍照后的照片Bitmap 因为照片太大会传输失败
+//        intent.putExtra("return-data", false)
+//        //改用Uri 传递
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
+//        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+//        intent.putExtra("noFaceDetection", true)
+//        startActivityForResult(intent, TAKE_FROM_CAMERA_CODE)
+
+
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                // Create the File where the photo should go
+                val photoFile: File? = try {
+                    FileExtensionHelper.createImageFile(this)
+                } catch (ex: IOException) {
+                    XToast.toastShort(this, getString(R.string.message_camera_file_create_error))
+                    null
+                }
+                // Continue only if the File was successfully created
+                photoFile?.also {
+                    cameraImagePath = it.absolutePath
+                    val photoURI = FileUtil.getUriFromFile(this, it)
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, TAKE_FROM_CAMERA_CODE)
+                }
+            }
+        }
     }
 
 

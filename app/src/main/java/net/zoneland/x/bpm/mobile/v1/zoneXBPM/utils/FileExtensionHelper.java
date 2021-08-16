@@ -7,6 +7,9 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.UUID;
 
 /**
@@ -157,10 +160,30 @@ public class FileExtensionHelper {
     /**
      * 拍照后的暂存地址
      * png
+     * @Deprecated 现在用createImageFile 方法生成一张图片 再进行拍摄
      * @return
      */
+    @Deprecated
     public static String getCameraCacheFilePath(Context context) {
         return getXBPMTempFolder(context) + File.separator + "camera_cache.png";
+    }
+
+
+    /**
+     * 拍照用的地址 自动生成
+     * @return
+     * @throws IOException
+     */
+    public static File createImageFile(Context context) throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = FileUtil.INSTANCE.appExternalImageDir(context);
+        return File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
     }
 
 
