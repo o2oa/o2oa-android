@@ -7,14 +7,12 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.media.AudioFormat
-import android.media.MediaPlayer
 import android.net.Uri
 import android.os.Bundle
 import android.os.CountDownTimer
@@ -41,13 +39,11 @@ import net.muliba.fancyfilepickerlibrary.PicturePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.ContactPickerActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.LocalImageViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.*
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.ContactPickerResult
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
@@ -57,6 +53,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequeste
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import pl.droidsonroids.gif.GifImageView
 import java.io.File
+import java.io.IOException
 import java.util.*
 
 
@@ -128,8 +125,9 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 //    private var mPlayer: MediaPlayer? = null
 
     //拍照
-    private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
-    private val camera_result_code = 10240
+//    private val cameraImageUri: Uri by lazy { FileUtil.getUriFromFile(this, File(FileExtensionHelper.getCameraCacheFilePath(this))) }
+    private  val TAKE_FROM_CAMERA_CODE = 1004
+    private var cameraImagePath: String? = null
 
     //是否能修改群名 群成员
     private var canUpdate = false
@@ -320,10 +318,13 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK && requestCode == camera_result_code) {
+        if (resultCode == Activity.RESULT_OK && requestCode == TAKE_FROM_CAMERA_CODE) {
             //拍照
             XLog.debug("拍照//// ")
-            newImageMessage(FileExtensionHelper.getCameraCacheFilePath(this))
+//            newImageMessage(FileExtensionHelper.getCameraCacheFilePath(this))
+            if (!TextUtils.isEmpty(cameraImagePath)) {
+                newImageMessage(cameraImagePath!!)
+            }
         }
     }
 
@@ -692,14 +693,33 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 
 
     private fun openCamera() {
-        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
-        //return-data false 不是直接返回拍照后的照片Bitmap 因为照片太大会传输失败
-        intent.putExtra("return-data", false)
-        //改用Uri 传递
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
-        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
-        intent.putExtra("noFaceDetection", true)
-        startActivityForResult(intent, camera_result_code)
+//        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
+//        //return-data false 不是直接返回拍照后的照片Bitmap 因为照片太大会传输失败
+//        intent.putExtra("return-data", false)
+//        //改用Uri 传递
+//        intent.putExtra(MediaStore.EXTRA_OUTPUT, cameraImageUri)
+//        intent.putExtra("outputFormat", Bitmap.CompressFormat.JPEG.toString())
+//        intent.putExtra("noFaceDetection", true)
+//        startActivityForResult(intent, camera_result_code)
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+            takePictureIntent.resolveActivity(packageManager)?.also {
+                // Create the File where the photo should go
+                val photoFile: File? = try {
+                    FileExtensionHelper.createImageFile(this)
+                } catch (ex: IOException) {
+                    XToast.toastShort(this, getString(R.string.message_camera_file_create_error))
+                    null
+                }
+                // Continue only if the File was successfully created
+                photoFile?.also {
+                    cameraImagePath = it.absolutePath
+                    val photoURI = FileUtil.getUriFromFile(this, it)
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, TAKE_FROM_CAMERA_CODE)
+                }
+            }
+        }
     }
 
 

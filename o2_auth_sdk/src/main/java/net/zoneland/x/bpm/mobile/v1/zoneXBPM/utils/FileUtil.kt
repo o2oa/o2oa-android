@@ -48,7 +48,7 @@ object FileUtil {
     fun appExternalCacheDir(context: Context): File? = context.externalCacheDir
 
     /**
-     * 应用sd卡数据目录
+     * 图片存储目录
      */
     fun appExternalImageDir(context: Context): File? = context.getExternalFilesDir(Environment.DIRECTORY_PICTURES)
 
