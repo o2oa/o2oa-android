@@ -727,6 +727,7 @@
     <string name="message_members_cannot_less_three">成员不能少于3人！</string>
     <string name="message_share_file_not_exist">分享文件不存在</string>
     <string name="message_contact_new_no_permission_for_search">当前用户被限制查询通讯录</string>
+    <string name="message_camera_file_create_error">无法拍照，存储文件获取不到！</string>
 
     <!--    dialog -->
     <string name="dialog_msg_bind_to_server_fail">绑定服务器失败，请检查当前服务器配置是否正确？您也可以先绑定到O2OA演示服务器进行体验！</string>
