@@ -139,7 +139,7 @@ class TaskCompletedWorkListFragment : DialogFragment(), TaskCompletedWorkListCon
 
     override fun loadWorkCompletedInfoFail() {
         XToast.toastShort(activity, getString(R.string.message_get_workcompleted_list_error))
-        closeSelf()
+//        closeSelf()
     }
 
 
