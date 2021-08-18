@@ -14,4 +14,41 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/ll_video_player_bar"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:orientation="horizontal">
+
+        <ImageButton
+            android:id="@+id/btn_video_player_close"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@mipmap/icon_off_round"
+            android:background="@null"
+            />
+
+        <TextView
+            android:id="@+id/tv_video_player_title"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            tools:text="标题标题标题标题标题"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:gravity="center"
+            />
+        <Button
+            android:id="@+id/btn_video_player_share"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:text="@string/share"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

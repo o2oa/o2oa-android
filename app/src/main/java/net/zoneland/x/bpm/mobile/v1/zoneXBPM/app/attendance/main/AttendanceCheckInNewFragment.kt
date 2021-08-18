@@ -335,7 +335,9 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
                 XLog.info("checkInposition:${checkInPosition?.placeName}")
                 checkIsInWorkplace()
             } else {
-                tv_attendance_check_in_new_workplace.text = myLocation?.addrStr
+                activity?.runOnUiThread {
+                    tv_attendance_check_in_new_workplace.text = myLocation?.addrStr
+                }
             }
         }
     }

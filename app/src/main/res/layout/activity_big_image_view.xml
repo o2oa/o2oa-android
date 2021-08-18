@@ -18,31 +18,44 @@
         android:scaleType="fitCenter"
         />
 
-    <ImageButton
-        android:id="@+id/btn_big_picture_close"
-        android:layout_width="48dp"
+    <LinearLayout
+        android:id="@+id/ll_big_picture_bar"
+        android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:src="@mipmap/icon_off_round"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        android:background="@null"
-        />
-
-    <TextView
-        android:id="@+id/tv_big_picture_title"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        tools:text="标题标题标题标题标题"
-        android:textColor="@android:color/white"
-        android:textSize="16sp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginTop="@dimen/spacing_small"
-        android:layout_marginStart="64dp"
-        android:layout_marginEnd="64dp"
-        android:textAlignment="center"
-        />
+        android:orientation="horizontal">
+        <ImageButton
+            android:id="@+id/btn_big_picture_close"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:src="@mipmap/icon_off_round"
+            android:background="@null"
+            />
+
+        <TextView
+            android:id="@+id/tv_big_picture_title"
+            android:layout_width="0dp"
+            android:layout_weight="1"
+            android:layout_height="match_parent"
+            tools:text="标题标题标题标题标题"
+            android:textColor="@android:color/white"
+            android:textSize="16sp"
+            android:gravity="center"
+            />
+        <Button
+            android:id="@+id/btn_big_picture_share"
+            android:layout_width="48dp"
+            android:layout_height="match_parent"
+            android:background="@null"
+            android:text="@string/share"
+            android:textColor="@color/white"
+            android:textSize="14sp" />
+
+
+    </LinearLayout>
+
 <!--    <net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleProgressBar-->
 <!--        android:id="@+id/cpb_big_picture_progressbar_id"-->
 <!--        android:layout_width="wrap_content"-->

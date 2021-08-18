@@ -1,14 +1,17 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer
 
 import android.app.Activity
+import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
-import androidx.appcompat.app.AppCompatActivity
-import android.view.Window
 import android.view.WindowManager
+import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import kotlinx.android.synthetic.main.activity_big_image_view.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskFileDownloadHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
@@ -41,19 +44,38 @@ class BigImageViewActivity : AppCompatActivity() {
     var loadingDialog: LoadingDialog? = null
 
     private val downloader: CloudDiskFileDownloadHelper by lazy { CloudDiskFileDownloadHelper(this) }
+
+    // 分享使用
+    var currentImage: File? = null
+
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //隐藏标题栏
-        requestWindowFeature(Window.FEATURE_NO_TITLE)
-        //隐藏状态栏
-        //定义全屏参数
-        val flag = WindowManager.LayoutParams.FLAG_FULLSCREEN
-        //设置当前窗体为全屏显示
-        window.setFlags(flag, flag)
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            val lp = window.attributes
+            // 始终允许窗口延伸到屏幕短边上的刘海区域
+            lp.layoutInDisplayCutoutMode =
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            window.attributes = lp
+        }
 
         setContentView(R.layout.activity_big_image_view)
+        // 透明状态栏
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+            window.addFlags(
+                WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        }
+        val statusBarHeight = AndroidUtils.getStatusBarHeight(this)
+
+        val barLayout = ll_big_picture_bar.layoutParams as ConstraintLayout.LayoutParams
+        barLayout.topMargin = statusBarHeight
+        ll_big_picture_bar.layoutParams = barLayout
+
+
 
         btn_big_picture_close.setOnClickListener { finish() }
+        btn_big_picture_share.setOnClickListener { share() }
 
         val localPath = intent.getStringExtra(IMAGE_LOCAL_PATH_KEY) ?: ""
         if (TextUtils.isEmpty(localPath)) {
@@ -73,6 +95,7 @@ class BigImageViewActivity : AppCompatActivity() {
                 downloader.startDownload(fileId, extension) { file ->
                     XLog.debug("返回了。。。。")
                     if (file != null) {
+                        currentImage = file
                         O2ImageLoaderManager.instance().showImage(zoomImage_big_picture_view, file)
                     }else {
                         XToast.toastShort(this, "下载大图失败！")
@@ -81,16 +104,22 @@ class BigImageViewActivity : AppCompatActivity() {
             }
         }else {
             val file = File(localPath)
+            currentImage = file
             tv_big_picture_title.text = file.name
             O2ImageLoaderManager.instance().showImage(zoomImage_big_picture_view, file)
         }
 
     }
 
-
     override fun onStop() {
         downloader.closeDownload()
         super.onStop()
+    }
+
+    private fun share() {
+        currentImage?.let {
+            AndroidUtils.shareFile(this, it)
+        }
     }
 
     fun showLoadingDialog() {
