@@ -127,11 +127,7 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
 
     private var taskCompletedWorkListFragment: TaskCompletedWorkListFragment? = null
     private fun showTaskCompletedWorkFragment(taskId: String) {
-        if (taskCompletedWorkListFragment==null) {
-            taskCompletedWorkListFragment = TaskCompletedWorkListFragment.createFragmentInstance(taskId)
-        }else{
-            taskCompletedWorkListFragment?.startLoad(taskId)
-        }
+        taskCompletedWorkListFragment = TaskCompletedWorkListFragment.createFragmentInstance(taskId)
         taskCompletedWorkListFragment?.show(supportFragmentManager, TaskCompletedWorkListFragment.TASK_COMPLETED_WORK_LIST_FRAGMENT_TAG)
     }
 
