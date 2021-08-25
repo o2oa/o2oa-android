@@ -16,6 +16,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.APIDistributeData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AuthenticationInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectUnitData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.CheckButtonDoubleClick
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.StringUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
@@ -149,6 +150,10 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
     override fun onClick(v: View?) {
         when (v?.id) {
             R.id.button_login_phone_next -> {
+                if (CheckButtonDoubleClick.isFastDoubleClick(R.id.button_login_phone_next)) {
+                    XLog.debug("重复点了。。。。。。。。。。。。")
+                    return
+                }
                 val phone = edit_login_phone.text.toString()
                 val code = edit_login_code.text.toString()
                 if (TextUtils.isEmpty(phone)) {
@@ -169,6 +174,10 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                 mPresenter.getUnitList(phone, code)
             }
             R.id.button_login_phone_code -> {
+                if (CheckButtonDoubleClick.isFastDoubleClick(R.id.button_login_phone_code)) {
+                    XLog.debug("重复点了。。。。。。。。。。。。")
+                    return
+                }
                 val phone = edit_login_phone.text.toString()
                 if (TextUtils.isEmpty(phone)) {
                     XToast.toastShort(activity, getString(R.string.message_need_input_right_cellphone))

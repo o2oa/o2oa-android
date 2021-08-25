@@ -9,7 +9,6 @@ import android.widget.RadioGroup
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_fluid_login_unit.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2App
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPFragment
@@ -19,6 +18,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.APIDistributeData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AuthenticationInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectUnitData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.CheckButtonDoubleClick
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
@@ -98,6 +98,10 @@ class SecondStepFragment: BaseMVPFragment<SecondStepContract.View, SecondStepCon
     override fun onClick(v: View?) {
         when(v?.id) {
             R.id.button_login_unit_next -> {
+                if (CheckButtonDoubleClick.isFastDoubleClick(R.id.button_login_unit_next)) {
+                    XLog.debug("重复点了。。。。。。。。。。。。")
+                    return
+                }
                 val radioId = radio_group_login_unit_choose_unit.checkedRadioButtonId
                 val deviceId = (activity as BindPhoneActivity).loadDeviceId()
                 XLog.debug("电话：$phone, radio id:$radioId, token:$deviceId")

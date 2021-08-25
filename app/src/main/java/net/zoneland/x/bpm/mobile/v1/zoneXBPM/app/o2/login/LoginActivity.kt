@@ -239,6 +239,10 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
                 bioAuthLogin()
             }
             R.id.btn_login_submit -> {
+                if (CheckButtonDoubleClick.isFastDoubleClick(R.id.btn_login_submit)) {
+                    XLog.debug("重复点了。。。。。。。。。。。。")
+                    return
+                }
                 submitLogin()
             }
             R.id.button_login_phone_code -> {
