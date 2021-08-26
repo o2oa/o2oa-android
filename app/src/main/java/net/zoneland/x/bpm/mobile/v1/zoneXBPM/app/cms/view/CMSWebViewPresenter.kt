@@ -1,5 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.view
 
+import android.graphics.BitmapFactory
 import android.text.TextUtils
 import net.muliba.accounting.app.ExceptionHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
@@ -178,8 +179,27 @@ class CMSWebViewPresenter : BasePresenterImpl<CMSWebViewContract.View>(), CMSWeb
             val mediaType = FileUtil.getMIMEType(file)
             val requestBody = RequestBody.create(MediaType.parse(mediaType), file)
             val body = MultipartBody.Part.createFormData("file", file.name, requestBody)
-            fileService.uploadFile2ReferenceZone(body, referenceType, reference, scale)
-                    .subscribeOn(Schedulers.io())
+            Observable.just(scale)
+                .subscribeOn(Schedulers.io())
+                .flatMap { s ->
+                    var newScale = s
+                    val bit = BitmapFactory.decodeFile(filePath)
+                    val width = bit.width
+                    // 比较图片宽度
+                    newScale = when {
+                        width <= 0 -> {
+                            s
+                        }
+                        width > s -> {
+                            s
+                        }
+                        else -> {
+                            width
+                        }
+                    }
+                    XLog.debug("图片的width: $newScale")
+                    fileService.uploadFile2ReferenceZone(body, referenceType, reference, newScale)
+                }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ResponseHandler<IdData> {
                         id -> mView?.upload2FileStorageSuccess(id.id)

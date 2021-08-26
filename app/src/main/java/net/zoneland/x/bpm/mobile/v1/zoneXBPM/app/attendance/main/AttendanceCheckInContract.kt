@@ -2,6 +2,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.attendance.main
 
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseView
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.AttendancePreCheckInFeature
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.MobileCheckInJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.MobileCheckInWorkplaceInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.MobileMyRecords
@@ -13,10 +14,11 @@ object AttendanceCheckInContract {
         fun workplaceList(list: List<MobileCheckInWorkplaceInfoJson>)
         fun todayCheckInRecord(list: List<MobileCheckInJson>)
         fun checkIn(result: Boolean)
+        fun previewCheckInData(data: AttendancePreCheckInFeature)
     }
 
     interface Presenter : BasePresenter<View> {
-
+        fun mobilePreviewCheckIn()
         fun listMyRecords()
         fun findTodayCheckInRecord(person: String)
         fun loadAllWorkplace()

@@ -18,8 +18,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPViewPagerFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.MobileCheckInJson
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.MobileCheckInWorkplaceInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
@@ -30,8 +28,7 @@ import org.jetbrains.anko.uiThread
 import java.util.*
 import com.baidu.mapapi.map.MapStatusUpdateFactory
 import com.baidu.mapapi.map.MapStatus
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.MobileFeature
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.MobileMyRecords
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
 
@@ -235,6 +232,10 @@ class AttendanceCheckInFragment : BaseMVPViewPagerFragment<AttendanceCheckInCont
         }
         mPresenter.findTodayCheckInRecord(O2SDKManager.instance().distinguishedName)
         mPresenter.listMyRecords()
+    }
+
+    override fun previewCheckInData(data: AttendancePreCheckInFeature) {
+
     }
 
     /**
