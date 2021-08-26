@@ -115,6 +115,14 @@ interface AttendanceAssembleControlService {
     fun attendanceDetailCheckIn(@Body body: RequestBody): Observable<ApiResponse<IdData>>
 
     /**
+     * 预打卡接口
+     * 判断当前应该打哪个卡，以及打卡状态
+     *
+     */
+    @GET("jaxrs/attendancedetail/mobile/mobilepreview")
+    fun mobilePreviewCheckIn(): Observable<ApiResponse<AttendancePreCheckInJson>>
+
+    /**
      * 分页查询手机端打卡记录
 
      * @param body  MobileCheckInQueryFilterJson

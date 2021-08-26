@@ -37,6 +37,6 @@ object TaskWebViewContract {
         fun setReadComplete(read: ReadData?)
         fun retractWork(workId: String)
 
-        fun upload2FileStorage(filePath: String, referenceType: String , reference: String , scale: Int = 800)
+        fun upload2FileStorage(filePath: String, referenceType: String , reference: String , scale: Int = 2000)
     }
 }

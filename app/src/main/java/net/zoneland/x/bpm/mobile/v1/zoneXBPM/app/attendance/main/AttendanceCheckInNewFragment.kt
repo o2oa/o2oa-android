@@ -3,6 +3,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.attendance.main
 import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Message
+import android.text.TextUtils
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import android.widget.ImageView
@@ -20,6 +21,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPViewPagerFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.CheckButtonDoubleClick
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
@@ -42,6 +44,9 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
     override fun layoutResId(): Int = R.layout.fragment_attendance_check_in_new
 
 
+    private val statusChecked = "已打卡"
+    private val statusUnCheck = "未打卡"
+
     private val recordList = ArrayList<MobileScheduleInfo>()
     private var lastRecord: MobileCheckInJson? = null
     private val recordAdapter: CommonRecycleViewAdapter<MobileScheduleInfo> by lazy {
@@ -54,7 +59,7 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
 //                    val image = holder.getView<ImageView>(R.id.image_item_attendance_check_in_schedule_list_enable_icon)
                     val updateBtn = holder.getView<TextView>(R.id.tv_item_attendance_check_in_schedule_list_update_btn)
                     updateBtn.gone()
-                    if (t.checkinStatus == "已打卡") {
+                    if (t.checkinStatus == statusChecked) {
 //                        image.visible()
                         holder.setText(R.id.tv_item_attendance_check_in_schedule_list_status, t.checkinTime.substring(0, 5)+t.checkinStatus)
                         if (lastRecord != null && lastRecord!!.id == t.recordId) {
@@ -76,6 +81,9 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
     private var checkInPosition: MobileCheckInWorkplaceInfoJson? = null//离的最近的工作地点位置
     private var isInCheckInPositionRange = false
     private var needCheckIn = false //是否需要打卡 根据打卡结果和打卡班次判断
+
+    // 新版打卡使用mobilePreviewCheckIn预打卡功能判断当前打开的情况
+    private var previewCheckInData: AttendancePreCheckInFeature? = null
 
     //刷新打卡按钮的时间
     private val handler = Handler { msg ->
@@ -112,7 +120,7 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
         rv_attendance_check_in_new_schedules.adapter = recordAdapter
         recordAdapter.setOnItemClickListener { view, position ->
             val t = recordList[position]
-            if (t.checkinStatus == "已打卡") {
+            if (t.checkinStatus == statusChecked) {
                 if (lastRecord != null && lastRecord!!.id == t.recordId) {
                     updateCheckIn(t)
                 }
@@ -121,33 +129,92 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
 
         //打卡按钮
         rl_attendance_check_in_new_knock_btn.setOnClickListener {
-            if (!needCheckIn) {
-                XToast.toastShort(activity, "今日已经不需要打卡！")
+            if (CheckButtonDoubleClick.isFastDoubleClick(R.id.rl_attendance_check_in_new_knock_btn)) {
                 return@setOnClickListener
             }
-
-            if (myLocation != null ){
-                tv_attendance_check_in_new_check_in.text = getString(R.string.attendance_check_in_knock_loading)
-                tv_attendance_check_in_new_now_time.gone()
-                val signDate = DateHelper.nowByFormate("yyyy-MM-dd")
-                val signTime = DateHelper.nowByFormate("HH:mm:ss")
-                val checkType = calCheckType()
-                if (!isInCheckInPositionRange) {
-                    O2DialogSupport.openConfirmDialog(activity, "当前不在打卡范围内，你确定要进行外勤打卡？", { _ ->
-                        mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
-                                myLocation!!.addrStr, "", signDate, signTime, "", checkType, true, "")
-                    })
-                }else {
-                    mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
-                            myLocation!!.addrStr, "", signDate, signTime, "", checkType, false, checkInPosition?.placeName)
-                }
-
-            }else {
-                XToast.toastShort(activity!!, "没有获取到你的位置信息，请确认是否开启定位功能！")
-            }
+            loadPreview()
         }
         //时间
         timer.schedule(timerTask, 0, 1000)
+    }
+
+    private fun loadPreview() {
+        showLoadingDialog()
+        mPresenter.mobilePreviewCheckIn()
+    }
+
+
+    /**
+     * 没有previewCheckIn之前的打卡
+     */
+    private fun checkInPostOld() {
+        if (!needCheckIn) {
+            XToast.toastShort(activity, R.string.attendance_message_donot_need_check_in)
+            return
+        }
+
+        if (myLocation != null ){
+            tv_attendance_check_in_new_check_in.text = getString(R.string.attendance_check_in_knock_loading)
+            tv_attendance_check_in_new_now_time.gone()
+            val signDate = DateHelper.nowByFormate("yyyy-MM-dd")
+            val signTime = DateHelper.nowByFormate("HH:mm:ss")
+            val checkType = calCheckType()
+            if (!isInCheckInPositionRange) {
+                O2DialogSupport.openConfirmDialog(activity, getString(R.string.attendance_message_work_out), { _ ->
+                    mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
+                        myLocation!!.addrStr, "", signDate, signTime, "", checkType, true, "")
+                })
+            }else {
+                mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
+                    myLocation!!.addrStr, "", signDate, signTime, "", checkType, false, checkInPosition?.placeName)
+            }
+
+        }else {
+            XToast.toastShort(activity!!, R.string.attendance_message_no_location_info)
+        }
+    }
+
+    /**
+     * 使用previewCheckIn返回的数据进行打卡
+     */
+    private fun checkInPostNew() {
+        if (previewCheckInData == null) {
+            checkInPostOld()
+        } else {
+            if (previewCheckInData?.signSeq == 5) {
+                XToast.toastShort(activity, R.string.attendance_message_donot_need_check_in)
+                return
+            }
+            if (myLocation != null ) {
+                if (previewCheckInData?.signSeq != 1) {
+                    O2DialogSupport.openConfirmDialog(activity, "确定要进行【${previewCheckInData?.getSignSeqString()}】打开？", {_ ->
+                        checkInPostNewConfirm()
+                    })
+                } else {
+                    checkInPostNewConfirm()
+                }
+            }else {
+                XToast.toastShort(activity!!, R.string.attendance_message_no_location_info)
+            }
+        }
+    }
+
+
+    private fun checkInPostNewConfirm() {
+        tv_attendance_check_in_new_check_in.text = getString(R.string.attendance_check_in_knock_loading)
+        tv_attendance_check_in_new_now_time.gone()
+        val signDate = DateHelper.nowByFormate("yyyy-MM-dd")
+        val signTime = DateHelper.nowByFormate("HH:mm:ss")
+        val checkType = if(TextUtils.isEmpty(previewCheckInData?.checkinType)) { calCheckType() } else { previewCheckInData?.checkinType }
+        if (!isInCheckInPositionRange) {
+            O2DialogSupport.openConfirmDialog(activity, getString(R.string.attendance_message_work_out), { _ ->
+                mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
+                    myLocation!!.addrStr, "", signDate, signTime, "", checkType, true, "")
+            })
+        }else {
+            mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
+                myLocation!!.addrStr, "", signDate, signTime, "", checkType, false, checkInPosition?.placeName)
+        }
     }
 
     /**
@@ -171,7 +238,7 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
         XLog.debug(list.joinToString())
         val newList = ArrayList<MobileScheduleInfo>()
         for (info in list) {
-            if(info.checkinStatus == "未打卡") {
+            if(info.checkinStatus == statusUnCheck) {
                 newList.add(info)
             }else {
                 break
@@ -197,6 +264,18 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
         super.onDestroy()
     }
 
+    override fun todayCheckInRecord(list: List<MobileCheckInJson>) {
+    }
+
+    override fun previewCheckInData(data: AttendancePreCheckInFeature) {
+        hideLoadingDialog()
+        if (data.signSeq > 0 && !TextUtils.isEmpty(data.checkinType)){
+            previewCheckInData = data
+            checkInPostNew()
+        } else {
+            checkInPostOld()
+        }
+    }
 
     override fun myRecords(records: MobileMyRecords?) {
         if (records != null) {
@@ -211,12 +290,12 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
                 //是否已打卡
                 val record = rList.firstOrNull { re -> re.checkin_type == it.checkinType }
                 if (record != null) {
-                    s.checkinStatus =  "已打卡"
+                    s.checkinStatus =  statusChecked
                     s.checkinTime = record.signTime
                     s.recordId = record.id
                     unCheckNumber = 0 //清零
                 }else{
-                    s.checkinStatus =  "未打卡"
+                    s.checkinStatus =  statusUnCheck
                     unCheckNumber++
                 }
                 s.signDate = it.signDate
@@ -256,8 +335,6 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
         calNearestWorkplace()
     }
 
-    override fun todayCheckInRecord(list: List<MobileCheckInJson>) {
-    }
 
     override fun checkIn(result: Boolean) {
         tv_attendance_check_in_new_check_in?.setText(R.string.attendance_check_in_knock)

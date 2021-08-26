@@ -495,6 +495,9 @@
     <string name="attendance_work_place_hint">请输入工作场所名称</string>
     <string name="attendance_work_place_error_range">打卡范围</string>
     <string name="attendance_work_place_error_range_hint">请输入打卡范围，单位(米)</string>
+    <string name="attendance_message_no_location_info">没有获取到你的位置信息，请确认是否开启定位功能！</string>
+    <string name="attendance_message_donot_need_check_in">今日已经不需要打卡！</string>
+    <string name="attendance_message_work_out">当前不在打卡范围内，你确定要进行外勤打卡？</string>
 
     <!-- bbs -->
     <string name="bbs">论坛</string>
