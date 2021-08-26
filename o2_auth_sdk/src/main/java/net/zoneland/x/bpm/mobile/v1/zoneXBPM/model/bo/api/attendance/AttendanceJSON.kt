@@ -105,6 +105,29 @@ data class BackInfoJson(
 )
 
 /**
+ * 预打卡返回对象
+ */
+data class AttendancePreCheckInJson(
+        var feature: AttendancePreCheckInFeature = AttendancePreCheckInFeature()
+)
+
+data class AttendancePreCheckInFeature(
+        var signSeq: Int = -1, // 1正常|2迟到|3缺勤|4早退|5已完成
+        var checkinType: String = ""
+) {
+        fun getSignSeqString() : String {
+                return when(signSeq) {
+                        1 -> "正常"
+                        2 -> "迟到"
+                        3 -> "缺勤"
+                        4 -> "早退"
+                        5 -> "完成"
+                        else -> ""
+                }
+        }
+}
+
+/**
  * 考勤信息查询过滤条件
  */
 data class AttendanceDetailQueryFilterJson(

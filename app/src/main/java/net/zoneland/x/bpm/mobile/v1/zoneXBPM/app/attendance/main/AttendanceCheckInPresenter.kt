@@ -5,6 +5,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2App
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.AttendancePreCheckInFeature
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.MobileCheckInJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.MobileCheckInQueryFilterJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
@@ -18,6 +19,28 @@ import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
 class AttendanceCheckInPresenter : BasePresenterImpl<AttendanceCheckInContract.View>(), AttendanceCheckInContract.Presenter {
+
+
+    override fun mobilePreviewCheckIn() {
+        getAttendanceAssembleControlService(mView?.getContext())?.let { service ->
+            service.mobilePreviewCheckIn().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext {
+                        if (it.data != null) {
+                            mView?.previewCheckInData(it.data.feature)
+                        }else {
+                            mView?.previewCheckInData(AttendancePreCheckInFeature())
+                        }
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.previewCheckInData(AttendancePreCheckInFeature())
+                    }
+                }
+        }
+    }
+
 
     override fun listMyRecords() {
         getAttendanceAssembleControlService(mView?.getContext())?.let { service ->
