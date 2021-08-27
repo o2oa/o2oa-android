@@ -112,7 +112,7 @@
                     <!-- 滚动公告 -->
                     <LinearLayout
                         android:id="@+id/linear_todo_banner_container"
-                        android:layout_width="365dp"
+                        android:layout_width="match_parent"
                         android:layout_height="195dp"
                         android:orientation="vertical"
                         android:visibility="gone" />
@@ -121,6 +121,7 @@
                         android:id="@+id/image_todo_banner_noData"
                         android:layout_width="365dp"
                         android:layout_height="195dp"
+                        android:layout_gravity="center_horizontal"
                         android:src="@mipmap/banner_default"
                         android:visibility="visible" />
 

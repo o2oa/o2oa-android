@@ -381,10 +381,13 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
         XLog.info("setmy app list ......${myAppList.size}")
         appList.clear()
         appList.addAll(myAppList)
-        val app = MyAppListObject()
-        app.appTitle = getString(R.string.tab_todo_more)
-        app.appId = ALL_APP_ID
-        appList.add(app)
+        val simple = (activity as? MainActivity)?.isSimpleMode() ?: false
+        if (!simple) {
+            val app = MyAppListObject()
+            app.appTitle = getString(R.string.tab_todo_more)
+            app.appId = ALL_APP_ID
+            appList.add(app)
+        }
         appAdapter.notifyDataSetChanged()
     }
 
@@ -396,7 +399,8 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
             }
         }
         recycler_todo_main_app_list.adapter = appAdapter
-        recycler_todo_main_app_list.layoutManager = GridLayoutManager(activity, 5)
+        val simple = (activity as? MainActivity)?.isSimpleMode() ?: false
+        recycler_todo_main_app_list.layoutManager = GridLayoutManager(activity, if (simple){4}else{5})
 
     }
 
