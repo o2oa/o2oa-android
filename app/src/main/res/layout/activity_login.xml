@@ -47,7 +47,7 @@
                     android:layout_height="87dp"
                     android:layout_marginTop="4dp"
                     android:layout_centerHorizontal="true"
-                    android:src="@mipmap/login_avatar"
+                    android:src="@mipmap/logo_round"
                     />
 
                 <LinearLayout
@@ -255,19 +255,32 @@
 
                 <LinearLayout
                     android:id="@+id/login_sample_alert"
-                    android:layout_width="120dp"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_alignParentEnd="true"
+                    android:layout_marginTop="@dimen/spacing_normal"
+                    android:layout_below="@+id/relative_login_form"
+                    android:layout_centerHorizontal="true"
                     android:padding="@dimen/spacing_small"
                     android:visibility="visible"
                     android:orientation="vertical">
-                    <TextView
-                        android:id="@+id/tv_bind_unit_name"
+                    <LinearLayout
+                        android:id="@+id/ll_login_change_unit_btn"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/font_small"
-                        android:textColor="@color/z_color_text_primary_dark"
-                        android:text="@string/login_bind_server" />
+                        >
+                        <TextView
+                            android:id="@+id/tv_bind_unit_name"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/font_normal"
+                            android:textColor="@color/z_color_text_primary_dark"
+                            android:text="@string/login_bind_server" />
+                        <ImageView
+                            android:layout_width="24dp"
+                            android:layout_height="24dp"
+                            android:src="@mipmap/icon_arrow2_down"/>
+                    </LinearLayout>
+
                     <TextView
                         android:visibility="gone"
                         android:layout_width="wrap_content"

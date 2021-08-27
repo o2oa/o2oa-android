@@ -19,6 +19,7 @@ import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.bind.BindPhoneActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.launch.LaunchActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main.MainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.CaptchaImgData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.LoginModeData
@@ -28,6 +29,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.biometric.BioConstants
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.biometric.BiometryManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.biometric.OnBiometryAuthCallback
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goAndClearBefore
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goThenKill
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
@@ -85,7 +87,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
     private var mediaPlayer: MediaPlayer? = null
     private var playBeep: Boolean = false
 
-    private var loginType = 0 // 0默认的用户名验证码登录 1用户名密码登录
+    private var loginType = 1 // 0默认的用户名验证码登录 1用户名密码登录
     private var canBioAuth = false //是否有指纹认证
 
     //验证码
@@ -96,7 +98,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         receivePhone = intent.extras?.getString(REQUEST_PHONE_KEY) ?: ""
-        setDefaultLogo()
+//        setDefaultLogo()
         tv_bind_unit_name.text = getString(R.string.login_bind_server) + " " + SampleEditionManger.instance().getCurrent().name
         login_edit_username_id.setText(receivePhone)
         tv_login_copyright.text = getString(R.string.copy_right).plus(" ")
@@ -134,6 +136,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
         tv_user_fallback_btn.setOnClickListener(this)
         tv_bioauth_btn.setOnClickListener(this)
         image_login_captcha.setOnClickListener(this)
+        ll_login_change_unit_btn.setOnClickListener(this)
 
         //是否开启了指纹识别登录
         checkBioAuthLogin()
@@ -259,8 +262,41 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
                 showLoadingDialog()
                 mPresenter.getCaptcha()
             }
+            R.id.ll_login_change_unit_btn -> {
+                chooseUnitInfo()
+            }
         }
     }
+
+
+    /**
+     * 选择访问环境
+     */
+    private fun chooseUnitInfo() {
+        val titles = SampleEditionManger.instance().getUnits().map { it.name }
+        BottomSheetMenu(this)
+            .setTitle(getString(R.string.account_security_change_unit_title))
+            .setItems(titles, ContextCompat.getColor(this, R.color.z_color_text_primary)) { index ->
+
+                O2DialogSupport.openConfirmDialog(this@LoginActivity, getString(R.string.account_security_change_unit_dialog_alert), {
+                    val unit = SampleEditionManger.instance().getUnits()[index]
+                    SampleEditionManger.instance().setCurrent(unit)
+                    clearAndreLaunch()
+                })
+
+            }.setCancelButton(getString(R.string.cancel)) {
+
+            }
+            .show()
+    }
+
+    private fun clearAndreLaunch() {
+        O2SDKManager.instance().clearBindUnit()
+        O2SDKManager.instance().logoutCleanCurrentPerson()
+        goAndClearBefore<LaunchActivity>()
+    }
+
+
 
     private fun checkShowSampleAlert() {
         val unit = O2SDKManager.instance().prefs().getString(O2.PRE_CENTER_HOST_KEY, "")

@@ -129,7 +129,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
     val taskList = ArrayList<TaskData>()
     val newsList = ArrayList<CMSDocumentInfoJson>()
     val hotPictureList = ArrayList<HotPictureOutData>()
-    var currentType = BUSINESS_TYPE_MESSAGE_CENTER
+    var currentType = BUSINESS_TYPE_WORK_CENTER //演示版本默认打开工作中心
     var isLoadHotPictureList = false
 //    var isRedPointShow = true
     //load more refresh
