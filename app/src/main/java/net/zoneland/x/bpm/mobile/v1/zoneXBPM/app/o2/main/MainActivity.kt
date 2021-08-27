@@ -279,6 +279,9 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         }
     }
 
+    // 给IndexFragment使用
+    fun isSimpleMode(): Boolean = simpleMode
+
     private fun selectTab(i: Int) {
         changePageView(i)
         changeBottomIcon(i)
