@@ -21,6 +21,8 @@ import androidx.annotation.RequiresApi
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import cn.jpush.android.api.JPushInterface
+import com.huawei.hms.aaid.HmsInstanceId
+import com.huawei.hms.common.ApiException
 import kotlinx.android.synthetic.main.activity_launch.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
@@ -88,7 +90,37 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
             }
             Log.d("LaunchActivity", "推送服务的本机deviceId：$pushToken")
         }
+
+        getHuaweiPushToken()
     }
+
+    private fun getHuaweiPushToken() {
+        // 创建一个新线程
+        object : Thread() {
+            override fun run() {
+                try {
+                    // 从agconnect-service.json文件中读取appId
+                    val appId = "100016851"
+
+                    // 输入token标识"HCM"
+                    val tokenScope = "HCM"
+                    val token = HmsInstanceId.getInstance(this@LaunchActivity).getToken(appId, tokenScope)
+                    Log.i("LaunchActivity", "get token:$token")
+
+                    // 判断token是否为空
+                    if (!TextUtils.isEmpty(token)) {
+                        sendRegTokenToServer(token)
+                    }
+                } catch (e: ApiException) {
+                    Log.e("LaunchActivity", "get token failed, $e")
+                }
+            }
+        }.start()
+    }
+    private fun sendRegTokenToServer(token: String?) {
+        Log.i("LaunchActivity", "sending token to server. token:$token")
+    }
+
 
     override fun onResume() {
         super.onResume()

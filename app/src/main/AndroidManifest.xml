@@ -264,6 +264,17 @@
             android:enabled="true"
             android:process=":remote" />
 
+<!--        华为推送-->
+        <meta-data
+            android:name="com.huawei.hms.client.channel.androidMarket"
+            android:value="false" />
+        <service android:name=".core.service.HuaweiPushService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
+
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="${BAIDU_MAP_APPKEY}" /> <!-- baidu yuyin -->
