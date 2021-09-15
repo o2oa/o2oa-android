@@ -53,7 +53,7 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
     //介绍页
     val introductionArray = intArrayOf(R.mipmap.introduction1, R.mipmap.introduction2, R.mipmap.introduction3,
             R.mipmap.introduction4, R.mipmap.introduction5)
-    private val indicatorList = ArrayList<ImageView>()
+    private val indicatorList: ArrayList<ImageView> = ArrayList()
 
     private var mStyleUpdate = false
     private var mCheckNetwork:Boolean? = null
@@ -460,6 +460,7 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
         frame_launch_introduction_content.visible()
         constraint_launch_main_content.gone()
         //生成indicator
+        indicatorList.clear()
         introductionArray.map {
             val indicator = ImageView(this@LaunchActivity)
             indicator.setImageResource(R.mipmap.ic_launch_introduction_indicator_dark)
