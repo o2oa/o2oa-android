@@ -113,10 +113,7 @@ class SettingsFragment : BaseMVPViewPagerFragment<SettingsContract.View, Setting
 
     private fun logout() {
         O2DialogSupport.openConfirmDialog(activity, getString(R.string.dialog_msg_logout), {
-            if (BuildConfig.InnerServer) {
-                val token = JPushInterface.getRegistrationID(activity)
-                mPresenter.jPushUnBindDevice(token)
-            }
+            mPresenter.jPushUnBindDevice()
             if (activity is MainActivity) {
                 (activity as MainActivity).webSocketClose()
             }
