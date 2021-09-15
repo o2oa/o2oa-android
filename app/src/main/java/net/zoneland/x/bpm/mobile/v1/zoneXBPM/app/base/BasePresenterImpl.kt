@@ -4,9 +4,12 @@ import android.content.Context
 import android.text.TextUtils
 import cn.jpush.android.api.JPushInterface
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.BuildConfig
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.service.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.JPushDeviceForm
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.PushType
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
@@ -327,51 +330,119 @@ open class BasePresenterImpl<V: BaseView> : BasePresenter<V> {
     }
 
     /**
-     * 绑定设备到个人属性 内部直连版本使用
+     * 绑定设备
+     * 根据 后台配置 绑定 设备号
      */
-    override fun jPushBindDevice(deviceToken: String) {
-        if (BuildConfig.InnerServer) {
-            XLog.info("绑定设备号")
-            val service = getJPushControlService()
-            if (service != null) {
-                val form = JPushDeviceForm(deviceToken)
-                service.deviceBind(form).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .o2Subscribe {
-                            onNext { res ->
-                                XLog.info("绑定设备到个人属性，结果：${res.data.isValue}")
-                            }
-                            onError { e, _ ->
-                                XLog.error("绑定设备到个人属性出错，", e)
-                            }
+    override fun jPushBindDevice() {
+        XLog.info("绑定设备号")
+        val service = getJPushControlService()
+        if (service != null) {
+            service.deviceConfigPushType().subscribeOn(Schedulers.io())
+                .flatMap { res ->
+                    val config = res.data
+                    if (config != null && !TextUtils.isEmpty(config.pushType)) {
+                        val deviceToken = if (config.pushType == PushType.HUAWEI_TYPE) {
+                            O2SDKManager.instance().prefs().getString(O2.PRE_PUSH_HUAWEI_DEVICE_ID_KEY, "") ?: ""
+                        } else {
+                            O2SDKManager.instance().prefs().getString(O2.PRE_PUSH_JPUSH_DEVICE_ID_KEY, "") ?: ""
                         }
-            } else {
-                XLog.error("没有极光推送模块")
-            }
+                        val form = JPushDeviceForm(deviceToken, config.pushType)
+                        service.deviceBind(form)
+                    } else {
+                        val deviceToken =  O2SDKManager.instance().prefs().getString(O2.PRE_PUSH_JPUSH_DEVICE_ID_KEY, "") ?: ""
+                        val form = JPushDeviceForm(deviceToken, PushType.JPUSH_TYPE)
+                        service.deviceBind(form)
+                    }
+                }.observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext { res ->
+                        XLog.info("绑定设备，结果：${res.data.isValue}")
+                        XLog.info("绑定设备，message：${res.message}")
+                    }
+                    onError { e, _ ->
+                        XLog.error("绑定设备出错，", e)
+                        jpushBindOldRetry()
+                    }
+                }
+        } else {
+            XLog.error("没有极光推送模块")
+        }
+    }
+
+    /**
+     * 适配老版本 重试一下
+     */
+    private fun jpushBindOldRetry() {
+        val service = getJPushControlService()
+        if (service != null) {
+            val deviceToken =  O2SDKManager.instance().prefs().getString(O2.PRE_PUSH_JPUSH_DEVICE_ID_KEY, "") ?: ""
+            val form = JPushDeviceForm(deviceToken, PushType.JPUSH_TYPE)
+            service.deviceBind(form).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext { res ->
+                        XLog.info("绑定设备，结果：${res.data.isValue}")
+                        XLog.info("绑定设备，message：${res.message}")
+                    }
+                    onError { e, _ ->
+                        XLog.error("绑定设备出错，", e)
+                    }
+                }
         }
     }
 
     /**
      * 解除绑定设备 内部直连版本使用
      */
-    override fun jPushUnBindDevice(deviceToken: String) {
-        if (BuildConfig.InnerServer) {
-            XLog.info("解除绑定设备号")
-            val service = getJPushControlService()
-            if (service != null) {
-                service.deviceUnBind(deviceToken).subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .o2Subscribe {
-                            onNext { res ->
-                                XLog.info("绑定设备到个人属性，结果：${res.data.isValue}")
-                            }
-                            onError { e, _ ->
-                                XLog.error("绑定设备到个人属性出错，", e)
-                            }
+    override fun jPushUnBindDevice() {
+        XLog.info("解除绑定设备号")
+        val service = getJPushControlService()
+        if (service != null) {
+            service.deviceConfigPushType().subscribeOn(Schedulers.io())
+                .flatMap { res ->
+                    val config = res.data
+                    if (config != null && !TextUtils.isEmpty(config.pushType)) {
+                        val deviceToken = if (config.pushType == PushType.HUAWEI_TYPE) {
+                            O2SDKManager.instance().prefs().getString(O2.PRE_PUSH_HUAWEI_DEVICE_ID_KEY, "") ?: ""
+                        } else {
+                            O2SDKManager.instance().prefs().getString(O2.PRE_PUSH_JPUSH_DEVICE_ID_KEY, "") ?: ""
                         }
-            } else {
-                XLog.error("没有极光推送模块")
-            }
+                        service.deviceUnBindNew(deviceToken, config.pushType)
+                    } else {
+                        val deviceToken =  O2SDKManager.instance().prefs().getString(O2.PRE_PUSH_JPUSH_DEVICE_ID_KEY, "") ?: ""
+                        service.deviceUnBindNew(deviceToken, PushType.JPUSH_TYPE)
+                    }
+                }.observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext { res ->
+                        XLog.info("解除绑定，结果：${res.data.isValue}")
+                    }
+                    onError { e, _ ->
+                        XLog.error("解除绑定出错，", e)
+                        jpushUnbindOldRetry()
+                    }
+                }
+
+
+        } else {
+            XLog.error("没有极光推送模块")
+        }
+    }
+
+    private fun jpushUnbindOldRetry() {
+        val service = getJPushControlService()
+        if (service != null) {
+            val deviceToken =  O2SDKManager.instance().prefs().getString(O2.PRE_PUSH_JPUSH_DEVICE_ID_KEY, "") ?: ""
+            service.deviceUnBind(deviceToken).subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext { res ->
+                        XLog.info("解除绑定，结果：${res.data.isValue}")
+                    }
+                    onError { e, _ ->
+                        XLog.error("解除绑定出错，", e)
+                    }
+                }
         }
     }
 

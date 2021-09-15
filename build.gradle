@@ -13,12 +13,16 @@ buildscript {
     repositories {
         google()
         jcenter()
+        // 配置HMS Core SDK的Maven仓地址。
+        maven {url 'https://developer.huawei.com/repo/'}
     }
 
     dependencies {
         classpath "com.android.tools.build:gradle:${gradle_version}"
         classpath "io.realm:realm-gradle-plugin:3.1.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
+        // 增加agcp插件配置。
+        classpath 'com.huawei.agconnect:agcp:1.6.0.300'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -39,6 +43,8 @@ allprojects {
         }
 //        maven { url "http://mvn.zoneland.net/nexus/content/repositories/land_repo/" }
         maven { url "http://maven.o2oa.net/repository/maven-public/" }
+        // 配置HMS Core SDK的Maven仓地址。
+        maven {url 'https://developer.huawei.com/repo/'}
     }
 
 }

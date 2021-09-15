@@ -3,6 +3,7 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
+apply plugin: 'com.huawei.agconnect'
 
 ext {
     //定义变量
@@ -104,7 +105,7 @@ android {
 
     buildTypes {
         debug {
-            signingConfig signingConfigs.debug
+            signingConfig signingConfigs.release
             buildConfigField "Boolean", "InnerServer", "true"
             buildConfigField "Boolean", "LOG_ENABLE", "true"
             buildConfigField "Boolean", "NEED_UPDATE", "true"
@@ -257,6 +258,10 @@ dependencies {
 
     // 此处以JMessage 2.5.0 版本为例。
     implementation 'cn.jiguang.sdk:jcore:1.1.9'
+
+
+    // 华为推送
+    implementation 'com.huawei.hms:push:5.3.0.304'
 
     //im
 //    implementation 'com.michaelpardo:activeandroid:3.1.0'
