@@ -126,6 +126,9 @@ object O2 {
     val PRE_BIND_PHONE_KEY = "PRE_BIND_PHONE_KEY"//绑定手机号码
     val PRE_BIND_PHONE_TOKEN_KEY = "PRE_BIND_PHONE_TOKEN_JPUSH_KEY"//绑定手机唯一编码 @date 2018-04-19 修改成极光推送
 
+    val PRE_PUSH_JPUSH_DEVICE_ID_KEY = "PRE_PUSH_JPUSH_DEVICE_ID_KEY" // 极光推送设备id存储key
+    val PRE_PUSH_HUAWEI_DEVICE_ID_KEY = "PRE_PUSH_HUAWEI_DEVICE_ID_KEY" // 华为推送设备id存储key
+
     val PRE_DEMO_O2_KEY = "DemoO2UnitKey" // 手动绑定了sample服务器 true不验证绑定 false验证绑定
 
     // 当前服务器连接信息存储

@@ -235,9 +235,10 @@
         <activity
             android:name=".app.attendance.setting.AttendanceLocationSettingActivity"
             android:label="@string/title_activity_attendance_location_setting" />
-        <activity
-            android:name=".app.o2.main.MyAppActivity"
-            android:label="所有应用" /> <!-- ai -->
+<!--        <activity-->
+<!--            android:name=".app.o2.main.MyAppActivity"-->
+<!--            android:label="所有应用" /> -->
+        <!-- ai -->
         <activity
             android:name=".app.o2.ai.O2AIActivity"
             android:launchMode="singleTask" /> <!-- calendar -->
@@ -263,6 +264,17 @@
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
+
+<!--        华为推送-->
+        <meta-data
+            android:name="com.huawei.hms.client.channel.androidMarket"
+            android:value="false" />
+        <service android:name=".core.service.HuaweiPushService" android:exported="false">
+            <intent-filter>
+                <action android:name="com.huawei.push.action.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"

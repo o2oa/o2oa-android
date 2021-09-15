@@ -21,6 +21,8 @@ import androidx.annotation.RequiresApi
 import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import cn.jpush.android.api.JPushInterface
+import com.huawei.hms.aaid.HmsInstanceId
+import com.huawei.hms.common.ApiException
 import kotlinx.android.synthetic.main.activity_launch.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
@@ -76,19 +78,79 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
     }
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
-        val deviceId = O2SDKManager.instance().prefs().getString(O2.PRE_BIND_PHONE_TOKEN_KEY, "") ?: ""//检查本地是否存在设备号
-        if (!TextUtils.isEmpty(deviceId)) {
-            Log.d("LaunchActivity", "本地存在设备号：$deviceId")
-            pushToken = deviceId
-        }
-        if (TextUtils.isEmpty(pushToken)) {
-            val nowToken = JPushInterface.getRegistrationID(this)
-            if (!TextUtils.isEmpty(nowToken)) {
-                pushToken = nowToken
+        getJpushToken()
+
+        getHuaweiPushToken()
+    }
+
+
+    /**
+     * 极光推送设备号
+     */
+    private fun getJpushToken() {
+        val token = O2SDKManager.instance().prefs().getString(O2.PRE_PUSH_JPUSH_DEVICE_ID_KEY, "") ?: ""
+        Log.e("LaunchActivity", "极光推送设备id  $token")
+        if (!TextUtils.isEmpty(token)) {
+            pushToken = token
+        } else {
+            val deviceId = O2SDKManager.instance().prefs().getString(O2.PRE_BIND_PHONE_TOKEN_KEY, "") ?: ""
+            if (!TextUtils.isEmpty(deviceId)) {
+                Log.d("LaunchActivity", "本地存在设备号：$deviceId")
+                pushToken = deviceId
+                O2SDKManager.instance().prefs().edit {
+                    putString(O2.PRE_PUSH_JPUSH_DEVICE_ID_KEY, deviceId)
+                }
             }
-            Log.d("LaunchActivity", "推送服务的本机deviceId：$pushToken")
+            if (TextUtils.isEmpty(pushToken)) {
+                val nowToken = JPushInterface.getRegistrationID(this)
+                if (!TextUtils.isEmpty(nowToken)) {
+                    pushToken = nowToken
+                    O2SDKManager.instance().prefs().edit {
+                        putString(O2.PRE_PUSH_JPUSH_DEVICE_ID_KEY, nowToken)
+                    }
+                }
+                Log.d("LaunchActivity", "推送服务的本机deviceId：$pushToken")
+            }
         }
     }
+
+    /**
+     * 获取华为设备id
+     */
+    private fun getHuaweiPushToken() {
+        val deviceId = O2SDKManager.instance().prefs().getString(O2.PRE_PUSH_HUAWEI_DEVICE_ID_KEY, "")
+        Log.e("LaunchActivity", "华为推送设备id  $deviceId")
+        if (TextUtils.isEmpty(deviceId)) {
+            // 创建一个新线程
+            object : Thread() {
+                override fun run() {
+                    try {
+                        // 从agconnect-service.json文件中读取appId
+                        val appId = "100016851"
+                        // 输入token标识"HCM"
+                        val tokenScope = "HCM"
+                        val token = HmsInstanceId.getInstance(this@LaunchActivity).getToken(appId, tokenScope)
+                        Log.i("LaunchActivity", "华为推送设备id: $token")
+                        // 判断token是否为空
+                        if (!TextUtils.isEmpty(token)) {
+                            sendRegTokenToServer(token)
+                        }
+                    } catch (e: ApiException) {
+                        Log.e("LaunchActivity", "华为推送设备id 获取失败, $e")
+                    }
+                }
+            }.start()
+        }
+    }
+    private fun sendRegTokenToServer(token: String?) {
+        Log.i("LaunchActivity", "sending token to server. token:$token")
+        if (!TextUtils.isEmpty(token)) {
+            O2SDKManager.instance().prefs().edit {
+                putString(O2.PRE_PUSH_HUAWEI_DEVICE_ID_KEY, token)
+            }
+        }
+    }
+
 
     override fun onResume() {
         super.onResume()

@@ -162,11 +162,8 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             registerSchedulerJob()
         }
-        //注册极光设备号
-        if (BuildConfig.InnerServer) {
-            val token = JPushInterface.getRegistrationID(this)
-            mPresenter.jPushBindDevice(token)
-        }
+        //注册设备号 推送消息用
+        mPresenter.jPushBindDevice()
         //绑定启动webSocket 服务
         val webSocketServiceIntent = Intent(this, WebSocketService::class.java)
         bindService(webSocketServiceIntent, serviceConnect, BIND_AUTO_CREATE)
