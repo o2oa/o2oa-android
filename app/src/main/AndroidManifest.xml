@@ -235,9 +235,10 @@
         <activity
             android:name=".app.attendance.setting.AttendanceLocationSettingActivity"
             android:label="@string/title_activity_attendance_location_setting" />
-        <activity
-            android:name=".app.o2.main.MyAppActivity"
-            android:label="所有应用" /> <!-- ai -->
+<!--        <activity-->
+<!--            android:name=".app.o2.main.MyAppActivity"-->
+<!--            android:label="所有应用" /> -->
+        <!-- ai -->
         <activity
             android:name=".app.o2.ai.O2AIActivity"
             android:launchMode="singleTask" /> <!-- calendar -->
