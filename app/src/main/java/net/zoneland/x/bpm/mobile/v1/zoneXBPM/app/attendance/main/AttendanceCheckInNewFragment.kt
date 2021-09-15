@@ -139,8 +139,10 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
     }
 
     private fun loadPreview() {
-        showLoadingDialog()
-        mPresenter.mobilePreviewCheckIn()
+        // 20210915 暂时先不上 预打卡
+//        showLoadingDialog()
+//        mPresenter.mobilePreviewCheckIn()
+        checkInPostOld()
     }
 
 
