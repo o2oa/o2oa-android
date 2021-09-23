@@ -46,7 +46,8 @@ class SecondStepPresenter : BasePresenterImpl<SecondStepContract.View>(), Second
                     .subscribeOn(Schedulers.io())
                     .flatMap{
                         XLog.debug("这里是绑定成功了。。。。")
-                        getApiService(mView?.getContext(), url)?.getWebserverDistributeWithSource(unitData.centerHost)
+                        val newUrl = O2SDKManager.instance().urlTransfer2Mapping(url, unitData.urlMapping ?: "{}")
+                        getApiService(mView?.getContext(), newUrl)?.getWebserverDistributeWithSource(unitData.centerHost)
                     }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ResponseHandler { data ->

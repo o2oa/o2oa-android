@@ -123,6 +123,7 @@ object O2 {
     val PRE_CENTER_URL_KEY = "PRE_CENTER_URL_KEY"
     val PRE_BIND_UNIT_ID_KEY = "PRE_BIND_UNIT_ID_KEY"//绑定的公司的id unitId
     val PRE_BIND_UNIT_KEY = "PRE_BIND_UNIT_KEY"//绑定的公司 unitName
+    val PRE_BIND_UNIT_URLMAPPING_KEY = "PRE_BIND_UNIT_URLMAPPING_KEY"// urlMapping
     val PRE_BIND_PHONE_KEY = "PRE_BIND_PHONE_KEY"//绑定手机号码
     val PRE_BIND_PHONE_TOKEN_KEY = "PRE_BIND_PHONE_TOKEN_JPUSH_KEY"//绑定手机唯一编码 @date 2018-04-19 修改成极光推送
 

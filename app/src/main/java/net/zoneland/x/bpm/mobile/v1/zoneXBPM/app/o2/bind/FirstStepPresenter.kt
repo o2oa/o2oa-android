@@ -73,7 +73,8 @@ class FirstStepPresenter : BasePresenterImpl<FirstStepContract.View>(), FirstSte
             service.bindDevice(postBody)
                     .subscribeOn(Schedulers.io())
                     .flatMap{
-                        getApiService(mView?.getContext(), url)?.getWebserverDistributeWithSource(unitData.centerHost)
+                        val newUrl = O2SDKManager.instance().urlTransfer2Mapping(url, unitData.urlMapping ?: "{}")
+                        getApiService(mView?.getContext(), newUrl)?.getWebserverDistributeWithSource(unitData.centerHost)
                     }
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ResponseHandler { data ->

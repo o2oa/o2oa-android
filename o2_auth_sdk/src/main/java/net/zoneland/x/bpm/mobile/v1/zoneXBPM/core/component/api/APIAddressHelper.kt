@@ -78,36 +78,40 @@ class APIAddressHelper private constructor() {
      * 待办 待阅等任务的网页打开地址
      */
     fun getWorkUrlPre(): String {
-        return webServerData?.let {
+        val url = webServerData?.let {
             "$httpHead${webServerData?.host}:${webServerData?.port}/x_desktop/workmobilewithaction.html?workid=%s"
         } ?: ""
+        return O2SDKManager.instance().urlTransfer2Mapping(url)
     }
 
     /**
      * 已经完成的任务待办打开
      */
     fun getWorkCompletedUrl(): String {
-        return webServerData?.let {
+        val url = webServerData?.let {
             "$httpHead${webServerData?.host}:${webServerData?.port}/x_desktop/workmobilewithaction.html?workcompletedid=%s"
         } ?: ""
+        return O2SDKManager.instance().urlTransfer2Mapping(url)
     }
 
     /**
      * 流程草稿打开的url
      */
     fun getProcessDraftUrl(): String {
-        return webServerData?.let {
+        val url = webServerData?.let {
             "$httpHead${webServerData?.host}:${webServerData?.port}/x_desktop/workmobilewithaction.html?draft=%s"
         } ?: ""
+        return O2SDKManager.instance().urlTransfer2Mapping(url)
     }
 
     /**
      * 流程草稿打开的url
      */
     fun getProcessDraftWithIdUrl(): String {
-        return webServerData?.let {
+        val url = webServerData?.let {
             "$httpHead${webServerData?.host}:${webServerData?.port}/x_desktop/workmobilewithaction.html?draftid=%s"
         } ?: ""
+        return O2SDKManager.instance().urlTransfer2Mapping(url)
     }
 
     /**
@@ -116,9 +120,10 @@ class APIAddressHelper private constructor() {
      * @param page 评论页数
      */
     fun getBBSWebViewUrl(subjectId: String, page: Int): String {
-        return webServerData?.let {
+        val url = webServerData?.let {
             "$httpHead${webServerData?.host}:${webServerData?.port}/x_desktop/forumdocMobile.html?id=$subjectId&page=$page"
         } ?: ""
+        return O2SDKManager.instance().urlTransfer2Mapping(url)
     }
 
     /**
@@ -135,9 +140,10 @@ class APIAddressHelper private constructor() {
      * cms 文章地址
      */
     fun getCMSWebViewUrl(docId: String): String {
-        return webServerData?.let {
+        val url = webServerData?.let {
             "$httpHead${webServerData?.host}:${webServerData?.port}/x_desktop/cmsdocMobile.html?id=$docId"
         } ?: ""
+        return O2SDKManager.instance().urlTransfer2Mapping(url)
     }
 
     /**
@@ -218,9 +224,10 @@ class APIAddressHelper private constructor() {
      * 门户打开地址
      */
     fun getPortalWebViewUrl(portalId:String): String {
-        return webServerData?.let {
+        val url = webServerData?.let {
             "$httpHead${webServerData?.host}:${webServerData?.port}/x_desktop/portalmobile.html?id=$portalId"
         } ?: ""
+        return O2SDKManager.instance().urlTransfer2Mapping(url)
     }
 
     /**
@@ -362,7 +369,8 @@ class APIAddressHelper private constructor() {
 
     fun getAPIDistribute(typeEnum: APIDistributeTypeEnum): String {
         val bean = apiDistribute[typeEnum]
-        return bean?.let { "$httpHead${it.host}:${it.port}${it.context}/" } ?: ""
+        val url = bean?.let { "$httpHead${it.host}:${it.port}${it.context}/" } ?: ""
+        return O2SDKManager.instance().urlTransfer2Mapping(url)
     }
 
 

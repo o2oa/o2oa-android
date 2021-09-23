@@ -16,6 +16,8 @@ public class CollectUnitData {
 
     private String urlMapping;// 代理地址
 
+
+
     public String getUrlMapping() {
         return urlMapping;
     }

@@ -241,8 +241,9 @@ class RetrofitClient private constructor() {
      * @return
      */
     fun api(baseUrl: String): ApiService {
+        val newUrl = O2SDKManager.instance().urlTransfer2Mapping(baseUrl)
         val retrofit = Retrofit.Builder()
-                .baseUrl(baseUrl)
+                .baseUrl(newUrl)
                 .client(o2HttpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())

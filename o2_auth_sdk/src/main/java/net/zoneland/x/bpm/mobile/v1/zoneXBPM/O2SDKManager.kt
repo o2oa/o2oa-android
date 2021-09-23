@@ -245,6 +245,45 @@ class O2SDKManager private constructor()  {
     }
 
     /**
+     * 转化成urlMapping后的地址
+     * @param url 转化前的地址
+     * @param urlMapping 默认情况下读取prefs中PRE_BIND_UNIT_URLMAPPING_KEY的值，特殊情况下（暂时没有存储）使用这个值解析
+     */
+    fun urlTransfer2Mapping(url: String, urlMapping: String? = null): String {
+        var mapping = if (!TextUtils.isEmpty(urlMapping)) {
+            urlMapping
+        } else {
+            prefs().getString(O2.PRE_BIND_UNIT_URLMAPPING_KEY, "")
+        }
+        if (TextUtils.isEmpty(mapping)) { // 没有值 直接返回原地址
+            return url
+        } else {
+            try {
+                val map = gson.fromJson<HashMap<String, String>>(mapping, HashMap::class.java)
+                if (map != null) {
+                    var newUrl = ""
+                    map.keys.forEach { key->
+                        val value = map[key]
+                        if (url.contains(key) && value != null) {
+                            newUrl = url.replace(key, value, false)
+                        }
+                    }
+                    return if (TextUtils.isEmpty(newUrl)) {
+                        url
+                    } else {
+                        newUrl
+                    }
+                }else {
+                    return url
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "urlMapping 解析失败", e)
+                return url
+            }
+        }
+    }
+
+    /**
      * 绑定信息存储
      */
     fun bindUnit(unit: CollectUnitData, phone: String, deviceToken: String) {
@@ -257,6 +296,7 @@ class O2SDKManager private constructor()  {
             putInt(O2.PRE_CENTER_PORT_KEY, unit.centerPort)
             putString(O2.PRE_BIND_UNIT_ID_KEY, unit.id)
             putString(O2.PRE_BIND_UNIT_KEY, unit.name)
+            putString(O2.PRE_BIND_UNIT_URLMAPPING_KEY, unit.urlMapping)
             putString(O2.PRE_BIND_PHONE_KEY, phone)
             putString(O2.PRE_BIND_PHONE_TOKEN_KEY, deviceToken)
         }
@@ -274,10 +314,13 @@ class O2SDKManager private constructor()  {
             putInt(O2.PRE_CENTER_PORT_KEY, 0)
             putString(O2.PRE_BIND_UNIT_ID_KEY, "")
             putString(O2.PRE_BIND_UNIT_KEY, "")
+            putString(O2.PRE_BIND_UNIT_URLMAPPING_KEY, "")
             putString(O2.PRE_BIND_PHONE_KEY, "")
             putString(O2.PRE_BIND_PHONE_TOKEN_KEY, "")
         }
     }
+
+
 
 
     private fun saveCollectInfo(unit: CollectUnitData, showState:(state: LaunchState)->Unit) {
@@ -295,6 +338,7 @@ class O2SDKManager private constructor()  {
             putString(O2.PRE_CENTER_CONTEXT_KEY, unit.centerContext)
             putInt(O2.PRE_CENTER_PORT_KEY, unit.centerPort)
             putString(O2.PRE_BIND_UNIT_KEY, unit.name)
+            putString(O2.PRE_BIND_UNIT_URLMAPPING_KEY, unit.urlMapping)
         }
         Log.d(TAG, "保存 服务器信息成功！！！！newUrl：$newUrl")
         Log.d(TAG, "httpProtocol:${unit.httpProtocol}")
