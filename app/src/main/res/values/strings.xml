@@ -760,7 +760,9 @@
     <string name="btn_send">发送</string>
     <string name="chat_input_message">请输入消息…</string>
     <string name="search_taskcompleted">搜索已办工作</string>
-    <string name="secret">隐私政策</string>
+    <string name="secret">《隐私政策》</string>
+    <string name="user_service">《用户协议》</string>
+    <string name="and"> 和 </string>
     <string name="search_no_result">未搜到相关结果</string>
     <string name="search_hint">请输入搜索关键字</string>
     <string name="search_delete_all_history">删除全部历史记录</string>
@@ -768,6 +770,8 @@
     <string name="search_process">流程: </string>
     <string name="search_service_error">查询接口异常，服务器不存在！</string>
     <string name="search_error">错误！%1$s</string>
+    <string name="agree_login_privacy">我已阅读并同意</string>
+    <string name="agree_login_privacy_alert_message">必须先同意我们的产品服务协议，否则无法注册使用本产品!</string>
 
 
 </resources>

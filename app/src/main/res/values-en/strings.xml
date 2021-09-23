@@ -789,6 +789,8 @@
     <string name="chat_input_message">Please enter a message…</string>
     <string name="search_taskcompleted">Search for work done</string>
     <string name="secret">Privacy policy</string>
+    <string name="and"> And </string>
+    <string name="user_service">User agreement</string>
     <string name="search_no_result">No relevant results were found</string>
     <string name="search_hint">Please enter search keywords</string>
     <string name="search_delete_all_history">Delete all history</string>
@@ -796,6 +798,8 @@
     <string name="search_process">Process: </string>
     <string name="search_service_error">Query interface exception, server does not exist！</string>
     <string name="search_error">Error！%1$s</string>
+    <string name="agree_login_privacy">I have read and agree</string>
+    <string name="agree_login_privacy_alert_message">You must first agree to our product service agreement, otherwise you cannot register to use this product !</string>
 
 
 </resources>

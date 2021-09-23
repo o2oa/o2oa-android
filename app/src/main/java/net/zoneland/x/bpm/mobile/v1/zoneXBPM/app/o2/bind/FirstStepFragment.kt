@@ -1,5 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.bind
 
+import android.content.pm.PackageManager
 import android.text.TextUtils
 import android.view.View
 import com.google.gson.reflect.TypeToken
@@ -23,6 +24,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goThenKill
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.hideSoftInput
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CountDownButtonHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
@@ -45,6 +47,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         button_login_phone_next.setOnClickListener(this)
         button_login_phone_code.setOnClickListener(this)
         tv_secret_login.setOnClickListener(this)
+        tv_user_service_login.setOnClickListener(this)
         edit_login_phone.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 view_bind_phone_step_one_number_bottom.setBackgroundColor(FancySkinManager.instance().getColor(activity!!, R.color.z_color_input_line_focus))
@@ -64,6 +67,11 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                 view_bind_phone_step_one_code_bottom.setBackgroundColor(FancySkinManager.instance().getColor(activity!!, R.color.z_color_input_line_blur))
                 image_login_phone_code_icon.setImageDrawable(FancySkinManager.instance().getDrawable(activity!!, R.mipmap.icon_verification_code_normal))
             }
+        }
+        // 华为需要同意协议
+        if (isHuaweiChannel()) {
+            ll_fluid_login_agree_bar.visible()
+
         }
     }
 
@@ -154,6 +162,16 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                     XLog.debug("重复点了。。。。。。。。。。。。")
                     return
                 }
+
+                // 必须同意协议
+                if (isHuaweiChannel()) {
+                    val isCheck = radio_fluid_login_agree.isChecked
+                    if (!isCheck) {
+                        XToast.toastShort(activity, getString(R.string.agree_login_privacy_alert_message))
+                        return
+                    }
+                }
+
                 val phone = edit_login_phone.text.toString()
                 val code = edit_login_code.text.toString()
                 if (TextUtils.isEmpty(phone)) {
@@ -204,6 +222,11 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                     O2WebViewActivity.openWebView(it, getString(R.string.secret), "https://www.o2oa.net/secret.html")
                 }
             }
+            R.id.tv_user_service_login -> {
+                activity?.let {
+                    O2WebViewActivity.openWebView(it, getString(R.string.user_service), "https://www.o2oa.net/userService.html")
+                }
+            }
             else -> XLog.error("no implements this view ,id:${v?.id}")
         }
 
@@ -241,6 +264,24 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
 
     private fun gotoLogin() {
         mPresenter.login(phone, code)//@date 2018-03-20 绑定成功 直接登陆
+    }
+
+
+    /**
+     * 读取当前渠道
+     * 是否华为
+     */
+    private fun isHuaweiChannel() : Boolean {
+        var value = ""
+        value = try {
+            val applicationInfo = activity?.packageManager?.getApplicationInfo(activity?.packageName, PackageManager.GET_META_DATA)
+            applicationInfo?.metaData?.getString("BUGLY_APP_CHANNEL") ?: ""
+        } catch(e: Exception) {
+            ""
+        }
+        XLog.info("渠道。。。。$value")
+        return (value == "huawei")
+//        return true
     }
 
 

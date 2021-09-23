@@ -188,11 +188,13 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
                     .o2Subscribe {
                         onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
                             Log.d("LaunchActivity", "granted:$granted, show:$shouldShowRequestPermissionRationale, deniedList:$deniedPermissions")
-                            if (!granted) {
-                                O2DialogSupport.openAlertDialog(this@LaunchActivity, getString(R.string.dialog_msg_go_to_set_storage_permission), { permissionSetting() })
-                            } else {
-                                checkNetwork()
-                            }
+                            // 关闭存储权限控制
+//                            if (!granted) {
+//                                //O2DialogSupport.openAlertDialog(this@LaunchActivity, getString(R.string.dialog_msg_go_to_set_storage_permission), { permissionSetting() })
+//                            } else {
+//                                checkNetwork()
+//                            }
+                            checkNetwork()
                         }
                         onError { e, _ ->
                             Log.e("LaunchActivity", "检查权限出错", e)
