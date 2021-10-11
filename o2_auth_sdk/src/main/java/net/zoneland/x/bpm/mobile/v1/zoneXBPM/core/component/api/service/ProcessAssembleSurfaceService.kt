@@ -74,9 +74,16 @@ interface ProcessAssembleSurfaceService {
     /**
      * 获取工作对象
      * 如果返回500错误就是工作已经结束了
+     * 老版本api已经删除
      */
-    @GET("jaxrs/work/{workId}")
-    fun getWorkInfo(@Path("workId") workId: String): Observable<ApiResponse<WorkInfoResData>>
+//    @GET("jaxrs/work/{workId}")
+//    fun getWorkInfo(@Path("workId") workId: String): Observable<ApiResponse<WorkInfoResData>>
+
+    /**
+     * 新版api
+     */
+    @GET("jaxrs/work/v2/workorworkcompleted/{workOrWorkCompleted}")
+    fun getWorkInfo(@Path("workOrWorkCompleted") workOrWorkCompleted: String): Observable<ApiResponse<WorkInfoResData>>
 
     /**
      * 已阅列表

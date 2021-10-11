@@ -26,6 +26,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.ApplicationEnu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.flutter.FlutterConnectActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.InstantMessage
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
@@ -91,7 +92,8 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
         if (!flag) {
             go<TaskWebViewActivity>(TaskWebViewActivity.start(workId, "", ""))
         }else {
-            XToast.toastShort(this, getString(R.string.message_work_is_completed))
+//            XToast.toastShort(this, getString(R.string.message_work_is_completed))
+            XLog.error("无法打开工作，请求不到工作对象？？？？？")
         }
     }
 

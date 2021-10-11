@@ -463,6 +463,7 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
         constraint_launch_main_content.gone()
         //生成indicator
         indicatorList.clear()
+        linear_launch_introduction_bottom_indicator.removeAllViews()
         introductionArray.map {
             val indicator = ImageView(this@LaunchActivity)
             indicator.setImageResource(R.mipmap.ic_launch_introduction_indicator_dark)
