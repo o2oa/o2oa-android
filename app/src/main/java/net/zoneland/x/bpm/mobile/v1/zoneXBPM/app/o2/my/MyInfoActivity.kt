@@ -314,8 +314,15 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
         PicturePicker()
                 .withActivity(this)
                 .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
-                .requestCode(TAKE_FROM_PICTURES_CODE)
-                .start()
+            .forResult { list ->
+                if (list.isNotEmpty()) {
+                    val result = list[0]
+                    if (!TextUtils.isEmpty(result)) {
+                        val photoURI = FileUtil.getUriFromFile(this, File(result))
+                        startClipAvatar(photoURI)
+                    }
+                }
+            }
     }
 
     private fun takeFromCamera() {

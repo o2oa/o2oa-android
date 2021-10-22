@@ -1,6 +1,5 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.unit
 
-import android.os.Build.ID
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.NewContactFragmentVO
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.NewContactListVO
 

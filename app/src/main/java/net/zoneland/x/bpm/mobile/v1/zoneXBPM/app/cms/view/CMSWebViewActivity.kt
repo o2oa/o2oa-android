@@ -458,8 +458,15 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
         PicturePicker()
                 .withActivity(this)
                 .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
-                .requestCode(TAKE_FROM_PICTURES_CODE)
-                .start()
+            .forResult { list ->
+                if (list.isNotEmpty()) {
+                    val result = list[0]
+                    if (!TextUtils.isEmpty(result)) {
+                        XLog.debug("照片 path:$result")
+                        uploadImage2FileStorageStart(result!!)
+                    }
+                }
+            }
     }
 
     private fun takeFromCamera() {

@@ -73,8 +73,14 @@ class BBSReplyActivity : BaseMVPActivity<BBSReplyContract.View, BBSReplyContract
             PicturePicker()
                     .withActivity(this)
                     .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
-                    .requestCode(BBS_TAKE_FROM_PICTURES_CODE)
-                    .start()
+                .forResult { list ->
+                    if (list.isNotEmpty()) {
+                        val result = list[0]
+                        if (!TextUtils.isEmpty(result)) {
+                            readyUploadImages(result)
+                        }
+                    }
+                }
         }
     }
 

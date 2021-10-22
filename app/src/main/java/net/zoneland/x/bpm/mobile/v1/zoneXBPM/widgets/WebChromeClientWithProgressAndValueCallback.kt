@@ -37,8 +37,8 @@ import java.io.IOException
 class WebChromeClientWithProgressAndValueCallback private constructor (val activity: Activity?) : WebChromeClient() {
 
     companion object {
-        const val TAKE_FROM_CAMERA_KEY = 100999
-        const val TAKE_FROM_PICTURES_KEY = 100998
+        const val TAKE_FROM_CAMERA_KEY = 1099
+        const val TAKE_FROM_PICTURES_KEY = 1098
         fun with(activity: Activity): WebChromeClientWithProgressAndValueCallback =
                 WebChromeClientWithProgressAndValueCallback(activity)
         fun with(fragment: Fragment): WebChromeClientWithProgressAndValueCallback =
@@ -124,13 +124,13 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
         if (activity != null) {
             BottomSheetMenu(activity)
                     .setTitle("上传照片")
-                    .setItem("从相册选择", activity.resources.getColor(R.color.z_color_text_primary)) {
+                    .setItem("从相册选择", ContextCompat.getColor(activity, R.color.z_color_text_primary)) {
                         takeFromPictures()
                     }
-                    .setItem("拍照", activity.resources.getColor(R.color.z_color_text_primary)) {
+                    .setItem("拍照", ContextCompat.getColor(activity, R.color.z_color_text_primary)) {
                         takeFromCamera()
                     }
-                    .setCancelButton("取消", activity.resources.getColor(R.color.z_color_text_hint)) {
+                    .setCancelButton("取消", ContextCompat.getColor(activity, R.color.z_color_text_hint)) {
                         XLog.debug("取消。。。。。")
                         if (uploadMessageAboveL!=null) {
                             uploadMessageAboveL?.onReceiveValue(null)
@@ -149,8 +149,19 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
             PicturePicker()
                     .withActivity(activity)
                     .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
-                    .requestCode(TAKE_FROM_PICTURES_KEY)
-                    .start()
+                    .forResult { list->
+                        //选择照片
+                        if (list.isNotEmpty()) {
+                            val result = list[0]
+                            XLog.debug("照片 path:$result")
+                            if (uploadMessageAboveL != null)   {
+                                val uri = FileUtil.getUriFromFile(activity, File(result))
+                                val uriList = ArrayList<Uri>()
+                                uriList.add(uri)
+                                uploadMessageAboveL?.onReceiveValue(uriList.toTypedArray())
+                            }
+                        }
+                    }
         }else {
             XLog.error("activity 不存在， 无法打开图片选择器!")
         }
