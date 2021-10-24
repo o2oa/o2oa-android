@@ -11,6 +11,16 @@ public class ProcessInfoData {
     private String description;
 
     private String defaultStartMode;	//默认启动方式,draft,instance
+    private String startableTerminal;// client,mobile,all 有可能没有值 没有值就是all
+
+
+    public String getStartableTerminal() {
+        return startableTerminal;
+    }
+
+    public void setStartableTerminal(String startableTerminal) {
+        this.startableTerminal = startableTerminal;
+    }
 
     public String getId() {
         return id;

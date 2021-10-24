@@ -15,15 +15,50 @@ import rx.schedulers.Schedulers
 
 class StartProcessStepOnePresenter : BasePresenterImpl<StartProcessStepOneContract.View>(), StartProcessStepOneContract.Presenter {
 
-    override fun loadApplicationList() {
+    override fun loadApplicationListWithProcess() {
+
         getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service->
-            service.getApplicationList()
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(ResponseHandler<List<ApplicationData>>({list-> mView?.loadApplicationList(list)}),
-                            ExceptionHandler(mView?.getContext(), {e-> mView?.loadApplicationListFail()}))
+            service.getApplicationProcessList()
+                .subscribeOn(Schedulers.io())
+                .flatMap {// 过滤不是移动端的流程和应用
+                    val oldList = it.data
+                    var newList = ArrayList<ApplicationWithProcessData>()
+                    if (oldList != null && oldList.isNotEmpty()) {
+                        oldList.map { item ->
+                            val pList = item.processList
+                            if (pList != null &&  pList.isNotEmpty() ) {
+                                val newPlist = pList.filter { p -> "client" != p.startableTerminal }.toList()
+                                if (newPlist.isNotEmpty()) {
+                                    item.processList = newPlist
+                                    newList.add(item)
+                                }
+                            }
+                        }
+                    }
+                    Observable.just(newList)
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext {
+                        mView?.loadApplicationListWithProcess(it)
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.loadApplicationListFail()
+                    }
+                }
         }
     }
+
+//    override fun loadApplicationList() {
+//        getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service->
+//            service.getApplicationList()
+//                    .subscribeOn(Schedulers.io())
+//                    .observeOn(AndroidSchedulers.mainThread())
+//                    .subscribe(ResponseHandler<List<ApplicationData>>({list-> mView?.loadApplicationList(list)}),
+//                            ExceptionHandler(mView?.getContext(), {e-> mView?.loadApplicationListFail()}))
+//        }
+//    }
 
     override fun loadProcessListByAppId(appId: String) {
         getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service->

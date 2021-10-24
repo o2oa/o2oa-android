@@ -16,6 +16,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.identity.ProcessWOIdentityJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ApplicationData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ApplicationWithProcessData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ProcessDraftWorkData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ProcessInfoData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
@@ -34,12 +35,12 @@ class StartProcessStepOneFragment : BaseMVPFragment<StartProcessStepOneContract.
     override fun layoutResId(): Int = R.layout.fragment_start_process_step_one
 
     var currentChooseAppId = ""
-    val appList = ArrayList<ApplicationData>()
+    val appList = ArrayList<ApplicationWithProcessData>()
     val processList = ArrayList<ProcessInfoData>()
     var clickProcess : ProcessInfoData? = null
-    val appAdapter: CommonRecycleViewAdapter<ApplicationData> by lazy {
-        object : CommonRecycleViewAdapter<ApplicationData>(activity, appList, R.layout.item_start_process_application) {
-            override fun convert(holder: CommonRecyclerViewHolder, t: ApplicationData) {
+    val appAdapter: CommonRecycleViewAdapter<ApplicationWithProcessData> by lazy {
+        object : CommonRecycleViewAdapter<ApplicationWithProcessData>(activity, appList, R.layout.item_start_process_application) {
+            override fun convert(holder: CommonRecyclerViewHolder, t: ApplicationWithProcessData) {
                 holder.setText(R.id.tv_item_start_process_application_name, t.name)
                 val back = holder.getView<LinearLayout>(R.id.linear_item_start_process_application_content)
                 if (t.id == currentChooseAppId) {
@@ -81,23 +82,44 @@ class StartProcessStepOneFragment : BaseMVPFragment<StartProcessStepOneContract.
         }
         recycler_start_process_application_process_list.adapter = processAdapter
 
-        mPresenter.loadApplicationList()
+        showLoadingDialog()
+        mPresenter.loadApplicationListWithProcess()
     }
 
 
-    override fun loadApplicationList(list: List<ApplicationData>) {
+    override fun loadApplicationListWithProcess(list: List<ApplicationWithProcessData>) {
+        hideLoadingDialog()
         appList.clear()
         appList.addAll(list)
         if (appList.size>0) {
             currentChooseAppId = appList[0].id
-            mPresenter.loadProcessListByAppId(currentChooseAppId)
+            setProcessList(appList[0].processList)
             linear_start_process_content?.visible()
             tv_start_process_empty?.gone()
         }
         appAdapter.notifyDataSetChanged()
     }
 
+    private fun setProcessList(list: List<ProcessInfoData>) {
+        processList.clear()
+        processList.addAll(list)
+        processAdapter.notifyDataSetChanged()
+    }
+
+//    override fun loadApplicationList(list: List<ApplicationData>) {
+//        appList.clear()
+//        appList.addAll(list)
+//        if (appList.size>0) {
+//            currentChooseAppId = appList[0].id
+//            mPresenter.loadProcessListByAppId(currentChooseAppId)
+//            linear_start_process_content?.visible()
+//            tv_start_process_empty?.gone()
+//        }
+//        appAdapter.notifyDataSetChanged()
+//    }
+
     override fun loadApplicationListFail() {
+        hideLoadingDialog()
         XToast.toastShort(activity, getString(R.string.message_get_application_fail))
         appList.clear()
         linear_start_process_content?.gone()
