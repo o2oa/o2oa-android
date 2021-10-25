@@ -1,5 +1,7 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base
 
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
@@ -32,6 +34,20 @@ abstract class BaseO2Activity : AppCompatActivity() {
      */
     private var toolbarTitle: TextView? = null
 
+    //固定字体比例 防止系统设置字体影响
+    override fun getResources(): Resources {
+        var res =  super.getResources()
+        if (res.configuration != null && res.configuration.fontScale != 1f) {
+            val config = Configuration()
+            config.setToDefaults()
+            config.fontScale = 1f
+            val ct = createConfigurationContext(config)
+            if (ct != null) {
+                res = ct.resources
+            }
+        }
+        return res
+    }
 
 
     override fun onCreate(savedInstanceState: Bundle?) {

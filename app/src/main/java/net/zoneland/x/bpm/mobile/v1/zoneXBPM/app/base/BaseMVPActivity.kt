@@ -1,6 +1,8 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base
 
 import android.content.Context
+import android.content.res.Configuration
+import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
 import android.widget.TextView
@@ -18,6 +20,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.ContactPickerResult
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.LoadingDialog
+import org.jetbrains.anko.internals.AnkoInternals.createAnkoContext
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -46,6 +49,9 @@ abstract class BaseMVPActivity<in V: BaseView, T: BasePresenter<V>>: AppCompatAc
 
     var loadingDialog: LoadingDialog? = null
 
+    // 字体不放大
+    private val fontScale = 1f
+
 
     override fun onCreate(savedInstanceState: Bundle?)  {
         super.onCreate(savedInstanceState)
@@ -67,6 +73,22 @@ abstract class BaseMVPActivity<in V: BaseView, T: BasePresenter<V>>: AppCompatAc
         super.onDestroy()
         mPresenter.detachView()
     }
+
+    //固定字体比例 防止系统设置字体影响
+    override fun getResources(): Resources {
+        var res =  super.getResources()
+        if (res.configuration != null && res.configuration.fontScale != fontScale) {
+            val config = Configuration()
+            config.setToDefaults()
+            config.fontScale = fontScale
+            val ct = createConfigurationContext(config)
+            if (ct != null) {
+                res = ct.resources
+            }
+        }
+        return res
+    }
+
 
     fun setupToolBar(title:String = "", setupBackButton:Boolean = false, isCloseBackIcon: Boolean = false) {
         toolbar = findViewById(R.id.toolbar_snippet_top_bar)
