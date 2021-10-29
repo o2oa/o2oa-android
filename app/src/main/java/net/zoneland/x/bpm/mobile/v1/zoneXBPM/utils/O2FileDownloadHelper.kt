@@ -38,7 +38,7 @@ object O2FileDownloadHelper {
     }
 
     fun download(downloadUrl: String, outputFilePath: String): Observable<Boolean> {
-        XLog.debug("准备下载文件 网络下载url: $downloadUrl 本地路径: $outputFilePath")
+        XLog.info("准备下载文件 网络下载url: $downloadUrl 本地路径: $outputFilePath")
         return Observable.create { subscriber ->
             val file = File(outputFilePath)
             if (file.exists()) {

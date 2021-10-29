@@ -201,12 +201,14 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
             mView?.finishLoading()
             return
         }
+        XLog.info("下载附件， attId ：$attachmentId , workId: $workId")
         getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service->
             service.getWorkAttachmentInfo(attachmentId, workId)
                     .subscribeOn(Schedulers.io())
                     .flatMap { response ->
                         val info: AttachmentInfo? = response.data
                         if (info != null) {
+                            XLog.info("获取到附件对象，${info.name}")
                             val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(info.name, mView?.getContext())
                             if (O2FileDownloadHelper.fileNeedDownload(info.updateTime, path)) {
                                 val downloadUrl = APIAddressHelper.instance()
@@ -216,6 +218,7 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                                             Observable.just(File(path))
                                         }
                             } else {
+                                XLog.info("文件存在 无需下载，path $path")
                                 Observable.just(File(path))
                             }
 
@@ -268,9 +271,18 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
 
                     }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ file -> mView?.downloadAttachmentSuccess(file) }, { e ->
-                        mView?.downloadFail(mView?.getContext()?.getString(R.string.message_download_fail) ?:  "下载附件失败，${e.message}")
-                    })
+                .o2Subscribe {
+                    onNext {  file ->
+                        mView?.downloadAttachmentSuccess(file)
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.downloadFail(mView?.getContext()?.getString(R.string.message_download_fail) ?:  "下载附件失败，${e?.message}")
+                    }
+                }
+//                    .subscribe({ file -> mView?.downloadAttachmentSuccess(file) }, { e ->
+//                        mView?.downloadFail(mView?.getContext()?.getString(R.string.message_download_fail) ?:  "下载附件失败，${e.message}")
+//                    })
         }
     }
 
@@ -282,12 +294,14 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
             mView?.finishLoading()
             return
         }
+        XLog.info("下载附件， attId ：$attachmentId , workCompleted: $workCompleted")
         getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service->
             service.getWorkCompletedAttachmentInfo(attachmentId, workCompleted)
                     .subscribeOn(Schedulers.io())
                     .flatMap { response ->
                         val info: AttachmentInfo? = response.data
                         if (info != null) {
+                            XLog.info("获取到附件对象，${info.name}")
                             val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(info.name, mView?.getContext())
                             if (O2FileDownloadHelper.fileNeedDownload(info.updateTime, path)) {
                                 val downloadUrl = APIAddressHelper.instance()
@@ -297,6 +311,7 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                                             Observable.just(File(path))
                                         }
                             }else {
+                                XLog.info("文件存在 无需下载，path $path")
                                 Observable.just(File(path))
                             }
 
@@ -349,9 +364,18 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
 
                     }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ file -> mView?.downloadAttachmentSuccess(file) }, { e ->
-                        mView?.downloadFail( mView?.getContext()?.getString(R.string.message_download_fail) ?: "下载附件失败，${e.message}")
-                    })
+                .o2Subscribe {
+                    onNext { file ->
+                        mView?.downloadAttachmentSuccess(file)
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.downloadFail( mView?.getContext()?.getString(R.string.message_download_fail) ?: "下载附件失败，${e?.message}")
+                    }
+                }
+//                    .subscribe({ file -> mView?.downloadAttachmentSuccess(file) }, { e ->
+//                        mView?.downloadFail( mView?.getContext()?.getString(R.string.message_download_fail) ?: "下载附件失败，${e.message}")
+//                    })
         }
     }
 
