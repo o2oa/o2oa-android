@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.text.TextUtils
 import android.util.Log
+import android.view.TextureView
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2.SECURITY_IS_UPDATE
@@ -166,7 +167,7 @@ class O2SDKManager private constructor()  {
             return
         }
         try {
-            val client = RetrofitClient.instance()
+//            val client = RetrofitClient.instance()
             showState(LaunchState.ConnectO2Collect)
             val demoKey = prefs().getBoolean(O2.PRE_DEMO_O2_KEY, false)
             if (demoKey) { // 不验证
@@ -192,18 +193,19 @@ class O2SDKManager private constructor()  {
                             }
                         }
             }else {
-                client.collectApi().checkBindDeviceNew(deviceToken, phone, unit, O2.DEVICE_TYPE)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .o2Subscribe {
-                            onNext { collectUnitRes ->
-                                saveCollectInfo(collectUnitRes.data, showState)
-                            }
-                            onError { e, _ ->
-                                Log.e(TAG, "检查绑定异常", e)
-                                showState(LaunchState.NoBindError)
-                            }
-                        }
+                // 检查绑定设备取消 绑定后直接读取本地存储的服务器信息
+//                client.collectApi().checkBindDeviceNew(deviceToken, phone, unit, O2.DEVICE_TYPE)
+//                        .subscribeOn(Schedulers.io())
+//                        .observeOn(AndroidSchedulers.mainThread())
+//                        .o2Subscribe {
+//                            onNext { collectUnitRes ->
+                                saveCollectInfo(null, showState)
+//                            }
+//                            onError { e, _ ->
+//                                Log.e(TAG, "检查绑定异常", e)
+//                                showState(LaunchState.NoBindError)
+//                            }
+//                        }
             }
         }catch (e: RuntimeException) {
             Log.e(TAG, "catch到的异常", e)
@@ -323,26 +325,40 @@ class O2SDKManager private constructor()  {
 
 
 
-    private fun saveCollectInfo(unit: CollectUnitData, showState:(state: LaunchState)->Unit) {
-        Log.d(TAG, "unit: ${unit.centerHost}, port: ${unit.centerPort} , id: ${unit.id}")
-        //更新http协议
-        RetrofitClient.instance().setO2ServerHttpProtocol(unit.httpProtocol)
-        APIAddressHelper.instance().setHttpProtocol(unit.httpProtocol)
-        val host = unit.centerHost
-        val newUrl = APIAddressHelper.instance().getCenterUrl(unit.centerHost, unit.centerContext, unit.centerPort)
-        prefs().edit {
-            putString(O2.PRE_BIND_UNIT_ID_KEY, unit.id)
-            putString(O2.PRE_CENTER_URL_KEY, newUrl)
-            putString(O2.PRE_CENTER_HTTP_PROTOCOL_KEY, unit.httpProtocol)
-            putString(O2.PRE_CENTER_HOST_KEY, unit.centerHost)
-            putString(O2.PRE_CENTER_CONTEXT_KEY, unit.centerContext)
-            putInt(O2.PRE_CENTER_PORT_KEY, unit.centerPort)
-            putString(O2.PRE_BIND_UNIT_KEY, unit.name)
-            putString(O2.PRE_BIND_UNIT_URLMAPPING_KEY, unit.urlMapping)
+    private fun saveCollectInfo(unit: CollectUnitData?, showState:(state: LaunchState)->Unit) {
+        var newUrl = ""
+        var host = ""
+        if (unit != null) {
+            Log.d(TAG, "unit: ${unit.centerHost}, port: ${unit.centerPort} , id: ${unit.id}")
+            //更新http协议
+            RetrofitClient.instance().setO2ServerHttpProtocol(unit.httpProtocol)
+            APIAddressHelper.instance().setHttpProtocol(unit.httpProtocol)
+            host = unit.centerHost
+            newUrl = APIAddressHelper.instance().getCenterUrl(unit.centerHost, unit.centerContext, unit.centerPort)
+            prefs().edit {
+                putString(O2.PRE_BIND_UNIT_ID_KEY, unit.id)
+                putString(O2.PRE_CENTER_URL_KEY, newUrl)
+                putString(O2.PRE_CENTER_HTTP_PROTOCOL_KEY, unit.httpProtocol)
+                putString(O2.PRE_CENTER_HOST_KEY, unit.centerHost)
+                putString(O2.PRE_CENTER_CONTEXT_KEY, unit.centerContext)
+                putInt(O2.PRE_CENTER_PORT_KEY, unit.centerPort)
+                putString(O2.PRE_BIND_UNIT_KEY, unit.name)
+                putString(O2.PRE_BIND_UNIT_URLMAPPING_KEY, unit.urlMapping)
+            }
+            Log.d(TAG, "保存 服务器信息成功！！！！newUrl：$newUrl")
+            Log.d(TAG, "httpProtocol:${unit.httpProtocol}")
+            Log.d(TAG, "host:$host")
+        } else {
+            Log.d(TAG, "没有单位信息，读取本地存储信息")
+            host = prefs().getString(O2.PRE_CENTER_HOST_KEY, null) ?: ""
+            newUrl = prefs().getString(O2.PRE_CENTER_URL_KEY, null) ?: ""
+            if (TextUtils.isEmpty(host) || TextUtils.isEmpty(newUrl)) {
+                Log.e(TAG, "本地检查异常， 没有获取到本地存储的服务器信息")
+                showState(LaunchState.NoBindError)
+                return
+            }
         }
-        Log.d(TAG, "保存 服务器信息成功！！！！newUrl：$newUrl")
-        Log.d(TAG, "httpProtocol:${unit.httpProtocol}")
-        Log.d(TAG, "host:$host")
+
 
         /////////////////////////// 开始业务逻辑  ////////////////////////////////////
 

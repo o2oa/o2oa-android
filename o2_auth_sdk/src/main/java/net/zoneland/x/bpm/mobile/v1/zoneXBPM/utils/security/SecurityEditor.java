@@ -82,6 +82,9 @@ public class SecurityEditor implements SharedPreferences.Editor {
      * @return cipherText base64
      */
     private String encryptPreference(String plainText){
+        if(plainText == null) {
+            return null;
+        }
         return EncryptUtil.getInstance(mContext).encrypt(plainText);
     }
 
