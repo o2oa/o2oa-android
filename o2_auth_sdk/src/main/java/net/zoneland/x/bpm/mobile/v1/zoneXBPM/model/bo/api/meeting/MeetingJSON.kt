@@ -116,3 +116,10 @@ data class BuildingInfoJson(
     }
 }
 
+/**
+ * 会议签到返回的人员
+ */
+data class MeetingCheckInRes(
+        var checkinPersonList: List<String> = ArrayList() //已签到的人员列表
+): Serializable
+
