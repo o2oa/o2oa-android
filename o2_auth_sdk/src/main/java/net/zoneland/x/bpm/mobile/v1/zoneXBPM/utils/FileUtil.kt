@@ -226,6 +226,9 @@ object FileUtil {
         return null
     }
 
+    /**
+     * 根据文件后缀 获取 mimetype
+     */
     fun getMIMEType(file: File): String {
         var type = "application/octet-stream"
         val fName = file.name
@@ -245,6 +248,20 @@ object FileUtil {
             }
         }
         return type
+    }
+
+    /**
+     * 根据mimetype 获取文件后缀名
+     */
+    fun getFileExtensionByMimetype(mimetype: String): String? {
+        var ext:String? = null
+        for (i in MIMETypes.indices) {
+            if (mimetype == MIMETypes[i][1]) {
+                ext = MIMETypes[i][0]
+                break
+            }
+        }
+        return ext
     }
 
 

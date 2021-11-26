@@ -109,11 +109,11 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
             }
             override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
                 XLog.debug("shouldOverrideUrlLoading:$url")
-                if (ZoneUtil.checkUrlIsInner(url)) {
+//                if (ZoneUtil.checkUrlIsInner(url)) {
                     view?.loadUrl(url)
-                } else {
-                    AndroidUtils.runDefaultBrowser(this@CMSWebViewActivity, url)
-                }
+//                } else {
+//                    AndroidUtils.runDefaultBrowser(this@CMSWebViewActivity, url)
+//                }
                 return true
             }
         }

@@ -31,6 +31,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.zxing.activity.CaptureActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.O2WebviewDownloadListener
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.WebChromeClientWithProgressAndValueCallback
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
@@ -84,11 +85,17 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
             web_view_portal_content.addJavascriptInterface(jsUtil, JSInterfaceO2mUtil.JSInterfaceName)
             web_view_portal_content.addJavascriptInterface(jsBiz, JSInterfaceO2mBiz.JSInterfaceName)
             web_view_portal_content.webViewSetCookie(activity!!, portalUrl)
+            web_view_portal_content.setDownloadListener(O2WebviewDownloadListener(activity!!))
             web_view_portal_content.webChromeClient = webChromeClient
             web_view_portal_content.webViewClient = object : WebViewClient() {
                 override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
                     XLog.error("ssl error, $error")
                     handler?.proceed()
+                }
+
+                override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                    view?.loadUrl(url)
+                    return true
                 }
 
             }

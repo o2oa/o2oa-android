@@ -101,11 +101,11 @@ class BBSWebViewSubjectActivity : BaseMVPActivity<BBSWebViewSubjectContract.View
             }
             override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
                 XLog.debug("shouldOverrideUrlLoading:$url")
-                if (ZoneUtil.checkUrlIsInner(url)) {
+//                if (ZoneUtil.checkUrlIsInner(url)) {
                     view?.loadUrl(url)
-                } else {
-                    AndroidUtils.runDefaultBrowser(this@BBSWebViewSubjectActivity, url)
-                }
+//                } else {
+//                    AndroidUtils.runDefaultBrowser(this@BBSWebViewSubjectActivity, url)
+//                }
                 return true
             }
         }
