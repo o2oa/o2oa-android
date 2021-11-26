@@ -11,6 +11,7 @@ import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.TypedValue.COMPLEX_UNIT_SP
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.SslErrorHandler
@@ -164,11 +165,11 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             }
             override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
                 XLog.debug("shouldOverrideUrlLoading:$url")
-                if (ZoneUtil.checkUrlIsInner(url)) {
+//                if (ZoneUtil.checkUrlIsInner(url)) {
                     view?.loadUrl(url)
-                } else {
-                    AndroidUtils.runDefaultBrowser(this@TaskWebViewActivity, url)
-                }
+//                } else {
+//                    AndroidUtils.runDefaultBrowser(this@TaskWebViewActivity, url)
+//                }
                 return true
             }
 
@@ -177,6 +178,15 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 
         web_view.webViewSetCookie(this, url)
         web_view.loadUrl(url)
+    }
+
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            processCheckNew()
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
 
@@ -580,17 +590,33 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 
     //region  private function
 
+
+    /**
+     * webview 返回上级一层
+     */
+    private fun goBack(): Boolean{
+        return if (web_view?.canGoBack() == true) {
+            web_view.goBack()
+            true
+        } else {
+            false
+        }
+    }
+
+
     /**
      * 检查新建
      * 关闭页面的时候检查一下 是否要删除草稿
      */
     private fun processCheckNew() {
-        web_view.evaluateJavascript("layout.app.appForm.finishOnMobile()"){
-            value -> XLog.debug("finishOnMobile /。。。。。。。。。。。。。。$value")
-            try {
-                finish()
-            }catch (e: Exception){
-                XLog.error("", e)
+        if (!goBack()) {
+            web_view.evaluateJavascript("layout.app.appForm.finishOnMobile()"){
+                    value -> XLog.debug("finishOnMobile /。。。。。。。。。。。。。。$value")
+                try {
+                    finish()
+                }catch (e: Exception){
+                    XLog.error("", e)
+                }
             }
         }
     }

@@ -77,8 +77,10 @@ class NestedProgressWebView : WebView, NestedScrollingChild {
         settings.allowFileAccess = true
         settings.setAppCacheEnabled(true)
         settings.builtInZoomControls = false
-        settings.setSupportMultipleWindows(true)
+        settings.setSupportMultipleWindows(false)
         settings.javaScriptCanOpenWindowsAutomatically = true
+        settings.domStorageEnabled = true
+
         //5.0以上开启混合模式加载
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
             settings.mixedContentMode = WebSettings.MIXED_CONTENT_ALWAYS_ALLOW
