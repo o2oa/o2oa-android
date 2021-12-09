@@ -137,7 +137,7 @@
 
     <!-- login activity -->
     <string name="login_sample_alert_1">The current binding server is：演示服务器。</string>
-    <string name="login_sample_alert_2">Trial account：开发部经理、开发部员工2、财务部员工1\n 密码统一为：o2</string>
+    <string name="login_sample_alert_2">Trial account：https://sample.o2oa.net obtain username \n Passwords are unified as：o2</string>
     <string name="login_sample_alert_3">Please switch password to login</string>
     <string name="activity_login_username">User name or mobile number</string>
     <string name="login_phone">Enter mobile phone number</string>

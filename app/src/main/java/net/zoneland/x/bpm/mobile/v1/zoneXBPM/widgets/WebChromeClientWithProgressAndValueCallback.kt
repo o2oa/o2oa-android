@@ -50,6 +50,8 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
 
     var progressBar: ProgressBar? = null
 
+    var onO2ReceivedTitle: ((String) -> Unit)? = null
+
 
     init {
         progressBar = ProgressBar(activity, null, android.R.attr.progressBarStyleHorizontal)
@@ -57,6 +59,19 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
         val drawable = ContextCompat.getDrawable(activity!!, R.drawable.web_view_progress_bar)
         if (drawable != null) {
             progressBar?.progressDrawable = drawable
+        }
+    }
+
+    override fun onReceivedTitle(view: WebView?, title: String?) {
+        super.onReceivedTitle(view, title)
+        getWebviewTitle(view)
+    }
+
+    private fun getWebviewTitle(view: WebView?) {
+        val list = view?.copyBackForwardList()
+        val current = list?.currentItem
+        if (current?.title != null && onO2ReceivedTitle != null) {
+            onO2ReceivedTitle?.invoke(current.title)
         }
     }
 

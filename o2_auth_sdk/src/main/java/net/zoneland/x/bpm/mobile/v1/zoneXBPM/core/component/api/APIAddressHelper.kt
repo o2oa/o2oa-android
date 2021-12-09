@@ -147,6 +147,16 @@ class APIAddressHelper private constructor() {
     }
 
     /**
+     * 带编辑按钮的 cms webview url
+     */
+    fun getCMSWebViewUrlWithAction(docId: String): String {
+        val url = webServerData?.let {
+            "$httpHead${webServerData?.host}:${webServerData?.port}/x_desktop/cmsdocmobilewithaction.html?id=$docId"
+        } ?: ""
+        return O2SDKManager.instance().urlTransfer2Mapping(url)
+    }
+
+    /**
      * 热图图片地址
      * http://host:port/x_file_assemble_control/jaxrs/file/${pId}/download/stream
      */

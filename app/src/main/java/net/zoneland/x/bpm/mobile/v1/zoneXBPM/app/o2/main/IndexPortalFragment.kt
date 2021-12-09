@@ -10,7 +10,9 @@ import android.webkit.JavascriptInterface
 import android.webkit.SslErrorHandler
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.fragment_index_portal.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPViewPagerFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.calendar.CalendarMainActivity
@@ -25,6 +27,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.cms.CMSApplicationInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.cms.CMSCategoryInfoJson
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.O2JsPostMessage
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.O2UtilDatePickerMessage
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
@@ -94,6 +98,7 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
                 }
 
                 override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
+                    XLog.debug("跳转 url : $url" )
                     view?.loadUrl(url)
                     return true
                 }
@@ -181,8 +186,17 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
 
     @JavascriptInterface
     fun openO2CmsDocument(docId: String, docTitle: String) {
-        XLog.debug("openO2CmsDocument : $docId, $docTitle ")
-        activity?.go<CMSWebViewActivity>(CMSWebViewActivity.startBundleData(docId, docTitle))
+        XLog.debug("openO2CmsDocument old : $docId, $docTitle")
+        activity?.go<CMSWebViewActivity>(CMSWebViewActivity.startBundleDataWithOptions(docId, docTitle, null))
+    }
+
+    /**
+     * 新版 打开内容管理 添加第三个参数 options
+     */
+    @JavascriptInterface
+    fun openO2CmsDocumentV2(docId: String, docTitle: String, options: String?) {
+        XLog.debug("openO2CmsDocument new : $docId, $docTitle $options")
+        activity?.go<CMSWebViewActivity>(CMSWebViewActivity.startBundleDataWithOptions(docId, docTitle, options))
     }
 
     @JavascriptInterface

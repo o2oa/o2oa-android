@@ -127,7 +127,8 @@ class CMSPublishDocumentActivity : BaseMVPActivity<CMSPublishDocumentContract.Vi
         hideLoadingDialog()
         if (!TextUtils.isEmpty(id)) {
             val title = edit_cms_publish_title.text.toString()
-            goThenKill<CMSWebViewActivity>(CMSWebViewActivity.startBundleData(id, title))
+            val options = "{\"readonly\": false}"
+            goThenKill<CMSWebViewActivity>(CMSWebViewActivity.startBundleDataWithOptions(id, title, options))
         }else {
             XToast.toastShort(this, "保存失败, 没有返回id！")
         }

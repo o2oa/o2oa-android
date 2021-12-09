@@ -15,6 +15,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.SslErrorHandler
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_cms_web_view_document.*
 import net.muliba.fancyfilepickerlibrary.FilePicker
 import net.muliba.fancyfilepickerlibrary.PicturePicker
@@ -37,6 +38,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.WebChromeClientWithProgress
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import java.io.File
 import java.io.IOException
+import java.net.URLEncoder
 
 
 class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewContract.Presenter>(), CMSWebViewContract.View {
@@ -47,11 +49,20 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
     companion object {
         const val CMS_VIEW_DOCUMENT_ID_KEY = "CMS_VIEW_DOCUMENT_ID_KEY"
         const val CMS_VIEW_DOCUMENT_TITLE_KEY = "CMS_VIEW_DOCUMENT_TITLE_KEY"
+        const val CMS_VIEW_DOCUMENT_OPTIONS_KEY = "CMS_VIEW_DOCUMENT_OPTIONS_KEY"
 
         fun startBundleData(docId: String, docTitle:String): Bundle {
             val bundle = Bundle()
             bundle.putString(CMS_VIEW_DOCUMENT_ID_KEY, docId)
             bundle.putString(CMS_VIEW_DOCUMENT_TITLE_KEY, docTitle)
+            return bundle
+        }
+
+        fun startBundleDataWithOptions(docId: String, docTitle: String, options: String?): Bundle {
+            val bundle = Bundle()
+            bundle.putString(CMS_VIEW_DOCUMENT_ID_KEY, docId)
+            bundle.putString(CMS_VIEW_DOCUMENT_TITLE_KEY, docTitle)
+            bundle.putString(CMS_VIEW_DOCUMENT_OPTIONS_KEY, options)
             return bundle
         }
     }
@@ -80,15 +91,41 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         docId = intent.extras?.getString(CMS_VIEW_DOCUMENT_ID_KEY) ?: ""
         docTitle = intent.extras?.getString(CMS_VIEW_DOCUMENT_TITLE_KEY) ?: ""
-
+        val options = intent.extras?.getString(CMS_VIEW_DOCUMENT_OPTIONS_KEY) ?: ""
         //初始化附件存储目录  权限
         val folder = File(FileExtensionHelper.getXBPMCMSAttachFolder(this))
         if (!folder.exists()) {
             folder.mkdirs()
         }
         url = APIAddressHelper.instance().getCMSWebViewUrl(docId)
+        // 把options 放到url的query里面去
+        try {
+            if (!TextUtils.isEmpty(options)) {
+                XLog.info("options : $options")
+                val type = object : TypeToken<HashMap<String, String>>() {}.type
+                val jsonMap: HashMap<String, String>? =
+                    O2SDKManager.instance().gson.fromJson(options, type)
+                if (jsonMap != null) {
+                    if (jsonMap.containsKey("readonly")) {
+                        val read = jsonMap["readonly"]
+                        XLog.info("read 【$read】")
+                        if (!TextUtils.isEmpty(read) && read == "false") { // 编辑模式 使用带操作按钮的页面
+                            url = APIAddressHelper.instance().getCMSWebViewUrlWithAction(docId)
+                        }
+                    }
+                    jsonMap.entries.forEach { item ->
+                        XLog.info("key ${item.key} value ${item.value}")
+                        val valueEncode = URLEncoder.encode(item.value, "utf-8")
+                        url += "&${item.key}=${valueEncode}"
+                    }
+                }
+
+            }
+        }catch (e: Exception) {
+            XLog.error("", e)
+        }
         url += "&time="+System.currentTimeMillis()
-        XLog.debug("url=$url")
+        XLog.info("document url=$url")
 
         setupToolBar(docTitle, true)
 
@@ -108,7 +145,7 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
                 handler?.proceed()
             }
             override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
-                XLog.debug("shouldOverrideUrlLoading:$url")
+                XLog.info("shouldOverrideUrlLoading:$url")
 //                if (ZoneUtil.checkUrlIsInner(url)) {
                     view?.loadUrl(url)
 //                } else {
@@ -116,9 +153,16 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
 //                }
                 return true
             }
+
         }
         web_view_cms_document_content.webViewSetCookie(this, url)
         web_view_cms_document_content.loadUrl(url)
+
+        // 标题
+        webChromeClient.onO2ReceivedTitle = { title ->
+            XLog.info("设置标题 $title")
+            updateToolbarTitle(title)
+        }
 
     }
 
@@ -279,6 +323,7 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
      */
     @JavascriptInterface
     fun closeDocumentWindow(result: String) {
+        XLog.debug("关闭文档 closeDocumentWindow ：$result")
         finish()
     }
 
