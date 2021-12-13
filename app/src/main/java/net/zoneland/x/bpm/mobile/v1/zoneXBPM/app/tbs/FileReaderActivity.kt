@@ -50,6 +50,7 @@ class FileReaderActivity : BaseO2BindActivity() {
         }
         fl_file_reader_container.addView(mTbsReaderView, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
         filePath = intent.extras?.getString(file_reader_file_path_key) ?: ""
+        XLog.info("打开文件 ：$filePath")
         if (!TextUtils.isEmpty(filePath)) {
             openFileWithTBS(filePath)
         }

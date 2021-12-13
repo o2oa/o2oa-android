@@ -317,6 +317,7 @@
     <!-- notice setting -->
     <string name="title_activity_notice_setting">New news notification</string>
     <string name="title_clean_cache_setting">Clear cache</string>
+    <string name="title_logs_setting">System log</string>
     <string name="title_share_setting">Share and download</string>
     <string name="notice_setting_message_receive_help">Mobile new message notification settings</string>
     <string name="title_notice_setting_message_receive_help">Help - Mobile new message notification settings</string>

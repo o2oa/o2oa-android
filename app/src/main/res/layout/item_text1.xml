@@ -9,7 +9,8 @@
     android:ellipsize="marquee"
     android:maxLines="1"
     android:textAppearance="?android:attr/textAppearanceLargePopupMenu"
-    android:paddingTop="@dimen/spacing_small"
-    android:paddingBottom="@dimen/spacing_small"
+    android:paddingTop="@dimen/spacing_normal"
+    android:paddingBottom="@dimen/spacing_normal"
     tools:text="jkjk标题"
+    android:textSize="@dimen/font_large"
     android:background="?android:attr/selectableItemBackground"/>

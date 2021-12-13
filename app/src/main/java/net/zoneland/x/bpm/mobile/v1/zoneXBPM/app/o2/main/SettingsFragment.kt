@@ -8,6 +8,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPViewPagerFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.about.AboutActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.login.LoginActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.logs.LogsActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.my.MyInfoActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.notice.NoticeSettingActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.security.AccountSecurityActivity
@@ -50,6 +51,7 @@ class SettingsFragment : BaseMVPViewPagerFragment<SettingsContract.View, Setting
         setting_button_skin.setOnClickListener(this)
         setting_button_about_id.setOnClickListener(this)
         setting_button_remind_setting_id.setOnClickListener(this)
+        setting_button_logs_id.setOnClickListener(this)
         setting_button_common_set_id.setOnClickListener(this)
         if (BuildConfig.InnerServer) {
             id_setting_button_customer_service_split.gone()
@@ -90,6 +92,7 @@ class SettingsFragment : BaseMVPViewPagerFragment<SettingsContract.View, Setting
                     HttpCacheUtil.clearCache(activity, 0)
                 }, icon = O2AlertIconEnum.CLEAR)
             }
+            R.id.setting_button_logs_id -> activity?.go<LogsActivity>()
             R.id.setting_button_customer_service_id -> shareDialog.show()
 //            R.id.setting_button_feedback_id -> startFeedBack()
             R.id.setting_button_about_id -> activity?.go<AboutActivity>()
