@@ -261,7 +261,7 @@ dependencies {
 
 
     // 华为推送
-    implementation 'com.huawei.hms:push:5.3.0.304'
+//    implementation 'com.huawei.hms:push:5.3.0.304'
 
     //im
 //    implementation 'com.michaelpardo:activeandroid:3.1.0'
