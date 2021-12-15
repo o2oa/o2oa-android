@@ -25,7 +25,7 @@ ext {
 def loadProperties() {
     Properties properties = new Properties()
     properties.load(project.rootProject.file('local.properties').newDataInputStream())
-
+    // 打包apk使用的密钥文件相关信息，请填写到local.properties文件中
     project.signingConfigKeyAlias = properties.getProperty("signingConfig.keyAlias")
     project.signingConfigKeyPassword = properties.getProperty("signingConfig.keyPassword")
     project.signingConfigStoreFilePath = properties.getProperty("signingConfig.storeFilePath")
@@ -106,7 +106,7 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.release
-            buildConfigField "Boolean", "InnerServer", "true"
+            buildConfigField "Boolean", "InnerServer", "false"
             buildConfigField "Boolean", "LOG_ENABLE", "true"
             buildConfigField "Boolean", "NEED_UPDATE", "true"
             buildConfigField "Boolean", "LOG_FILE", "true"
