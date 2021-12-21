@@ -247,10 +247,14 @@ object AndroidUtils {
      * 获取当前应用的版本号
      *
      */
-    fun getAppVersionCode(context: Context): Int {
-        val versionCode: Int
+    fun getAppVersionCode(context: Context): Long {
+        val versionCode: Long
         try {
-            versionCode = context.packageManager.getPackageInfo(context.packageName, 0).versionCode
+            versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                context.packageManager.getPackageInfo(context.packageName, 0).longVersionCode
+            } else {
+                context.packageManager.getPackageInfo(context.packageName, 0).versionCode.toLong()
+            }
         }catch (e: PackageManager.NameNotFoundException) {
             throw java.lang.RuntimeException(this.javaClass.simpleName + " this application not found! ")
         }
