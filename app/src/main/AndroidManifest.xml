@@ -231,9 +231,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".app.o2.webview.TaskWebViewActivity"
-            android:configChanges="orientation"
             android:label="@string/title_activity_work_web_view"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="nosensor"
+            android:configChanges="keyboardHidden|orientation|screenSize" />
         <activity
             android:name=".app.o2.process.TaskListActivity"
             android:configChanges="orientation"
@@ -291,9 +291,9 @@
             android:label="@string/title_cms_application" />
         <activity
             android:name=".app.cms.view.CMSWebViewActivity"
-            android:configChanges="orientation"
             android:label="@string/title_cms_view"
-            android:screenOrientation="portrait" /> <!-- cloud drive -->
+            android:screenOrientation="nosensor"
+            android:configChanges="keyboardHidden|orientation|screenSize" /> <!-- cloud drive -->
         <activity
             android:name=".app.clouddrive.CloudDriveActivity"
             android:label="@string/title_activity_yunpan"
@@ -349,8 +349,8 @@
         <activity android:name=".app.calendar.CalendarStoreActivity" /> <!-- portal -->
         <activity
             android:name=".app.o2.webview.PortalWebViewActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
+            android:screenOrientation="nosensor"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:theme="@style/XBPMTheme.NoActionBar.Transparent" /> <!-- 换肤 -->
         <activity
             android:name=".app.o2.skin.SkinManagerActivity"

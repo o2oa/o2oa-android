@@ -1,6 +1,8 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview
 
 import android.Manifest
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -68,6 +70,7 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
                         "calendar.chooseOneDay" -> calendarDatePicker(message!!)
                         "calendar.chooseDateTime" -> calendarDateTimePicker(message!!)
                         "calendar.chooseInterval" -> calendarDateIntervalPicker(message!!)
+                        "device.rotate" -> rotateToggle(message!!)
                         "device.getPhoneInfo" -> deviceGetPhoneInfo(message!!)
                         "device.scan" -> deviceScan(message!!)
                         "device.location" -> deviceGetLocation(message!!)
@@ -392,6 +395,29 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
             }
         }else {
             XLog.error("activity不存在 deviceGetPhoneInfo失败 ！！")
+        }
+    }
+
+    private fun rotateToggle(message: String) {
+        val type = object : TypeToken<O2JsPostMessage<O2UtilNavigationMessage>>() {}.type
+        val value: O2JsPostMessage<O2UtilNavigationMessage> = gson.fromJson(message, type)
+        val callback = value.callback
+        if (activity != null) {
+            activity.runOnUiThread {
+                if (activity is TaskWebViewActivity || activity is CMSWebViewActivity || activity is PortalWebViewActivity) {
+                    if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                    } else {
+                        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                    }
+                }
+            }
+            if (!TextUtils.isEmpty(callback)) {
+                callbackJs("$callback('{}')")
+            }
+
+        } else {
+            XLog.error("activity不存在 navigationClose失败 ！！")
         }
     }
 
