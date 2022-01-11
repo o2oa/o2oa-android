@@ -4,9 +4,8 @@
     package="net.zoneland.x.bpm.mobile.v1.zoneXBPM">
     <!-- baidu需要 -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="android.permission.USE_FINGERPRINT" />
     <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
-    <uses-permission android:name="android.permission.GET_TASKS" /> <!-- 获取网络状态 -->
+    <!-- 获取网络状态 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 网络通信 -->
@@ -28,7 +27,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 选举使用，当应用有删除或者更新时需要重新选举，复用推送通道 -->
     <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED" />
     <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
-    <uses-permission android:name="android.permission.RESTART_PACKAGES" /> <!-- 允许task重排序 -->
+    <!-- 允许task重排序 -->
     <uses-permission android:name="android.permission.REORDER_TASKS" /> <!-- 蓝牙 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- gps -->
@@ -366,7 +365,9 @@
         <activity
             android:name=".flutter.FlutterConnectActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait" /> <!-- ```````````````````service```````````````````` -->
+            android:screenOrientation="portrait" />
+
+        <!-- ```````````````````service```````````````````` -->
         <!-- baidu -->
         <service
             android:name="com.baidu.location.f"
@@ -407,31 +408,66 @@
         <service
             android:name=".core.service.CollectLogJobService"
             android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE" /> <!-- 下载apk -->
+            android:permission="android.permission.BIND_JOB_SERVICE" />
+
+        <!-- 下载apk -->
         <service
             android:name=".core.service.DownloadAPKService"
             android:exported="true">
             <intent-filter>
                 <action android:name="${applicationId}.action.UPDATE" />
             </intent-filter>
-        </service> <!-- 重启应用的service -->
-        <service android:name=".core.service.RestartSelfService" /> <!-- jpush -->
+        </service>
+
+        <!-- 重启应用的service -->
+        <service android:name=".core.service.RestartSelfService" />
+
+
         <service
             android:name=".core.service.WebSocketService"
-            android:exported="false" /> <!-- 录音 转mp3 service -->
+            android:exported="false" />
+
+        <!-- 录音 转mp3 service -->
         <service android:name="com.zlw.main.recorderlib.recorder.RecordService" />
-
-        <receiver
-            android:name=".core.receiver.JpushNoticeBroadReceiver"
-            android:enabled="true">
+        <!-- jpush -->
+        <!-- Since JCore2.0.0 Required SDK核心功能-->
+        <!-- 可配置android:process参数将Service放在其他进程中；android:enabled属性不能是false -->
+        <!-- 这个是自定义Service，要继承极光JCommonService，可以在更多手机平台上使得推送通道保持的更稳定 -->
+        <service android:name=".core.service.JpushService"
+            android:enabled="true"
+            android:exported="false"
+            android:process=":pushcore">
             <intent-filter>
-                <action android:name="cn.jpush.android.intent.REGISTRATION" />
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />
-                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />
+                <action android:name="cn.jiguang.user.service.action" />
+            </intent-filter>
+        </service>
+        <!--        <receiver-->
+<!--            android:name=".core.receiver.JpushNoticeBroadReceiver"-->
+<!--            android:enabled="true">-->
+<!--            <intent-filter>-->
+<!--                <action android:name="cn.jpush.android.intent.REGISTRATION" />-->
+<!--                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />-->
+<!--                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />-->
 
+<!--                <category android:name="${applicationId}" />-->
+<!--            </intent-filter>-->
+<!--        </receiver>-->
+        <!-- Required since 3.0.7 -->
+        <!-- 新的 tag/alias 接口结果返回需要开发者配置一个自定的广播 -->
+        <!-- 3.3.0开始所有事件将通过该类回调 -->
+        <!-- 该广播需要继承 JPush 提供的 JPushMessageReceiver 类, 并如下新增一个 Intent-Filter -->
+        <receiver
+            android:name=".core.receiver.O2JPushMessageReceiver"
+            android:enabled="true"
+            android:exported="false" >
+            <intent-filter>
+                <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
                 <category android:name="${applicationId}" />
             </intent-filter>
-        </receiver> <!-- bugly -->
+        </receiver>
+
+
+        <!-- bugly -->
         <!-- 配置APP ID -->
         <meta-data
             android:name="BUGLY_APPID"

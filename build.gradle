@@ -13,8 +13,11 @@ buildscript {
     repositories {
         google()
         jcenter()
+        mavenCentral()
         // 配置HMS Core SDK的Maven仓地址。
         maven {url 'https://developer.huawei.com/repo/'}
+        // fcm
+//        maven { url "https://maven.google.com" }
     }
 
     dependencies {
@@ -23,9 +26,8 @@ buildscript {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         // 增加agcp插件配置。
         classpath 'com.huawei.agconnect:agcp:1.6.0.300'
-
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
+        // fcm
+//        classpath 'com.google.gms:google-services:4.3.4'
     }
 }
 
@@ -41,10 +43,12 @@ allprojects {
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots/"
         }
-//        maven { url "http://mvn.zoneland.net/nexus/content/repositories/land_repo/" }
+        //hms
+        maven {url 'http://developer.huawei.com/repo/'}
+        //fcm
+//        maven { url "https://maven.google.com" }
+        //o2oa
         maven { url "http://maven.o2oa.net/repository/maven-public/" }
-        // 配置HMS Core SDK的Maven仓地址。
-        maven {url 'https://developer.huawei.com/repo/'}
     }
 
 }

@@ -357,7 +357,6 @@ open class BasePresenterImpl<V: BaseView> : BasePresenter<V> {
                 .o2Subscribe {
                     onNext { res ->
                         XLog.info("绑定设备，结果：${res.data.isValue}")
-                        XLog.info("绑定设备，message：${res.message}")
                     }
                     onError { e, _ ->
                         XLog.error("绑定设备出错，", e)
