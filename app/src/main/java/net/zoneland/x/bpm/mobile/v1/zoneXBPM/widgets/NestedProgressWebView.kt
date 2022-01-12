@@ -19,6 +19,10 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.StringUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DomainTools
+
+
+
 
 
 /**
@@ -103,7 +107,7 @@ class NestedProgressWebView : WebView, NestedScrollingChild {
      */
     fun webViewSetCookie(context: Context, url: String) {
         //设置cookie
-        val domain = StringUtil.getTopDomain(url)
+        val domain = StringUtil.getSubDomain(url)
         XLog.info("domain:$domain")
         val cookie = O2SDKManager.instance().tokenName() + "=" + O2SDKManager.instance().zToken
         XLog.info("cookie:$cookie")
