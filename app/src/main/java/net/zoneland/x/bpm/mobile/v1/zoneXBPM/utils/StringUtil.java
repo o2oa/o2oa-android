@@ -107,9 +107,11 @@ public class StringUtil {
 
     /**
      * 获取顶级域名
+     * 这个方法有问题 有些新的域名如vip等就不支持，得手工维护
      * @param url
      * @return
      */
+    @Deprecated
     public static String getTopDomain(String url) {
         String result = url;
         try {
@@ -121,6 +123,32 @@ public class StringUtil {
 //            e.printStackTrace();
         }
         return result;
+    }
+
+    /**
+     * 这里取域名的子级 如 www.o2oa.net -> o2oa.net
+     * 如果是o2oa.net 直接返回
+     * @param url 传入整个url
+     * @return
+     */
+    public static String getSubDomain(String url) {
+        String host = DomainTools.getDomainWithoutPort(url);
+        int len = host.split("\\.").length;
+        if (len > 2) { // 有两个点
+            return substringAfter(host, ".");
+        }
+        return host;
+    }
+
+    public static String substringAfter(String str, String separator) {
+        if (isEmpty(str)) {
+            return str;
+        } else if (separator == null) {
+            return "";
+        } else {
+            int pos = str.indexOf(separator);
+            return pos == -1 ? "" : str.substring(pos + separator.length());
+        }
     }
 
 
