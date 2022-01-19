@@ -40,14 +40,16 @@ class O2Interceptor : Interceptor {
                 .method(original.method(), original.body())
                 .url(url).build()
 
-        val response = chain.proceed(request)
-        val mediaType = response.body()?.contentType()
-        val content = response.body()?.string()
-//        Log.d(TAG, "| Response:$content")
-//        return chain.proceed(request)
-
-        return response.newBuilder()
-                .body(okhttp3.ResponseBody.create(mediaType, content ?: ""))
-                .build()
+        return chain.proceed(request)
+//        val response = chain.proceed(request)
+//        val mediaType = response.body()?.contentType()
+//        return if (mediaType == null || !mediaType.toString().contains("application/json")) {
+//            chain.proceed(request)
+//        } else {
+//            val content = response.body()?.string()
+//            response.newBuilder()
+//                .body(okhttp3.ResponseBody.create(mediaType, content ?: ""))
+//                .build()
+//        }
     }
 }

@@ -4,6 +4,7 @@ apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
 apply plugin: 'com.huawei.agconnect'
+//apply plugin: 'com.google.gms.google-services'
 
 ext {
     //定义变量
@@ -19,6 +20,13 @@ ext {
     baiduMapAppKey = ""
     jpushIMPassword = ""
     buglyAppId = ""
+    xiaomiAppId=""
+    xiaomiAppKey=""
+    oppoAppKey=""
+    oppoAppId=""
+    oppoAppSecret=""
+    vivoAppKey=""
+    vivoAppId=""
 }
 
 
@@ -37,8 +45,14 @@ def loadProperties() {
     project.baiduSpeechSecret = project.property("BAIDU_SPEECH_SECRET").toString()
     project.baiduSpeechAppKey = project.property("BAIDU_SPEECH_APPKEY").toString()
     project.baiduMapAppKey = project.property("BAIDU_MAP_APPKEY").toString()
-
     project.buglyAppId = project.property("BUGLY_APPID").toString()
+    project.xiaomiAppId=project.property("XIAOMI_APPID").toString()
+    project.xiaomiAppKey=project.property("XIAOMI_APPKEY").toString()
+//    project.oppoAppKey=project.property("OPPO_APPKEY").toString()
+//    project.oppoAppId=project.property("OPPO_APPID").toString()
+//    project.oppoAppSecret=project.property("OPPO_APPSECRET").toString()
+//    project.vivoAppKey=project.property("VIVO_APPKEY").toString()
+//    project.vivoAppId=project.property("VIVO_APPID").toString()
 
 
 }
@@ -82,7 +96,7 @@ android {
 
     defaultConfig {
         applicationId "net.zoneland.x.bpm.mobile.v1.zoneXBPM"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 28
         versionCode project.property("o2.versionCode").toInteger()
         versionName project.property("o2.versionName").toString()
@@ -112,6 +126,8 @@ android {
             buildConfigField "Boolean", "LOG_FILE", "true"
             manifestPlaceholders = [JPUSH_PKGNAME      : defaultConfig.applicationId,
                                     JPUSH_APPKEY       : project.jpushAppKey,
+                                    XIAOMI_APPID : project.xiaomiAppId,
+                                    XIAOMI_APPKEY : project.xiaomiAppKey,
                                     BAIDU_SPEECH_APPID : project.baiduSpeechAppId,
                                     BAIDU_SPEECH_SECRET: project.baiduSpeechSecret,
                                     BAIDU_SPEECH_APPKEY: project.baiduSpeechAppKey,
@@ -129,6 +145,8 @@ android {
             buildConfigField "Boolean", "LOG_FILE", "true"
             manifestPlaceholders = [JPUSH_PKGNAME      : defaultConfig.applicationId,
                                     JPUSH_APPKEY       : project.jpushAppKey,
+                                    XIAOMI_APPID : project.xiaomiAppId,
+                                    XIAOMI_APPKEY : project.xiaomiAppKey,
                                     BAIDU_SPEECH_APPID : project.baiduSpeechAppId,
                                     BAIDU_SPEECH_SECRET: project.baiduSpeechSecret,
                                     BAIDU_SPEECH_APPKEY: project.baiduSpeechAppKey,
@@ -253,15 +271,32 @@ dependencies {
 
     implementation 'com.tencent.bugly:crashreport:2.6.6'
 
-    implementation 'cn.jiguang.sdk:jpush:3.1.2'
-//    implementation 'cn.jiguang.sdk:jmessage:2.5.0'
-
-    // 此处以JMessage 2.5.0 版本为例。
-    implementation 'cn.jiguang.sdk:jcore:1.1.9'
+    /////////////////////////////////////////////////推送///////////////////////
+    implementation project(':jiguang')
 
 
-    // 华为推送
+//    implementation 'cn.jiguang.sdk:jpush:3.1.2'
+//    implementation 'cn.jiguang.sdk:jcore:1.1.9'
+
+//    implementation 'cn.jiguang.sdk:jcore:2.7.2'  // 此处以JCore 2.7.2 版本为例。
+//    implementation 'cn.jiguang.sdk:jpush:4.0.0'  // 此处以JPush 4.0.0 版本为例
+//    // 接入华为厂商
     implementation 'com.huawei.hms:push:5.3.0.304'
+//    implementation 'cn.jiguang.sdk.plugin:huawei:4.0.0'// 极光厂商插件版本与接入 JPush 版本保持一致，下同
+//    // 接入 FCM 厂商
+////    implementation 'com.google.firebase:firebase-messaging:21.0.1'
+////    implementation 'cn.jiguang.sdk.plugin:fcm:4.0.0'
+//    // 接入魅族厂商
+//    implementation 'cn.jiguang.sdk.plugin:meizu:4.0.0'
+//    // 接入 VIVO 厂商
+//    implementation 'cn.jiguang.sdk.plugin:vivo:4.0.0'
+//    // 接入 OPPO 厂商
+//    implementation 'cn.jiguang.sdk.plugin:oppo:4.0.0'
+//    // 接入小米厂商
+//    implementation 'cn.jiguang.sdk.plugin:xiaomi:4.0.0'
+
+
+
 
     //im
 //    implementation 'com.michaelpardo:activeandroid:3.1.0'
