@@ -273,8 +273,9 @@ dependencies {
 
     /////////////////////////////////////////////////推送///////////////////////
     implementation project(':jiguang')
+
+
 //    implementation 'cn.jiguang.sdk:jpush:3.1.2'
-//    // 此处以JMessage 2.5.0 版本为例。
 //    implementation 'cn.jiguang.sdk:jcore:1.1.9'
 
 //    implementation 'cn.jiguang.sdk:jcore:2.7.2'  // 此处以JCore 2.7.2 版本为例。
