@@ -9,12 +9,14 @@ import cn.jpush.android.api.JPushInterface
 import com.baidu.mapapi.SDKInitializer
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.smtt.sdk.QbSdk
+import com.xiaomi.push.it
 import com.zlw.main.recorderlib.RecordManager
 import io.realm.Realm
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.skin.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.LogSingletonService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2MediaPlayerManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 
 
 /**
@@ -42,6 +44,7 @@ class O2App : MultiDexApplication() {
         getAppMeta("com.baidu.speech.SECRET_KEY")
     }
 
+    private val notificationList: ArrayList<Int> = ArrayList()
 
     override fun onCreate() {
         super.onCreate()
@@ -130,6 +133,24 @@ class O2App : MultiDexApplication() {
 
     }
 
+    fun addNotification(nId: Int) {
+        notificationList.add(nId)
+        XLog.info("添加通知 $nId ！！！！！！")
+    }
+
+    fun clearAllNotification() {
+        XLog.info("清除所有的通知！！！！！！")
+        try {
+            if (notificationList.isNotEmpty()) {
+                notificationList.forEach {
+                    JPushInterface.clearNotificationById(this, it)
+                    XLog.info("清除通知：$it")
+                }
+            }
+        } catch (e: Exception) {
+            XLog.error("", e)
+        }
+    }
 
 
 }

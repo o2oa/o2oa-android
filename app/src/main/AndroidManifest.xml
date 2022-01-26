@@ -33,6 +33,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- gps -->
     <uses-feature android:name="android.hardware.location.gps" /> <!-- android 8.0 安装未知来源apk的权限问题 -->
     <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+    <!-- 华为系统角标 -->
+    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE "/>
 
     <application
         android:name=".O2App"

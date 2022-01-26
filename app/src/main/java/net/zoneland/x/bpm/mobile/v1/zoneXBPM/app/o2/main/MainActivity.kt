@@ -137,8 +137,6 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
 //            OrganizationPermissionManager.instance().initData(data)
             mPresenter.loadOrganizationPermission()
         }
-
-
         content_fragmentView_id.adapter = adapter
         content_fragmentView_id.offscreenPageLimit = if(simpleMode){2}else{5}
         content_fragmentView_id.addOnPageChangeListener {
@@ -154,23 +152,24 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
             }
         }
 
-
-
         selectTab(mCurrentSelectIndex)
 
         //register scheduler job
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            registerSchedulerJob()
-        }
+        registerSchedulerJob()
         //注册设备号 推送消息用
         mPresenter.jPushBindDevice()
+
         //绑定启动webSocket 服务
         val webSocketServiceIntent = Intent(this, WebSocketService::class.java)
         bindService(webSocketServiceIntent, serviceConnect, BIND_AUTO_CREATE)
 
+        // IM 消息接收广播
         registerBroadcast()
 
+        // 检查考勤版本
         mPresenter.checkAttendanceFeature()
+
+
     }
 
 
@@ -198,6 +197,11 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
                 webSocketService?.webSocketOpen()
             }
         }
+
+        // 清除通知 清除角标 这句写了好像角标不会再出现了
+//        JPushInterface.setBadgeNumber(this, 0)
+        XLog.info("onResume ... 清除通知！！")
+        O2App.instance.clearAllNotification()
     }
 
 
