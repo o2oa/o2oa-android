@@ -36,6 +36,7 @@ import com.zlw.main.recorderlib.recorder.listener.RecordStateListener
 import kotlinx.android.synthetic.main.activity_o2_chat.*
 import net.muliba.fancyfilepickerlibrary.FilePicker
 import net.muliba.fancyfilepickerlibrary.PicturePicker
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
@@ -73,7 +74,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 
     override fun layoutResId(): Int = R.layout.activity_o2_chat
 
-
+    private var imConfig: IMConfig = IMConfig()
     private val adapter: O2ChatMessageAdapter by lazy { O2ChatMessageAdapter() }
     private val emojiList = O2IM.im_emoji_hashMap.keys.toList().sortedBy { it }
     private val emojiAdapter: CommonRecycleViewAdapter<String> by lazy {
@@ -143,6 +144,13 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
         setupToolBar(defaultTitle, setupBackButton = true)
+        val json = O2SDKManager.instance().prefs().getString(O2.PRE_IM_CONFIG_KEY, "") ?: ""
+        if (!TextUtils.isEmpty(json)) {
+            val c = O2SDKManager.instance().gson.fromJson(json, IMConfig::class.java)
+            if (c != null) {
+                imConfig = c
+            }
+        }
 
         conversationId = intent.getStringExtra(con_id_key) ?: ""
         if (TextUtils.isEmpty(conversationId)) {
@@ -216,9 +224,17 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.clear()
         if (canUpdate) {
-            menuInflater.inflate(R.menu.menu_chat, menu)
+            if (imConfig.enableClearMsg) {
+                menuInflater.inflate(R.menu.menu_chat_with_clear, menu)
+            } else {
+                menuInflater.inflate(R.menu.menu_chat, menu)
+            }
         } else {
-            menuInflater.inflate(R.menu.menu_chat_no_update, menu)
+            if (imConfig.enableClearMsg) {
+                menuInflater.inflate(R.menu.menu_chat_no_update_with_clear, menu)
+            } else {
+                menuInflater.inflate(R.menu.menu_chat_no_update, menu)
+            }
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -235,6 +251,10 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             }
             R.id.menu_chat_update_member -> {
                 updateMembers()
+                return true
+            }
+            R.id.menu_chat_clear_msg -> {
+                clearAllMsg()
                 return true
             }
         }
@@ -260,6 +280,16 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 
             XToast.toastShort(this, "感谢您的提交，我们会尽快核实并处理！")
         }
+    }
+
+    /**
+     * 清空聊天记录
+     */
+    private fun clearAllMsg() {
+        O2DialogSupport.openConfirmDialog(this, getString(R.string.im_message_confirm_delete_msgs), {
+            _ ->
+            mPresenter.deleteAllChatMsg(conversationId)
+        })
     }
 
     private fun updateTitle() {
@@ -491,6 +521,17 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     }
 
     override fun downloadFileFail(msg: String) {
+        XToast.toastShort(this, msg)
+    }
+
+    override fun deleteAllChatMsgSuccess() {
+        XToast.toastShort(this, getString(R.string.im_message_clear_msg_success))
+        page = 0
+        adapter.clearAllMessage()
+        getPageData()
+    }
+
+    override fun deleteAllChatMsgFail(msg: String) {
         XToast.toastShort(this, msg)
     }
 

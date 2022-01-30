@@ -22,6 +22,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.InstantMessage
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMConfig
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMConversationInfo
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMMessage
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.MessageType
@@ -111,6 +112,8 @@ class O2IMConversationFragment : BaseMVPViewPagerFragment<O2IMConversationContra
 
     private var systemMessageSwitch = true // 消息列表中 是否显示系统通知
 
+    private var imConfig: IMConfig = IMConfig()
+
     override fun initUI() {
         rv_o2_im_conversation.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         rv_o2_im_conversation.adapter = adapter
@@ -140,6 +143,7 @@ class O2IMConversationFragment : BaseMVPViewPagerFragment<O2IMConversationContra
 
     override fun lazyLoad() {
         XLog.debug("lazy load im conversation。。。。。。。。。。")
+        mPresenter.loadImConfig()
         mPresenter.getMyConversationList()
     }
 
@@ -212,6 +216,12 @@ class O2IMConversationFragment : BaseMVPViewPagerFragment<O2IMConversationContra
 
     override fun createConvFail(message: String) {
         XToast.toastShort(activity, message)
+    }
+
+    override fun loadImConfig(config: IMConfig?) {
+        if (config != null) {
+            imConfig = config
+        }
     }
 
     fun receiveMessageFromWebsocket(message: IMMessage) {

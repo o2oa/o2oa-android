@@ -147,6 +147,8 @@ object O2 {
 
     val PRE_SEARCH_HISTORY_KEY = "PRE_SEARCH_HISTORY_KEY" //搜索历史的key
 
+    val PRE_IM_CONFIG_KEY = "PRE_IM_CONFIG_KEY" //
+
     val BUSINESS_TYPE_MESSAGE_CENTER = 0//信息中心
     val BUSINESS_TYPE_WORK_CENTER = 1//工作中心
 

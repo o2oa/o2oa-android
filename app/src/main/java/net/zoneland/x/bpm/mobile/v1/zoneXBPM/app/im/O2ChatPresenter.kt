@@ -231,9 +231,27 @@ class O2ChatPresenter : BasePresenterImpl<O2ChatContract.View>(), O2ChatContract
                         }
                     }
 
+        }
+    }
 
-
-
+    override fun deleteAllChatMsg(conversationId: String) {
+        if (TextUtils.isEmpty(conversationId)) {
+            mView?.deleteAllChatMsgFail(mView?.getContext()?.getString(R.string.im_message_clear_msg_no_conversationId) ?: "unknown")
+            return
+        } else {
+            getMessageCommunicateService(mView?.getContext())
+                ?.deleteAllChatMsg(conversationId)
+                ?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.o2Subscribe {
+                    onNext {
+                        mView?.deleteAllChatMsgSuccess()
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.deleteAllChatMsgFail(e?.message ?: "unknown")
+                    }
+                }
         }
     }
 }

@@ -35,6 +35,10 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private var animation: Animation? = null
     var eventListener: MessageEventListener? = null
 
+    fun clearAllMessage() {
+        messages.clear()
+        notifyDataSetChanged()
+    }
     fun addPageMessage(list: List<IMMessage>) {
         messages.addAll(0, list)
         notifyDataSetChanged()

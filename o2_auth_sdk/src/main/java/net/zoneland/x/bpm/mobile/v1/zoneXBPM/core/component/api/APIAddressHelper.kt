@@ -256,6 +256,16 @@ class APIAddressHelper private constructor() {
     }
 
     /**
+     * 前端config.json 配置文件地址
+     */
+    fun getConfigJsonUrl():String {
+        val url = webServerData?.let {
+            "$httpHead${webServerData?.host}:${webServerData?.port}/x_desktop/res/config/config.json"
+        } ?: ""
+        return O2SDKManager.instance().urlTransfer2Mapping(url)
+    }
+
+    /**
      * web服务器地址 如：http://dev.o2oa.io:80
      */
     fun getWebServerUrl():String {

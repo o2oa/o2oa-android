@@ -280,6 +280,7 @@
     <string name="im_report_desc">详情描述</string>
     <string name="menu_im_tribe_name_update">修改群名</string>
     <string name="menu_im_tribe_member_update">修改成员</string>
+    <string name="menu_im_tribe_clear_msg">清空聊天记录</string>
     <string name="im_system_message">通知消息</string>
     <string name="im_manager_member">管理成员</string>
     <string name="im_location_click_choose">点击地图选择位置</string>
@@ -288,6 +289,9 @@
     <string name="im_camera">拍摄</string>
     <string name="im_album">相册</string>
     <string name="im_hint_input_tribe_name">请输入群名！</string>
+    <string name="im_message_confirm_delete_msgs">确定要清空聊天记录吗，清空后当前会话所有人都将看不到这些聊天记录？</string>
+    <string name="im_message_clear_msg_success">清空聊天记录成功！</string>
+    <string name="im_message_clear_msg_no_conversationId">没有传入会话id，无法清空聊天记录！</string>
     <string name="im_tribe_name_cannot_empty">群名不能为空！</string>
     <string name="baidu_map">百度地图</string>
     <string name="baidu_map_error_message">未安装百度地图，无法打开</string>
