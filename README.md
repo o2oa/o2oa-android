@@ -2,7 +2,7 @@
 
 
 
-O2OA 平台Android客户端，最低支持Android版本4.4 Android KitKat，编程语言主要使用kotlin。
+O2OA 平台Android客户端，最低支持Android版本5.0 Android L，编程语言主要使用kotlin。
 
 
 
@@ -121,6 +121,14 @@ signingConfig.storeFilePath=密钥文件
 signingConfig.storePassword=存储密码
 ```
 
+ ### 华为推送sdk
+ 如果前面提到的app的applicationId修改过，那上面的这些第三方sdk你必须自行申请，并把key都修改了。
+ 打包的时候如果还遇到这个错误：
+ ![huawei](./img/iShot2022-02-16-14-2326.png)
+ 那是因为华为推送的sdk要校验你打包的apk的applicationId，那你需要去华为推送官方网站申请一个推送的key。
+ 请到华为开发者网站，申请推送的应用，创建应用后到项目管理里面找到对应的connect文件：
+  ![huawei](./img/iShot2022-02-16-144049.png)
+把这个json文件下载下来后放到源码目录app，里面有一个 **agconnect-services.json** ，覆盖你自己下载的文件。
  
 
 ## 直连版本配置 
