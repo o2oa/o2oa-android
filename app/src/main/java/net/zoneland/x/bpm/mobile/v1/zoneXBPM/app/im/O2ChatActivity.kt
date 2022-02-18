@@ -56,6 +56,7 @@ import pl.droidsonroids.gif.GifImageView
 import java.io.File
 import java.io.IOException
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Presenter>(), O2ChatContract.View, View.OnTouchListener, SensorEventListener {
@@ -187,6 +188,10 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             override fun openFile(position: Int, msgBody: IMMessageBody) {
                 mPresenter.getFileFromNetOrLocal(position, msgBody)
             }
+
+            override fun onCreateContextMenu(menu: ContextMenu?, message: IMMessage) {
+                createContextMenu(menu, message)
+            }
         }
         //输入法切换的时候滚动到底部
         cl_o2_chat_outside.addOnLayoutChangeListener { _, _, _, _, bottom, _, _, _, oldBottom ->
@@ -220,6 +225,42 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         sensorListen()
     }
 
+    /**
+     * 聊天消息
+     * 长按菜单
+     */
+    private fun createContextMenu(menu: ContextMenu?, message: IMMessage) {
+        val menuList = ArrayList<String>()
+        // 撤回菜单
+        if (imConfig.enableRevokeMsg) {
+            if (message.createPerson == O2SDKManager.instance().distinguishedName) {
+                menuList.add(O2IM.IM_Message_Menu_name_Revoke)
+            } else if (conversationInfo?.adminPerson == O2SDKManager.instance().distinguishedName) {
+                menuList.add(O2IM.IM_Message_Menu_name_Revoke_group)
+            }
+        }
+        if (menuList.isNotEmpty()) {
+            val groupId = 0
+            menuList.forEachIndexed { index, s ->
+                menu?.add(groupId, index, index, s)
+                menu?.getItem(index)?.setOnMenuItemClickListener { item ->
+                    if (item.title == O2IM.IM_Message_Menu_name_Revoke || item.title == O2IM.IM_Message_Menu_name_Revoke_group) {
+                        revokeMsg(message)
+                    }
+                    true
+                }
+            }
+        }
+    }
+
+    /**
+     * 撤回
+     */
+    private fun revokeMsg(message: IMMessage) {
+        XLog.debug("撤回消息，${message.createPerson}" )
+        adapter.removeMessage(message)
+        mPresenter.revokeMsg(message.id)
+    }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.clear()
@@ -230,11 +271,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                 menuInflater.inflate(R.menu.menu_chat, menu)
             }
         } else {
-            if (imConfig.enableClearMsg) {
-                menuInflater.inflate(R.menu.menu_chat_no_update_with_clear, menu)
-            } else {
-                menuInflater.inflate(R.menu.menu_chat_no_update, menu)
-            }
+            menuInflater.inflate(R.menu.menu_chat_no_update, menu)
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -533,6 +570,15 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 
     override fun deleteAllChatMsgFail(msg: String) {
         XToast.toastShort(this, msg)
+    }
+
+    override fun revokeMsgSuccess() {
+        //XToast.toastShort(this, getString(R.string.im_message_clear_msg_success))
+        XLog.info("撤回消息成功！")
+    }
+
+    override fun revokeMsgFail(msg: String) {
+        XToast.toastShort(this, getString(R.string.im_message_revoke_fail) + msg)
     }
 
     /**

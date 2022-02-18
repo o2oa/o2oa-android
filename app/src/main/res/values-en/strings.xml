@@ -291,6 +291,7 @@
     <string name="im_message_confirm_delete_msgs">Are you sure you want to clear the chat records? After clearing, everyone in the current session will not see these chat records?</string>
     <string name="im_message_clear_msg_success">Empty chat record successfully!</string>
     <string name="im_message_clear_msg_no_conversationId">No session ID passed in, unable to empty the chat record!</string>
+    <string name="im_message_revoke_fail">Failed to recall message！</string>
     <string name="im_location_click_choose">Click on the map to select the location</string>
     <string name="im_location">Location</string>
     <string name="im_file">File</string>

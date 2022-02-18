@@ -11,6 +11,9 @@ object O2IM {
     const val conversation_type_single = "single"
     const val conversation_type_group = "group"
 
+    const val IM_Message_Menu_name_Revoke = "撤回"
+    const val IM_Message_Menu_name_Revoke_group = "撤回成员消息"
+
     val im_emoji_hashMap = hashMapOf<String, Int>(
             "[01]" to R.mipmap.im_emotion_01,
             "[02]" to R.mipmap.im_emotion_02,

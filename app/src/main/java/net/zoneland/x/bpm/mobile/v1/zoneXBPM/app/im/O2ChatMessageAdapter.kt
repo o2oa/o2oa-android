@@ -1,12 +1,13 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im
 
-import androidx.recyclerview.widget.RecyclerView
 import android.text.TextUtils
+import android.view.ContextMenu
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.AnimationUtils
 import android.widget.*
+import androidx.recyclerview.widget.RecyclerView
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
@@ -20,7 +21,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
-import pl.droidsonroids.gif.GifDrawable
 import pl.droidsonroids.gif.GifImageView
 import java.io.File
 
@@ -48,6 +48,13 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         messages.add(message)
         notifyDataSetChanged()
     }
+
+    // 删除 撤回消息等
+    fun removeMessage(message: IMMessage) {
+        messages.remove(message)
+        notifyDataSetChanged()
+    }
+
     fun sendMessageSuccess(msgId: String) {
         for ((index, msg) in messages.withIndex()) {
             if (msg.id == msgId) {
@@ -148,6 +155,10 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             }
             sendFailBtn.setOnClickListener {
                 eventListener?.resendClick(message)
+            }
+
+            holder.itemView.setOnCreateContextMenuListener { menu, v, menuInfo ->
+                eventListener?.onCreateContextMenu(menu, message)
             }
         }
     }
@@ -308,5 +319,6 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         fun openOriginImage(position: Int, msgBody: IMMessageBody)
         fun openLocation(msgBody: IMMessageBody)
         fun openFile(position: Int, msgBody: IMMessageBody)
+        fun onCreateContextMenu(menu: ContextMenu?, message: IMMessage)
     }
 }

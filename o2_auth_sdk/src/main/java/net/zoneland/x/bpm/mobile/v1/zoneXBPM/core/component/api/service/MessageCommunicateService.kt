@@ -12,6 +12,15 @@ import rx.Observable
 interface MessageCommunicateService {
 
 
+
+
+    /**
+     * 获取ImConfig
+     */
+    @GET("jaxrs/im/manager/config")
+    fun getImConfig(): Observable<ApiResponse<IMConfig>>
+
+
     /**
      * 创建会话
      * @param info
@@ -89,5 +98,12 @@ interface MessageCommunicateService {
      */
     @DELETE("jaxrs/im/conversation/{id}/clear/all/msg")
     fun deleteAllChatMsg(@Path("id") id: String): Observable<ApiResponse<ValueData>>
+
+
+    /**
+     * 撤回聊天消息
+     */
+    @GET("jaxrs/im/msg/revoke/{id}")
+    fun revokeChatMsg(@Path("id") id: String):  Observable<ApiResponse<IdData>>
 
 }

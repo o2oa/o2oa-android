@@ -292,6 +292,7 @@
     <string name="im_message_confirm_delete_msgs">确定要清空聊天记录吗，清空后当前会话所有人都将看不到这些聊天记录？</string>
     <string name="im_message_clear_msg_success">清空聊天记录成功！</string>
     <string name="im_message_clear_msg_no_conversationId">没有传入会话id，无法清空聊天记录！</string>
+    <string name="im_message_revoke_fail">撤回消息失败！</string>
     <string name="im_tribe_name_cannot_empty">群名不能为空！</string>
     <string name="baidu_map">百度地图</string>
     <string name="baidu_map_error_message">未安装百度地图，无法打开</string>
