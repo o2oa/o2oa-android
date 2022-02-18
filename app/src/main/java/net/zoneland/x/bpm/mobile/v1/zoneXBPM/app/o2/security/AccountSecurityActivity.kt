@@ -105,7 +105,14 @@ class AccountSecurityActivity : BaseMVPActivity<AccountSecurityContract.View, Ac
             image_btn_account_security_biometry_enable.setImageResource(R.mipmap.icon_toggle_off_29dp)
         }
 
-        if (bioManager?.isBiometricPromptEnable() == true) {
+        var isBioEnable = false
+        try {
+            isBioEnable = bioManager?.isBiometricPromptEnable() ?: false
+        }catch (e: Exception) {
+            XLog.error("",e)
+        }
+
+        if (isBioEnable) {
             image_btn_account_security_biometry_enable.setOnClickListener {
                 bioManager?.authenticate(object : OnBiometryAuthCallback{
                     override fun onUseFallBack() {
