@@ -737,6 +737,7 @@
 
     <!--    dialog -->
     <string name="dialog_msg_bind_to_server_fail">绑定服务器失败，请检查当前服务器配置是否正确？您也可以先绑定到O2OA演示服务器进行体验！</string>
+    <string name="dialog_msg_get_o2collect_unit_list_fail">未获取可以绑定的信息，您可以先绑定到O2OA演示服务器进行体验！</string>
     <string name="dialog_title_sample_server">演示服务器</string>
     <string name="dialog_msg_root_refuse">当前是Root环境，App禁止使用！</string>
     <string name="dialog_msg_go_to_set_storage_permission">非常抱歉，应用需要存储权限才能正常运行， 马上去设置</string>

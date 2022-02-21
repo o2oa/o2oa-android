@@ -762,6 +762,7 @@
 
     <!--    dialog -->
     <string name="dialog_msg_bind_to_server_fail">Failed to bind the server. Please check whether the current server configuration is correct? You can also bind to the o2oa demo server to experience！</string>
+    <string name="dialog_msg_get_o2collect_unit_list_fail">You can bind to the o2oa demo server to experience the information you can bind without getting it!</string>
     <string name="dialog_title_sample_server">Demo server</string>
     <string name="dialog_msg_root_refuse">The current environment is root, app is forbidden to use！</string>
     <string name="dialog_msg_go_to_set_storage_permission">I am very sorry, the application needs to store permissions to run normally, go to set it now</string>

@@ -94,7 +94,10 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
     }
 
     override fun receiveUnitFail() {
-        XToast.toastLong(activity, getString(R.string.message_get_o2collect_unit_list_fail))
+//        XToast.toastLong(activity, getString(R.string.message_get_o2collect_unit_list_fail))
+        O2DialogSupport.openConfirmDialog(activity, getString(R.string.dialog_msg_get_o2collect_unit_list_fail), { _ ->
+            bind2SampleServer()
+        }, positiveText = getString(R.string.dialog_title_sample_server))
     }
 
     override fun bindSuccess(distributeData: APIDistributeData) {
