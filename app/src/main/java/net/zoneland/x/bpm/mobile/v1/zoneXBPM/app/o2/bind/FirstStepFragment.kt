@@ -38,6 +38,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
     var phone = ""
     var code = ""
     val countDownHelper: CountDownButtonHelper by lazy { CountDownButtonHelper(button_login_phone_code, getString(R.string.login_button_code), 60, 1) }
+    private var isDemoAccount = false // 上架测试账号
 
     override var mPresenter: FirstStepContract.Presenter = FirstStepPresenter()
     override fun layoutResId(): Int = R.layout.fragment_fluid_login_phone
@@ -145,7 +146,12 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         O2SDKManager.instance().prefs().edit {
             putBoolean(O2.PRE_DEMO_O2_KEY, true)
         }
-        activity?.goThenKill<LoginActivity>()
+        // 上架测试账号 直接登录
+        if (isDemoAccount && phone == "13912345678") {
+            mPresenter.login(phone, "o2") // 自动登录到演示服务器
+        } else {
+            activity?.goThenKill<LoginActivity>()
+        }
     }
 
     override fun err(msg: String) {
@@ -192,7 +198,13 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                 activity?.hideSoftInput()
                 this.phone = phone
                 this.code = code
-                mPresenter.getUnitList(phone, code)
+                // 应用上架用的测试账户 手机号码：13912345678 验证码：5678
+                if ("13912345678" == phone && "5678" == code) {
+                    isDemoAccount = true
+                    bind2SampleServer()
+                } else {
+                    mPresenter.getUnitList(phone, code)
+                }
             }
             R.id.button_login_phone_code -> {
                 if (CheckButtonDoubleClick.isFastDoubleClick(R.id.button_login_phone_code)) {
