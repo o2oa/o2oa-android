@@ -11,6 +11,7 @@ object StartProcessStepTwoContract {
         fun loadCurrentPersonIdentity(list:List<ProcessWOIdentityJson>)
         fun loadCurrentPersonIdentityFail()
         fun startProcessSuccess(workId:String)
+        fun startProcessSuccessNoWork()
         fun startProcessFail(message:String)
         fun startDraftSuccess(work: ProcessDraftWorkData)
         fun startDraftFail(message:String)

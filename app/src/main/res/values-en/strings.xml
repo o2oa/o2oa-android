@@ -724,6 +724,7 @@
     <string name="message_get_process_fail">Failed to get process list！</string>
     <string name="message_get_current_identity_fail">The identity of the current user was not obtained！</string>
     <string name="message_start_process_fail">The incoming parameter is empty, unable to start the process, identity:%1$s,processId:%2$s</string>
+    <string name="message_start_process_success">Start process succeeded!</string>
     <string name="message_start_process_back_data_error">Return data exception！%1$s</string>
     <string name="message_start_process_fail_with_error">Failed to start the process, %1$s</string>
     <string name="message_open_draft_error">Open draft exception！</string>
