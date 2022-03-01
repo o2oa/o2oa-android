@@ -109,9 +109,15 @@ class StartProcessStepTwoFragment : BaseMVPFragment<StartProcessStepTwoContract.
         (activity as StartProcessActivity).goThenKill<TaskWebViewActivity>(TaskWebViewActivity.start(workId, "", name))
     }
 
-    override fun startProcessFail(message:String) {
-        XToast.toastShort(activity, getString(R.string.message_start_process_fail_with_error, message))
+    override fun startProcessSuccessNoWork() {
         hideLoadingDialog()
+        XToast.toastShort(activity, getString(R.string.message_start_process_success))
+        (activity as StartProcessActivity).finish()
+    }
+
+    override fun startProcessFail(message:String) {
+        hideLoadingDialog()
+        XToast.toastShort(activity, getString(R.string.message_start_process_fail_with_error, message))
     }
 
     override fun startDraftSuccess(work: ProcessDraftWorkData) {

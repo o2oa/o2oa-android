@@ -164,7 +164,12 @@ class StartProcessStepOneFragment : BaseMVPFragment<StartProcessStepOneContract.
     override fun startProcessSuccess(workId: String) {
         hideLoadingDialog()
         val name = if (clickProcess != null && !TextUtils.isEmpty(clickProcess?.name)){ clickProcess?.name?: getString(R.string.create_manuscript)}else{getString(R.string.create_manuscript)}
-        (activity as StartProcessActivity).go<TaskWebViewActivity>(TaskWebViewActivity.start(workId, "", name))
+        (activity as StartProcessActivity).goThenKill<TaskWebViewActivity>(TaskWebViewActivity.start(workId, "", name))
+    }
+
+    override fun startProcessSuccessNoWork() {
+        hideLoadingDialog()
+        XToast.toastShort(activity, getString(R.string.message_start_process_success))
         (activity as StartProcessActivity).finish()
     }
 

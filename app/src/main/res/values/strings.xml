@@ -698,6 +698,7 @@
     <string name="message_get_process_fail">获取流程列表失败！</string>
     <string name="message_get_current_identity_fail">没有获取到当前用户的身份！</string>
     <string name="message_start_process_fail">传入参数为空，无法启动流程, identity:%1$s,processId:%2$s</string>
+    <string name="message_start_process_success">启动流程成功！</string>
     <string name="message_start_process_back_data_error">返回数据异常！%1$s</string>
     <string name="message_start_process_fail_with_error">启动流程失败, %1$s</string>
     <string name="message_open_draft_error">打开草稿异常！</string>
