@@ -124,7 +124,9 @@ class StartProcessStepOnePresenter : BasePresenterImpl<StartProcessStepOneContra
                         } catch (e: Exception) {
                             XLog.error("", e)
                             val error = mView?.getContext()?.getString(R.string.message_start_process_back_data_error, e.message)
-                            mView?.startProcessFail(error ?: "返回数据异常！${e.message}")
+                            XLog.error( error ?: "返回数据异常， 没有待办！${e.message}")
+                            //mView?.startProcessFail(error ?: "返回数据异常！${e.message}")
+                            mView?.startProcessSuccessNoWork()
                         }
                     }, ExceptionHandler(mView?.getContext(), { e ->
                         mView?.startProcessFail(e.message ?: "")

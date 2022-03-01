@@ -151,8 +151,8 @@ class CMSPublishDocumentActivity : BaseMVPActivity<CMSPublishDocumentContract.Vi
     }
 
     override fun startProcessFail(message: String) {
-        XToast.toastShort(this, "启动流程失败, $message")
         hideLoadingDialog()
+        XToast.toastShort(this, "启动流程失败, $message")
         if (ignoreTitle) {
             finish()
         }
