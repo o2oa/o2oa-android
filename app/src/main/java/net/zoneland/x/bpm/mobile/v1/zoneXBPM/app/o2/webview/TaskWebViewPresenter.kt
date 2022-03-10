@@ -129,7 +129,7 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
         }
     }
 
-    override fun uploadAttachment(attachmentFilePath: String, site: String, workId: String) {
+    override fun uploadAttachment(attachmentFilePath: String, site: String, workId: String, datagridParam:String) {
         if (TextUtils.isEmpty(attachmentFilePath) || TextUtils.isEmpty(site) || TextUtils.isEmpty(workId)) {
             mView?.invalidateArgs()
             XLog.error("arguments is null  workid:$workId， site:$site, attachmentFilePath:$attachmentFilePath")
@@ -144,14 +144,14 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
             service.uploadAttachment(body, siteBody, workId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(ResponseHandler<IdData> { id -> mView?.uploadAttachmentSuccess(id.id, site) },
+                    .subscribe(ResponseHandler<IdData> { id -> mView?.uploadAttachmentSuccess(id.id, site, datagridParam) },
                             ExceptionHandler(mView?.getContext()) { e ->
                                 XLog.error("$e")
                                 mView?.finishLoading() })
         }
     }
 
-    override fun replaceAttachment(attachmentFilePath: String, site: String, attachmentId: String, workId: String) {
+    override fun replaceAttachment(attachmentFilePath: String, site: String, attachmentId: String, workId: String, datagridParam:String) {
         if (TextUtils.isEmpty(attachmentFilePath) || TextUtils.isEmpty(site) || TextUtils.isEmpty(attachmentId) || TextUtils.isEmpty(workId)) {
             mView?.invalidateArgs()
             XLog.error("arguments is null att:$attachmentId, workid:$workId， site:$site, attachmentFilePath:$attachmentFilePath")
@@ -187,7 +187,7 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                             }
                         })
                     }.observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(Action1<String> { id -> mView?.replaceAttachmentSuccess(id, site) },
+                    .subscribe(Action1<String> { id -> mView?.replaceAttachmentSuccess(id, site, datagridParam) },
                             ExceptionHandler(mView?.getContext()) { e ->
                                 XLog.error("", e)
                                 mView?.finishLoading() })

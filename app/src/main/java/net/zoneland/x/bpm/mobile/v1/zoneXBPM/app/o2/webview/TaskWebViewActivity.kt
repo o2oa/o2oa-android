@@ -76,8 +76,10 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
         }
     }
 
-    private  val WORK_WEB_VIEW_UPLOAD_REQUEST_CODE = 1001
-    private  val WORK_WEB_VIEW_REPLACE_REQUEST_CODE = 1002
+    private  val WORK_WEB_VIEW_UPLOAD_REQUEST_CODE = 1001 // 表单上传附件
+    private  val WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE = 10010 // 表单数据表格中的上传附件
+    private  val WORK_WEB_VIEW_REPLACE_REQUEST_CODE = 1002 // 表单替换附件
+    private  val WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE = 10020 // 表单数据表格中的替换附件
     private  val TAKE_FROM_PICTURES_CODE = 1003
     private  val TAKE_FROM_CAMERA_CODE = 1004
 
@@ -90,7 +92,8 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 
     private var control: WorkControl? = null
     private var read: ReadData? = null
-    private var site = ""
+    private var site = "" // 上传附件使用
+    private var datagridParam = ""; // 数据表格上传附件使用
     private var attachmentId = ""
     private var formData: String? = ""//表单json数据
     private var formOpinion: String? = ""// 在表单内的意见信息
@@ -210,7 +213,17 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                     if (!TextUtils.isEmpty(result)) {
                         XLog.debug("uri path:$result")
                         showLoadingDialog()
-                        mPresenter.uploadAttachment(result!!, site, workId)
+                        mPresenter.uploadAttachment(result!!, site, workId, "")
+                    } else {
+                        XLog.error("FilePicker 没有返回值！")
+                    }
+                }
+                WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE -> {
+                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+                    if (!TextUtils.isEmpty(result)) {
+                        XLog.debug("uri path:$result")
+                        showLoadingDialog()
+                        mPresenter.uploadAttachment(result!!, site, workId, datagridParam)
                     } else {
                         XLog.error("FilePicker 没有返回值！")
                     }
@@ -220,7 +233,17 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                     if (!TextUtils.isEmpty(result)) {
                         XLog.debug("uri path:$result")
                         showLoadingDialog()
-                        mPresenter.replaceAttachment(result!!, site, attachmentId, workId)
+                        mPresenter.replaceAttachment(result!!, site, attachmentId, workId, "")
+                    } else {
+                        XLog.error("FilePicker 没有返回值！")
+                    }
+                }
+                WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE -> {
+                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+                    if (!TextUtils.isEmpty(result)) {
+                        XLog.debug("uri path:$result")
+                        showLoadingDialog()
+                        mPresenter.replaceAttachment(result!!, site, attachmentId, workId, datagridParam)
                     } else {
                         XLog.error("FilePicker 没有返回值！")
                     }
@@ -391,13 +414,30 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
      */
     @JavascriptInterface
     fun uploadAttachment(site: String) {
-        XLog.debug("upload site:$site")
+        XLog.debug("uploadAttachment site:$site")
         if (TextUtils.isEmpty(site)) {
             XLog.error("没有传入site")
             return
         }
         this.site = site
         openFancyFilePicker(WORK_WEB_VIEW_UPLOAD_REQUEST_CODE)
+    }
+
+    /**
+     * 数据表格内的附件上传
+     * @param site
+     * @param param
+     */
+    @JavascriptInterface
+    fun uploadAttachmentForDatagrid(site: String, param: String) {
+        XLog.debug("uploadAttachmentForDatagrid site:$site, param: $param")
+        if (TextUtils.isEmpty(site)) {
+            XLog.error("没有传入site")
+            return
+        }
+        this.site = site
+        this.datagridParam = param
+        openFancyFilePicker(WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE)
     }
 
     /**
@@ -408,7 +448,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
      */
     @JavascriptInterface
     fun replaceAttachment(attachmentId: String, site: String) {
-        XLog.debug("replace site:$site, attachmentId:$attachmentId")
+        XLog.debug("replaceAttachment site:$site, attachmentId:$attachmentId")
         if (TextUtils.isEmpty(attachmentId) || TextUtils.isEmpty(site)) {
             XLog.error("没有传入attachmentId 或 site")
             return
@@ -416,6 +456,24 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
         this.site = site
         this.attachmentId = attachmentId
         openFancyFilePicker(WORK_WEB_VIEW_REPLACE_REQUEST_CODE)
+    }
+
+    /**
+     * 数据表格内的附件替换
+     * @param site
+     * @param param
+     */
+    @JavascriptInterface
+    fun  replaceAttachmentForDatagrid(attachmentId: String, site: String, param: String) {
+        XLog.debug("replaceAttachmentForDatagrid site:$site, attachmentId:$attachmentId , param: $param")
+        if (TextUtils.isEmpty(attachmentId) || TextUtils.isEmpty(site)) {
+            XLog.error("没有传入attachmentId 或 site")
+            return
+        }
+        this.site = site
+        this.attachmentId = attachmentId
+        this.datagridParam = param
+        openFancyFilePicker(WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE)
     }
 
     /**
@@ -534,19 +592,31 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
         XToast.toastShort(this, getString(R.string.message_delete_fail))
     }
 
-    override fun uploadAttachmentSuccess(attachmentId: String, site: String) {
-        XLog.debug("uploadAttachmentResponse attachmentId:$attachmentId, site:$site")
+    override fun uploadAttachmentSuccess(attachmentId: String, site: String, datagridParam:String) {
+        XLog.debug("uploadAttachmentResponse attachmentId:$attachmentId, site:$site datagridParam：$datagridParam")
         hideLoadingDialog()
-        web_view.evaluateJavascript("layout.app.appForm.uploadedAttachment(\"$site\", \"$attachmentId\")"){
-            value -> XLog.debug("uploadedAttachment， onReceiveValue value=$value")
+        if (TextUtils.isEmpty(datagridParam)) {
+            web_view.evaluateJavascript("layout.app.appForm.uploadedAttachment(\"$site\", \"$attachmentId\")") { value ->
+                XLog.debug("uploadedAttachment， onReceiveValue value=$value")
+            }
+        }  else {
+            web_view.evaluateJavascript("layout.app.appForm.uploadedAttachmentDatagrid(\"$site\", \"$attachmentId\", \"$datagridParam\")") { value ->
+                XLog.debug("uploadedAttachmentDatagrid， onReceiveValue value=$value")
+            }
         }
     }
 
-    override fun replaceAttachmentSuccess(attachmentId: String, site: String) {
+    override fun replaceAttachmentSuccess(attachmentId: String, site: String, datagridParam:String) {
         XLog.debug("replaceAttachmentResponse attachmentId:$attachmentId, site:$site")
         hideLoadingDialog()
-        web_view.evaluateJavascript("layout.app.appForm.replacedAttachment(\"$site\", \"$attachmentId\")"){
-            value -> XLog.debug("replacedAttachment， onReceiveValue value=$value")
+        if (TextUtils.isEmpty(datagridParam)) {
+            web_view.evaluateJavascript("layout.app.appForm.replacedAttachment(\"$site\", \"$attachmentId\")") { value ->
+                XLog.debug("replacedAttachment， onReceiveValue value=$value")
+            }
+        } else {
+            web_view.evaluateJavascript("layout.app.appForm.replacedAttachmentDatagrid(\"$site\", \"$attachmentId\", \"$datagridParam\")") { value ->
+                XLog.debug("replacedAttachment， onReceiveValue value=$value")
+            }
         }
     }
 
