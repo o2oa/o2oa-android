@@ -10,6 +10,7 @@ import com.prolificinteractive.materialcalendarview.*
 import kotlinx.android.synthetic.main.content_meeting.*
 import net.muliba.changeskin.FancySkinManager
 import net.muliba.fancyfilepickerlibrary.ext.concat
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2App
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
@@ -28,6 +29,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.decorator.EventDecorator
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.decorator.SelectorDecorator
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.decorator.TodayDecorator
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
@@ -161,6 +163,9 @@ class MeetingMainFragment : BaseMVPViewPagerFragment<MeetingMainFragmentContract
             return
         }
         (activity as MeetingMainActivity).meetingConfig = config
+        O2SDKManager.instance().prefs().edit {
+            putString(O2.PRE_MEETING_CONFIG_KEY, config)
+        }
         if (TextUtils.isEmpty(config)) {
             fab_meeting_create.gone()
         } else {
@@ -301,7 +306,7 @@ class MeetingMainFragment : BaseMVPViewPagerFragment<MeetingMainFragmentContract
 
                 holder.getView<TextView>(R.id.tv_meeting_list_item_meeting_participants).tag = t.id
                 var participantsStr = "参加人: "
-                for (participants: String in t.invitePersonList) {
+                for (participants: String in t.inviteMemberList) {
                     participantsStr = participantsStr.concat(participants.split("@").first()).concat(" ")
 //                    mPresenter.asyncLoadPersonName(
 //                            holder.getView(R.id.tv_meeting_list_item_meeting_participants), t.id, participants)

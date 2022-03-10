@@ -149,6 +149,9 @@ object O2 {
 
     val PRE_IM_CONFIG_KEY = "PRE_IM_CONFIG_KEY" //
 
+    val PRE_MEETING_CONFIG_KEY = "PRE_MEETING_CONFIG_KEY" // 会议配置数据的key
+
+
     val BUSINESS_TYPE_MESSAGE_CENTER = 0//信息中心
     val BUSINESS_TYPE_WORK_CENTER = 1//工作中心
 

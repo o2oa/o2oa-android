@@ -8,6 +8,7 @@ data class ProcessDataJson(
 		var weekBegin: Int = 0,
 		var meetingViewer: List<String> = ArrayList(),
 		var disableViewList: List<String> = ArrayList(),
+		var typeList: List<String> = ArrayList(), // 会议类型
 		var mobileCreateEnable: Boolean = false,
 		var toMyMeetingViewName: String = "",
 		var toMonthViewName: String = "",

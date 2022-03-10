@@ -429,6 +429,12 @@
 <!--    <string name="meeting_end_time">结束时间</string>-->
 <!--    <string name="meeting_end_time_hint">请选择结束时间</string>-->
     <string name="meeting_room">Conference Room</string>
+    <string name="meeting_form_type">Meeting type</string>
+    <string name="meeting_form_type_hint">Please select a meeting type</string>
+    <string name="meeting_form_hostPerson">Host</string>
+    <string name="meeting_form_hostPerson_hint">Please select the host</string>
+    <string name="meeting_form_hostUnit">Host Unit</string>
+    <string name="meeting_form_hostUnit_hint">Please select the Host Unit</string>
     <string name="meeting_room_hint">Please select conference room</string>
     <string name="meeting_invite_people">Participants</string>
     <string name="meeting_file">Conference materials</string>
@@ -442,6 +448,7 @@
 <!--    <string name="title_activity_meeting_accept_wait_list">会议邀请</string>-->
     <string name="title_activity_meeting_edit_form">Modify meeting application</string>
     <string name="meeting_delete_label">Cancel the meeting</string>
+    <string name="meeting_delete_message_confirm">Are you sure you want to cancel the meeting ? </string>
 <!--    <string name="meeting_room_filter">过滤：</string>-->
 <!--    <string name="meeting_invited_list">会议列表</string>-->
     <string name="meeting_tip_info">Pro, you don not have a meeting yet！</string>
