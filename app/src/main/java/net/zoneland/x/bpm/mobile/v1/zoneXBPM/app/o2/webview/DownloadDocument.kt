@@ -56,6 +56,11 @@ class DownloadDocument(val context: Activity) {
                 val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(fileName, context)
                 XLog.debug("本地文件存储地址： $path")
                 file = File(path)
+                val parentDir = file.parent
+                val parent = File(parentDir)
+                if (!parent.exists()) {
+                    parent.mkdirs()
+                }
                 val fos = FileOutputStream(file)
                 val buf = ByteArray(1024 * 8)
                 var currentLength = 0
@@ -90,7 +95,7 @@ class DownloadDocument(val context: Activity) {
                 .o2Subscribe {
                     onNext { result ->
                         XLog.info("下载文档：$result")
-                        if (TextUtils.isEmpty(result)) {
+                        if (!TextUtils.isEmpty(result)) {
                             openFileWithTBS(result, "")
                         } else {
                             XToast.toastShort(context, context.getString(R.string.message_download_document_fail))

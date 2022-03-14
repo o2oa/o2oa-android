@@ -231,19 +231,7 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
                     XToast.toastShort(this, "请选择与会人员！")
                     return true
                 }
-                val info = MeetingInfoJson()
-                info.subject = subject
-                info.startTime = "$startDay $startTime:00"
-                info.completedTime = "$startDay $endTime:00"
-                info.summary = edit_meeting_create_form_desc.text.toString()
-                val savePersonList = invitePersonList
-                savePersonList.remove(invitePersonAdd)
-                info.invitePersonList = savePersonList
-                info.room = roomId
-                info.type = type
-                info.hostPerson = hostPerson
-                info.hostUnit = hostUnit
-                info.applicant = O2SDKManager.instance().distinguishedName
+                val info = newMeetingInfoJson(subject, startDay, startTime, endTime)
                 if (TextUtils.isEmpty(meetingId)) {
                     mPresenter.saveMeetingNoFile(info)
                 } else {
@@ -253,6 +241,29 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun newMeetingInfoJson(
+        subject: String,
+        startDay: String,
+        startTime: String,
+        endTime: String
+    ): MeetingInfoJson {
+        val info = MeetingInfoJson()
+        info.subject = subject
+        info.startTime = "$startDay $startTime:00"
+        info.completedTime = "$startDay $endTime:00"
+        info.summary = edit_meeting_create_form_desc.text.toString()
+        val savePersonList = invitePersonList
+        savePersonList.remove(invitePersonAdd)
+        info.invitePersonList = savePersonList
+        info.inviteMemberList = savePersonList
+        info.room = roomId
+        info.type = type
+        info.hostPerson = hostPerson
+        info.hostUnit = hostUnit
+        info.applicant = O2SDKManager.instance().distinguishedName
+        return info
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -449,16 +460,7 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
                 XToast.toastShort(this, "请选择与会人员！")
                 return
             }
-            val info = MeetingInfoJson()
-            info.subject = subject
-            info.startTime = "$startDay $startTime:00"
-            info.completedTime = "$startDay $endTime:00"
-            info.summary = edit_meeting_create_form_desc.text.toString()
-            val savePersonList = invitePersonList
-            savePersonList.remove(invitePersonAdd)
-            info.invitePersonList = savePersonList
-            info.inviteMemberList = savePersonList
-            info.room = roomId
+            val info = newMeetingInfoJson(subject, startDay, startTime, endTime)
             mPresenter.saveMeeting(info,addFile)
         }
     }

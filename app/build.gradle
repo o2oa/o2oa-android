@@ -88,9 +88,13 @@ android {
         debug {
             v1SigningEnabled true
             v2SigningEnabled true
-            keyAlias 'androiddebugkey'
-            storeFile file('debug.keystore')
-            keyPassword 'android'
+            keyAlias project.signingConfigKeyAlias
+            keyPassword project.signingConfigKeyPassword
+            storeFile file(project.signingConfigStoreFilePath)
+            storePassword project.signingConfigStorePassword
+//            keyAlias 'androiddebugkey'
+//            storeFile file('debug.keystore')
+//            keyPassword 'android'
         }
     }
 
@@ -120,7 +124,7 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.release
-            buildConfigField "Boolean", "InnerServer", "true"
+            buildConfigField "Boolean", "InnerServer", "false"
             buildConfigField "Boolean", "LOG_ENABLE", "true"
             buildConfigField "Boolean", "NEED_UPDATE", "true"
             buildConfigField "Boolean", "LOG_FILE", "true"
