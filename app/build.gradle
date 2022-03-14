@@ -124,7 +124,7 @@ android {
     buildTypes {
         debug {
             signingConfig signingConfigs.release
-            buildConfigField "Boolean", "InnerServer", "false"
+            buildConfigField "Boolean", "InnerServer", "true"
             buildConfigField "Boolean", "LOG_ENABLE", "true"
             buildConfigField "Boolean", "NEED_UPDATE", "true"
             buildConfigField "Boolean", "LOG_FILE", "true"
