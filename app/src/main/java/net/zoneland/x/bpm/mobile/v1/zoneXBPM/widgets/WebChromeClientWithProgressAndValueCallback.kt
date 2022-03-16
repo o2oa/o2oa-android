@@ -95,6 +95,10 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
         return true
     }
 
+    override fun onCloseWindow(window: WebView?) {
+        super.onCloseWindow(window)
+        activity?.finish()
+    }
 
     /**
      * 接收activity返回的数据

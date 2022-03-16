@@ -41,6 +41,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.LocalImageViewActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.TaskWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
@@ -191,6 +192,12 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 
             override fun onCreateContextMenu(menu: ContextMenu?, message: IMMessage) {
                 createContextMenu(menu, message)
+            }
+
+            override fun openProcessWork(position: Int, msgBody: IMMessageBody) {
+                if (!TextUtils.isEmpty(msgBody.work)) {
+                    go<TaskWebViewActivity>(TaskWebViewActivity.start(msgBody.work, "", ""))
+                }
             }
         }
         //输入法切换的时候滚动到底部

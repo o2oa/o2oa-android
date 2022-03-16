@@ -22,10 +22,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.InstantMessage
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMConfig
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMConversationInfo
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMMessage
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.MessageType
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.CustomStyleData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.ContactPickerResult
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
@@ -91,6 +88,13 @@ class O2IMConversationFragment : BaseMVPViewPagerFragment<O2IMConversationContra
                                 image.gone()
                                 val text = holder.getView<TextView>(R.id.tv_o2_im_con_last_message)
                                 text.text = lastMessageBody.body
+                                text.visible()
+                            }
+                            MessageType.process.key -> {
+                                val image = holder.getView<ImageView>(R.id.tv_o2_im_con_last_message_emoji)
+                                image.gone()
+                                val text = holder.getView<TextView>(R.id.tv_o2_im_con_last_message)
+                                text.text = MessageBody.process.body
                                 text.visible()
                             }
                             else -> {
