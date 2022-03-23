@@ -86,8 +86,8 @@ class TaskCompletedListActivity : BaseMVPActivity<TaskCompletedListContract.View
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.menu_task_complete_search -> {
                 go<TaskCompletedSearchActivity>()
                 return true

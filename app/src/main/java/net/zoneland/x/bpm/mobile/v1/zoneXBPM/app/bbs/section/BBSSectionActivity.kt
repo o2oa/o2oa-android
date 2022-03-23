@@ -129,8 +129,8 @@ class BBSSectionActivity : BaseMVPActivity<BBSSectionContract.View, BBSSectionCo
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.menu_bbs_collect -> {
                 mPresenter.collectOrCancelCollectSection(sectionId, isCollected)
                 return true

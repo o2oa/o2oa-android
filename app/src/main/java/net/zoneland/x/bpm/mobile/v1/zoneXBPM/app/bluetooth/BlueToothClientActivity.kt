@@ -125,6 +125,7 @@ class BlueToothClientActivity : BaseMVPActivity<BlueToothContract.View, BlueToot
                 }
             }
         }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
     override fun onDestroy() {
@@ -170,7 +171,7 @@ class BlueToothClientActivity : BaseMVPActivity<BlueToothContract.View, BlueToot
 
     private val handler = object : Handler() {
 
-        override fun handleMessage(msg: Message?) {
+        override fun handleMessage(msg: Message) {
             when (msg?.what) {
                 CONN_SUCCESS -> {
                     runOnUiThread {
@@ -209,9 +210,9 @@ class BlueToothClientActivity : BaseMVPActivity<BlueToothContract.View, BlueToot
                 BluetoothDevice.ACTION_FOUND -> {
                     XLog.info("找到一个蓝牙设备")
                     //  EXTRA_DEVICE  , EXTRA_CLASS
-                    val device = intent?.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                    XLog.info("name: ${device.name}, address:${device.address}, state:${device.bondState}")
-                    if ("B8:27:EB:B6:1E:24" == device.address) {
+                    val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                    XLog.info("name: ${device?.name}, address:${device?.address}, state:${device?.bondState}")
+                    if ("B8:27:EB:B6:1E:24" == device?.address) {
                         connect2Device(device)
                     }
                 }

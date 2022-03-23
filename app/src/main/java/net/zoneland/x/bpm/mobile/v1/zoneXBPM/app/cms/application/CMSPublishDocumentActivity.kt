@@ -74,8 +74,8 @@ class CMSPublishDocumentActivity : BaseMVPActivity<CMSPublishDocumentContract.Vi
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if(item?.itemId == R.id.menu_cms_create) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.menu_cms_create) {
             createDocument()
             return true
         }

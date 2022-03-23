@@ -142,8 +142,8 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
-        // 起初的布局可自动调整大小
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+        // 起初的布局可自动调整大小 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or
+        window.setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
         setupToolBar(defaultTitle, setupBackButton = true)
         val json = O2SDKManager.instance().prefs().getString(O2.PRE_IM_CONFIG_KEY, "") ?: ""
@@ -283,8 +283,8 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
             R.id.menu_chat_report -> {
                 openReportDialog()
                 return true

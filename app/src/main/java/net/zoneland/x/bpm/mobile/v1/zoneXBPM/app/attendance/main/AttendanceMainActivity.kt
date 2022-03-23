@@ -89,8 +89,10 @@ class AttendanceMainActivity : BaseMVPActivity<AttendanceMainContract.View, Atte
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item?.itemId) {
+
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when(item.itemId) {
             R.id.menu_attendance_list -> {
                 XLog.debug("click menu attendance list")
                 go<AttendanceListActivity>()

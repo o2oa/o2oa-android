@@ -21,30 +21,31 @@ class LogRecord2FileTask(val context: Context,
 
 
     override fun run() {
-        if (!AndroidUtils.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
-            Log.e("LogRecord2FileTask", "存储文件权限没有开通！")
-        } else {
-            try {
-                val filePath = getLogFile()
-                val todayFile = File(filePath)
-                if (!todayFile.exists()) {
-                    SDCardHelper.generateNewFile(filePath)
-                }
-                val line = lineSeparator()
-                // Encode and encrypt the message.
-                val trace = FileOutputStream(todayFile, true)
-                val writer = OutputStreamWriter(trace, "utf-8")
-                writer.write("$time $level/$tag: $log $line")
-                if (t != null) {
-                    writer.write(render(t))
-                }
-                writer.flush()
-                trace.flush()
-                trace.close()
-            } catch (e: Exception) {
-                Log.e("LogRecord2FileTask", "", e)
+//        if (!AndroidUtils.checkPermission(context, Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+//            Log.e("LogRecord2FileTask", "存储文件权限没有开通！")
+//        } else {
+//
+//
+//        }
+        try {
+            val filePath = getLogFile()
+            val todayFile = File(filePath)
+            if (!todayFile.exists()) {
+                SDCardHelper.generateNewFile(filePath)
             }
-
+            val line = lineSeparator()
+            // Encode and encrypt the message.
+            val trace = FileOutputStream(todayFile, true)
+            val writer = OutputStreamWriter(trace, "utf-8")
+            writer.write("$time $level/$tag: $log $line")
+            if (t != null) {
+                writer.write(render(t))
+            }
+            writer.flush()
+            trace.flush()
+            trace.close()
+        } catch (e: Exception) {
+            Log.e("LogRecord2FileTask", "", e)
         }
     }
 

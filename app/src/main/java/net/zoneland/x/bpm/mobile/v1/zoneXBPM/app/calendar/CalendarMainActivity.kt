@@ -174,8 +174,8 @@ class CalendarMainActivity : BaseO2Activity() {
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.menu_calendar_tool -> {
                 if (mShowBar) {
                     hideBar()

@@ -101,8 +101,8 @@ class BBSPublishSubjectActivity : BaseMVPActivity<BBSPublishSubjectContract.View
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.menu_bbs_publish_subject -> {
                 XLog.debug("发表。。。。。。。。attachment:" + uploadedImageMap.size)
                 publishSubject()

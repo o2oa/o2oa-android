@@ -99,7 +99,9 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
 
                 override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                     XLog.debug("跳转 url : $url" )
-                    view?.loadUrl(url)
+                    if (!TextUtils.isEmpty(url)) {
+                        view?.loadUrl(url!!)
+                    }
                     return true
                 }
 

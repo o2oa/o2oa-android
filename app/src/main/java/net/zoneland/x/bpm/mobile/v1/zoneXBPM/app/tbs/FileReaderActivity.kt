@@ -62,8 +62,8 @@ class FileReaderActivity : BaseO2BindActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.menu_share) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_share) {
             share()
         }
         return super.onOptionsItemSelected(item)

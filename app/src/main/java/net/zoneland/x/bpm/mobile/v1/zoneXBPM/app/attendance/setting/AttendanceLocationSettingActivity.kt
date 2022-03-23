@@ -70,8 +70,8 @@ class AttendanceLocationSettingActivity : BaseMVPActivity<AttendanceLocationSett
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.menu_work_place_save -> {
                 saveWorkplace()
                 return true

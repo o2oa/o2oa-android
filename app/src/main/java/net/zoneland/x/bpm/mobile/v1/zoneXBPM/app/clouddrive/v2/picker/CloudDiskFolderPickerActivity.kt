@@ -92,8 +92,8 @@ class CloudDiskFolderPickerActivity : BaseMVPActivity<CloudDiskFolderPickerContr
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.menu_cloud_disk_picker_top) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_cloud_disk_picker_top) {
             backResult("")
             return true
         }

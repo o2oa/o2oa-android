@@ -89,7 +89,7 @@ class BlueToothServerActivity : BaseMVPActivity<BlueToothContract.View, BlueToot
     }
 
     private val handler = Handler(Looper.getMainLooper(), { msg ->
-        when (msg?.what) {
+        when (msg.what) {
             CONN_SUCCESS -> {
                 messageTv.text = "连接成功！！！！"
             }

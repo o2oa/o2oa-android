@@ -208,8 +208,8 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.menu_meeting_main_accept -> {
                 val subject = edit_meeting_create_form_name.text.toString()
                 if (TextUtils.isEmpty(subject)) {

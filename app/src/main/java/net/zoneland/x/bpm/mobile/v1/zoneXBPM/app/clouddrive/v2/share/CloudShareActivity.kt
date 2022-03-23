@@ -101,8 +101,8 @@ class CloudShareActivity : BaseMVPActivity<CloudShareContract.View, CloudShareCo
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.menu_cloud_my_share) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_cloud_my_share) {
             go<CloudShareActivity>(openMyShare())
             return true
         }

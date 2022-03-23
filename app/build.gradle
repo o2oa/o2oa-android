@@ -67,8 +67,8 @@ task printVersionName {
 
 
 android {
-    compileSdkVersion 28
-    buildToolsVersion "28.0.3"
+    compileSdkVersion 30
+    buildToolsVersion "30.0.3"
     sourceSets {
         main {
             jniLibs.srcDir 'libs'
@@ -101,7 +101,7 @@ android {
     defaultConfig {
         applicationId "net.zoneland.x.bpm.mobile.v1.zoneXBPM"
         minSdkVersion 21
-        targetSdkVersion 28
+        targetSdkVersion 30
         versionCode project.property("o2.versionCode").toInteger()
         versionName project.property("o2.versionName").toString()
         multiDexEnabled true
@@ -361,7 +361,7 @@ dependencies {
     implementation 'com.github.zhaolewei:ZlwAudioRecorder:v1.07'
 
     //gif 播放
-    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.19'
+    implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
 
 
 

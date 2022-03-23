@@ -26,7 +26,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R;
 /**
  * 圆形图片控件
  */
-public class CircleImageView extends ImageView {
+public class CircleImageView extends androidx.appcompat.widget.AppCompatImageView {
 
     private static final ScaleType SCALE_TYPE = ScaleType.CENTER_CROP;
 

@@ -289,8 +289,15 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
     private fun isHuaweiChannel() : Boolean {
         var value = ""
         value = try {
-            val applicationInfo = activity?.packageManager?.getApplicationInfo(activity?.packageName, PackageManager.GET_META_DATA)
-            applicationInfo?.metaData?.getString("BUGLY_APP_CHANNEL") ?: ""
+            if (TextUtils.isEmpty(activity?.packageName)) {
+                ""
+            } else {
+                val applicationInfo = activity?.packageManager?.getApplicationInfo(
+                    activity!!.packageName,
+                    PackageManager.GET_META_DATA
+                )
+                applicationInfo?.metaData?.getString("BUGLY_APP_CHANNEL") ?: ""
+            }
         } catch(e: Exception) {
             ""
         }

@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    tools:ignore="LockedOrientationActivity"
     package="net.zoneland.x.bpm.mobile.v1.zoneXBPM">
     <!-- baidu需要 -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
@@ -12,8 +13,12 @@
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 获取设备信息 -->
     <uses-permission
         android:name="android.permission.READ_PHONE_STATE"
-        android:maxSdkVersion="28" /> <!-- 读写sdcard，storage等等 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 允许程序录制音频 -->
+        android:maxSdkVersion="28" />
+<!--    <uses-permission-->
+<!--        android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />-->
+    <!-- 读写sdcard，storage等等 -->
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" /> <!-- 允许程序录制音频 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 拨打电话 -->
     <uses-permission android:name="android.permission.CALL_PHONE" /> <!-- 拍照 -->
     <uses-permission android:name="android.permission.CAMERA" /> <!-- 允许监听启动完成事件 -->
@@ -46,7 +51,7 @@
         android:roundIcon="@mipmap/logo_round"
         android:theme="@style/XBPMTheme.NoActionBar"
         tools:replace="android:allowBackup">
-        <activity android:name=".app.o2.logs.LogsActivity"></activity>
+        <activity android:name=".app.o2.logs.LogsActivity" />
         <activity
             android:name=".app.o2.main.SearchActivity"
             android:configChanges="orientation"
@@ -55,7 +60,8 @@
         <activity
             android:name=".app.o2.webview.O2WebViewActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            />
         <activity
             android:name=".app.clouddrive.v2.share.CloudShareActivity"
             android:configChanges="orientation"

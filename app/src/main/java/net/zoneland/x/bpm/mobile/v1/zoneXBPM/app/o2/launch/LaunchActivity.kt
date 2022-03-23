@@ -177,15 +177,20 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
         setIntent(intent)
     }
 
+    var isStarted = false // 保证start执行一次
     fun start() {
+        if (isStarted) {
+            Log.d("LaunchActivity", "已经开始！！！！")
+            return
+        }
+        isStarted = true
         tv_launch_status.text = getString(R.string.launch_start) //开始启动
         circleProgressBar_launch.visible()
         if (CheckRoot.isDeviceRooted()) {
             O2DialogSupport.openAlertDialog(this, getString(R.string.dialog_msg_root_refuse))
         }else {
             PermissionRequester(this)
-                    .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .o2Subscribe {
+                .request(Manifest.permission.READ_EXTERNAL_STORAGE).o2Subscribe {
                         onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
                             Log.d("LaunchActivity", "granted:$granted, show:$shouldShowRequestPermissionRationale, deniedList:$deniedPermissions")
                             // 关闭存储权限控制

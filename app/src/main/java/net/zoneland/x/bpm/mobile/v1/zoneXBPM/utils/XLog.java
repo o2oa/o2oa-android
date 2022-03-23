@@ -96,12 +96,15 @@ final class Printer {
     }
 
     public void debug(String message) {
-        if (!isEnableLog()) {
+        if (!isEnableLog() && !isEnableLogFile()) {
             return;
         }
+        String log = logBeautify(message);
         if (isEnableLog()) {
-            String log = logBeautify(message);
             Log.d(tag, log);
+        }
+        if (isEnableLogFile()) {
+            recordLog2File(Log.DEBUG, log);
         }
     }
 

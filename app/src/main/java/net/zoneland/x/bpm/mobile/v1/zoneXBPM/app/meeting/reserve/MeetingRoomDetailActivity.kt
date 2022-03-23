@@ -78,8 +78,8 @@ class MeetingRoomDetailActivity : BaseMVPActivity<MeetingRoomDetailContract.View
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.menu_meeting_edit_delete -> {
                 val bundle = Bundle()
                 go<MeetingApplyActivity>(bundle)

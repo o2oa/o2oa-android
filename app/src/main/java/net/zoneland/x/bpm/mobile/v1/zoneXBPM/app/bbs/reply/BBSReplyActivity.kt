@@ -89,8 +89,8 @@ class BBSReplyActivity : BaseMVPActivity<BBSReplyContract.View, BBSReplyContract
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.menu_bbs_publish_reply -> {
                 XLog.debug("发表。。。。。。。。回复:" + uploadedImageMap.size)
                 publishReply()
