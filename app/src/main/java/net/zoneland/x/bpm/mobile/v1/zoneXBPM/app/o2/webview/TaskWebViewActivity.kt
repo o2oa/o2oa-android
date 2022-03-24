@@ -20,8 +20,6 @@ import android.webkit.WebViewClient
 import android.widget.*
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_work_web_view.*
-import net.muliba.fancyfilepickerlibrary.FilePicker
-import net.muliba.fancyfilepickerlibrary.PicturePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
@@ -39,6 +37,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.O2WebviewDownloadListener
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.WebChromeClientWithProgressAndValueCallback
@@ -208,56 +208,46 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                 return
             }
             when (requestCode) {
-                WORK_WEB_VIEW_UPLOAD_REQUEST_CODE -> {
-                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-                    if (!TextUtils.isEmpty(result)) {
-                        XLog.debug("uri path:$result")
-                        showLoadingDialog()
-                        mPresenter.uploadAttachment(result!!, site, workId, "")
-                    } else {
-                        XLog.error("FilePicker 没有返回值！")
-                    }
-                }
-                WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE -> {
-                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-                    if (!TextUtils.isEmpty(result)) {
-                        XLog.debug("uri path:$result")
-                        showLoadingDialog()
-                        mPresenter.uploadAttachment(result!!, site, workId, datagridParam)
-                    } else {
-                        XLog.error("FilePicker 没有返回值！")
-                    }
-                }
-                WORK_WEB_VIEW_REPLACE_REQUEST_CODE -> {
-                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-                    if (!TextUtils.isEmpty(result)) {
-                        XLog.debug("uri path:$result")
-                        showLoadingDialog()
-                        mPresenter.replaceAttachment(result!!, site, attachmentId, workId, "")
-                    } else {
-                        XLog.error("FilePicker 没有返回值！")
-                    }
-                }
-                WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE -> {
-                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-                    if (!TextUtils.isEmpty(result)) {
-                        XLog.debug("uri path:$result")
-                        showLoadingDialog()
-                        mPresenter.replaceAttachment(result!!, site, attachmentId, workId, datagridParam)
-                    } else {
-                        XLog.error("FilePicker 没有返回值！")
-                    }
-                }
-                TAKE_FROM_PICTURES_CODE -> {
-                    //选择照片
-                    data?.let {
-                        val result = it.extras?.getString(PicturePicker.FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY, "")
-                        if (!TextUtils.isEmpty(result)) {
-                            XLog.debug("照片 path:$result")
-                            uploadImage2FileStorageStart(result!!)
-                        }
-                    }
-                }
+//                WORK_WEB_VIEW_UPLOAD_REQUEST_CODE -> {
+//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+//                    if (!TextUtils.isEmpty(result)) {
+//                        XLog.debug("uri path:$result")
+//                        showLoadingDialog()
+//                        mPresenter.uploadAttachment(result!!, site, workId, "")
+//                    } else {
+//                        XLog.error("FilePicker 没有返回值！")
+//                    }
+//                }
+//                WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE -> {
+//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+//                    if (!TextUtils.isEmpty(result)) {
+//                        XLog.debug("uri path:$result")
+//                        showLoadingDialog()
+//                        mPresenter.uploadAttachment(result!!, site, workId, datagridParam)
+//                    } else {
+//                        XLog.error("FilePicker 没有返回值！")
+//                    }
+//                }
+//                WORK_WEB_VIEW_REPLACE_REQUEST_CODE -> {
+//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+//                    if (!TextUtils.isEmpty(result)) {
+//                        XLog.debug("uri path:$result")
+//                        showLoadingDialog()
+//                        mPresenter.replaceAttachment(result!!, site, attachmentId, workId, "")
+//                    } else {
+//                        XLog.error("FilePicker 没有返回值！")
+//                    }
+//                }
+//                WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE -> {
+//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+//                    if (!TextUtils.isEmpty(result)) {
+//                        XLog.debug("uri path:$result")
+//                        showLoadingDialog()
+//                        mPresenter.replaceAttachment(result!!, site, attachmentId, workId, datagridParam)
+//                    } else {
+//                        XLog.error("FilePicker 没有返回值！")
+//                    }
+//                }
                 TAKE_FROM_CAMERA_CODE -> {
                     //拍照
                     XLog.debug("拍照//// ")
@@ -1021,16 +1011,10 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     }
 
     private fun takeFromPictures() {
-        PicturePicker()
-                .withActivity(this)
-                .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
-            .forResult { list ->
-                if (list.isNotEmpty()) {
-                    val result = list[0]
-                    if (!TextUtils.isEmpty(result)) {
-                        XLog.debug("照片 path:$result")
-                        uploadImage2FileStorageStart(result)
-                    }
+        PicturePickUtil().withAction(this)
+            .forResult { files ->
+                if (files!=null && files.isNotEmpty()) {
+                    uploadImage2FileStorageStart(files[0])
                 }
             }
     }
@@ -1085,9 +1069,54 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 
 
     private fun openFancyFilePicker(requestCode: Int) {
-        FilePicker().withActivity(this).requestCode(requestCode)
-                .chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
-                .start()
+        PicturePickUtil().withAction(this)
+            .setMode(PickTypeMode.File)
+            .forResult { files ->
+                if (files !=null && files.isNotEmpty()) {
+                     when(requestCode) {
+                         WORK_WEB_VIEW_UPLOAD_REQUEST_CODE -> {
+                             val result = files[0]
+                             if (!TextUtils.isEmpty(result)) {
+                                 XLog.debug("uri path:$result")
+                                 showLoadingDialog()
+                                 mPresenter.uploadAttachment(result, site, workId, "")
+                             } else {
+                                 XLog.error("FilePicker 没有返回值！")
+                             }
+                         }
+                         WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE -> {
+                             val result = files[0]
+                             if (!TextUtils.isEmpty(result)) {
+                                 XLog.debug("uri path:$result")
+                                 showLoadingDialog()
+                                 mPresenter.uploadAttachment(result, site, workId, datagridParam)
+                             } else {
+                                 XLog.error("FilePicker 没有返回值！")
+                             }
+                         }
+                         WORK_WEB_VIEW_REPLACE_REQUEST_CODE -> {
+                             val result = files[0]
+                             if (!TextUtils.isEmpty(result)) {
+                                 XLog.debug("uri path:$result")
+                                 showLoadingDialog()
+                                 mPresenter.replaceAttachment(result, site, attachmentId, workId, "")
+                             } else {
+                                 XLog.error("FilePicker 没有返回值！")
+                             }
+                         }
+                         WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE -> {
+                             val result = files[0]
+                             if (!TextUtils.isEmpty(result)) {
+                                 XLog.debug("uri path:$result")
+                                 showLoadingDialog()
+                                 mPresenter.replaceAttachment(result, site, attachmentId, workId, datagridParam)
+                             } else {
+                                 XLog.error("FilePicker 没有返回值！")
+                             }
+                         }
+                     }
+                }
+            }
     }
 
 

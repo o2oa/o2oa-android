@@ -1,19 +1,16 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive
 
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import com.google.android.material.tabs.TabLayout
-import androidx.fragment.app.Fragment
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.view.KeyEvent
+import androidx.fragment.app.Fragment
+import com.google.android.material.tabs.TabLayout
 import kotlinx.android.synthetic.main.activity_yunpan.*
 import net.muliba.changeskin.FancySkinManager
-import net.muliba.fancyfilepickerlibrary.FilePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.ContactPickerActivity
@@ -24,6 +21,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.FileOperateTyp
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import rx.Observer
 import rx.Subscription
 import rx.android.schedulers.AndroidSchedulers
@@ -125,22 +124,6 @@ class CloudDriveActivity : BaseMVPActivity<CloudDriveContract.View, CloudDriveCo
         return super.onKeyDown(keyCode, event)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            when(requestCode) {
-                YUNPAN_UPLOAD_FILE_REQUEST_CODE -> {
-                    val filePath = data?.extras?.getString(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY) ?: ""
-//                    val uri = data?.data
-//                    XLog.debug( "uri string: $uri")
-//                    val filePath = FileUtil.getAbsoluteFilePath(this, uri)
-                    XLog.debug( "uri path:$filePath")
-                    (fragmentList[0] as CloudDriveMyFileFragment).menuUploadFile(filePath)
-                }
-
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
 
     val downloadTaskMap = HashMap<String, Subscription>()
     fun openYunPanFile(id: String, fileName: String) {
@@ -228,12 +211,14 @@ class CloudDriveActivity : BaseMVPActivity<CloudDriveContract.View, CloudDriveCo
     }
 
     fun clickUploadFile() {
-//        val intent = Intent(Intent.ACTION_GET_CONTENT)
-//        intent.type = "*/*"
-//        intent.addCategory(Intent.CATEGORY_OPENABLE)
-//        startActivityForResult(Intent.createChooser(intent, "请选择一个要上传的文件"), YUNPAN_UPLOAD_FILE_REQUEST_CODE)
 
-        FilePicker().withActivity(this).requestCode(YUNPAN_UPLOAD_FILE_REQUEST_CODE).chooseType(FilePicker.CHOOSE_TYPE_SINGLE).start()
+        PicturePickUtil().withAction(this)
+            .setMode(PickTypeMode.File)
+            .forResult { files ->
+                if (files !=null && files.isNotEmpty()) {
+                    (fragmentList[0] as CloudDriveMyFileFragment).menuUploadFile(files[0])
+                }
+            }
     }
 
     fun menuShareOrSend(from: String) {

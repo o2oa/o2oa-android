@@ -3,8 +3,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.apply
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
@@ -13,12 +11,11 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.borax12.materialdaterangepicker.time.RadialPickerLayout
 import com.borax12.materialdaterangepicker.time.TimePickerDialog
-import com.xiaomi.push.ge
-import com.xiaomi.push.it
 import kotlinx.android.synthetic.main.content_meeting_create_form.*
-import net.muliba.fancyfilepickerlibrary.FilePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
@@ -33,6 +30,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.MeetingInfoJso
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goWithRequestCode
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
 import java.io.File
@@ -149,9 +148,19 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
             R.id.ll_meeting_time -> showTimePicker()
             R.id.rl_choose_room -> chooseMeetingRoom()
             R.id.iv_meeting_file_add -> {
-                FilePicker().withActivity(this).requestCode(MEETING_FILE_CODE)
-                        .chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
-                        .start()
+
+                PicturePickUtil().withAction(this)
+                    .setMode(PickTypeMode.File)
+                    .forResult { files ->
+                        if (files !=null && files.isNotEmpty()) {
+                            XLog.debug("uri path:" + files[0])
+                            showLoadingDialog()
+                            addFile = files[0]
+                            updateFileList()
+                        }
+                    }
+
+
             }
             R.id.rl_choose_meeting_type -> {
                 chooseMeetingType()
@@ -279,17 +288,17 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
                         roomId = resultRoomId
                     }
                 }
-                MEETING_FILE_CODE -> {
-                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-                    if (!TextUtils.isEmpty(result)) {
-                        XLog.debug("uri path:" + result)
-                        showLoadingDialog()
-                        addFile = result!!
-                        updateFileList()
-                    } else {
-                        XLog.error("FilePicker 没有返回值！")
-                    }
-                }
+//                MEETING_FILE_CODE -> {
+//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+//                    if (!TextUtils.isEmpty(result)) {
+//                        XLog.debug("uri path:" + result)
+//                        showLoadingDialog()
+//                        addFile = result!!
+//                        updateFileList()
+//                    } else {
+//                        XLog.error("FilePicker 没有返回值！")
+//                    }
+//                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data)

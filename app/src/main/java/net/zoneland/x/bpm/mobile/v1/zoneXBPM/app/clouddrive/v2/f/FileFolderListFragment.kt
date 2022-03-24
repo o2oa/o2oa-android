@@ -1,8 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.f
 
 import android.graphics.Typeface
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.text.TextUtils
 import android.util.TypedValue
 import android.view.Menu
@@ -11,9 +9,10 @@ import android.view.MenuItem
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_file_folder_list.*
 import net.muliba.changeskin.FancySkinManager
-import net.muliba.fancyfilepickerlibrary.FilePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskActivity
@@ -30,9 +29,23 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import java.io.File
-import java.util.HashMap
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.List
+import kotlin.collections.arrayListOf
+import kotlin.collections.first
+import kotlin.collections.firstOrNull
+import kotlin.collections.forEach
+import kotlin.collections.isNotEmpty
+import kotlin.collections.last
+import kotlin.collections.map
+import kotlin.collections.mapIndexed
+import kotlin.collections.set
+import kotlin.collections.toList
 
 
 class FileFolderListFragment : BaseMVPFragment<FileFolderListContract.View, FileFolderListContract.Presenter>(), FileFolderListContract.View {
@@ -417,14 +430,15 @@ class FileFolderListFragment : BaseMVPFragment<FileFolderListContract.View, File
 
 
     private fun menuUploadFile() {
-        FilePicker()
-                .withActivity(activity!!)
-                .chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
-                .forResult { filePaths ->
-                    if (filePaths.isNotEmpty()) {
-                        uploadFile(filePaths[0])
+        if (activity != null) {
+            PicturePickUtil().withAction(activity!!)
+                .setMode(PickTypeMode.File)
+                .forResult { files ->
+                    if (files != null && files.isNotEmpty()) {
+                        uploadFile(files[0])
                     }
                 }
+        }
     }
     private fun uploadFile(filePath: String) {
         XLog.debug("filePath=$filePath")

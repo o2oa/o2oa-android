@@ -9,11 +9,9 @@ import android.net.Uri
 import android.os.Build
 import android.os.Bundle
 import android.provider.MediaStore
-import android.text.TextUtils
 import android.view.*
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_my_info.*
-import net.muliba.fancyfilepickerlibrary.PicturePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
@@ -26,6 +24,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderOptions
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import org.jetbrains.anko.doAsync
@@ -126,17 +125,6 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
             when (requestCode) {
                 TAKE_FROM_CAMERA_CODE -> cameraImageUri?.also { startClipAvatar(it) }
 
-                TAKE_FROM_PICTURES_CODE -> {
-                    XLog.debug("choose from pictures ...")
-                    data?.let {
-                        val result = it.extras?.getString(PicturePicker.FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY, "")
-                        if (!TextUtils.isEmpty(result)) {
-//                            val uri = Uri.fromFile(File(result!!))
-                            val photoURI = FileUtil.getUriFromFile(this, File(result!!))
-                            startClipAvatar(photoURI)
-                        }
-                    }
-                }
 
                 CLIP_AVATAR_ACTIVITY_CODE -> {
                     data?.let {
@@ -311,16 +299,11 @@ class MyInfoActivity : BaseMVPActivity<MyInfoContract.View, MyInfoContract.Prese
 
 
     private fun takeFromPictures() {
-        PicturePicker()
-                .withActivity(this)
-                .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
-            .forResult { list ->
-                if (list.isNotEmpty()) {
-                    val result = list[0]
-                    if (!TextUtils.isEmpty(result)) {
-                        val photoURI = FileUtil.getUriFromFile(this, File(result))
-                        startClipAvatar(photoURI)
-                    }
+        PicturePickUtil().withAction(this)
+            .forResult { files ->
+                if (files!=null && files.isNotEmpty()) {
+                    val photoURI = FileUtil.getUriFromFile(this, File(files[0]))
+                    startClipAvatar(photoURI)
                 }
             }
     }

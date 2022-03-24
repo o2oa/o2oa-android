@@ -215,7 +215,8 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             val url = APIAddressHelper.instance().getImImageDownloadUrlWithWH(msgBody.fileId!!, 144, 192)
             O2ImageLoaderManager.instance().showImage(imageMessageView, url)
         }else if (!TextUtils.isEmpty(msgBody.fileTempPath)) {
-            O2ImageLoaderManager.instance().showImage(imageMessageView, msgBody.fileTempPath!!)
+            val file = File(msgBody.fileTempPath!!)
+            O2ImageLoaderManager.instance().showImage(imageMessageView, file)
         }
         imageMessageView.visible()
         imageMessageView.setOnClickListener { eventListener?.openOriginImage(position, msgBody) }

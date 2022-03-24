@@ -458,7 +458,7 @@
             android:layout_height="wrap_content"
             android:textSize="@dimen/font_small"
             android:text="@string/meeting_tips"
-            android:textColor="@color/secondary_text"
+            android:textColor="@color/z_color_text_hint"
             android:padding="@dimen/spacing_small"/>
 
         <!--<Button

@@ -142,3 +142,12 @@ fun Activity.screenHeight():Int {
     return resources.displayMetrics.heightPixels
 }
 
+
+
+/**
+ * 连加
+ */
+fun String.concat(other: String): String {
+    return this + other
+}
+

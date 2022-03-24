@@ -2,7 +2,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.bbs.reply
 
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.LayoutInflater
@@ -13,7 +12,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_bbs_reply_subject.*
-import net.muliba.fancyfilepickerlibrary.PicturePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
@@ -24,6 +22,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.bbs.SubjectReplyInfoJs
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import org.jetbrains.anko.dip
 import java.util.*
 import kotlin.collections.HashMap
@@ -70,15 +69,10 @@ class BBSReplyActivity : BaseMVPActivity<BBSReplyContract.View, BBSReplyContract
         }
 
         image_bbs_reply_subject_attachment_add_button.setOnClickListener {
-            PicturePicker()
-                    .withActivity(this)
-                    .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
-                .forResult { list ->
-                    if (list.isNotEmpty()) {
-                        val result = list[0]
-                        if (!TextUtils.isEmpty(result)) {
-                            readyUploadImages(result)
-                        }
+            PicturePickUtil().withAction(this)
+                .forResult { files ->
+                    if (files!=null && files.isNotEmpty()) {
+                        readyUploadImages(files[0])
                     }
                 }
         }
@@ -99,19 +93,6 @@ class BBSReplyActivity : BaseMVPActivity<BBSReplyContract.View, BBSReplyContract
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                BBS_TAKE_FROM_PICTURES_CODE -> {
-                    val result = data?.extras?.getString(PicturePicker.FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY, "")
-                    if (!TextUtils.isEmpty(result)) {
-                        readyUploadImages(result!!)
-                    }
-                }
-            }
-        }
-    }
 
     override fun uploadFail(tag: String) {
         XToast.toastShort(this, "上传图片到服务器失败！")

@@ -1,11 +1,7 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.edit
 
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
@@ -14,15 +10,9 @@ import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.content_meeting_edit_form.*
-import kotlinx.android.synthetic.main.content_meeting_edit_form.edit_meeting_hostPerson
-import kotlinx.android.synthetic.main.content_meeting_edit_form.edit_meeting_hostUnit
-import kotlinx.android.synthetic.main.content_meeting_edit_form.edit_meeting_type
-import kotlinx.android.synthetic.main.content_meeting_edit_form.iv_meeting_file_add
-import kotlinx.android.synthetic.main.content_meeting_edit_form.rl_choose_meeting_hostPerson
-import kotlinx.android.synthetic.main.content_meeting_edit_form.rl_choose_meeting_hostUnit
-import kotlinx.android.synthetic.main.content_meeting_edit_form.rl_choose_meeting_type
-import net.muliba.fancyfilepickerlibrary.FilePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
@@ -38,6 +28,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
@@ -144,9 +136,15 @@ class MeetingEditActivity : BaseMVPActivity<MeetingEditContract.View, MeetingEdi
         }
         iv_meeting_file_add.setOnClickListener {
             _ ->
-            FilePicker().withActivity(this).requestCode(MEETING_FILE_CODE)
-                    .chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
-                    .start()
+            PicturePickUtil().withAction(this)
+                .setMode(PickTypeMode.File)
+                .forResult { files ->
+                    if (files !=null && files.isNotEmpty()) {
+                        XLog.debug("uri path:" + files[0])
+                        showLoadingDialog()
+                        mPresenter.saveMeetingFile(files[0], meeting.id)
+                    }
+                }
         }
         meetingFileAdapter.setOnItemClickListener { _, position ->
             showLoadingDialog()
@@ -183,25 +181,25 @@ class MeetingEditActivity : BaseMVPActivity<MeetingEditContract.View, MeetingEdi
         }
         return super.onOptionsItemSelected(item)
     }
-
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            when(requestCode){
-
-                MEETING_FILE_CODE -> {
-                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-                    if (!TextUtils.isEmpty(result)) {
-                        XLog.debug("uri path:" + result)
-                        showLoadingDialog()
-                        mPresenter.saveMeetingFile(result!!,meeting.id)
-                    } else {
-                        XLog.error("FilePicker 没有返回值！")
-                    }
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
+//
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        if (resultCode == Activity.RESULT_OK) {
+//            when(requestCode){
+//
+//                MEETING_FILE_CODE -> {
+//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+//                    if (!TextUtils.isEmpty(result)) {
+//                        XLog.debug("uri path:" + result)
+//                        showLoadingDialog()
+//                        mPresenter.saveMeetingFile(result!!,meeting.id)
+//                    } else {
+//                        XLog.error("FilePicker 没有返回值！")
+//                    }
+//                }
+//            }
+//        }
+//        super.onActivityResult(requestCode, resultCode, data)
+//    }
 
     override fun onError(message: String) {
         XToast.toastShort(this, message)

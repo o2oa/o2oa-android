@@ -31,9 +31,9 @@ class O2ImageLoaderStrategyWithGlide : O2ImageLoaderStrategy {
                 if (options.errorDrawable != -1) {
                     request.error(options.errorDrawable)
                 }
-                if (options.isCrossFade) {
-                    request.crossFade()
-                }
+//                if (options.isCrossFade) {
+//                    request.crossFade()
+//                }
                 if (options.isSkipCache) {
                     request.skipMemoryCache(true)
                     request.diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -61,9 +61,9 @@ class O2ImageLoaderStrategyWithGlide : O2ImageLoaderStrategy {
                  if (options.errorDrawable != -1) {
                      request.error(options.errorDrawable)
                  }
-                 if (options.isCrossFade) {
-                     request.crossFade()
-                 }
+//                 if (options.isCrossFade) {
+//                     request.crossFade()
+//                 }
                  if (options.isSkipCache) {
                      request.skipMemoryCache(true)
                      request.diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -89,9 +89,9 @@ class O2ImageLoaderStrategyWithGlide : O2ImageLoaderStrategy {
                 if (options.errorDrawable != -1) {
                     request.error(options.errorDrawable)
                 }
-                if (options.isCrossFade) {
-                    request.crossFade()
-                }
+//                if (options.isCrossFade) {
+//                    request.crossFade()
+//                }
                 if (options.isSkipCache) {
                     request.skipMemoryCache(true)
                     request.diskCacheStrategy(DiskCacheStrategy.NONE)

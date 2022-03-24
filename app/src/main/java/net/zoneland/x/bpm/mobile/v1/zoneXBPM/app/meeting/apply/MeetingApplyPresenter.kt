@@ -2,7 +2,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.apply
 
 import android.widget.TextView
 import net.muliba.accounting.app.ExceptionHandler
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2App
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
@@ -13,7 +12,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import okhttp3.MediaType
 import okhttp3.MultipartBody
 import okhttp3.RequestBody
-import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.io.File

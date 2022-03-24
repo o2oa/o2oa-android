@@ -2,7 +2,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.edit
 
 import android.widget.TextView
 import net.muliba.accounting.app.ExceptionHandler
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2App
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler

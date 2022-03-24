@@ -71,7 +71,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@color/icons"
+            android:background="@color/white"
             android:orientation="vertical">
 
             <View
@@ -127,7 +127,7 @@
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
                     android:text="发送"
-                    android:textColor="@color/white_translucent"
+                    android:textColor="@color/z_color_white_translucent"
                     android:layout_margin="@dimen/spacing_normal"
                     android:background="@drawable/button_submit_comment"/>
 

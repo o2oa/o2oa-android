@@ -34,8 +34,6 @@ import com.zlw.main.recorderlib.recorder.RecordConfig
 import com.zlw.main.recorderlib.recorder.RecordHelper
 import com.zlw.main.recorderlib.recorder.listener.RecordStateListener
 import kotlinx.android.synthetic.main.activity_o2_chat.*
-import net.muliba.fancyfilepickerlibrary.FilePicker
-import net.muliba.fancyfilepickerlibrary.PicturePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
@@ -52,6 +50,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import pl.droidsonroids.gif.GifImageView
 import java.io.File
@@ -735,13 +735,12 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             }
         }
         ll_o2_chat_album_btn.setOnClickListener {
-            PicturePicker()
-                    .withActivity(this)
-                    .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE).forResult { files ->
-                        if (files.isNotEmpty()) {
-                            newImageMessage(files[0])
-                        }
+            PicturePickUtil().withAction(this)
+                .forResult { files ->
+                    if (files!=null && files.isNotEmpty()) {
+                        newImageMessage(files[0])
                     }
+                }
         }
         ll_o2_chat_camera_btn.setOnClickListener {
             PermissionRequester(this@O2ChatActivity).request(Manifest.permission.CAMERA)
@@ -774,14 +773,13 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         }
         ll_o2_chat_file_btn.setOnClickListener {
             //文件选择器
-            FilePicker()
-                    .withActivity(this@O2ChatActivity)
-                    .chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
-                    .forResult { filePaths ->
-                        if (filePaths.isNotEmpty()) {
-                            newFileMessage(filePaths[0])
-                        }
+            PicturePickUtil().withAction(this)
+                .setMode(PickTypeMode.File)
+                .forResult { files ->
+                    if (files !=null && files.isNotEmpty()) {
+                        newFileMessage(files[0])
                     }
+                }
         }
     }
 

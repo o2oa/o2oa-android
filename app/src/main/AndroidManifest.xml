@@ -50,7 +50,14 @@
         android:networkSecurityConfig="@xml/network_security_config"
         android:roundIcon="@mipmap/logo_round"
         android:theme="@style/XBPMTheme.NoActionBar"
-        tools:replace="android:allowBackup">
+        tools:replace="android:allowBackup"
+        android:requestLegacyExternalStorage="true"
+        >
+<!--        图片选择器-->
+        <activity
+            android:name=".utils.pick.PicturePickActivity"
+            android:theme="@style/tyhjtranslucentTheme"></activity>
+
         <activity android:name=".app.o2.logs.LogsActivity" />
         <activity
             android:name=".app.o2.main.SearchActivity"
