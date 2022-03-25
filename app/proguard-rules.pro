@@ -289,6 +289,17 @@
 
 # Addidional for x5.sdk classes for apps
 
+-dontwarn dalvik.**
+-dontwarn com.tencent.smtt.**
+
+-keep class com.tencent.smtt.** {
+    *;
+}
+
+-keep class com.tencent.tbs.** {
+    *;
+}
+
 -keep class com.tencent.smtt.export.external.**{
     *;
 }

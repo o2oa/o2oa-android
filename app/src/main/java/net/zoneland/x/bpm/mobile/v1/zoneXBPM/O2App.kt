@@ -9,6 +9,8 @@ import cn.jpush.android.api.JPushInterface
 import com.baidu.mapapi.SDKInitializer
 import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.smtt.sdk.QbSdk
+import com.tencent.smtt.sdk.TbsDownloader
+import com.tencent.smtt.sdk.TbsListener
 import com.xiaomi.push.it
 import com.zlw.main.recorderlib.RecordManager
 import io.realm.Realm
@@ -17,6 +19,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.skin.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.LogSingletonService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2MediaPlayerManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import com.tencent.smtt.export.external.TbsCoreSettings
+import io.realm.ObjectChangeSet
 
 
 /**
@@ -72,17 +76,8 @@ class O2App : MultiDexApplication() {
             //bugly
             CrashReport.initCrashReport(applicationContext)
 
-            // qb
-            QbSdk.initX5Environment(this, object : QbSdk.PreInitCallback{
-                override fun onCoreInitFinished() {
-                    Log.i("O2app", "qb sdk core init finish..........")
-                }
 
-                override fun onViewInitFinished(p0: Boolean) {
-                    Log.i("O2app", "qb sdk init $p0 ..........")
-                }
-            })
-            QbSdk.setDownloadWithoutWifi(true)
+            initTBS()
 
             //极光推送
             initJMessageAndJPush()
@@ -104,6 +99,49 @@ class O2App : MultiDexApplication() {
         Log.i("O2app", "O2app init.....................................................")
         //stetho developer tool
 //        Stetho.initializeWithDefaults(this)
+    }
+
+    /**
+     * 初始化腾讯TBS
+     */
+    private fun initTBS() {
+        var map  = HashMap<String, Any>()
+        map[TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER] = true
+        map[TbsCoreSettings.TBS_SETTINGS_USE_DEXLOADER_SERVICE] = true
+        QbSdk.initTbsSettings(map)
+
+        QbSdk.setDownloadWithoutWifi(true)
+        QbSdk.setTbsListener(object : TbsListener {
+            override fun onDownloadFinish(progress: Int) {
+                Log.d("QbSdk", "onDownloadFinish -->下载X5内核完成：$progress")
+                //若是progress == 100 的情况下才表示 内核加载成功 其他数据不管大小都是失败的 否则重新 加载
+//                if (progress != 100) {
+//                    TbsDownloader.startDownload(instance)
+//                }
+            }
+
+            override fun onInstallFinish(progress: Int) {
+                //安装结束时的状态，安装成功时errorCode为200,其他均为失败，外部不需要关注具体的失败原因
+                Log.d("QbSdk", "onInstallFinish -->安装X5内核进度：$progress")
+            }
+
+            override fun onDownloadProgress(progress: Int) {
+                Log.d("QbSdk", "onDownloadProgress -->下载X5内核进度：$progress")
+            }
+        })
+        // qb
+        QbSdk.initX5Environment(this, object : QbSdk.PreInitCallback {
+            override fun onCoreInitFinished() {
+                Log.i("QbSdk", "qb sdk core init finish..........")
+            }
+
+            override fun onViewInitFinished(p0: Boolean) {
+                Log.i("QbSdk", "qb sdk init $p0 ..........")
+//                if (!p0) {
+//                    TbsDownloader.startDownload(instance)
+//                }
+            }
+        })
     }
 
     override fun attachBaseContext(base: Context) {
