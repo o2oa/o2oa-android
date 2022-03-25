@@ -41,9 +41,7 @@ dependencies {
     implementation 'io.reactivex:rxjava:1.1.6'
     implementation 'io.reactivex:rxandroid:1.2.1'
 
-    implementation('com.github.bumptech.glide:glide:3.7.0') {
-        force = true
-    }
+    implementation('com.github.bumptech.glide:glide:3.7.0')
 }
 
 //添加以下方法
