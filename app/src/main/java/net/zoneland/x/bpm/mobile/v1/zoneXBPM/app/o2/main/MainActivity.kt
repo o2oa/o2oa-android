@@ -12,7 +12,6 @@ import android.util.DisplayMetrics
 import android.view.KeyEvent
 import android.view.View
 import androidx.fragment.app.Fragment
-import cn.jpush.android.api.JPushInterface
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main_bottom_bar_image.*
 import net.muliba.changeskin.FancySkinManager
@@ -379,12 +378,6 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
                 .setRequiresCharging(true)//充电的时候才执行
                 .setPeriodic(24 * 60 * 60 * 1000)
                 .build()
-//        val collectLogComponent = ComponentName(this, CollectLogJobService::class.java)
-//        val jobCollectLog = JobInfo.Builder(O2.O2_COLLECT_LOG_JOB_ID, collectLogComponent)
-//                .setPersisted(true)
-//                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-//                .setPeriodic(1000 * 60 * 60 * 12)
-//                .build()
 
         val jobScheduler = applicationContext.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         val result = jobScheduler.schedule(jobInfo)

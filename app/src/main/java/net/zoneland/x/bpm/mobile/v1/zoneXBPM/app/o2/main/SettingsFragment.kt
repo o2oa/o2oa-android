@@ -2,7 +2,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main
 
 import android.text.TextUtils
 import android.view.View
-import cn.jpush.android.api.JPushInterface
 import kotlinx.android.synthetic.main.fragment_main_settings.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPViewPagerFragment

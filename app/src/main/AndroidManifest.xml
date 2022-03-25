@@ -57,7 +57,7 @@
 <!--        图片选择器-->
         <activity
             android:name=".utils.pick.PicturePickActivity"
-            android:theme="@style/tyhjtranslucentTheme"></activity>
+            android:theme="@style/tyhjtranslucentTheme" />
 
         <activity android:name=".app.o2.logs.LogsActivity" />
         <activity
@@ -388,18 +388,7 @@
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" /> <!-- 华为推送 -->
-        <meta-data
-            android:name="com.huawei.hms.client.channel.androidMarket"
-            android:value="false" />
-
-        <service
-            android:name=".core.service.HuaweiPushService"
-            android:exported="false">
-            <intent-filter>
-                <action android:name="com.huawei.push.action.MESSAGING_EVENT" />
-            </intent-filter>
-        </service>
+            android:process=":remote" />
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
@@ -421,10 +410,7 @@
             android:name=".core.service.ClearTempFileJobService"
             android:exported="true"
             android:permission="android.permission.BIND_JOB_SERVICE" />
-        <service
-            android:name=".core.service.CollectLogJobService"
-            android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
+
 
         <!-- 下载apk -->
         <service

@@ -3,8 +3,6 @@ apply plugin: 'kotlin-android'
 apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'realm-android'
-apply plugin: 'com.huawei.agconnect'
-//apply plugin: 'com.google.gms.google-services'
 
 ext {
     //定义变量
@@ -266,8 +264,6 @@ dependencies {
     /////////////////////////////////////////////////推送///////////////////////
     implementation project(':jiguang')
 
-//    // 接入华为厂商
-    implementation 'com.huawei.hms:push:5.3.0.304'
 
     implementation 'com.contrarywind:Android-PickerView:3.2.4'
 
