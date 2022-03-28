@@ -9,6 +9,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.APIDistributeTypeEnum
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ApiResponse
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.IdData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AttachmentInfo
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ReadData
@@ -150,6 +151,69 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                                 mView?.finishLoading() })
         }
     }
+
+
+
+    override fun uploadAttachmentList(attachmentFilePaths: List<String>, site: String, workId: String, datagridParam:String) {
+        if (attachmentFilePaths.isEmpty() || TextUtils.isEmpty(site) || TextUtils.isEmpty(workId)) {
+            mView?.invalidateArgs()
+            XLog.error("uploadAttachmentList arguments is null  workid:$workId， site:$site ")
+            mView?.finishLoading()
+            return
+        } else {
+
+            if (attachmentFilePaths.size > 9) {
+                mView?.uploadMaxFiles()
+                XLog.error("太多附件了，超过9个。。。。。。")
+                return
+            }
+
+            val list: List<Observable<ApiResponse<IdData>>> = attachmentFilePaths.mapNotNull { path ->
+                uploadAttachmentObservable(
+                    path,
+                    site,
+                    workId
+                )
+            }
+            Observable.zip(list) { results ->
+                val idList = ArrayList<String>()
+                for (result in results) {
+                    val s = result as? ApiResponse<IdData>
+                    if (s != null && s.data != null ) {
+                        idList.add(s.data.id)
+                    }
+                }
+                XLog.debug("uploadAttachmentList idList: ${idList.size}")
+                idList
+            }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext { d ->
+                        for (s in d) {
+                            mView?.uploadAttachmentSuccess(s, site, datagridParam)
+                        }
+                    }
+                    onError { e, _ ->
+                        XLog.error("$e")
+                        mView?.finishLoading()
+                    }
+                }
+
+        }
+    }
+
+
+    private fun uploadAttachmentObservable(attachmentFilePath: String, site: String, workId: String) : Observable<ApiResponse<IdData>>? {
+        val file = File(attachmentFilePath)
+        if (!file.exists()) {
+            return null
+        }
+        val requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), file)
+        val body = MultipartBody.Part.createFormData("file", file.name, requestBody)
+        val siteBody = RequestBody.create(MediaType.parse("text/plain"), site)
+        return getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.uploadAttachment(body, siteBody, workId)
+    }
+
 
     override fun replaceAttachment(attachmentFilePath: String, site: String, attachmentId: String, workId: String, datagridParam:String) {
         if (TextUtils.isEmpty(attachmentFilePath) || TextUtils.isEmpty(site) || TextUtils.isEmpty(attachmentId) || TextUtils.isEmpty(workId)) {

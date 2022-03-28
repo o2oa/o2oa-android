@@ -744,6 +744,7 @@
     <string name="message_update_fail">Modification failed！</string>
     <string name="message_download_document_fail">Failed to download document！</string>
     <string name="message_download_fail">Download failed！</string>
+    <string name="message_upload_file_max_number">The number of uploaded attachments exceeds the limit!</string>
     <string name="message_upload_fail">File upload exception！</string>
     <string name="message_arg_error">Incorrect incoming parameters！</string>
     <string name="message_file_not_exist">File does not exist！</string>

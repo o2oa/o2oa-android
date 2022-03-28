@@ -727,6 +727,7 @@
     <string name="message_withdraw_fail">撤回失败！</string>
     <string name="message_delete_success">删除成功！</string>
     <string name="message_delete_fail">删除失败！</string>
+    <string name="message_upload_file_max_number">上传附件超过限制个数！</string>
     <string name="message_task_data_load_fail">任务数据获取不到！</string>
     <string name="message_data_parse_fail">解析数据异常！</string>
     <string name="message_need_choose_decision">请选择决策！</string>

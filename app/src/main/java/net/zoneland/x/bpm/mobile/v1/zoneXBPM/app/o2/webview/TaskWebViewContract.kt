@@ -17,6 +17,7 @@ object TaskWebViewContract {
         fun replaceAttachmentSuccess(attachmentId:String, site:String, datagridParam:String )
         fun downloadAttachmentSuccess(file:File)
         fun invalidateArgs()
+        fun uploadMaxFiles()
         fun downloadFail(message:String)
         fun retractSuccess()
         fun retractFail()
@@ -28,6 +29,7 @@ object TaskWebViewContract {
 
     interface Presenter : BasePresenter<View> {
         fun uploadAttachment(attachmentFilePath: String, site: String, workId: String, datagridParam:String )
+        fun uploadAttachmentList(attachmentFilePaths: List<String>, site: String, workId: String, datagridParam:String) //多附件上传
         fun replaceAttachment(attachmentFilePath: String, site: String, attachmentId: String, workId: String, datagridParam:String )
         fun downloadAttachment(attachmentId: String, workId: String)
         fun downloadWorkCompletedAttachment(attachmentId: String, workCompleted: String)

@@ -337,7 +337,9 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     @JavascriptInterface
     fun closeWork(result: String) {
         XLog.debug("关闭表单 closeWork ：$result")
-        finish()
+        runOnUiThread {
+            finish()
+        }
     }
 
     /**
@@ -410,7 +412,9 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             return
         }
         this.site = site
-        openFancyFilePicker(WORK_WEB_VIEW_UPLOAD_REQUEST_CODE)
+        runOnUiThread {
+            openFancyFilePicker(WORK_WEB_VIEW_UPLOAD_REQUEST_CODE, true)
+        }
     }
 
     /**
@@ -425,9 +429,12 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             XLog.error("没有传入site")
             return
         }
-        this.site = site
-        this.datagridParam = param
-        openFancyFilePicker(WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE)
+
+        runOnUiThread {
+            this.site = site
+            this.datagridParam = param
+            openFancyFilePicker(WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE, true)
+        }
     }
 
     /**
@@ -443,9 +450,11 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             XLog.error("没有传入attachmentId 或 site")
             return
         }
-        this.site = site
-        this.attachmentId = attachmentId
-        openFancyFilePicker(WORK_WEB_VIEW_REPLACE_REQUEST_CODE)
+        runOnUiThread {
+            this.site = site
+            this.attachmentId = attachmentId
+            openFancyFilePicker(WORK_WEB_VIEW_REPLACE_REQUEST_CODE, false)
+        }
     }
 
     /**
@@ -460,10 +469,12 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             XLog.error("没有传入attachmentId 或 site")
             return
         }
-        this.site = site
-        this.attachmentId = attachmentId
-        this.datagridParam = param
-        openFancyFilePicker(WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE)
+        runOnUiThread {
+            this.site = site
+            this.attachmentId = attachmentId
+            this.datagridParam = param
+            openFancyFilePicker(WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE, false)
+        }
     }
 
     /**
@@ -580,6 +591,11 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     override fun deleteFail() {
         hideLoadingDialog()
         XToast.toastShort(this, getString(R.string.message_delete_fail))
+    }
+
+    override fun uploadMaxFiles() {
+        hideLoadingDialog()
+        XToast.toastShort(this, getString(R.string.message_upload_file_max_number))
     }
 
     override fun uploadAttachmentSuccess(attachmentId: String, site: String, datagridParam:String) {
@@ -1068,31 +1084,20 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 
 
 
-    private fun openFancyFilePicker(requestCode: Int) {
+    private fun openFancyFilePicker(requestCode: Int, multiple: Boolean) {
         PicturePickUtil().withAction(this)
             .setMode(PickTypeMode.File)
+            .allowMultiple(multiple)
             .forResult { files ->
                 if (files !=null && files.isNotEmpty()) {
                      when(requestCode) {
                          WORK_WEB_VIEW_UPLOAD_REQUEST_CODE -> {
-                             val result = files[0]
-                             if (!TextUtils.isEmpty(result)) {
-                                 XLog.debug("uri path:$result")
-                                 showLoadingDialog()
-                                 mPresenter.uploadAttachment(result, site, workId, "")
-                             } else {
-                                 XLog.error("FilePicker 没有返回值！")
-                             }
+                             showLoadingDialog()
+                             mPresenter.uploadAttachmentList(files, site, workId, "")
                          }
                          WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE -> {
-                             val result = files[0]
-                             if (!TextUtils.isEmpty(result)) {
-                                 XLog.debug("uri path:$result")
-                                 showLoadingDialog()
-                                 mPresenter.uploadAttachment(result, site, workId, datagridParam)
-                             } else {
-                                 XLog.error("FilePicker 没有返回值！")
-                             }
+                             showLoadingDialog()
+                             mPresenter.uploadAttachmentList(files, site, workId, datagridParam)
                          }
                          WORK_WEB_VIEW_REPLACE_REQUEST_CODE -> {
                              val result = files[0]
@@ -1115,6 +1120,8 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                              }
                          }
                      }
+                } else {
+                    XLog.error("FilePicker 没有返回值！")
                 }
             }
     }

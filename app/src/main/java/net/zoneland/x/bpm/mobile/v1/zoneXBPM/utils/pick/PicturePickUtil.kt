@@ -67,8 +67,9 @@ class PicturePickUtil {
                         }
                     }
                 }
+        } else {
+            callback(null)
         }
-        callback(null)
     }
 
 
