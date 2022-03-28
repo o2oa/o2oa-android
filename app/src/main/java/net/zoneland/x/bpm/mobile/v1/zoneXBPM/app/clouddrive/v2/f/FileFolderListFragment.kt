@@ -432,21 +432,21 @@ class FileFolderListFragment : BaseMVPFragment<FileFolderListContract.View, File
     private fun menuUploadFile() {
         if (activity != null) {
             PicturePickUtil().withAction(activity!!)
-                .setMode(PickTypeMode.File)
+                .setMode(PickTypeMode.FileWithMedia)
+                .allowMultiple(true)
                 .forResult { files ->
                     if (files != null && files.isNotEmpty()) {
-                        uploadFile(files[0])
+                        uploadFile(files)
                     }
                 }
         }
     }
-    private fun uploadFile(filePath: String) {
-        XLog.debug("filePath=$filePath")
+    private fun uploadFile(filePaths: List<String>) {
         try {
-            val upFile = File(filePath)
+//            val upFile = File(filePath)
             val bean = breadcrumbBeans.last()//最后一个
             showLoadingDialog()
-            mPresenter.uploadFile(bean.folderId, upFile)
+            mPresenter.uploadFileList(bean.folderId, filePaths)
         } catch (e: Exception) {
             XLog.error("", e)
             XToast.toastShort(activity, "上传文件失败！")

@@ -161,6 +161,48 @@ class FileFolderListPresenter : BasePresenterImpl<FileFolderListContract.View>()
                 }
     }
 
+    override fun uploadFileList(parentId: String, files: List<String>) {
+        var folderId = parentId
+        if (parentId.isEmpty()) {
+            folderId = O2.FIRST_PAGE_TAG
+        }
+        if (files.isEmpty() || files.size > 9) {
+            mView?.error("上传附件个数太多错误！")
+            return
+        }
+        val list = files.mapNotNull { path -> uploadFileObservable(folderId, path) }
+        Observable.zip(list) {iddatas ->
+            val idList = ArrayList<String>()
+            for (iddata in iddatas) {
+                val d = iddata as? ApiResponse<IdData>
+                if (d != null && d.data != null) {
+                    idList.add(d.data.id ?: "")
+                }
+            }
+            idList
+        }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .o2Subscribe {
+                onNext {
+                    mView?.uploadSuccess()
+                }
+                onError { e, _ ->
+                    XLog.error("", e)
+                    mView?.error(e?.message ?: "错误！")
+                }
+            }
+    }
+
+    private fun uploadFileObservable(folderId: String, path: String) :  Observable<ApiResponse<IdData>>? {
+        val file = File(path)
+        if (!file.exists()) {
+            return null
+        }
+        val requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), file)
+        val body = MultipartBody.Part.createFormData("file", file.name, requestBody)
+        return getCloudFileControlService(mView?.getContext())?.uploadFile2Folder(body, folderId)
+    }
+
     override fun createFolder(params: HashMap<String, String>) {
         val service = getCloudFileControlService(mView?.getContext()) ?: return
         service.createFolder(params).subscribeOn(Schedulers.io())

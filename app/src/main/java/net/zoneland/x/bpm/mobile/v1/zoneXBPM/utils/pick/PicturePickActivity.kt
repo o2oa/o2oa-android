@@ -27,15 +27,15 @@ class PicturePickActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val modeInt = intent.extras?.getInt(PicturePickUtil.MODE_INTENT_KEY) ?: 0
-        mode = if (modeInt == 1) {
-            PickTypeMode.File
-        } else {
-            PickTypeMode.Picture
+        mode = when(modeInt) {
+            0 -> PickTypeMode.Picture
+            1 -> PickTypeMode.File
+            else -> PickTypeMode.FileWithMedia
         }
         multiple = intent.extras?.getBoolean(PicturePickUtil.MULTIPLE_INTENT_KEY) ?: false
         if (mode == PickTypeMode.Picture) {
             openSystemAlbum()
-        } else {
+        } else { // PickTypeMode.File PickTypeMode.FileWithMedia
             openFileChoose()
         }
     }
@@ -62,12 +62,23 @@ class PicturePickActivity : AppCompatActivity() {
        "application/*",
        "text/*"
     )
+    private val file_media_mimetypes = arrayOf(
+        "audio/*",
+        "image/*",
+        "video/*",
+        "application/*",
+        "text/*"
+    )
     // 选择文件
     private fun openFileChoose() {
-//        val intent = Intent(Intent.ACTION_GET_CONTENT)
         val intent = Intent(Intent.ACTION_OPEN_DOCUMENT)
         intent.type = "*/*"
-        intent.putExtra(Intent.EXTRA_MIME_TYPES, file_mimetypes)
+        val mimetypes = if (mode == PickTypeMode.FileWithMedia) {
+            file_media_mimetypes
+        } else {
+            file_mimetypes
+        }
+        intent.putExtra(Intent.EXTRA_MIME_TYPES, mimetypes)
         if (multiple) {
             // 支持多选（长按多选）
             intent.putExtra(Intent.EXTRA_ALLOW_MULTIPLE, true)

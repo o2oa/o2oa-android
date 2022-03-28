@@ -23,6 +23,7 @@ object FileFolderListContract {
         fun getItemList(parentId: String)
         fun createFolder(params: HashMap<String, String>)
         fun uploadFile(parentId: String, file: File)
+        fun uploadFileList(parentId: String, files: List<String>)
         fun updateFile(file: FileJson)
         fun updateFolder(folder: FolderJson)
         fun deleteBatch(fileIds: List<String>, folderIds: List<String>)

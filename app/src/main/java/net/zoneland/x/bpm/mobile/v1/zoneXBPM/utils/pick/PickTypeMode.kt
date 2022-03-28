@@ -6,5 +6,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick
  */
 enum class PickTypeMode(val v: Int) {
     Picture(0),
-    File(1)
+    File(1),
+    FileWithMedia(2)
 }
