@@ -397,4 +397,8 @@ public final class CameraManager {
         }
     }
 
+	public Camera getCamera() {
+		return camera;
+	}
+
 }
