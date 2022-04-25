@@ -40,9 +40,10 @@ class MeetingDetailInfoActivity : BaseMVPActivity<MeetingDetailInfoContract.View
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         setupToolBar(getString(R.string.meeting_detail),true,false)
 
-        if (intent.extras?.getSerializable(meetingDetail)  ==null) {
+        if (intent.extras?.getSerializable(meetingDetail)  == null) {
             XToast.toastShort(this, "没有获取到会议详细信息！")
             finish()
+            return
         }
 
         val meetingDetailInfo = intent.extras?.getSerializable(meetingDetail) as MeetingInfoJson

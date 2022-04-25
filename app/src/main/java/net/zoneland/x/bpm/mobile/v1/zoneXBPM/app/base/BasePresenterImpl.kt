@@ -380,11 +380,11 @@ open class BasePresenterImpl<V: BaseView> : BasePresenter<V> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .o2Subscribe {
                     onNext { res ->
-                        XLog.info("绑定设备，结果：${res.data.isValue}")
-                        XLog.info("绑定设备，message：${res.message}")
+                        XLog.info("老版接口： 绑定设备，结果：${res.data.isValue}")
+                        XLog.info("老版接口： 绑定设备，message：${res.message}")
                     }
                     onError { e, _ ->
-                        XLog.error("绑定设备出错，", e)
+                        XLog.error("老版接口： 绑定设备出错，", e)
                     }
                 }
         }

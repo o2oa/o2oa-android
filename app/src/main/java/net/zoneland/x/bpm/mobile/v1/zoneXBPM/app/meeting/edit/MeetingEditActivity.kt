@@ -155,9 +155,9 @@ class MeetingEditActivity : BaseMVPActivity<MeetingEditContract.View, MeetingEdi
         val config = O2SDKManager.instance().prefs().getString(O2.PRE_MEETING_CONFIG_KEY, "")
         if (!TextUtils.isEmpty(config)) {
             val meetingConfig = O2SDKManager.instance().gson.fromJson<ProcessDataJson>(config, ProcessDataJson::class.java)
-            if (meetingConfig.typeList.isNotEmpty()) {
+            if (meetingConfig.typeList?.isNotEmpty() == true) {
                 typeList.clear()
-                typeList.addAll(meetingConfig.typeList)
+                typeList.addAll(meetingConfig.typeList!!)
             }
         }
         rl_choose_meeting_type.setOnClickListener { chooseMeetingType() }

@@ -4,11 +4,13 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseView
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ReadData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.TaskData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.WorkInfoRes
 import java.io.File
 
 
 object TaskWebViewContract {
     interface View : BaseView {
+        fun workOrWorkCompletedInfo(info: WorkInfoRes?)
         fun finishLoading()
         fun submitSuccess()
         fun saveSuccess()
@@ -28,6 +30,7 @@ object TaskWebViewContract {
     }
 
     interface Presenter : BasePresenter<View> {
+        fun getWorkInfoByWorkOrWorkCompletedId(workOrWorkCompletedId: String)
         fun uploadAttachment(attachmentFilePath: String, site: String, workId: String, datagridParam:String )
         fun uploadAttachmentList(attachmentFilePaths: List<String>, site: String, workId: String, datagridParam:String) //多附件上传
         fun replaceAttachment(attachmentFilePath: String, site: String, attachmentId: String, workId: String, datagridParam:String )

@@ -29,6 +29,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.WorkNewActionItem
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.WorkControl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ProcessDraftWorkData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ReadData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.WorkInfoRes
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.WorkOpinionData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.O2UploadImageData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
@@ -140,9 +141,11 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             if (isWorkCompleted) {
                 url = APIAddressHelper.instance().getWorkCompletedUrl()
                 url = String.format(url, workCompletedId)
+                mPresenter.getWorkInfoByWorkOrWorkCompletedId(workCompletedId) // 后台请求工作对象
             } else {
                 url = APIAddressHelper.instance().getWorkUrlPre()
                 url = String.format(url, workId)
+                mPresenter.getWorkInfoByWorkOrWorkCompletedId(workId) // 后台请求工作对象
             }
         }
         url += "&time=" + System.currentTimeMillis()
@@ -548,6 +551,13 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     //MARK: - view implements
 
     //region view implements
+
+    override fun workOrWorkCompletedInfo(info: WorkInfoRes?) {
+        if (info != null && !TextUtils.isEmpty(info.completedTime)) {
+            XLog.info("当前工作已完成！")
+            isWorkCompleted = true
+        }
+    }
 
     override fun finishLoading() {
         XLog.debug("finishLoading.........")

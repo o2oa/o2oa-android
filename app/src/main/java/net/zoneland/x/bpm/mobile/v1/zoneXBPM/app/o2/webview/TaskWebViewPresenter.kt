@@ -33,6 +33,37 @@ import java.io.File
 class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), TaskWebViewContract.Presenter {
 
 
+    override fun getWorkInfoByWorkOrWorkCompletedId(workOrWorkCompletedId: String) {
+        if (TextUtils.isEmpty(workOrWorkCompletedId)) {
+            XLog.error("没有传入workOrWorkCompletedId ！")
+            mView?.workOrWorkCompletedInfo(null)
+            return;
+        }
+        val service = getProcessAssembleSurfaceServiceAPI(mView?.getContext())
+        if (service != null) {
+            service.getWorkInfo(workOrWorkCompletedId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext { res->
+                       if (res != null && res.data != null && res.data.work!=null) {
+                           mView?.workOrWorkCompletedInfo(res.data.work)
+                       } else {
+                           XLog.error("getWorkInfo 返回结果为空。。。 ")
+                           mView?.workOrWorkCompletedInfo(null)
+                       }
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.workOrWorkCompletedInfo(null)
+                    }
+                }
+        } else {
+            XLog.error("服务为空。。。 ")
+            mView?.workOrWorkCompletedInfo(null)
+        }
+    }
+
     override fun save(workId: String, formData: String) {
         XLog.debug("save ....... workid:$workId formData:$formData")
         if (TextUtils.isEmpty(workId) || TextUtils.isEmpty(formData)) {
