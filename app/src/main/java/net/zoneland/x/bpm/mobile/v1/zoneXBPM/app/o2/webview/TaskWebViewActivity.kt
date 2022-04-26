@@ -555,6 +555,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     override fun workOrWorkCompletedInfo(info: WorkInfoRes?) {
         if (info != null && !TextUtils.isEmpty(info.completedTime)) {
             XLog.info("当前工作已完成！")
+            workCompletedId = info.id
             isWorkCompleted = true
         }
     }
