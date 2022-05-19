@@ -409,6 +409,20 @@ class RetrofitClient private constructor() {
     }
 
     /**
+     * V3版本云盘服务
+     */
+    fun cloudFileV3ControlApi(): CloudFileV3ControlService {
+        val url = helper.getAPIDistribute(APIDistributeTypeEnum.x_pan_assemble_control)
+        val retrofit = Retrofit.Builder()
+            .baseUrl(url)
+            .client(o2HttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+            .build()
+        return retrofit.create(CloudFileV3ControlService::class.java)
+    }
+
+    /**
      * 会议室管理
      * @return
      */

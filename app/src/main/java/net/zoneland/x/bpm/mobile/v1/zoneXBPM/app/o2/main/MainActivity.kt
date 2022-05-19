@@ -168,6 +168,8 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         // 检查考勤版本
         mPresenter.checkAttendanceFeature()
 
+        // 检测网盘是否存在V3版本
+        mPresenter.checkCloudFileV3()
 
     }
 

@@ -17,6 +17,7 @@ import kotlinx.android.synthetic.main.fragment_main_todo.*
 import kotlinx.android.synthetic.main.snippet_shimmer_content.*
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.attendance.main.AttendanceMainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPViewPagerFragment
@@ -24,6 +25,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.bbs.main.BBSMainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.bbs.view.BBSWebViewSubjectActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.calendar.CalendarMainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v3.CloudDiskV3Activity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.index.CMSIndexActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.view.CMSWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.main.MeetingMainActivity
@@ -76,9 +78,8 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
                 ApplicationEnum.READCOMPLETED.key -> activity.go<ReadCompletedListActivity>()
                 ApplicationEnum.BBS.key -> activity.go<BBSMainActivity>()
                 ApplicationEnum.CMS.key -> activity.go<CMSIndexActivity>()
-                ApplicationEnum.YUNPAN.key -> activity.go<CloudDiskActivity>()
-//                ApplicationEnum.YUNPAN.key -> activity.go<CloudDriveActivity>()
-                ApplicationEnum.clouddisk.key -> activity.go<CloudDiskActivity>()
+                ApplicationEnum.YUNPAN.key -> openCloudFile(activity)
+                ApplicationEnum.clouddisk.key -> openCloudFile(activity)
                 ApplicationEnum.MEETING.key -> activity.go<MeetingMainActivity>()
                 ApplicationEnum.ATTENDANCE.key -> activity.go<AttendanceMainActivity>()
                 ApplicationEnum.CALENDAR.key -> activity.go<CalendarMainActivity>()
@@ -117,7 +118,18 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
             }
 
         }
+        private fun openCloudFile(activity: Activity) {
+            val cloudFileV3 = O2SDKManager.instance().prefs().getString(O2.PRE_CLOUD_FILE_VERSION_KEY, "")
+            if (TextUtils.isEmpty(cloudFileV3) || cloudFileV3 != "1") {
+                XLog.debug("没有V3版本的网盘")
+                activity.go<CloudDiskActivity>()
+            } else {
+                activity.go<CloudDiskV3Activity>()
+            }
+        }
     }
+
+
 
     lateinit var cBannerView: ConvenientBanner<HotPictureOutData>
 //    lateinit var mActionBarBackgroundDrawable: Drawable

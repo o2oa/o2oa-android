@@ -1,23 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:ignore="LockedOrientationActivity"
-    package="net.zoneland.x.bpm.mobile.v1.zoneXBPM">
+    package="net.zoneland.x.bpm.mobile.v1.zoneXBPM"
+    tools:ignore="LockedOrientationActivity">
     <!-- baidu需要 -->
     <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
-    <!-- 获取网络状态 -->
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" /> <!-- 获取网络状态 -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 网络通信 -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 获取设备信息 -->
     <uses-permission
         android:name="android.permission.READ_PHONE_STATE"
-        android:maxSdkVersion="28" />
-<!--    <uses-permission-->
-<!--        android:name="android.permission.MANAGE_EXTERNAL_STORAGE" />-->
+        android:maxSdkVersion="28" /> <!-- <uses-permission -->
+    <!-- android:name="android.permission.MANAGE_EXTERNAL_STORAGE" /> -->
     <!-- 读写sdcard，storage等等 -->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+    <uses-permission
+        android:name="android.permission.WRITE_EXTERNAL_STORAGE"
         android:maxSdkVersion="28" /> <!-- 允许程序录制音频 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 拨打电话 -->
     <uses-permission android:name="android.permission.CALL_PHONE" /> <!-- 拍照 -->
@@ -31,15 +30,13 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 选举使用，当应用有删除或者更新时需要重新选举，复用推送通道 -->
     <uses-permission android:name="android.permission.BROADCAST_PACKAGE_CHANGED" />
-    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" />
-    <!-- 允许task重排序 -->
+    <uses-permission android:name="android.permission.BROADCAST_PACKAGE_REPLACED" /> <!-- 允许task重排序 -->
     <uses-permission android:name="android.permission.REORDER_TASKS" /> <!-- 蓝牙 -->
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- gps -->
     <uses-feature android:name="android.hardware.location.gps" /> <!-- android 8.0 安装未知来源apk的权限问题 -->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
-    <!-- 华为系统角标 -->
-    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE "/>
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 华为系统角标 -->
+    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE " />
 
     <application
         android:name=".O2App"
@@ -48,17 +45,18 @@
         android:icon="@mipmap/logo"
         android:label="@string/app_name"
         android:networkSecurityConfig="@xml/network_security_config"
+        android:requestLegacyExternalStorage="true"
         android:roundIcon="@mipmap/logo_round"
         android:theme="@style/XBPMTheme.NoActionBar"
-        tools:replace="android:allowBackup"
-        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true"
-        >
-<!--        图片选择器-->
+        tools:replace="android:allowBackup">
+        <activity
+            android:name=".app.clouddrive.v3.CloudDiskV3Activity"
+            android:exported="false" />
+        <!-- 图片选择器 -->
         <activity
             android:name=".utils.pick.PicturePickActivity"
             android:theme="@style/tyhjtranslucentTheme" />
-
         <activity android:name=".app.o2.logs.LogsActivity" />
         <activity
             android:name=".app.o2.main.SearchActivity"
@@ -68,8 +66,7 @@
         <activity
             android:name=".app.o2.webview.O2WebViewActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            />
+            android:screenOrientation="portrait" />
         <activity
             android:name=".app.clouddrive.v2.share.CloudShareActivity"
             android:configChanges="orientation"
@@ -246,9 +243,9 @@
             android:screenOrientation="portrait" />
         <activity
             android:name=".app.o2.webview.TaskWebViewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_activity_work_web_view"
-            android:screenOrientation="nosensor"
-            android:configChanges="keyboardHidden|orientation|screenSize" />
+            android:screenOrientation="nosensor" />
         <activity
             android:name=".app.o2.process.TaskListActivity"
             android:configChanges="orientation"
@@ -306,9 +303,9 @@
             android:label="@string/title_cms_application" />
         <activity
             android:name=".app.cms.view.CMSWebViewActivity"
+            android:configChanges="keyboardHidden|orientation|screenSize"
             android:label="@string/title_cms_view"
-            android:screenOrientation="nosensor"
-            android:configChanges="keyboardHidden|orientation|screenSize" /> <!-- cloud drive -->
+            android:screenOrientation="nosensor" /> <!-- cloud drive -->
         <activity
             android:name=".app.clouddrive.CloudDriveActivity"
             android:label="@string/title_activity_yunpan"
@@ -364,8 +361,8 @@
         <activity android:name=".app.calendar.CalendarStoreActivity" /> <!-- portal -->
         <activity
             android:name=".app.o2.webview.PortalWebViewActivity"
-            android:screenOrientation="nosensor"
             android:configChanges="keyboardHidden|orientation|screenSize"
+            android:screenOrientation="nosensor"
             android:theme="@style/XBPMTheme.NoActionBar.Transparent" /> <!-- 换肤 -->
         <activity
             android:name=".app.o2.skin.SkinManagerActivity"
@@ -381,9 +378,7 @@
         <activity
             android:name=".flutter.FlutterConnectActivity"
             android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-
-        <!-- ```````````````````service```````````````````` -->
+            android:screenOrientation="portrait" /> <!-- ```````````````````service```````````````````` -->
         <!-- baidu -->
         <service
             android:name="com.baidu.location.f"
@@ -409,51 +404,40 @@
         <service
             android:name=".core.service.ClearTempFileJobService"
             android:exported="true"
-            android:permission="android.permission.BIND_JOB_SERVICE" />
-
-
-        <!-- 下载apk -->
+            android:permission="android.permission.BIND_JOB_SERVICE" /> <!-- 下载apk -->
         <service
             android:name=".core.service.DownloadAPKService"
             android:exported="true">
             <intent-filter>
                 <action android:name="${applicationId}.action.UPDATE" />
             </intent-filter>
-        </service>
-
-        <!-- 重启应用的service -->
+        </service> <!-- 重启应用的service -->
         <service android:name=".core.service.RestartSelfService" />
-
-
         <service
             android:name=".core.service.WebSocketService"
-            android:exported="false" />
-
-        <!-- 录音 转mp3 service -->
-        <service android:name="com.zlw.main.recorderlib.recorder.RecordService" />
-        <!-- jpush -->
-        <!-- Since JCore2.0.0 Required SDK核心功能-->
+            android:exported="false" /> <!-- 录音 转mp3 service -->
+        <service android:name="com.zlw.main.recorderlib.recorder.RecordService" /> <!-- jpush -->
+        <!-- Since JCore2.0.0 Required SDK核心功能 -->
         <!-- 可配置android:process参数将Service放在其他进程中；android:enabled属性不能是false -->
         <!-- 这个是自定义Service，要继承极光JCommonService，可以在更多手机平台上使得推送通道保持的更稳定 -->
-        <service android:name=".core.service.JpushService"
+        <service
+            android:name=".core.service.JpushService"
             android:enabled="true"
             android:exported="false"
             android:process=":pushcore">
             <intent-filter>
                 <action android:name="cn.jiguang.user.service.action" />
             </intent-filter>
-        </service>
-        <!--        <receiver-->
-<!--            android:name=".core.receiver.JpushNoticeBroadReceiver"-->
-<!--            android:enabled="true">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="cn.jpush.android.intent.REGISTRATION" />-->
-<!--                <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" />-->
-<!--                <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" />-->
-
-<!--                <category android:name="${applicationId}" />-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
+        </service> <!-- <receiver -->
+        <!-- android:name=".core.receiver.JpushNoticeBroadReceiver" -->
+        <!-- android:enabled="true"> -->
+        <!-- <intent-filter> -->
+        <!-- <action android:name="cn.jpush.android.intent.REGISTRATION" /> -->
+        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_RECEIVED" /> -->
+        <!-- <action android:name="cn.jpush.android.intent.NOTIFICATION_OPENED" /> -->
+        <!-- <category android:name="${applicationId}" /> -->
+        <!-- </intent-filter> -->
+        <!-- </receiver> -->
         <!-- Required since 3.0.7 -->
         <!-- 新的 tag/alias 接口结果返回需要开发者配置一个自定的广播 -->
         <!-- 3.3.0开始所有事件将通过该类回调 -->
@@ -461,15 +445,13 @@
         <receiver
             android:name=".core.receiver.O2JPushMessageReceiver"
             android:enabled="true"
-            android:exported="false" >
+            android:exported="false">
             <intent-filter>
                 <action android:name="cn.jpush.android.intent.RECEIVE_MESSAGE" />
+
                 <category android:name="${applicationId}" />
             </intent-filter>
-        </receiver>
-
-
-        <!-- bugly -->
+        </receiver> <!-- bugly -->
         <!-- 配置APP ID -->
         <meta-data
             android:name="BUGLY_APPID"
@@ -500,18 +482,16 @@
         <service
             android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
             android:label="dexopt"
-            android:process=":dexopt"
-            ></service>
+            android:process=":dexopt" />
+
         <provider
             android:name="com.tencent.smtt.utils.FileProvider"
             android:authorities="${applicationId}.provider"
             android:exported="false"
-            android:grantUriPermissions="true"
-            >
+            android:grantUriPermissions="true">
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/x5webview_file_paths"
-                />
+                android:resource="@xml/x5webview_file_paths" />
         </provider>
     </application>
 

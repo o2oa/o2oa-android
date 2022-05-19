@@ -251,6 +251,12 @@
     <string name="yunpan_share_cancel">取消分享</string>
     <string name="yunpan_share_shield">屏蔽</string>
 
+    <string name="cloud_file_my">我的文件</string>
+    <string name="cloud_file_my_desc">个人文件</string>
+
+    <string name="cloud_file_org">企业文件</string>
+    <string name="cloud_file_org_desc">内部共享区</string>
+
     <!--    <string name="share_file_menu_test">测试</string>-->
 
     <!--chat activity -->

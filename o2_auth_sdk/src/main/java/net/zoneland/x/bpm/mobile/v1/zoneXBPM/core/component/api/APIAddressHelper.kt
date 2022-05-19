@@ -384,6 +384,9 @@ class APIAddressHelper private constructor() {
         if (data.x_organizationPermission != null) {
             apiDistribute[APIDistributeTypeEnum.x_organizationPermission] = data.x_organizationPermission
         }
+        if (data.x_pan_assemble_control != null) {
+            apiDistribute[APIDistributeTypeEnum.x_pan_assemble_control] = data.x_pan_assemble_control
+        }
 
     }
 

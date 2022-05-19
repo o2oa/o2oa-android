@@ -101,6 +101,9 @@
     <color name="z_color_background_checkin_record">#FFF4F6F8</color>
     <color name="bg_biometry_dialog">#99000000</color>
 
+<!--    cloud file-->
+    <color name="cloud_my_file_bg">#904FB2E3</color>
+    <color name="cloud_org_file_bg">#9C92FD93</color>
     <!--im-->
     <color name="item_click_bg_color">#E9EDED</color>
     <color name="conv_list_background">#f2f2f4</color>

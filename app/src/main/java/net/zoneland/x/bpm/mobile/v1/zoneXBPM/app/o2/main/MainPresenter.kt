@@ -20,7 +20,38 @@ import rx.schedulers.Schedulers
 class MainPresenter : BasePresenterImpl<MainContract.View>(), MainContract.Presenter {
 
 
+    /**
+     * 检查服务器是否有V3版本的网盘应用
+     */
+    override fun checkCloudFileV3() {
+        getCloudFileV3ControlService(null)?.let { service ->
+            service.echo().subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext {
+                        if (it?.data != null) {
+                            O2SDKManager.instance().prefs().edit {
+                                putString(O2.PRE_CLOUD_FILE_VERSION_KEY, "1");
+                            }
+                        } else {
+                            O2SDKManager.instance().prefs().edit {
+                                putString(O2.PRE_CLOUD_FILE_VERSION_KEY, "0");
+                            }
+                        }
+                    }
+                    onError { e, _ ->
+                        O2SDKManager.instance().prefs().edit {
+                            putString(O2.PRE_CLOUD_FILE_VERSION_KEY, "0");
+                        }
+                        XLog.error("V3网盘应用不存在", e)
+                    }
+                }
+        }
+    }
 
+    /**
+     * 检查考勤接口
+     */
     override fun checkAttendanceFeature() {
         getAttendanceAssembleControlService(mView?.getContext())?.let {
             service ->

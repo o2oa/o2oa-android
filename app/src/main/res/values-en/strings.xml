@@ -254,6 +254,11 @@
     <string name="yunpan_share_cancel">Cancel sharing</string>
     <string name="yunpan_share_shield">Shield</string>
 
+    <string name="cloud_file_my">My Files</string>
+    <string name="cloud_file_my_desc">Personal Files</string>
+    <string name="cloud_file_org">Corporate Files</string>
+    <string name="cloud_file_org_desc">Share Files Internally</string>
+
 <!--    <string name="share_file_menu_test">Test</string>-->
 
     <!--chat activity -->

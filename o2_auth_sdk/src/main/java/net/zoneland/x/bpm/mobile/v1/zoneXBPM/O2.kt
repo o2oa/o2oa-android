@@ -145,6 +145,8 @@ object O2 {
 
     val PRE_ATTENDANCE_VERSION_KEY = "PRE_ATTENDANCE_VERSION_KEY" //考勤版本兼容问题的key  1表示新版本 其他表示老版本 切换打卡页面使用
 
+    val PRE_CLOUD_FILE_VERSION_KEY = "PRE_CLOUD_FILE_VERSION_KEY" //V3版本网盘是否存在
+
     val PRE_SEARCH_HISTORY_KEY = "PRE_SEARCH_HISTORY_KEY" //搜索历史的key
 
     val PRE_IM_CONFIG_KEY = "PRE_IM_CONFIG_KEY" //

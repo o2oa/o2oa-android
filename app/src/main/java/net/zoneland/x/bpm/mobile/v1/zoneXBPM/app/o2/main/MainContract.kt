@@ -15,5 +15,6 @@ object MainContract {
     interface Presenter: BasePresenter<View> {
         fun checkAttendanceFeature()
         fun loadOrganizationPermission()
+        fun checkCloudFileV3()
     }
 }

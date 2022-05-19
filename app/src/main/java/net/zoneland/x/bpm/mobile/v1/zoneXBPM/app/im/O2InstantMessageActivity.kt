@@ -11,12 +11,14 @@ import android.text.style.ForegroundColorSpan
 import android.text.style.UnderlineSpan
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_o2_instant_message.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.bbs.main.BBSMainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.calendar.CalendarMainActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.CloudDriveActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v3.CloudDiskV3Activity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.index.CMSIndexActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.main.MeetingMainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.TaskWebViewActivity
@@ -27,7 +29,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.flutter.FlutterConnectActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.InstantMessage
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
@@ -125,8 +126,14 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
             }
         }else if (type.startsWith("attachment_")) {
             setLinkStyle(textView) {
-//                go<CloudDriveActivity>()
-                go<CloudDiskActivity>()
+                val cloudFileV3 = O2SDKManager.instance().prefs().getString(O2.PRE_CLOUD_FILE_VERSION_KEY, "")
+                if (TextUtils.isEmpty(cloudFileV3) || cloudFileV3 != "1") {
+                    XLog.debug("没有V3版本的网盘")
+                    go<CloudDiskActivity>()
+                } else {
+                    go<CloudDiskV3Activity>()
+                }
+
             }
         }else if (type.startsWith("calendar_")) {
             setLinkStyle(textView) {
