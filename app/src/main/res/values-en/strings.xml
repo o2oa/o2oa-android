@@ -258,6 +258,8 @@
     <string name="cloud_file_my_desc">Personal Files</string>
     <string name="cloud_file_org">Corporate Files</string>
     <string name="cloud_file_org_desc">Share Files Internally</string>
+    <string name="cloud_file_my_favorite">My Favorite</string>
+    <string name="cloud_file_my_zone">My Zone</string>
 
 <!--    <string name="share_file_menu_test">Test</string>-->
 

@@ -51,9 +51,11 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
         <activity
-            android:name=".app.clouddrive.v3.CloudDiskV3Activity"
+            android:name=".app.clouddrive.v3.zone.ZoneActivity"
             android:exported="false" />
-        <!-- 图片选择器 -->
+        <activity
+            android:name=".app.clouddrive.v3.CloudDiskV3Activity"
+            android:exported="false" /> <!-- 图片选择器 -->
         <activity
             android:name=".utils.pick.PicturePickActivity"
             android:theme="@style/tyhjtranslucentTheme" />

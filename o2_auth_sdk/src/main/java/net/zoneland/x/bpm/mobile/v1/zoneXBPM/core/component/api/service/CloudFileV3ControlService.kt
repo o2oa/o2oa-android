@@ -24,6 +24,18 @@ interface CloudFileV3ControlService {
     fun echo(): Observable<ApiResponse<EchoData>>
 
     /**
+     * 企业网盘 我的收藏
+     */
+    @GET("jaxrs/favorite/list")
+    fun listMyFavorite(): Observable<ApiResponse<List<CloudFileZoneData.MyFavorite>>>
+
+    /**
+     * 企业网盘 我的共享区
+     */
+    @GET("jaxrs/zone/list")
+    fun listMyZone(): Observable<ApiResponse<List<CloudFileZoneData.MyZone>>>
+
+    /**
      * 顶层文件列表
      */
     @GET("jaxrs/attachment2/list/top")
