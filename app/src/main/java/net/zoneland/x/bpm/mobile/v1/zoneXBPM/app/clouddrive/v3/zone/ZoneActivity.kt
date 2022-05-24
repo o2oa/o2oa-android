@@ -2,14 +2,17 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v3.zone
 
 import android.annotation.SuppressLint
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_cloud_disk_zone.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v3.folder.FolderFileListActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CloudFileZoneAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.yunpan.CloudFileZoneData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.MiscUtilK
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2oaColorScheme
 
 
@@ -33,7 +36,7 @@ class ZoneActivity : BaseMVPActivity<ZoneContract.View, ZoneContract.Presenter>(
             }
 
             override fun clickMyFavorite(favorite: CloudFileZoneData.MyFavorite) {
-                 //
+                openZone(favorite.zoneId, favorite.name)
             }
 
             override fun bindMyZone(
@@ -44,7 +47,7 @@ class ZoneActivity : BaseMVPActivity<ZoneContract.View, ZoneContract.Presenter>(
             }
 
             override fun clickMyZone(zone: CloudFileZoneData.MyZone) {
-                //
+                openZone(zone.zoneId, zone.name)
             }
         }
     }
@@ -68,5 +71,13 @@ class ZoneActivity : BaseMVPActivity<ZoneContract.View, ZoneContract.Presenter>(
         this.list.clear()
         this.list.addAll(list)
         adapter.notifyDataSetChanged()
+    }
+
+    private fun openZone(id: String, name: String) {
+        if (TextUtils.isEmpty(id) || TextUtils.isEmpty(name)) {
+            XToast.toastShort(this, getString(R.string.message_arg_error))
+            return
+        }
+        FolderFileListActivity.openZone(this, id, name)
     }
 }

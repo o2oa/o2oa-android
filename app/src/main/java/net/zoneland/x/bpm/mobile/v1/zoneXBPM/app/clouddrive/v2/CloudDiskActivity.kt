@@ -100,7 +100,7 @@ class CloudDiskActivity : BaseMVPActivity<CloudDiskContract.View, CloudDiskContr
                     go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
                 }
             }else {
-                XToast.toastShort(this, "打开文件异常！")
+                XToast.toastShort(this, R.string.message_cloud_open_file_fail)
             }
         }
     }

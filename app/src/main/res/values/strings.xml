@@ -232,6 +232,7 @@
     <string name="yunpan_rename">重命名</string>
     <string name="yunpan_delete">删除</string>
     <string name="yunpan_share">分享</string>
+    <string name="yunpan_save_to_my_pan">保存到网盘</string>
     <string name="yunpan_send">发送</string>
     <string name="yunpan_move">移动</string>
     <string name="yunpan_menu_list">列表展现</string>
@@ -259,6 +260,23 @@
 
     <string name="cloud_file_my_favorite">我的收藏</string>
     <string name="cloud_file_my_zone">共享工作区</string>
+
+    <string name="message_cloud_rename_alert">请选择一条数据进行重命名！</string>
+    <string name="message_cloud_delete_alert">请至少选择一条数据进行删除操作！</string>
+    <string name="message_cloud_save_to_my_pan_alert">请至少选择一条数据进行保存到网盘操作！</string>
+    <string name="message_cloud_move_alert">请至少选择一条数据进行移动操作！</string>
+    <string name="message_cloud_share_alert">请至少选择一条数据进行分享操作！</string>
+    <string name="message_cloud_confirm_delete_data">确定要删除选中的数据吗？</string>
+    <string name="message_cloud_not_empty_name_alert">名称不能为空！</string>
+    <string name="message_cloud_move_success">移动成功！</string>
+
+    <string name="message_cloud_create_folder_success">文件夹创建成功！</string>
+    <string name="message_cloud_upload_success">上传成功！</string>
+    <string name="message_cloud_share_success">分享成功！</string>
+    <string name="message_cloud_open_file_fail">打开文件异常！</string>
+    <string name="message_cloud_folder_name_not_empty">文件夹名称不能为空！</string>
+    <string name="message_cloud_create_folder_fail">文件夹创建失败！</string>
+    <string name="message_cloud_upload_fail">上传失败！</string>
 
     <!--    <string name="share_file_menu_test">测试</string>-->
 
@@ -752,6 +770,8 @@
     <string name="message_share_file_not_exist">分享文件不存在</string>
     <string name="message_contact_new_no_permission_for_search">当前用户被限制查询通讯录</string>
     <string name="message_camera_file_create_error">无法拍照，存储文件获取不到！</string>
+    <string name="message_update_success">更新成功！</string>
+    <string name="message_back_error">返回错误！</string>
 
     <!--    dialog -->
     <string name="dialog_msg_bind_to_server_fail">绑定服务器失败，请检查当前服务器配置是否正确？您也可以先绑定到O2OA演示服务器进行体验！</string>

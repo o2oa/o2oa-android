@@ -51,6 +51,9 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
         <activity
+            android:name=".app.clouddrive.v3.folder.FolderFileListActivity"
+            android:exported="false" />
+        <activity
             android:name=".app.clouddrive.v3.zone.ZoneActivity"
             android:exported="false" />
         <activity

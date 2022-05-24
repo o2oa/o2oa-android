@@ -167,7 +167,7 @@ class FileFolderListPresenter : BasePresenterImpl<FileFolderListContract.View>()
             folderId = O2.FIRST_PAGE_TAG
         }
         if (files.isEmpty() || files.size > 9) {
-            mView?.error("上传附件个数太多错误！")
+            mView?.error("错误，上传附件个数太多！")
             return
         }
         val list = files.mapNotNull { path -> uploadFileObservable(folderId, path) }

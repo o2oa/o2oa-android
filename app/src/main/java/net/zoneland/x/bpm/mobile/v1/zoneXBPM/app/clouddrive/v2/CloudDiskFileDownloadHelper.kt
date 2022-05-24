@@ -21,8 +21,9 @@ class CloudDiskFileDownloadHelper(val activity: Activity) {
     var showLoading: (()->Unit)? = null
     var hideLoading: (()->Unit)? = null
 
-//    var downloader: Future<Unit>? = null
     var subscription: Subscription? = null
+
+    var isV3 = false // 是否V3版本
 
     /**
      * 开始下载文件
@@ -32,10 +33,15 @@ class CloudDiskFileDownloadHelper(val activity: Activity) {
 
         val path = FileExtensionHelper.getXBPMTempFolder(activity)+ File.separator + fileId + "." +extension
         XLog.debug("file path $path")
-        val downloadUrl = APIAddressHelper.instance()
-                .getCommonDownloadUrl(APIDistributeTypeEnum.x_file_assemble_control, "jaxrs/attachment2/$fileId/download/stream")
-        XLog.debug("下载 文件 url: $downloadUrl")
 
+        val downloadUrl = if (isV3) {
+            APIAddressHelper.instance()
+                .getCommonDownloadUrl(APIDistributeTypeEnum.x_pan_assemble_control, "jaxrs/attachment3/$fileId/download/stream")
+        } else {
+            APIAddressHelper.instance()
+                .getCommonDownloadUrl(APIDistributeTypeEnum.x_file_assemble_control, "jaxrs/attachment2/$fileId/download/stream")
+        }
+        XLog.debug("下载 文件 url: $downloadUrl")
         subscription = O2FileDownloadHelper.download(downloadUrl, path)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())

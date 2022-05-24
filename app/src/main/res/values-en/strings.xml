@@ -235,6 +235,7 @@
     <string name="yunpan_rename">Rename</string>
     <string name="yunpan_delete">Delete</string>
     <string name="yunpan_share">Share</string>
+    <string name="yunpan_save_to_my_pan">Save To My Disk</string>
     <string name="yunpan_send">Send</string>
     <string name="yunpan_move">Move</string>
     <string name="yunpan_menu_list">List display</string>
@@ -260,6 +261,22 @@
     <string name="cloud_file_org_desc">Share Files Internally</string>
     <string name="cloud_file_my_favorite">My Favorite</string>
     <string name="cloud_file_my_zone">My Zone</string>
+
+    <string name="message_cloud_rename_alert">Please select an item to rename !</string>
+    <string name="message_cloud_delete_alert">Please select at least one piece of data to delete !</string>
+    <string name="message_cloud_save_to_my_pan_alert">Please select at least one piece of data to save to the network disk !</string>
+    <string name="message_cloud_move_alert">Please select at least one piece of data to move !</string>
+    <string name="message_cloud_share_alert">Please select at least one piece of data to share !</string>
+    <string name="message_cloud_confirm_delete_data">Are you sure you want to delete the selected data ?</string>
+    <string name="message_cloud_not_empty_name_alert">Name is required !</string>
+    <string name="message_cloud_move_success">Move successfully !</string>
+    <string name="message_cloud_create_folder_success">Folder created successfully !</string>
+    <string name="message_cloud_upload_success">Uploaded successfully !</string>
+    <string name="message_cloud_share_success">Share success !</string>
+    <string name="message_cloud_open_file_fail">Open file exception !</string>
+    <string name="message_cloud_folder_name_not_empty">Folder name cannot be empty !</string>
+    <string name="message_cloud_create_folder_fail">Folder creation failed !</string>
+    <string name="message_cloud_upload_fail">upload failed !</string>
 
 <!--    <string name="share_file_menu_test">Test</string>-->
 
@@ -349,6 +366,8 @@
     <string name="message_unbind_fail">Failed to unbind！</string>
     <string name="message_change_skin_will_reboot">Are you sure you want to switch skin? Switching will restart the application？</string>
     <string name="message_camera_file_create_error">Unable to take photos, unable to get the stored file!</string>
+    <string name="message_update_success">update completed !</string>
+    <string name="message_back_error">return error !</string>
 
     <!-- group activity -->
     <string name="title_activity_group">My Groups </string>

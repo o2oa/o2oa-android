@@ -35,6 +35,81 @@ interface CloudFileV3ControlService {
     @GET("jaxrs/zone/list")
     fun listMyZone(): Observable<ApiResponse<List<CloudFileZoneData.MyZone>>>
 
+
+    /**
+     * 文件夹下的文件列表
+     */
+    @GET("jaxrs/attachment3/list/folder/{folderId}/order/by/{orderBy}/desc/true")
+    fun listFileByFolderIdV3(@Path("folderId") folderId: String, @Path("orderBy") orderBy: String): Observable<ApiResponse<List<FileV3Json>>>
+
+    /**
+     * 文件夹下的文件夹列表
+     */
+    @GET("jaxrs/folder3/list/{folderId}/order/by/{orderBy}/desc/true")
+    fun listFolderByFolderIdV3(@Path("folderId") folderId: String,  @Path("orderBy") orderBy: String): Observable<ApiResponse<List<FolderV3Json>>>
+
+    /**
+     * 文件夹重命名
+     */
+    @POST("jaxrs/folder3/{id}/update/name")
+    fun updateFolderNameV3(@Path("id") id: String, @Body body: RenamePost): Observable<ApiResponse<ValueData>>
+
+    /**
+     * 文件重命名
+     */
+    @POST("jaxrs/attachment3/{id}/update/name")
+    fun updateFileNameV3(@Path("id") id: String, @Body body: RenamePost): Observable<ApiResponse<IdData>>
+
+    @DELETE("jaxrs/attachment3/{id}")
+    fun deleteFileV3(@Path("id") id: String): Observable<ApiResponse<ValueData>>
+
+    @DELETE("jaxrs/folder3/{id}")
+    fun deleteFolderV3(@Path("id") id: String): Observable<ApiResponse<ValueData>>
+
+    /**
+     * 保存到个人网盘
+     */
+    @POST("jaxrs/folder3/save/to/person/{personFolder}")
+    fun moveToMyPan(@Path("personFolder") personFolder: String, @Body body: MoveToMyPanPost): Observable<ApiResponse<ValueData>>
+
+    /**
+     * 移动文件夹
+     */
+    @POST("jaxrs/folder3/{id}/move")
+    fun moveFolderV3(@Path("id") id: String, @Body body: MoveV3Post): Observable<ApiResponse<ValueData>>
+
+    /**
+     * 移动文件
+     */
+    @POST("jaxrs/attachment3/{id}/move")
+    fun moveFileV3(@Path("id") id: String, @Body body: MoveV3Post): Observable<ApiResponse<IdData>>
+
+
+    /**
+     * 创建文件夹
+     *
+     * @param json name ，superior上级id (为空就是顶级)
+     * *
+     * @return
+     */
+    @POST("jaxrs/folder3")
+    fun createFolderV3(@Body json: Map<String, String>): Observable<ApiResponse<IdData>>
+
+
+
+    /**
+     * 上传文件
+     * @param body
+     *
+     * @param folderId 共享区或者目录ID
+     */
+    @Multipart
+    @POST("jaxrs/attachment3/upload/folder/{folderId}")
+    fun uploadFile2FolderV3(@Part body: MultipartBody.Part, @Path("folderId") folderId: String): Observable<ApiResponse<IdData>>
+
+
+
+
     /**
      * 顶层文件列表
      */
