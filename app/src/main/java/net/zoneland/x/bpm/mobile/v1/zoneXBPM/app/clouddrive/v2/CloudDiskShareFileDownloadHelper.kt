@@ -1,6 +1,7 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2
 
 import android.app.Activity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.APIDistributeTypeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
@@ -32,8 +33,17 @@ class CloudDiskShareFileDownloadHelper(val activity: Activity) {
 
         val path = FileExtensionHelper.getXBPMTempFolder(activity)+ File.separator + fileId + "." +extension
         XLog.debug("file path $path")
-        val downloadUrl = APIAddressHelper.instance()
-                .getCommonDownloadUrl(APIDistributeTypeEnum.x_file_assemble_control, "jaxrs/share/download/share/$shareId/file/$fileId")
+        val downloadUrl =  if (O2SDKManager.instance().appCloudDiskIsV3()) {
+            APIAddressHelper.instance()
+                .getCommonDownloadUrl(
+                    APIDistributeTypeEnum.x_pan_assemble_control,
+                    "jaxrs/share/download/share/$shareId/file/$fileId")
+        } else {
+            APIAddressHelper.instance()
+                .getCommonDownloadUrl(
+                    APIDistributeTypeEnum.x_file_assemble_control,
+                    "jaxrs/share/download/share/$shareId/file/$fileId")
+        }
         XLog.debug("下载 文件 url: $downloadUrl")
         subscription = O2FileDownloadHelper.download(downloadUrl, path)
                 .subscribeOn(Schedulers.io())
@@ -41,15 +51,17 @@ class CloudDiskShareFileDownloadHelper(val activity: Activity) {
                 .subscribe(object : Observer<Boolean>{
                     override fun onError(e: Throwable?) {
                         XLog.error("", e)
+                        hideLoading?.invoke()
                         result(null)
                     }
 
                     override fun onNext(t: Boolean?) {
+                        hideLoading?.invoke()
                         result(File(path))
                     }
 
                     override fun onCompleted() {
-                        hideLoading?.invoke()
+
                     }
 
                 })

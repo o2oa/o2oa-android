@@ -4,7 +4,7 @@
     <!-- 实心 -->
     <solid android:color="@color/cloud_my_file_bg"/>
     <!-- 圆角 -->
-    <corners android:radius="8dp"/>
+    <corners android:radius="10dp"/>
     <!-- 边距 -->
     <padding
         android:top="5dp"

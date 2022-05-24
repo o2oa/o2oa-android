@@ -119,12 +119,11 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
 
         }
         private fun openCloudFile(activity: Activity) {
-            val cloudFileV3 = O2SDKManager.instance().prefs().getString(O2.PRE_CLOUD_FILE_VERSION_KEY, "")
-            if (TextUtils.isEmpty(cloudFileV3) || cloudFileV3 != "1") {
+            if (O2SDKManager.instance().appCloudDiskIsV3()) {
+                activity.go<CloudDiskV3Activity>()
+            } else {
                 XLog.debug("没有V3版本的网盘")
                 activity.go<CloudDiskActivity>()
-            } else {
-                activity.go<CloudDiskV3Activity>()
             }
         }
     }

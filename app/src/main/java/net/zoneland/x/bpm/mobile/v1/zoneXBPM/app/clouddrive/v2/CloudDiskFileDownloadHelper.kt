@@ -1,6 +1,7 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2
 
 import android.app.Activity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.APIDistributeTypeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
@@ -23,7 +24,7 @@ class CloudDiskFileDownloadHelper(val activity: Activity) {
 
     var subscription: Subscription? = null
 
-    var isV3 = false // 是否V3版本
+    var isV3 = false // 是否企业网盘内的文件下载
 
     /**
      * 开始下载文件
@@ -34,7 +35,7 @@ class CloudDiskFileDownloadHelper(val activity: Activity) {
         val path = FileExtensionHelper.getXBPMTempFolder(activity)+ File.separator + fileId + "." +extension
         XLog.debug("file path $path")
 
-        val downloadUrl = if (isV3) {
+        val downloadUrl = if (O2SDKManager.instance().appCloudDiskIsV3() && isV3) {
             APIAddressHelper.instance()
                 .getCommonDownloadUrl(APIDistributeTypeEnum.x_pan_assemble_control, "jaxrs/attachment3/$fileId/download/stream")
         } else {
@@ -48,15 +49,17 @@ class CloudDiskFileDownloadHelper(val activity: Activity) {
                 .subscribe(object : Observer<Boolean>{
                     override fun onError(e: Throwable?) {
                         XLog.error("", e)
+                        hideLoading?.invoke()
                         result(null)
                     }
 
                     override fun onNext(t: Boolean?) {
+                        hideLoading?.invoke()
                         result(File(path))
                     }
 
                     override fun onCompleted() {
-                        hideLoading?.invoke()
+
                     }
 
                 })

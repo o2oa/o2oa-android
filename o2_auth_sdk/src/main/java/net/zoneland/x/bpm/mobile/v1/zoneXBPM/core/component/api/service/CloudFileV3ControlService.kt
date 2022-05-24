@@ -113,13 +113,13 @@ interface CloudFileV3ControlService {
     /**
      * 顶层文件列表
      */
-    @GET("jaxrs/attachment2/list/top")
+    @GET("jaxrs/attachment2/list/top/order/by/updateTime/desc/true")
     fun listFileTop() : Observable<ApiResponse<List<FileJson>>>
 
     /**
      * 文件夹下的文件列表
      */
-    @GET("jaxrs/attachment2/list/folder/{folderId}")
+    @GET("jaxrs/attachment2/list/folder/{folderId}/order/by/updateTime/desc/true")
     fun listFileByFolderId(@Path("folderId") folderId: String): Observable<ApiResponse<List<FileJson>>>
 
 
@@ -135,13 +135,13 @@ interface CloudFileV3ControlService {
     /**
      * 顶层文件夹列表
      */
-    @GET("jaxrs/folder2/list/top")
+    @GET("jaxrs/folder2/list/top/order/by/updateTime/desc/true")
     fun listFolderTop(): Observable<ApiResponse<List<FolderJson>>>
 
     /**
      * 文件夹下的文件夹列表
      */
-    @GET("jaxrs/folder2/list/{folderId}")
+    @GET("jaxrs/folder2/list/{folderId}/order/by/updateTime/desc/true")
     fun listFolderByFolderId(@Path("folderId") folderId: String): Observable<ApiResponse<List<FolderJson>>>
 
 

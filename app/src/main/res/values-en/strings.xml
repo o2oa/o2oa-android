@@ -794,6 +794,7 @@
     <string name="message_members_cannot_less_three">The number of members should not be less than 3！</string>
     <string name="message_share_file_not_exist">The shared file does not exist</string>
     <string name="message_contact_new_no_permission_for_search">The current user is restricted from querying the address book</string>
+    <string name="message_save_image_album">Successfully saved the picture to the album !</string>
 
     <!--    dialog -->
     <string name="dialog_msg_bind_to_server_fail">Failed to bind the server. Please check whether the current server configuration is correct? You can also bind to the o2oa demo server to experience！</string>

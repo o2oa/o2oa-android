@@ -687,4 +687,13 @@ class O2SDKManager private constructor()  {
         prefs().edit().putString(CURRENT_PERSON_SIGNATURE_KEY, cSignature).apply()
     }
 
+    /**
+     * 网盘是否是V3版本
+     * V3 版本 使用CloudFileV3ControlService
+     * x_pan_assemble_control
+     */
+    fun appCloudDiskIsV3(): Boolean {
+        val cloudFileV3 =  prefs().getString(O2.PRE_CLOUD_FILE_VERSION_KEY, "")
+        return !(TextUtils.isEmpty(cloudFileV3) || cloudFileV3 != "1")
+    }
 }

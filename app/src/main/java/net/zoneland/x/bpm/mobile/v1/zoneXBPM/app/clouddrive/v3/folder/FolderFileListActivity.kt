@@ -86,7 +86,7 @@ class FolderFileListActivity : BaseMVPActivity<FolderFileListContract.View, Fold
             }
         }
 
-        // 下载器
+        // 企业网盘下载地址不一样
         downloader.isV3 = true
 
         // 第一层面包屑
@@ -533,7 +533,7 @@ class FolderFileListActivity : BaseMVPActivity<FolderFileListContract.View, Fold
     }
 
     private fun openImage(file: CloudFileV3Data.FileItem) {
-        BigImageViewActivity.start(this, file.id, file.extension, file.name)
+        BigImageViewActivity.startForV3(this, file.id, file.extension, file.name)
     }
 
 }

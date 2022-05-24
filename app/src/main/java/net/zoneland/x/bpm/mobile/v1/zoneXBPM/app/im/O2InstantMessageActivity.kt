@@ -126,14 +126,12 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
             }
         }else if (type.startsWith("attachment_")) {
             setLinkStyle(textView) {
-                val cloudFileV3 = O2SDKManager.instance().prefs().getString(O2.PRE_CLOUD_FILE_VERSION_KEY, "")
-                if (TextUtils.isEmpty(cloudFileV3) || cloudFileV3 != "1") {
+                if (O2SDKManager.instance().appCloudDiskIsV3()) {
+                    go<CloudDiskV3Activity>()
+                } else {
                     XLog.debug("没有V3版本的网盘")
                     go<CloudDiskActivity>()
-                } else {
-                    go<CloudDiskV3Activity>()
                 }
-
             }
         }else if (type.startsWith("calendar_")) {
             setLinkStyle(textView) {

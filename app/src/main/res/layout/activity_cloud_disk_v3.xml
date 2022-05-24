@@ -10,7 +10,7 @@
     <RelativeLayout
         android:id="@+id/rl_my_file"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="75dp"
         app:layout_constraintTop_toBottomOf="@+id/app_bar_layout_snippet"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -22,9 +22,9 @@
 
         <ImageView
             android:id="@+id/image_my_file_id"
-            android:layout_width="@dimen/avatar_width_64"
-            android:layout_height="@dimen/avatar_width_64"
-            android:src="@mipmap/logo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/icon_myfiles"
             android:layout_marginStart="@dimen/spacing_normal"
             android:layout_centerVertical="true"/>
 
@@ -56,7 +56,7 @@
     <RelativeLayout
         android:id="@+id/rl_org_file"
         android:layout_width="0dp"
-        android:layout_height="120dp"
+        android:layout_height="75dp"
         app:layout_constraintTop_toBottomOf="@+id/rl_my_file"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -68,9 +68,9 @@
 
         <ImageView
             android:id="@+id/image_org_file_id"
-            android:layout_width="@dimen/avatar_width_64"
-            android:layout_height="@dimen/avatar_width_64"
-            android:src="@mipmap/logo"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:src="@mipmap/icon_unitfile"
             android:layout_marginStart="@dimen/spacing_normal"
             android:layout_centerVertical="true"/>
 

@@ -41,6 +41,9 @@ class CloudDiskFolderPickerActivity : BaseMVPActivity<CloudDiskFolderPickerContr
         val ARG_ZONE_NAME_KEY = "ARG_ZONE_NAME_KEY"
         val LPWW = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
+        /**
+         * 个人网盘选择
+         */
         fun pickFolder(activity: Activity, result: (String) -> Unit) {
             ActivityResult.of(activity)
                     .className(CloudDiskFolderPickerActivity::class.java)
