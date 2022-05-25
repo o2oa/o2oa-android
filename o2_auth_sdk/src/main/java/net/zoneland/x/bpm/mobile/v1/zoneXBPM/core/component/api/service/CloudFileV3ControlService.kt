@@ -24,6 +24,52 @@ interface CloudFileV3ControlService {
     fun echo(): Observable<ApiResponse<EchoData>>
 
     /**
+     * 当前用户是否有共享区创建权限
+     */
+    @GET("jaxrs/config/is/zone/creator")
+    fun isZoneCreator(): Observable<ApiResponse<ValueData>>
+
+    /**
+     * 创建共享区
+     */
+    @POST("jaxrs/zone")
+    fun createZone(@Body body: ZonePost): Observable<ApiResponse<IdData>>
+
+    /**
+     * 修改共享区
+     */
+    @POST("jaxrs/zone/{id}/update")
+    fun updateZone(@Path("id") id: String, @Body body: ZonePost): Observable<ApiResponse<ValueData>>
+
+    /**
+     * 删除共享区
+     */
+    @DELETE("jaxrs/zone/{id}")
+    fun deleteZone(@Path("id") id: String): Observable<ApiResponse<ValueData>>
+
+
+    /**
+     * 创建收藏 、加入收藏
+     */
+    @POST("jaxrs/favorite")
+    fun createFavorite(@Body body: FavoritePost): Observable<ApiResponse<IdData>>
+
+    /**
+     * 修改收藏, 重命名
+     */
+    @POST("jaxrs/favorite/{id}/update")
+    fun updateFavorite(@Path("id") id: String, @Body body: FavoritePost): Observable<ApiResponse<ValueData>>
+
+    /**
+     * 删除收藏、取消收藏
+     */
+    @DELETE("jaxrs/favorite/{id}")
+    fun deleteFavorite(@Path("id") id: String): Observable<ApiResponse<ValueData>>
+
+
+
+
+    /**
      * 企业网盘 我的收藏
      */
     @GET("jaxrs/favorite/list")

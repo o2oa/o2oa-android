@@ -13,6 +13,7 @@ import android.webkit.JavascriptInterface
 import android.webkit.SslErrorHandler
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.core.content.ContextCompat
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_cms_web_view_document.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
@@ -602,13 +603,13 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
     private fun showPictureChooseMenu() {
         BottomSheetMenu(this)
                 .setTitle("上传照片")
-                .setItem("从相册选择", resources.getColor(R.color.z_color_text_primary)) {
+                .setItem("从相册选择", ContextCompat.getColor(this, R.color.z_color_text_primary)) {
                     takeFromPictures()
                 }
-                .setItem("拍照", resources.getColor(R.color.z_color_text_primary)) {
+                .setItem("拍照", ContextCompat.getColor(this, R.color.z_color_text_primary)) {
                     takeFromCamera()
                 }
-                .setCancelButton("取消", resources.getColor(R.color.z_color_text_hint)) {
+                .setCancelButton("取消", ContextCompat.getColor(this, R.color.z_color_text_hint)) {
                     XLog.debug("取消。。。。。")
                 }
                 .show()

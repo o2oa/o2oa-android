@@ -2,6 +2,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter
 
 import android.view.View
 import android.view.ViewGroup
+import android.widget.LinearLayout
 import androidx.recyclerview.widget.RecyclerView
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.yunpan.CloudFileZoneData
@@ -44,7 +45,7 @@ abstract class CloudFileZoneAdapter(val items:List<CloudFileZoneData>) : Recycle
                 holder.setText(R.id.tv_item_cloud_file_zone_header_title, header.name)
             }
             is CloudFileZoneData.MyFavorite -> {
-                val department = items[position] as CloudFileZoneData.MyFavorite
+                val favorite = items[position] as CloudFileZoneData.MyFavorite
                 val isLast = if (position == items.size-1) {
                     true
                 }else {
@@ -57,11 +58,15 @@ abstract class CloudFileZoneAdapter(val items:List<CloudFileZoneData>) : Recycle
                 }else {
                     bottom.gone()
                 }
-                bindMyFavorite(department, holder)
-                holder.convertView?.setOnClickListener { clickMyFavorite(department) }
+                bindMyFavorite(favorite, holder)
+                val body = holder.getView<LinearLayout>(R.id.ll_item_cloud_file_body)
+                body.setOnClickListener { clickMyFavorite(favorite) }
+                val moreBtn = holder.getView<LinearLayout>(R.id.ll_item_cloud_file_more_btn)
+                moreBtn.setOnClickListener { clickMyFavoriteMoreBtn(favorite) }
+                //holder.convertView?.setOnClickListener { clickMyFavorite(department) }
             }
             else -> {
-                val collect = items[position] as CloudFileZoneData.MyZone
+                val zone = items[position] as CloudFileZoneData.MyZone
                 val isLast = if (position == items.size-1) {
                     true
                 }else {
@@ -74,8 +79,12 @@ abstract class CloudFileZoneAdapter(val items:List<CloudFileZoneData>) : Recycle
                 }else {
                     bottom.gone()
                 }
-                bindMyZone(collect, holder)
-                holder.convertView?.setOnClickListener { clickMyZone(collect) }
+                bindMyZone(zone, holder)
+//                holder.convertView?.setOnClickListener { clickMyZone(collect) }
+                val body = holder.getView<LinearLayout>(R.id.ll_item_cloud_file_body)
+                body.setOnClickListener { clickMyZone(zone) }
+                val moreBtn = holder.getView<LinearLayout>(R.id.ll_item_cloud_file_more_btn)
+                moreBtn.setOnClickListener { clickMyZoneMoreBtn(zone) }
             }
         }
     }
@@ -92,7 +101,9 @@ abstract class CloudFileZoneAdapter(val items:List<CloudFileZoneData>) : Recycle
 
     abstract fun bindMyFavorite(favorite:CloudFileZoneData.MyFavorite, holder: CommonRecyclerViewHolder?)
     abstract fun clickMyFavorite(favorite: CloudFileZoneData.MyFavorite)
+    abstract fun clickMyFavoriteMoreBtn(favorite: CloudFileZoneData.MyFavorite)
     abstract fun bindMyZone(zone: CloudFileZoneData.MyZone, holder: CommonRecyclerViewHolder?)
     abstract fun clickMyZone(zone: CloudFileZoneData.MyZone)
+    abstract fun clickMyZoneMoreBtn(zone: CloudFileZoneData.MyZone)
 
 }

@@ -261,6 +261,15 @@
     <string name="cloud_file_org_desc">Share Files Internally</string>
     <string name="cloud_file_my_favorite">My Favorite</string>
     <string name="cloud_file_my_zone">My Zone</string>
+    <string name="cloud_file_zone_create_title">Create a shared workspace</string>
+    <string name="cloud_file_zone_update_title">Update a shared workspace</string>
+    <string name="cloud_file_zone_create_name_hint">Please enter a name for the shared workspace</string>
+    <string name="cloud_file_zone_create_desc_hint">Please enter a description of the shared workspace</string>
+    <string name="cloud_file_zone_menu_cancel_favorite">Unfavorite</string>
+    <string name="cloud_file_zone_menu_rename_favorite">Rename</string>
+    <string name="cloud_file_zone_menu_add_favorite">Add To Favorites</string>
+    <string name="cloud_file_zone_menu_edit_zone">Edit</string>
+    <string name="cloud_file_zone_menu_delete_zone">Delete</string>
 
     <string name="message_cloud_rename_alert">Please select an item to rename !</string>
     <string name="message_cloud_delete_alert">Please select at least one piece of data to delete !</string>
@@ -277,8 +286,15 @@
     <string name="message_cloud_folder_name_not_empty">Folder name cannot be empty !</string>
     <string name="message_cloud_create_folder_fail">Folder creation failed !</string>
     <string name="message_cloud_upload_fail">upload failed !</string>
+    <string name="message_cloud_create_zone_success">Create shared area successfully !</string>
+    <string name="message_cloud_update_zone_success">Update shared area successfully !</string>
+    <string name="message_cloud_delete_zone_success">Delete shared area successfully !</string>
+    <string name="message_cloud_add_favorite_success">添加收藏成功！</string>
+    <string name="message_cloud_cancel_favorite_success">取消收藏成功！</string>
+    <string name="message_cloud_rename_favorite_success">重命名成功！</string>
 
-<!--    <string name="share_file_menu_test">Test</string>-->
+
+    <!--    <string name="share_file_menu_test">Test</string>-->
 
     <!--chat activity -->
 <!--    <string name="title_activity_chat">Real time message</string>-->

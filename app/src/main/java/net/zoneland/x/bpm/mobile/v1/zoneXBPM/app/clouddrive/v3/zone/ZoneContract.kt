@@ -11,8 +11,23 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.yunpan.CloudFileZoneDa
 object ZoneContract {
     interface View: BaseView {
         fun zoneList(list: List<CloudFileZoneData>)
+        fun backError(message: String)
+        fun canCreateZone(flag: Boolean)
+        fun createZoneSuccess()
+        fun updateZoneSuccess()
+        fun deleteZoneSuccess()
+        fun addFavoriteSuccess()
+        fun renameFavoriteSuccess()
+        fun cancelFavoriteSuccess()
     }
     interface Presenter: BasePresenter<View>{
         fun loadZone()
+        fun loadZoneCreatorPermission()
+        fun createZone(name: String, desc: String)
+        fun updateZone(id: String, name: String, desc: String)
+        fun deleteZone(id: String)
+        fun addFavorite(name: String, zoneId: String)
+        fun renameFavorite(name: String, id: String)
+        fun cancelFavorite(id: String)
     }
 }

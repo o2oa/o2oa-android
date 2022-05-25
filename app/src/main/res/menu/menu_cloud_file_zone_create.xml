@@ -1,0 +1,12 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".app.clouddrive.v3.zone.ZoneActivity">
+
+    <item android:id="@+id/menu_zone_create"
+        app:showAsAction="always"
+        android:orderInCategory="90"
+        android:title="@string/cms_create"/>
+
+
+</menu>

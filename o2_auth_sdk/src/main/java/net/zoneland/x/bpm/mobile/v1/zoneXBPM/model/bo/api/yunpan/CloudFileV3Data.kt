@@ -1,7 +1,5 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.yunpan
 
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.CloudDiskItem
-
 
 /**
  * Created by fancyLou on 2022-05-20.
@@ -122,4 +120,18 @@ data class FolderItemForPicker(
     var id: String = "",
     var name: String = "",
     var updateTime: String = ""
+)
+
+// 共享区提交对象
+data class ZonePost(
+    var name: String = "",
+    var description: String = ""
+)
+
+
+// 收藏提交对象
+data class FavoritePost(
+    var name: String = "",
+    var folder: String = "",
+    var orderNumber: String = "" //orderNumber:排序号,升序排列,为空在最后
 )

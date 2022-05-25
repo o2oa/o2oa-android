@@ -1027,13 +1027,13 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     private fun showPictureChooseMenu() {
         BottomSheetMenu(this)
                 .setTitle(getString(R.string.upload_photo))
-                .setItem(getString(R.string.take_from_album), resources.getColor(R.color.z_color_text_primary)) {
+                .setItem(getString(R.string.take_from_album), ContextCompat.getColor(this, R.color.z_color_text_primary)) {
                     takeFromPictures()
                 }
-                .setItem(getString(R.string.take_photo), resources.getColor(R.color.z_color_text_primary)) {
+                .setItem(getString(R.string.take_photo), ContextCompat.getColor(this, R.color.z_color_text_primary)) {
                     takeFromCamera()
                 }
-                .setCancelButton(getString(R.string.cancel), resources.getColor(R.color.z_color_text_hint)) {
+                .setCancelButton(getString(R.string.cancel), ContextCompat.getColor(this, R.color.z_color_text_hint)) {
                     XLog.debug("取消。。。。。")
                 }
                 .show()

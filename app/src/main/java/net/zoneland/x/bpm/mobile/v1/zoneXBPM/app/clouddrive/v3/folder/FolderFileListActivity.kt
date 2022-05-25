@@ -368,8 +368,8 @@ class FolderFileListActivity : BaseMVPActivity<FolderFileListContract.View, Fold
                 btn_cloud_disk_v3_rename.visible()
                 val renameId = adapter.mSelectIds.first()
                 when (val item = adapter.items.firstOrNull { it.id == renameId }) {
-                    is CloudFileV3Data.FileItem -> if (item.isCreator) { btn_cloud_disk_v3_delete.visible() } else { btn_cloud_disk_v3_delete.gone() }
-                    is CloudFileV3Data.FolderItem -> if (item.isCreator) { btn_cloud_disk_v3_delete.visible() } else { btn_cloud_disk_v3_delete.gone() }
+                    is CloudFileV3Data.FileItem -> if (item.isAdmin ||  item.isCreator) { btn_cloud_disk_v3_delete.visible() } else { btn_cloud_disk_v3_delete.gone() }
+                    is CloudFileV3Data.FolderItem -> if (item.isAdmin ||  item.isCreator) { btn_cloud_disk_v3_delete.visible() } else { btn_cloud_disk_v3_delete.gone() }
                     else -> btn_cloud_disk_v3_delete.gone()
                 }
             }
