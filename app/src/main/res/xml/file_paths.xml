@@ -5,7 +5,7 @@
 <!--    <external-path name="beta_external_files_path" path="Android/data/" />-->
     <cache-path name="cache_path" path="."/>
     <files-path name="files" path="."/>
-    <root-path
-        name="root_path"
-        path="." />
+<!--    <root-path-->
+<!--        name="root_path"-->
+<!--        path="." />-->
 </paths>

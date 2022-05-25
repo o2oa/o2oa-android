@@ -3,7 +3,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets
 import android.app.Activity
 import android.text.TextUtils
 import android.webkit.DownloadListener
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.LocalImageViewActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
@@ -77,7 +77,8 @@ class O2WebviewDownloadListener(val activity: Activity) : DownloadListener {
         ac?.runOnUiThread {
             if (file.exists()) {
                 if (FileExtensionHelper.isImageFromFileExtension(file.extension)) {
-                    ac.go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
+//                    ac.go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
+                    BigImageViewActivity.startLocalFile(ac, file.absolutePath)
                 } else {
                     ac.go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
                 }

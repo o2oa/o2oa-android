@@ -32,7 +32,6 @@ class CloudSharePresenter : BasePresenterImpl<CloudShareContract.View>(), CloudS
                 if (O2SDKManager.instance().appCloudDiskIsV3()) {
                     val service = getCloudFileV3ControlService(mView?.getContext())
                     if (service != null) {
-                        // shareType 当前只支持 member todo 后续扩展
                         val attaObservable = service.listMyShare("member", "attachment")
                         val folderObservable = service.listMyShare("member", "folder")
                         shareTop(folderObservable, attaObservable)
@@ -42,7 +41,6 @@ class CloudSharePresenter : BasePresenterImpl<CloudShareContract.View>(), CloudS
                 } else {
                     val service = getCloudFileControlService(mView?.getContext())
                     if (service != null) {
-                        // shareType 当前只支持 member todo 后续扩展
                         val attaObservable = service.listMyShare("member", "attachment")
                         val folderObservable = service.listMyShare("member", "folder")
                         shareTop(folderObservable, attaObservable)
@@ -127,7 +125,6 @@ class CloudSharePresenter : BasePresenterImpl<CloudShareContract.View>(), CloudS
         val service = getCloudFileControlService(mView?.getContext())
         if (service != null) {
             if (TextUtils.isEmpty(shareId)) { // 顶层
-                // shareType 当前只支持 member todo 后续扩展
                 val attaObservable = service.listShareToMe("attachment")
                 val folderObservable = service.listShareToMe("folder")
                 Observable.zip(folderObservable, attaObservable) { folder, attachment ->

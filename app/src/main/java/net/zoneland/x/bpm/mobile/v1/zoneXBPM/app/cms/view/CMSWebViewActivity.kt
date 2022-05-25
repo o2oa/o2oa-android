@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_cms_web_view_document.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
@@ -267,7 +268,8 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
         hideLoadingDialog()
         if (file.exists()){
             if (FileExtensionHelper.isImageFromFileExtension(file.extension)) {
-                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
+//                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
+                BigImageViewActivity.startLocalFile(this, file.absolutePath)
             }else {
                 go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
             }

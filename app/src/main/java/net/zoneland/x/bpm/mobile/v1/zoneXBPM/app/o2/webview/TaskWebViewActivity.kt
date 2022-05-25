@@ -23,6 +23,7 @@ import kotlinx.android.synthetic.main.activity_work_web_view.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.WorkNewActionItem
@@ -642,7 +643,8 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 //        if (file.exists()) AndroidUtils.openFileWithDefaultApp(this, file)
         if (file.exists()){
             if (FileExtensionHelper.isImageFromFileExtension(file.extension)) {
-                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
+//                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
+                BigImageViewActivity.startLocalFile(this, file.absolutePath)
             }else {
                 go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
 //                QbSdk.openFileReader(this, file.absolutePath, HashMap<String, String>()) { p0 -> XLog.info("打开文件返回。。。。。$p0") }

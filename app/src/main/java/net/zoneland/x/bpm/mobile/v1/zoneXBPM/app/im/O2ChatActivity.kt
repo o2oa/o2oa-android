@@ -38,7 +38,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.LocalImageViewActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.TaskWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
@@ -557,7 +557,8 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             }
             MessageType.image.key -> {
                 //打开大图
-                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(filePath))
+//                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(filePath))
+                BigImageViewActivity.startLocalFile(this, filePath)
             }
             else -> go<FileReaderActivity>(FileReaderActivity.startBundle(filePath))
         }
