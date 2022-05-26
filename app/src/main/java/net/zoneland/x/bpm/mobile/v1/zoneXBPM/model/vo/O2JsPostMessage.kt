@@ -67,3 +67,8 @@ class O2BizPersonPickerMessage(
         var maxNumber: Int?,
         var pickedUsers: ArrayList<String>?
 )
+
+class O2BizPreviewDocMessage(
+        var url: String?,
+        var fileName: String?
+)

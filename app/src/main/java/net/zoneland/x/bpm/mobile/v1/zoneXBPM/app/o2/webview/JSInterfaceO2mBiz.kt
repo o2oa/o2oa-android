@@ -12,11 +12,25 @@ import android.webkit.WebView
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.wugang.activityresult.library.ActivityResult
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.ContactPickerActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2FileDownloadHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.cache.MD5Util
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.O2WebviewDownloadListener.DownloadFileForm
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.LoadingDialog
 import org.json.JSONObject
 import org.json.JSONTokener
+import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
+import rx.schedulers.Schedulers
+import java.io.File
 
 
 class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
@@ -47,6 +61,7 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
                         "contact.groupPicker" -> groupPicker(message!!)
                         "contact.personPicker" -> personPicker(message!!)
                         "contact.complexPicker" -> complexPicker(message!!)
+                        "file.previewDoc" -> previewDoc(message!!)
                     }
                 } else {
                     XLog.error("message 格式错误！！！")
@@ -72,6 +87,86 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
         }
     }
 
+    /**
+     * 下载并预览文件
+     */
+    private fun previewDoc(message: String) {
+        val type = object : TypeToken<O2JsPostMessage<O2BizPreviewDocMessage>>() {}.type
+        val value: O2JsPostMessage<O2BizPreviewDocMessage> = gson.fromJson(message, type)
+        val callback = value.callback
+        if (activity != null) {
+            val url = value.data?.url
+            val fileName = value.data?.fileName
+            if (TextUtils.isEmpty(url) || TextUtils.isEmpty(fileName)) {
+                XLog.error("没有传入 url 或 fileName！")
+                if (!TextUtils.isEmpty(callback)) {
+                    callbackJs("$callback('{\"result\": false, \"message\": \"没有传入url 或 fileName！\"}')")
+                }
+            } else {
+                // 防止文件名相同，md5 url作为文件夹名称
+                val dirUrl = MD5Util.getMD5String(url) ?: "null"
+                val path = FileExtensionHelper.getXBPMTempFolder(activity) + File.separator + dirUrl + File.separator + fileName
+                showLoadingDialog()
+                Observable.just(DownloadFileForm(url!!, path))
+                    .subscribeOn(Schedulers.io())
+                    .flatMap { form ->
+                        O2FileDownloadHelper.download(form.downloadUrl, form.filePath)
+                    }.observeOn(AndroidSchedulers.mainThread())
+                    .o2Subscribe {
+                        onNext {
+                            hideLoadingDialog()
+                            openFile(path)
+                            if (!TextUtils.isEmpty(callback)) {
+                                callbackJs("$callback('{\"result\": true, \"message\": \"\"}')")
+                            }
+                        }
+                        onError { e, _ ->
+                            XLog.error("", e)
+                            hideLoadingDialog()
+                            val mes = "下载文件失败！${e?.message ?: ""}"
+                            activity.runOnUiThread {XToast.toastShort(activity, mes)}
+                            if (!TextUtils.isEmpty(callback)) {
+                                callbackJs("$callback('{\"result\": false, \"message\": \"$mes\"}')")
+                            }
+                        }
+                    }
+            }
+        } else {
+            XLog.error("activity不存在 previewDoc 失败！！")
+        }
+    }
+
+
+    private var loadingDialog: LoadingDialog? = null
+    private fun showLoadingDialog() {
+        activity?.runOnUiThread {
+            if (loadingDialog == null) {
+                loadingDialog = LoadingDialog(activity)
+            }
+            loadingDialog?.show()
+        }
+    }
+    private fun hideLoadingDialog() {
+        activity?.runOnUiThread {
+            loadingDialog?.dismiss()
+        }
+    }
+    private fun openFile(filePath: String) {
+        val file = File(filePath)
+        activity?.runOnUiThread {
+            if (file.exists()) {
+                if (FileExtensionHelper.isImageFromFileExtension(file.extension)) {
+                    BigImageViewActivity.startLocalFile(activity, file.absolutePath)
+                } else {
+                    activity.go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
+                }
+            }
+        }
+    }
+
+    /**
+     * 身份选择器
+     */
     private fun identityPicker(message: String) {
         val type = object : TypeToken<O2JsPostMessage<O2BizIdentityPickerMessage>>() {}.type
         val value: O2JsPostMessage<O2BizIdentityPickerMessage> = gson.fromJson(message, type)
@@ -102,6 +197,9 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
         }
     }
 
+    /**
+     * 部门选择器
+     */
     private fun departmentsPicker(message: String) {
         val type = object : TypeToken<O2JsPostMessage<O2BizUnitPickerMessage>>() {}.type
         val value: O2JsPostMessage<O2BizUnitPickerMessage> = gson.fromJson(message, type)
@@ -132,6 +230,9 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
         }
     }
 
+    /**
+     * 人员选择器
+     */
     private fun personPicker(message: String) {
         val type = object : TypeToken<O2JsPostMessage<O2BizPersonPickerMessage>>() {}.type
         val value: O2JsPostMessage<O2BizPersonPickerMessage> = gson.fromJson(message, type)
@@ -160,6 +261,9 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
         }
     }
 
+    /**
+     * 群组选择器
+     */
     private fun groupPicker(message: String) {
         val type = object : TypeToken<O2JsPostMessage<O2BizGroupPickerMessage>>() {}.type
         val value: O2JsPostMessage<O2BizGroupPickerMessage> = gson.fromJson(message, type)
@@ -188,6 +292,9 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
         }
     }
 
+    /**
+     * 组合选择器
+     */
     private fun complexPicker(message: String) {
         val type = object : TypeToken<O2JsPostMessage<O2BizComplexPickerMessage>>() {}.type
         val value: O2JsPostMessage<O2BizComplexPickerMessage> = gson.fromJson(message, type)

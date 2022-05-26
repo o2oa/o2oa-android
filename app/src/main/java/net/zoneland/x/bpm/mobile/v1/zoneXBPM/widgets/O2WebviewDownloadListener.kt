@@ -139,7 +139,7 @@ class O2WebviewDownloadListener(val activity: Activity) : DownloadListener {
     }
 
 
-    inner class DownloadFileForm(
+    public class DownloadFileForm(
         val downloadUrl:String,
         val filePath: String
     )

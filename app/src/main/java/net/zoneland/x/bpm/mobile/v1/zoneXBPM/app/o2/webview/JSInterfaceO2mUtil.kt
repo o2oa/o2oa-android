@@ -293,6 +293,7 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
                 activity.runOnUiThread {
                     val uri = Uri.parse(schema)   //   o2oa://" 相当于 http://www.baidu.com
                     val intent =  Intent(Intent.ACTION_VIEW, uri)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
                     activity.startActivity(intent)
                 }
                 if (!TextUtils.isEmpty(callback)) {
