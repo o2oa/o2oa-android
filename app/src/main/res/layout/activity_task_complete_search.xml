@@ -8,7 +8,6 @@
     android:background="@color/z_color_background"
     tools:context="net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.TaskCompletedSearchActivity">
     <com.google.android.material.appbar.AppBarLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
         android:id="@+id/app_bar_task_completed_search"
         android:layout_height="wrap_content"
@@ -38,7 +37,6 @@
             android:id="@+id/recycler_task_completed_search_list"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/spacing_small"
-            ></androidx.recyclerview.widget.RecyclerView>
+            android:layout_marginTop="@dimen/spacing_small" />
     </net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.RecyclerViewSwipeRefreshLayout>
 </RelativeLayout>

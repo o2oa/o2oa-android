@@ -8,6 +8,8 @@ import android.text.SpannableString
 import android.text.Spanned
 import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import android.widget.TextView
 import kotlinx.android.synthetic.main.activity_task_list.*
@@ -17,6 +19,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.TaskListPagerAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.ViewHolder
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.WorkTypeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.PictureLoaderService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.TaskApplicationData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
@@ -66,6 +69,21 @@ class TaskListActivity : BaseMVPActivity<TaskListContract.View, TaskListContract
 
         showLoadingDialog()
         mPresenter.findTaskApplicationList()
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_task_complete, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_task_complete_search -> {
+                TaskCompletedSearchActivity.openSearch(WorkTypeEnum.Task, this)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun onResume() {

@@ -1,6 +1,7 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process
 
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.appcompat.widget.Toolbar
@@ -12,29 +13,49 @@ import kotlinx.android.synthetic.main.activity_task_complete_search.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.TaskWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.WorkTypeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.PictureLoaderService
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.SearchWorkData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.TaskCompleteData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2oaColorScheme
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
 
 
-
-
+/**
+ * 搜索工作
+ * 支持多个类型，待办、已办、待阅、已阅
+ *
+ */
 class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.View, TaskCompletedSearchContract.Presenter>(), TaskCompletedSearchContract.View {
     override var mPresenter: TaskCompletedSearchContract.Presenter = TaskCompletedSearchPresenter()
     override fun layoutResId(): Int = R.layout.activity_task_complete_search
+
+
+    companion object {
+        const val SearchTypeKey = "SearchTypeKey"
+        fun openSearch(type: WorkTypeEnum, activity: Activity) {
+            val bundle = Bundle()
+            bundle.putSerializable(SearchTypeKey, type)
+            activity.go<TaskCompletedSearchActivity>(bundle)
+        }
+    }
 
     var pictureLoaderService: PictureLoaderService? = null
     var lastId: String = ""
     var searchKey: String = ""
     var isRefresh = false
     var isLoading = false
-    val resultList = ArrayList<TaskCompleteData>()
-    val adapter: CommonRecycleViewAdapter<TaskCompleteData> by lazy {
-        object : CommonRecycleViewAdapter<TaskCompleteData>(this, resultList, R.layout.item_todo_list) {
-            override fun convert(holder: CommonRecyclerViewHolder?, data: TaskCompleteData?) {
+    val resultList = ArrayList<SearchWorkData>()
+    var searchType: WorkTypeEnum = WorkTypeEnum.TaskCompleted // 默认已办
+
+    val adapter: CommonRecycleViewAdapter<SearchWorkData> by lazy {
+        object : CommonRecycleViewAdapter<SearchWorkData>(this, resultList, R.layout.item_todo_list) {
+            override fun convert(holder: CommonRecyclerViewHolder?, data: SearchWorkData?) {
                 val time = data?.startTime?.substring(0, 10) ?:""
                 holder?.setText(R.id.todo_card_view_title_id, data?.title)
                         ?.setText(R.id.todo_card_view_content_id, "【${data?.processName}】")
@@ -49,6 +70,7 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
     }
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
+        searchType = (intent.extras?.getSerializable(SearchTypeKey) as? WorkTypeEnum) ?: WorkTypeEnum.TaskCompleted
         val toolBar = findViewById<Toolbar>(R.id.toolbar_task_completed_search_top_bar)
         toolBar?.title = ""
         setSupportActionBar(toolBar)
@@ -69,28 +91,27 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
         })
         //SwipeRefreshLayout 下拉刷新控件的颜色 最多4个
-        refresh_task_completed_layout.setColorSchemeResources(R.color.z_color_refresh_scuba_blue,
-                R.color.z_color_refresh_red, R.color.z_color_refresh_purple, R.color.z_color_refresh_orange)
+        refresh_task_completed_layout.o2oaColorScheme()
         refresh_task_completed_layout.recyclerViewPageNumber = O2.DEFAULT_PAGE_NUMBER
         refresh_task_completed_layout.setOnRefreshListener {
             if(!isLoading && !isRefresh){
-                searchTaskCompleted(true)
                 isRefresh = true
+                searchTaskCompleted(true)
             }
         }
         refresh_task_completed_layout.setOnLoadMoreListener{
             if (!isLoading && !isRefresh) {
+                isLoading = true
                 if (TextUtils.isEmpty(lastId)) {
                     searchTaskCompleted(true)
                 } else {
                     searchTaskCompleted(false)
                 }
-                isLoading = true
             }
         }
 
         adapter.setOnItemClickListener { _, position ->
-            showTaskCompletedWorkFragment(resultList[position].id)
+            openWork(resultList[position])
         }
         recycler_task_completed_search_list.adapter = adapter
         recycler_task_completed_search_list.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -111,7 +132,7 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
         cleanResultList()
     }
 
-    override fun searchResult(list: List<TaskCompleteData>) {
+    override fun searchResult(list: List<SearchWorkData>) {
         if (isRefresh) {
             resultList.clear()
             resultList.addAll(list)
@@ -119,10 +140,20 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
             resultList.addAll(list)
         }
         if (resultList.size>0) {
-            lastId = resultList[resultList.size-1].id
+            lastId = resultList[resultList.size-1].id ?: ""
         }
         adapter.notifyDataSetChanged()
         finishAnimation()
+    }
+
+    private fun openWork(data: SearchWorkData) {
+        when(searchType) {
+            WorkTypeEnum.TaskCompleted -> showTaskCompletedWorkFragment(data.id ?: "")
+            else -> showTask(data)
+        }
+    }
+    private fun showTask(data: SearchWorkData) {
+        go<TaskWebViewActivity>(TaskWebViewActivity.start(data.work, data.workCompleted, data.title))
     }
 
     private var taskCompletedWorkListFragment: TaskCompletedWorkListFragment? = null
@@ -133,9 +164,9 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
 
     private fun searchTaskCompleted(flag: Boolean) {
         if (flag) {
-            mPresenter.searchTaskCompleted(O2.FIRST_PAGE_TAG, searchKey)
+            mPresenter.search(O2.FIRST_PAGE_TAG, searchKey, searchType)
         }else {
-            mPresenter.searchTaskCompleted(lastId, searchKey)
+            mPresenter.search(lastId, searchKey, searchType)
         }
     }
 

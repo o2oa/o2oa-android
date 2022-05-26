@@ -4,6 +4,8 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_read_complete.*
@@ -14,6 +16,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.TaskWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.SwipeRefreshCommonRecyclerViewAdapter
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.WorkTypeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.PictureLoaderService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ReadCompleteData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.MiscUtilK
@@ -90,6 +93,21 @@ class ReadCompletedListActivity : BaseMVPActivity<ReadCompletedListContract.View
         MiscUtilK.swipeRefreshLayoutRun(todo_read_complete_refresh_layout_id, this)
     }
 
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_task_complete, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_task_complete_search -> {
+                TaskCompletedSearchActivity.openSearch(WorkTypeEnum.ReadCompleted, this)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
     override fun onResume() {
         super.onResume()
         pictureLoaderService = PictureLoaderService(this)

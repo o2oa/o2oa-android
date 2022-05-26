@@ -176,7 +176,45 @@ interface ProcessAssembleSurfaceService {
      */
     @Headers("Content-Type:application/json;charset=UTF-8")
     @POST("jaxrs/taskcompleted/list/{lastId}/next/{limit}/filter")
-    fun searchTaskCompleteListByPage(@Path("lastId") lastId: String, @Path("limit") limit: Int, @Body body: RequestBody): Observable<ApiResponse<List<TaskCompleteData>>>
+    fun searchTaskCompleteListByPage(@Path("lastId") lastId: String, @Path("limit") limit: Int, @Body body: RequestBody): Observable<ApiResponse<List<SearchWorkData>>>
+
+
+    /**
+     * 搜索待办
+     * @param lastId (0) 第一条开始 、 传入最后一个任务id就是从这条任务开始
+     * *
+     * @param limit 每页展现数量
+     * *
+     * @return
+     */
+    @Headers("Content-Type:application/json;charset=UTF-8")
+    @POST("jaxrs/task/list/{lastId}/next/{limit}/filter")
+    fun searchTaskListByPage(@Path("lastId") lastId: String, @Path("limit") limit: Int, @Body body: RequestBody): Observable<ApiResponse<List<SearchWorkData>>>
+
+    /**
+     * 搜索待阅列表
+     * @param lastId
+     * *
+     * @param limit
+     * *
+     * @return
+     */
+    @Headers("Content-Type:application/json;charset=UTF-8")
+    @POST("jaxrs/read/list/{lastId}/next/{limit}/filter")
+    fun searchReadListByPage(@Path("lastId") lastId: String, @Path("limit") limit: Int, @Body body: RequestBody): Observable<ApiResponse<List<SearchWorkData>>>
+
+    /**
+     * 搜索已阅列表
+     * @param lastId
+     * *
+     * @param limit
+     * *
+     * @return
+     */
+    @Headers("Content-Type:application/json;charset=UTF-8")
+    @POST("jaxrs/readcompleted/list/{lastId}/next/{limit}/filter")
+    fun searchReadCompleteListByPage(@Path("lastId") lastId: String, @Path("limit") limit: Int, @Body body: RequestBody): Observable<ApiResponse<List<SearchWorkData>>>
+
 
     /**
      * 已办详细信息
