@@ -304,7 +304,8 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                         val info: AttachmentInfo? = response.data
                         if (info != null) {
                             XLog.info("获取到附件对象，${info.name}")
-                            val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(info.name, mView?.getContext())
+                            // 防止文件名相同 附件id作为文件夹名称
+                            val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(info.id + File.separator + info.name, mView?.getContext())
                             if (O2FileDownloadHelper.fileNeedDownload(info.updateTime, path)) {
                                 val downloadUrl = APIAddressHelper.instance()
                                         .getCommonDownloadUrl(APIDistributeTypeEnum.x_processplatform_assemble_surface, "jaxrs/attachment/download/$attachmentId/work/$workId/stream")
@@ -317,44 +318,6 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                                 Observable.just(File(path))
                             }
 
-
-
-//                            val file = File(path)
-//                            if (!file.exists()) { //下载
-//                                try {
-//                                    SDCardHelper.generateNewFile(path)
-//                                    val call = service.downloadWorkAttachment(attachmentId, workId)
-//                                    val downloadRes = call.execute()
-//                                    val headerDisposition = downloadRes.headers().get("Content-Disposition")
-//                                    XLog.debug("header disposition: $headerDisposition")
-//                                    val dataInput = DataInputStream(downloadRes.body()?.byteStream())
-//                                    val fileOut = DataOutputStream(FileOutputStream(file))
-//                                    val buffer = ByteArray(4096)
-//                                    var count = 0
-//                                    do {
-//                                        count = dataInput.read(buffer)
-//                                        if (count > 0) {
-//                                            fileOut.write(buffer, 0, count)
-//                                        }
-//                                    } while (count > 0)
-//                                    fileOut.close()
-//                                    dataInput.close()
-//                                } catch (e: Exception) {
-//                                    XLog.error("下载附件失败！", e)
-//                                    if (file.exists()) {
-//                                        file.delete()
-//                                    }
-//                                }
-//                            }
-//                            Observable.create { t ->
-//                                val thisfile = File(path)
-//                                if (file.exists()) {
-//                                    t?.onNext(thisfile)
-//                                } else {
-//                                    t?.onError(Exception("附件下载异常，找不到文件！"))
-//                                }
-//                                t?.onCompleted()
-//                            }
                         } else {
                             Observable.create(object : Observable.OnSubscribe<File> {
                                 override fun call(t: Subscriber<in File>?) {
@@ -397,7 +360,8 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                         val info: AttachmentInfo? = response.data
                         if (info != null) {
                             XLog.info("获取到附件对象，${info.name}")
-                            val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(info.name, mView?.getContext())
+                            // 防止文件名相同 附件id作为文件夹名称
+                            val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName( info.id + File.separator + info.name, mView?.getContext())
                             if (O2FileDownloadHelper.fileNeedDownload(info.updateTime, path)) {
                                 val downloadUrl = APIAddressHelper.instance()
                                         .getCommonDownloadUrl(APIDistributeTypeEnum.x_processplatform_assemble_surface, "jaxrs/attachment/download/$attachmentId/workcompleted/$workCompleted/stream")

@@ -130,7 +130,7 @@ class CloudDriveActivity : BaseMVPActivity<CloudDriveContract.View, CloudDriveCo
         XLog.debug("download id:$id, , file:$fileName")
         if (!downloadTaskMap.containsKey(id)) {
             yunpan_download_file_id.visible()
-            val path = FileExtensionHelper.getXBPMTempFolder(this)+ File.separator + fileName
+            val path = FileExtensionHelper.getXBPMTempFolder(this) + File.separator + id + File.separator + fileName
             XLog.debug("file path $path")
             val downloadUrl = APIAddressHelper.instance()
                     .getCommonDownloadUrl(APIDistributeTypeEnum.x_file_assemble_control, "jaxrs/attachment/$id/download/stream")

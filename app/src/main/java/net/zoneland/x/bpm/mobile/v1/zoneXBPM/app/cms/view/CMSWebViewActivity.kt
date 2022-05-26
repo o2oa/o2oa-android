@@ -16,6 +16,8 @@ import android.webkit.WebViewClient
 import androidx.core.content.ContextCompat
 import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_cms_web_view_document.*
+import kotlinx.android.synthetic.main.activity_cms_web_view_document.bottom_operate_button_layout
+import kotlinx.android.synthetic.main.activity_cms_web_view_document.fl_bottom_operation_bar
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
@@ -34,6 +36,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequeste
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.O2WebviewDownloadListener
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.WebChromeClientWithProgressAndValueCallback
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import java.io.File
@@ -141,6 +144,7 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
         web_view_cms_document_content.addJavascriptInterface(jsNotification, JSInterfaceO2mNotification.JSInterfaceName)
         web_view_cms_document_content.addJavascriptInterface(jsUtil, JSInterfaceO2mUtil.JSInterfaceName)
         web_view_cms_document_content.addJavascriptInterface(jsBiz, JSInterfaceO2mBiz.JSInterfaceName)
+        web_view_cms_document_content.setDownloadListener(O2WebviewDownloadListener(this))
         web_view_cms_document_content.webChromeClient = webChromeClient
         web_view_cms_document_content.webViewClient = object : WebViewClient() {
             override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
