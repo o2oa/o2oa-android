@@ -20,6 +20,11 @@ class O2UtilDatePickerMessage(var value: String?,
 
 class O2UtilNavigationMessage(var title: String?)
 
+/**
+ * 第三方 app 打开的的schema
+ */
+class O2UtilNavigationOpenOtherAppMessage(var schema: String?)
+
 
 class O2BizComplexPickerMessage(
         var pickMode: ArrayList<String>?,
