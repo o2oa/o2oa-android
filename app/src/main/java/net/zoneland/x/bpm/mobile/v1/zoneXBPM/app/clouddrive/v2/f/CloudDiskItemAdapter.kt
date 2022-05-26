@@ -70,7 +70,8 @@ class CloudDiskItemAdapter : RecyclerView.Adapter<CommonRecyclerViewHolder>() {
         val checkBox = holder.getView<CheckBox>(R.id.file_list_choose_id)
         checkBox.isChecked = false
         checkBox.visibility = View.VISIBLE
-        checkBox.setOnCheckedChangeListener { _, isChecked -> toggleCheckItem(position, isChecked) }
+//        checkBox.setOnCheckedChangeListener { _, isChecked -> toggleCheckItem(position, isChecked) }
+        checkBox.setOnClickListener { toggleCheckItem(position, checkBox.isChecked) }
         if (mSelectIds.contains(item.id)) {
             checkBox.isChecked = true
         }

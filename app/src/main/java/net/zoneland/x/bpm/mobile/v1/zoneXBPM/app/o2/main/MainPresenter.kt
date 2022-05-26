@@ -24,7 +24,8 @@ class MainPresenter : BasePresenterImpl<MainContract.View>(), MainContract.Prese
      * 检查服务器是否有V3版本的网盘应用
      */
     override fun checkCloudFileV3() {
-        getCloudFileV3ControlService(null)?.let { service ->
+        val service = getCloudFileV3ControlService(null)
+        if (service != null) {
             service.echo().subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .o2Subscribe {
@@ -46,6 +47,11 @@ class MainPresenter : BasePresenterImpl<MainContract.View>(), MainContract.Prese
                         XLog.error("V3网盘应用不存在", e)
                     }
                 }
+        } else {
+            O2SDKManager.instance().prefs().edit {
+                putString(O2.PRE_CLOUD_FILE_VERSION_KEY, "0");
+            }
+            XLog.error("V3网盘应用不存在")
         }
     }
 

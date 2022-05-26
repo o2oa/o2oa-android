@@ -76,10 +76,11 @@ class YunpanRecyclerViewAdapter : RecyclerView.Adapter<CommonRecyclerViewHolder>
         }
         val checkBox = holder.getView<CheckBox>(R.id.file_list_choose_id)
         if (isChoose) {
-            XLog.debug("checkBox, setChecked:false ........" + position)
+            XLog.debug("checkBox, setChecked:false ........$position")
             checkBox.isChecked = false
             checkBox.visibility = View.VISIBLE
-            checkBox.setOnCheckedChangeListener { _, isChecked -> toggleCheckItem(position, isChecked) }
+//            checkBox.setOnCheckedChangeListener { _, isChecked -> toggleCheckItem(position, isChecked) }
+            checkBox.setOnClickListener { toggleCheckItem(position, checkBox.isChecked) }
         } else {
             checkBox.visibility = View.GONE
         }
