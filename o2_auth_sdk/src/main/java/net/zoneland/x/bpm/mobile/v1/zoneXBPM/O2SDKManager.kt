@@ -13,13 +13,16 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.LaunchState
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.exception.NoLoginException
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ApiResponse
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.bbs.BBSMuteInfo
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AuthenticationInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectUnitData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.portal.PortalData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.SharedPreferencesHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.security.SecuritySharedPreference
+import org.w3c.dom.Text
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -92,6 +95,8 @@ class O2SDKManager private constructor()  {
     var cRoleList: String = ""//角色
     //扩展信息
     var zToken: String = ""//用户登录的token
+
+    var bbsMuteInfo: BBSMuteInfo? = null // 论坛禁言对象
 
 
 
@@ -695,5 +700,20 @@ class O2SDKManager private constructor()  {
     fun appCloudDiskIsV3(): Boolean {
         val cloudFileV3 =  prefs().getString(O2.PRE_CLOUD_FILE_VERSION_KEY, "")
         return !(TextUtils.isEmpty(cloudFileV3) || cloudFileV3 != "1")
+    }
+
+    /**
+     * 当前用户是否禁言
+     */
+    fun isBBSMute(): Boolean {
+        if (bbsMuteInfo == null){
+            return false
+        }
+        val expiredDate = bbsMuteInfo?.unmuteDate ?: return false
+        return try {
+            DateHelper.lsOrEq(DateHelper.nowByFormate("yyyy-MM-dd"), expiredDate, "yyyy-MM-dd")
+        } catch (e: Exception) {
+            false
+        }
     }
 }

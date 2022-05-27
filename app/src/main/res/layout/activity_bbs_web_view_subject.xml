@@ -61,6 +61,7 @@
         android:visibility="gone"
         />
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/cl_bbs_web_view_bottom_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/transparent"
@@ -110,15 +111,15 @@
                     android:background="@drawable/bbs_corners_bg"
                     android:textSize="@dimen/font_meeting_time"
                     android:padding="@dimen/spacing_tiny"
-                    android:hint="写评论..."/>
+                    android:hint="@string/bbs_write_reply_hint"/>
 
                 <ImageView
                     android:id="@+id/image_bbs_reply_subject_attachment_add_button"
                     android:layout_width="0dp"
                     android:layout_height="26dp"
                     android:layout_weight="1"
-                    android:layout_marginTop="@dimen/spacing_normal"
-                    android:layout_marginBottom="@dimen/spacing_normal"
+                    android:layout_marginTop="@dimen/spacing_small"
+                    android:layout_marginBottom="@dimen/spacing_small"
                     android:src="@mipmap/icon_choose_image_gray" />
 
                 <Button
@@ -126,9 +127,9 @@
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
                     android:layout_weight="2"
-                    android:text="发送"
+                    android:text="@string/bbs_send_reply_btn"
                     android:textColor="@color/z_color_white_translucent"
-                    android:layout_margin="@dimen/spacing_normal"
+                    android:layout_margin="@dimen/spacing_small"
                     android:background="@drawable/button_submit_comment"/>
 
             </LinearLayout>

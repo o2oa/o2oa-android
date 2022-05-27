@@ -11,5 +11,6 @@ object BBSMainContract {
 
     interface Presenter : BasePresenter<View> {
         fun whetherThereHasCollections()
+        fun checkHasMute()
     }
 }

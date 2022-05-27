@@ -582,6 +582,11 @@
         <item>My collection</item>
         <item>Section</item>
     </string-array>
+    <string name="bbs_send_reply_btn">Send</string>
+    <string name="bbs_mute_send_reply_btn">Forbidden</string>
+    <string name="bbs_write_reply_hint">Write comments...</string>
+    <string name="bbs_mute_reply_hint">Forbidden comments...</string>
+
 <!--    <string-array name="bbs_publish_subject_type_list">-->
 <!--        <item>讨论</item>-->
 <!--        <item>投票</item>-->

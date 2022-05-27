@@ -580,6 +580,10 @@
         <item>我的收藏</item>
         <item>版块</item>
     </string-array>
+    <string name="bbs_send_reply_btn">发送</string>
+    <string name="bbs_mute_send_reply_btn">禁用</string>
+    <string name="bbs_write_reply_hint">写评论...</string>
+    <string name="bbs_mute_reply_hint">禁止评论...</string>
 
 
     <string-array name="ai_command_stop">
@@ -835,6 +839,7 @@
     <string name="search_error">错误！%1$s</string>
     <string name="agree_login_privacy">我已阅读并同意</string>
     <string name="agree_login_privacy_alert_message">必须先同意我们的产品服务协议，否则无法注册使用本产品!</string>
+
 
 
 </resources>
