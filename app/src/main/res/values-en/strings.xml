@@ -816,6 +816,8 @@
     <string name="message_share_file_not_exist">The shared file does not exist</string>
     <string name="message_contact_new_no_permission_for_search">The current user is restricted from querying the address book</string>
     <string name="message_save_image_album">Successfully saved the picture to the album !</string>
+    <string name="message_copy_success">Copy successfully !</string>
+    <string name="message_im_audio_too_short">Recording time is too short !</string>
 
     <!--    dialog -->
     <string name="dialog_msg_bind_to_server_fail">Failed to bind the server. Please check whether the current server configuration is correct? You can also bind to the o2oa demo server to experience！</string>
@@ -828,7 +830,8 @@
     <string name="dialog_msg_clean_cache">Are you sure you want to clear the cache？</string>
     <string name="dialog_msg_logout">Are you sure you want to log out？</string>
     <string name="dialog_msg_need_rebind_phone_number">Are you sure you want to rebind the mobile phone number? This operation will clear the current login information and you need to login again？</string>
-
+    <string name="dialog_msg_audio_need_permission">Voice messages need permission, go to settings</string>
+    <string name="dialog_msg_camera_need_permission">Taking pictures requires permission, go to settings</string>
 
     <string name="choose">Choose</string>
     <string name="sign">Personal signature</string>

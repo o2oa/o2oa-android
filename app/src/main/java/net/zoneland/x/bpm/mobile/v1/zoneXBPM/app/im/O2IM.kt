@@ -13,6 +13,7 @@ object O2IM {
 
     const val IM_Message_Menu_name_Revoke = "撤回"
     const val IM_Message_Menu_name_Revoke_group = "撤回成员消息"
+    const val IM_Message_Menu_text_copy = "复制文字"
 
     val im_emoji_hashMap = hashMapOf<String, Int>(
             "[01]" to R.mipmap.im_emotion_01,

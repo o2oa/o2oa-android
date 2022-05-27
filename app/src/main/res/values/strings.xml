@@ -794,6 +794,8 @@
     <string name="message_update_success">更新成功！</string>
     <string name="message_back_error">返回错误！</string>
     <string name="message_save_image_album">成功保存图片到相册！</string>
+    <string name="message_copy_success">复制成功！</string>
+    <string name="message_im_audio_too_short">录音时间太短！</string>
 
     <!--    dialog -->
     <string name="dialog_msg_bind_to_server_fail">绑定服务器失败，请检查当前服务器配置是否正确？您也可以先绑定到O2OA演示服务器进行体验！</string>
@@ -806,6 +808,8 @@
     <string name="dialog_msg_clean_cache">确认要清除缓存吗？</string>
     <string name="dialog_msg_logout">确定要退出登录吗？</string>
     <string name="dialog_msg_need_rebind_phone_number">确定要重新绑定手机号码吗,该操作会清空当前登录信息，需要重新登录？</string>
+    <string name="dialog_msg_audio_need_permission">语音消息需要权限, 去设置</string>
+    <string name="dialog_msg_camera_need_permission">拍照需要权限, 去设置</string>
 
     <string name="choose">选择</string>
     <string name="sign">个性签名</string>
