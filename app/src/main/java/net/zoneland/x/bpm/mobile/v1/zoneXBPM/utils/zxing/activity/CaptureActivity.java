@@ -168,13 +168,13 @@ public class CaptureActivity extends Activity implements Callback {
         } else {
             String meta = parseMeta(resultString);
             XLog.debug("meta: "+meta);
-            if (backResult && TextUtils.isEmpty(meta)) {
+            if (backResult && !((resultString.contains("x_meeting_assemble_control") && resultString.contains("/checkin")) || !TextUtils.isEmpty(meta))) {
                 Intent resultIntent = new Intent();
                 Bundle bundle = new Bundle();
                 bundle.putString(SCAN_RESULT_KEY, resultString);
                 resultIntent.putExtras(bundle);
                 this.setResult(RESULT_OK, resultIntent);
-            } else {
+            } else { // 会议签到 或 扫码登录
                 sendResultToWebLogin(resultString);
             }
 

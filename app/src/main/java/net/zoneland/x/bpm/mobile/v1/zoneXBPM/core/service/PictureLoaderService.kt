@@ -7,6 +7,7 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import com.google.gson.reflect.TypeToken
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
@@ -212,6 +213,7 @@ class PictureLoaderService(val context: Context) {
             connection.connectTimeout = 5000// 设置链接超时的时间
             val newCookie = O2SDKManager.instance().tokenName() + ":" + O2SDKManager.instance().zToken
             connection.setRequestProperty("Cookie", newCookie)
+            connection.setRequestProperty("x-client", O2.DEVICE_TYPE)
             connection.setRequestProperty(O2SDKManager.instance().tokenName(), O2SDKManager.instance().zToken)
             // 获取响应的状态码 404 200 505 302
             val code = connection.responseCode
@@ -306,6 +308,7 @@ class PictureLoaderService(val context: Context) {
                 conn.setRequestProperty("Accept-Encoding", "identity")
                 val newCookie = O2SDKManager.instance().tokenName() + ":" + O2SDKManager.instance().zToken
                 conn.setRequestProperty("Cookie", newCookie)
+                conn.setRequestProperty("x-client", O2.DEVICE_TYPE)
                 conn.setRequestProperty(O2SDKManager.instance().tokenName(), O2SDKManager.instance().zToken)
                 conn.connect()
                 inputstream = conn.inputStream

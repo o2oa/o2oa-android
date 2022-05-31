@@ -172,10 +172,12 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             }
 
             override fun playAudio(position: Int, msgBody: IMMessageBody) {
+                showLoadingDialog()
                 mPresenter.getFileFromNetOrLocal(position, msgBody)
             }
 
             override fun openOriginImage(position: Int, msgBody: IMMessageBody) {
+                showLoadingDialog()
                  mPresenter.getFileFromNetOrLocal(position, msgBody)
             }
 
@@ -186,6 +188,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             }
 
             override fun openFile(position: Int, msgBody: IMMessageBody) {
+                showLoadingDialog()
                 mPresenter.getFileFromNetOrLocal(position, msgBody)
             }
 
@@ -565,6 +568,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     }
 
     override fun localFile(filePath: String, msgType: String, position: Int) {
+        hideLoadingDialog()
         XLog.debug("local file :$filePath type:$msgType")
         when (msgType) {
             MessageType.audio.key -> {
@@ -572,7 +576,6 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             }
             MessageType.image.key -> {
                 //打开大图
-//                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(filePath))
                 BigImageViewActivity.startLocalFile(this, filePath)
             }
             else -> go<FileReaderActivity>(FileReaderActivity.startBundle(filePath))
@@ -581,6 +584,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     }
 
     override fun downloadFileFail(msg: String) {
+        hideLoadingDialog()
         XToast.toastShort(this, msg)
     }
 

@@ -8,10 +8,9 @@ import androidx.multidex.MultiDexApplication
 import cn.jpush.android.api.JPushInterface
 import com.baidu.mapapi.SDKInitializer
 import com.tencent.bugly.crashreport.CrashReport
+import com.tencent.smtt.export.external.TbsCoreSettings
 import com.tencent.smtt.sdk.QbSdk
-import com.tencent.smtt.sdk.TbsDownloader
 import com.tencent.smtt.sdk.TbsListener
-import com.xiaomi.push.it
 import com.zlw.main.recorderlib.RecordManager
 import io.realm.Realm
 import net.muliba.changeskin.FancySkinManager
@@ -19,8 +18,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.skin.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.LogSingletonService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2MediaPlayerManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
-import com.tencent.smtt.export.external.TbsCoreSettings
-import io.realm.ObjectChangeSet
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.tbs.WordReadHelper
 
 
 /**
@@ -77,7 +75,8 @@ class O2App : MultiDexApplication() {
             CrashReport.initCrashReport(applicationContext)
 
 
-            initTBS()
+//            initTBS()
+            WordReadHelper.init(this);
 
             //极光推送
             initJMessageAndJPush()

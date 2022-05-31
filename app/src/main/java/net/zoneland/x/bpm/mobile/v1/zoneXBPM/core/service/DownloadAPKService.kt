@@ -7,6 +7,7 @@ import android.os.Looper
 import android.os.Message
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.BuildConfig
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import java.io.File
@@ -86,6 +87,7 @@ class DownloadAPKService : IntentService("DownloadAPKService") {
             val url = URL(downloadUrl)
             val conn = url.openConnection() as HttpURLConnection
             conn.setRequestProperty("Accept-Encoding", "identity")
+            conn.setRequestProperty("x-client", O2.DEVICE_TYPE)
             conn.connect()
             val length = conn.contentLength
             val inputStream = conn.inputStream

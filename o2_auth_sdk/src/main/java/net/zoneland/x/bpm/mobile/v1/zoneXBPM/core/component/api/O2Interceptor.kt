@@ -39,6 +39,13 @@ class O2Interceptor : Interceptor {
         val request = requestBuilder.addHeader("x-client", O2.DEVICE_TYPE)
                 .method(original.method(), original.body())
                 .url(url).build()
+//        Log.d(TAG,
+//            "发送请求: method：" + request.method()
+//                    + "\nurl：" + request.url()
+//                    + "\n请求头：" + request.headers()
+//                    )
+//
+
 
         return chain.proceed(request)
 //        val response = chain.proceed(request)

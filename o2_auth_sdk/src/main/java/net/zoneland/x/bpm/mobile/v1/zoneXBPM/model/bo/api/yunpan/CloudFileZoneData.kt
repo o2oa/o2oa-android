@@ -19,8 +19,8 @@ sealed class  CloudFileZoneData {
                      var folder: String = "",
                      var zoneId: String = "",
                      var orderNumber: Int = 0,
-                      var createTime: Boolean? = false,
-                      var updateTime: Boolean? = false,
+                      var createTime: String = "",
+                      var updateTime: String = "",
                       var isAdmin: Boolean? = false,
                       var isEditor: Boolean? = false
     ) : CloudFileZoneData()
@@ -37,8 +37,8 @@ sealed class  CloudFileZoneData {
                      var lastUpdateTime: String = "",
                      var description: String = "",
                      var orderNumber: Int = 0,
-                     var createTime: Boolean? = false,
-                     var updateTime: Boolean? = false,
+                     var createTime: String = "",
+                     var updateTime: String = "",
                      var isAdmin: Boolean? = false,
                      var isZone: Boolean? = false,
                      var isEditor: Boolean? = false

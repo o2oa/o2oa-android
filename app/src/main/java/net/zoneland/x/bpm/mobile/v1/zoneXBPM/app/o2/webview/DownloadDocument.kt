@@ -5,6 +5,7 @@ import android.os.Looper
 import android.text.TextUtils
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.ValueCallback
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
@@ -45,6 +46,7 @@ class DownloadDocument(val context: Activity) {
                 conn.setRequestProperty("Accept-Encoding", "identity")
                 val newCookie = O2SDKManager.instance().tokenName() + ":" + O2SDKManager.instance().zToken
                 conn.setRequestProperty("Cookie", newCookie)
+                conn.setRequestProperty("x-client", O2.DEVICE_TYPE)
                 conn.setRequestProperty(O2SDKManager.instance().tokenName(), O2SDKManager.instance().zToken)
                 conn.connect()
                 val inputStream = conn.inputStream

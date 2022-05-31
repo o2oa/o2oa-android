@@ -13,6 +13,9 @@ object O2 {
 
     const val O2_Process_start_mode_draft = "draft"
 
+    // tbs 内核是否已经下载完成
+    const val TBS_INSTALL_STATUS = "TBS_INSTALL_STATUS"
+
     /**
      * 项目文件存储路径
      * 根目录

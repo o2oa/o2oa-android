@@ -1,5 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils
 
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import rx.Observable
 import java.io.File
@@ -52,6 +53,7 @@ object O2FileDownloadHelper {
                     conn.setRequestProperty("Accept-Encoding", "identity")
                     val newCookie = O2SDKManager.instance().tokenName() + ":" + O2SDKManager.instance().zToken
                     conn.setRequestProperty("Cookie", newCookie)
+                    conn.setRequestProperty("x-client", O2.DEVICE_TYPE)
                     conn.setRequestProperty(O2SDKManager.instance().tokenName(), O2SDKManager.instance().zToken)
                     conn.connect()
                     val inputStream = conn.inputStream

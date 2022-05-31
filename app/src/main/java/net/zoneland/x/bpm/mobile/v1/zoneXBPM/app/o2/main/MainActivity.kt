@@ -33,6 +33,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.addOnPageChangeList
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.tbs.WordReadHelper
 import org.jetbrains.anko.doAsync
 
 
@@ -203,6 +204,10 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
 //        JPushInterface.setBadgeNumber(this, 0)
         XLog.info("onResume ... 清除通知！！")
         O2App.instance.clearAllNotification()
+
+        // 触发一次 tbs 内核下载
+        val isX5Init = WordReadHelper.initFinish()
+        XLog.info("x5内核是否已经完成，$isX5Init")
     }
 
 
