@@ -301,6 +301,15 @@
     </style>
 
 
+<!--    透明-->
+    <style name="tyhjtranslucentTheme" parent="Theme.AppCompat.Light.NoActionBar">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:backgroundDimEnabled">true</item>
+        <item name="android:windowAnimationStyle">@null</item>
+    </style>
 
 
 
@@ -391,10 +400,6 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.ActionBar">
         <item name="android:itemTextAppearance">?android:attr/actionMenuTextAppearance</item>
     </style>
-    <style name="round_check_box_style" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:background">@drawable/round_check_box_bg</item>
-        <item name="android:button">@null</item>
-    </style>
     <style name="default_input_style_with_bg">
         <item name="android:padding">5dp</item>
         <item name="android:textColor">#000000</item>
@@ -442,10 +447,6 @@
         <item name="android:paddingTop">@dimen/custom_dialog_padding_vertical</item>
         <item name="android:paddingBottom">@dimen/custom_dialog_padding_vertical</item>
     </style>
-    <style name="default_check_box_style" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:background">@drawable/default_check_box_style</item>
-        <item name="android:button">@null</item>
-    </style>
     <style name="Toolbar.TitleText" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
         <item name="android:textSize">16sp</item>
     </style>
@@ -454,9 +455,6 @@
         <item name="android:windowBackground">@drawable/photo_choose_bg</item>
     </style>
 
-    <style name="SuperCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
-        <item name="android:button">@drawable/selector_item_checked</item>
-    </style>
 
     <style name="ImagePickerTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="android:fitsSystemWindows">true</item>

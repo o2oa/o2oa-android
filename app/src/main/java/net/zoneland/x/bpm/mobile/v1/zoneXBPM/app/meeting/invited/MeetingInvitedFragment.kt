@@ -176,7 +176,7 @@ class MeetingInvitedFragment : BaseMVPViewPagerFragment<MeetingInvitedFragmentCo
             override fun convert(holder: CommonRecyclerViewHolder, t: MeetingInfoJson) {
                 val time = (t.startTime).substring(11, 19) + "-" + (t.completedTime).substring(11, 19)
                 var participants = "参加人: "
-                t.invitePersonList
+                t.inviteMemberList
                         .map { it.split("@")[0] }
                         .forEach { participants += "$it " }
                 holder.setText(R.id.meeting_card_view_time, time)
@@ -202,7 +202,7 @@ class MeetingInvitedFragment : BaseMVPViewPagerFragment<MeetingInvitedFragmentCo
             override fun convert(holder: CommonRecyclerViewHolder?, t: MeetingInfoJson) {
                 val time = (t.startTime).substring(11, 19) + "-" + (t.completedTime).substring(11, 19)
                 var participants = "参加人: "
-                t.invitePersonList
+                t.inviteMemberList
                         .map { it.split("@")[0] }
                         .forEach { participants += "$it " }
                 holder?.setText(R.id.meeting_card_view_time, time)

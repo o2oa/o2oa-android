@@ -27,7 +27,11 @@ data class MeetingInfoJson(
         var actualStartTime: String = "",//实际开始日期
         var actualCompletedTime: String = "",//实际结束日期
         var manualCompleted: Boolean = false,//会议是否手工结束
-        var invitePersonList: List<String> = ArrayList(),//被邀请的人员
+        var invitePersonList: List<String> = ArrayList(),//被邀请的人员 老字段 为了兼容 这个字段还需设值
+        var inviteMemberList: List<String> = ArrayList(),//被邀请的人员 这个是新字段
+        var inviteDelPersonList: List<String> = ArrayList(),//被邀请的人员 删除的人
+
+
         var acceptPersonList: List<String> = ArrayList(),//接收的人员
         var rejectPersonList: List<String> = ArrayList(),//拒绝的人员
         var confirmStatus: String = "",//会议预定状态
@@ -38,7 +42,10 @@ data class MeetingInfoJson(
         var myWaitAccept: Boolean = false,//是否需要我受邀请的
         var myAccept: Boolean = false,//我已经接受邀请了
         var myReject: Boolean = false,//我已经拒绝邀请了
-        var attachmentList : List<MeetingFileInfoJson> = ArrayList()
+        var attachmentList : List<MeetingFileInfoJson> = ArrayList(),
+        var hostUnit: String = "",// 承办部门
+        var hostPerson: String = "",// 主持人
+        var type: String = "" // 会议类型
 ): Serializable
 
 /**
@@ -115,4 +122,11 @@ data class BuildingInfoJson(
         return MeetingRoom.Building(name,roomList.size)
     }
 }
+
+/**
+ * 会议签到返回的人员
+ */
+data class MeetingCheckInRes(
+        var checkinPersonList: List<String> = ArrayList() //已签到的人员列表
+): Serializable
 

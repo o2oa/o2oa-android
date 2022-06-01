@@ -5,16 +5,16 @@ ext {
 }
 buildscript {
     //版本号
-    ext.kotlin_version = '1.3.72'
+    ext.gradle_version = '4.1.0'
+    ext.kotlin_version = '1.6.10'
     ext.anko_version = '0.10.3'
-    ext.gradle_version = '3.4.2'
 
 
     repositories {
         google()
         jcenter()
-        // 配置HMS Core SDK的Maven仓地址。
-        maven {url 'https://developer.huawei.com/repo/'}
+        mavenCentral()
+
     }
 
     dependencies {
@@ -22,8 +22,6 @@ buildscript {
         classpath "io.realm:realm-gradle-plugin:3.1.1"
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
-        // NOTE: Do not place your application dependencies here; they belong
-        // in the individual module build.gradle files
     }
 }
 
@@ -39,10 +37,8 @@ allprojects {
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots/"
         }
-//        maven { url "http://mvn.zoneland.net/nexus/content/repositories/land_repo/" }
+        //o2oa
         maven { url "http://maven.o2oa.net/repository/maven-public/" }
-        // 配置HMS Core SDK的Maven仓地址。
-        maven {url 'https://developer.huawei.com/repo/'}
     }
 
 }

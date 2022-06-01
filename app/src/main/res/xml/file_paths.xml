@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <external-files-path name="apk" path="."/>
-    <external-path name="external_path" path="."/>
-    <external-path name="beta_external_files_path" path="Android/data/" />
+<!--    <external-files-path name="apk" path="."/>-->
+<!--    <external-path name="external_path" path="."/>-->
+<!--    <external-path name="beta_external_files_path" path="Android/data/" />-->
     <cache-path name="cache_path" path="."/>
     <files-path name="files" path="."/>
-    <root-path
-        name="root_path"
-        path="." />
+<!--    <root-path-->
+<!--        name="root_path"-->
+<!--        path="." />-->
 </paths>

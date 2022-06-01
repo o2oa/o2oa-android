@@ -1,7 +1,12 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.share
 
 import android.text.TextUtils
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ApiResponse
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.yunpan.FileJson
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.yunpan.FolderJson
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.yunpan.ShareJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.CloudDiskItem
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
@@ -22,68 +27,104 @@ class CloudSharePresenter : BasePresenterImpl<CloudShareContract.View>(), CloudS
      * 传入 文件夹参数 获取分享的文件夹内的列表数据
      */
     override fun getMyShareItemList(parentId: String, shareId: String) {
-        val service = getCloudFileControlService(mView?.getContext())
-        if (service != null) {
+
             if (TextUtils.isEmpty(shareId)) { // 顶层
-                // shareType 当前只支持 member todo 后续扩展
-                val attaObservable = service.listMyShare("member", "attachment")
-                val folderObservable = service.listMyShare("member", "folder")
-                Observable.zip(folderObservable, attaObservable) { folder, attachment ->
-                        val items = ArrayList<CloudDiskItem>()
-                    folder.data.forEach {
-                        items.add(it.copyToItem())
+                if (O2SDKManager.instance().appCloudDiskIsV3()) {
+                    val service = getCloudFileV3ControlService(mView?.getContext())
+                    if (service != null) {
+                        val attaObservable = service.listMyShare("member", "attachment")
+                        val folderObservable = service.listMyShare("member", "folder")
+                        shareTop(folderObservable, attaObservable)
+                    } else {
+                        mView?.error("Server error!")
                     }
-                    attachment.data.forEach {
-                        items.add(it.copyToItem())
+                } else {
+                    val service = getCloudFileControlService(mView?.getContext())
+                    if (service != null) {
+                        val attaObservable = service.listMyShare("member", "attachment")
+                        val folderObservable = service.listMyShare("member", "folder")
+                        shareTop(folderObservable, attaObservable)
+                    }else {
+                        mView?.error("Server error!")
                     }
-                    items
-                }.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .o2Subscribe {
-                            onNext {
-                                mView?.itemList(it)
-                            }
-                            onError { e, _ ->
-                                XLog.error("", e)
-                                mView?.itemList(ArrayList())
-                            }
-                        }
+                }
+
             } else if (!TextUtils.isEmpty(shareId) && !TextUtils.isEmpty(parentId))  { //文件夹下内容查询
-                val folderObservable = service.listShareFolderWithFolder(shareId, parentId)
-                val attaObservable = service.listShareAttachmentWithFolder(shareId, parentId)
-                Observable.zip(folderObservable, attaObservable) { folder, attachment ->
-                    val items = ArrayList<CloudDiskItem>()
-                    folder.data.forEach {
-                        items.add(it.copyToVO2())
+                if (O2SDKManager.instance().appCloudDiskIsV3()) {
+                    val service = getCloudFileV3ControlService(mView?.getContext())
+                    if (service != null) {
+                        val folderObservable = service.listShareFolderWithFolder(shareId, parentId)
+                        val attaObservable = service.listShareAttachmentWithFolder(shareId, parentId)
+                        shareOther(folderObservable, attaObservable)
+                    } else {
+                        mView?.error("Server error!")
                     }
-                    attachment.data.forEach {
-                        items.add(it.copyToVO2())
+                } else {
+                    val service = getCloudFileControlService(mView?.getContext())
+                    if (service != null) {
+                        val folderObservable = service.listShareFolderWithFolder(shareId, parentId)
+                        val attaObservable = service.listShareAttachmentWithFolder(shareId, parentId)
+                        shareOther(folderObservable, attaObservable)
+                    }else {
+                        mView?.error("Server error!")
                     }
-                    items
-                }.subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .o2Subscribe {
-                            onNext {
-                                mView?.itemList(it)
-                            }
-                            onError { e, _ ->
-                                XLog.error("", e)
-                                mView?.itemList(ArrayList())
-                            }
-                        }
+                }
             } else {
                 mView?.error("Server error!")
             }
-        }else {
-            mView?.error("Server error!")
-        }
+
+    }
+
+    private fun shareTop(folderObservable: Observable<ApiResponse<List<ShareJson>>>, attaObservable: Observable<ApiResponse<List<ShareJson>>>) {
+        Observable.zip(folderObservable, attaObservable) { folder, attachment ->
+            val items = ArrayList<CloudDiskItem>()
+            folder.data.forEach {
+                items.add(it.copyToItem())
+            }
+            attachment.data.forEach {
+                items.add(it.copyToItem())
+            }
+            items
+        }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .o2Subscribe {
+                onNext {
+                    mView?.itemList(it)
+                }
+                onError { e, _ ->
+                    XLog.error("", e)
+                    mView?.itemList(ArrayList())
+                }
+            }
+    }
+
+    private fun shareOther(folderObservable:  Observable<ApiResponse<List<FolderJson>>>, attaObservable: Observable<ApiResponse<List<FileJson>>>) {
+        Observable.zip(folderObservable, attaObservable) { folder, attachment ->
+            val items = ArrayList<CloudDiskItem>()
+            folder.data.forEach {
+                items.add(it.copyToVO2())
+            }
+            attachment.data.forEach {
+                items.add(it.copyToVO2())
+            }
+            items
+        }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .o2Subscribe {
+                onNext {
+                    mView?.itemList(it)
+                }
+                onError { e, _ ->
+                    XLog.error("", e)
+                    mView?.itemList(ArrayList())
+                }
+            }
     }
 
     override fun getShareToMeItemList(parentId: String, shareId: String) {
         val service = getCloudFileControlService(mView?.getContext())
         if (service != null) {
             if (TextUtils.isEmpty(shareId)) { // 顶层
-                // shareType 当前只支持 member todo 后续扩展
                 val attaObservable = service.listShareToMe("attachment")
                 val folderObservable = service.listShareToMe("folder")
                 Observable.zip(folderObservable, attaObservable) { folder, attachment ->

@@ -162,17 +162,50 @@
             app:layout_constraintTop_toBottomOf="@+id/view_bind_phone_step_one_code_bottom"
              />
 
-        <TextView
-            android:id="@+id/tv_secret_login"
+        <LinearLayout
+            android:id="@+id/ll_fluid_login_agree_bar"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="16dp"
-            android:text="@string/secret"
-            android:textSize="16sp"
-            android:padding="@dimen/spacing_small"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/button_login_phone_next" />
+            app:layout_constraintTop_toBottomOf="@id/button_login_phone_next"
+            android:layout_marginTop="16dp"
+            android:visibility="invisible"
+            android:orientation="horizontal">
+
+            <RadioButton
+                android:id="@+id/radio_fluid_login_agree"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:button="@null"
+                android:layout_marginEnd="@dimen/spacing_small"
+                android:drawableStart="@drawable/radio_background_primary"
+                android:textColor="@color/z_color_text_primary"
+                android:text="@string/agree_login_privacy"/>
+
+            <TextView
+                android:id="@+id/tv_user_service_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_service"
+                android:textSize="16sp"
+                android:textColor="@color/z_color_primary_blue"
+                />
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/and"
+                android:textColor="@color/z_color_text_primary"
+                />
+            <TextView
+                android:id="@+id/tv_secret_login"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/secret"
+                android:textSize="16sp"
+                android:textColor="@color/z_color_primary_blue"
+                />
+        </LinearLayout>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

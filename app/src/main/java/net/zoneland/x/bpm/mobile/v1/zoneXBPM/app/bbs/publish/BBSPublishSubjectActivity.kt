@@ -1,8 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.bbs.publish
 
 
-import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.*
@@ -10,7 +8,6 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_bbs_publish_subject.*
-import net.muliba.fancyfilepickerlibrary.PicturePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
@@ -22,6 +19,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.hideSoftInput
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BBSSubjectTypePopupWindow
 import org.jetbrains.anko.dip
 import java.util.*
@@ -79,11 +77,12 @@ class BBSPublishSubjectActivity : BaseMVPActivity<BBSPublishSubjectContract.View
 
         image_bbs_publish_subject_attachment_add_button.setOnClickListener {
             XLog.debug("选择图片附件")
-            PicturePicker()
-                    .withActivity(this)
-                    .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
-                    .requestCode(BBS_TAKE_FROM_PICTURES_CODE)
-                    .start()
+            PicturePickUtil().withAction(this)
+                .forResult { files ->
+                    if (files!=null && files.isNotEmpty()) {
+                        readyUploadImages(files[0])
+                    }
+                }
         }
 
         //查询版块对象
@@ -95,8 +94,8 @@ class BBSPublishSubjectActivity : BaseMVPActivity<BBSPublishSubjectContract.View
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.menu_bbs_publish_subject -> {
                 XLog.debug("发表。。。。。。。。attachment:" + uploadedImageMap.size)
                 publishSubject()
@@ -105,19 +104,6 @@ class BBSPublishSubjectActivity : BaseMVPActivity<BBSPublishSubjectContract.View
         return super.onOptionsItemSelected(item)
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                BBS_TAKE_FROM_PICTURES_CODE -> {
-                    val result = data?.extras?.getString(PicturePicker.FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY, "")
-                    if (!TextUtils.isEmpty(result)) {
-                        readyUploadImages(result!!)
-                    }
-                }
-            }
-        }
-        super.onActivityResult(requestCode, resultCode, data)
-    }
 
 
     override fun sectionInfo(info: SectionInfoJson) {

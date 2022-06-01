@@ -39,6 +39,7 @@ import com.google.zxing.qrcode.QRCodeReader;
 
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.scanlogin.ScanLoginActivity;
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.zxing.camera.CameraManager;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.zxing.decoding.CaptureActivityHandler;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.zxing.decoding.InactivityTimer;
@@ -81,9 +82,7 @@ public class CaptureActivity extends Activity implements Callback {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
-        }
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
         setContentView(R.layout.act_capture);
         CameraManager.init(getApplication());
 
@@ -162,23 +161,48 @@ public class CaptureActivity extends Activity implements Callback {
         inactivityTimer.onActivity();
         playBeepSoundAndVibrate();
         String resultString = result.getText();
-        // FIXME
-        if (resultString.equals("")) {
+        XLog.debug("resultString: "+ resultString);
+        if (TextUtils.isEmpty(resultString)) {
             Toast.makeText(CaptureActivity.this, "没有扫描到任何东西!", Toast.LENGTH_SHORT)
                     .show();
         } else {
-            if (backResult) {
+            String meta = parseMeta(resultString);
+            XLog.debug("meta: "+meta);
+            if (backResult && !((resultString.contains("x_meeting_assemble_control") && resultString.contains("/checkin")) || !TextUtils.isEmpty(meta))) {
                 Intent resultIntent = new Intent();
                 Bundle bundle = new Bundle();
                 bundle.putString(SCAN_RESULT_KEY, resultString);
                 resultIntent.putExtras(bundle);
                 this.setResult(RESULT_OK, resultIntent);
-            } else {
+            } else { // 会议签到 或 扫码登录
                 sendResultToWebLogin(resultString);
             }
 
         }
         CaptureActivity.this.finish();
+    }
+
+    /**
+     * 解析结果 判断是否是内部的扫码登录
+     * @param resultString
+     * @return
+     */
+    private String parseMeta(String resultString) {
+        try {
+            String str = resultString.trim().toLowerCase();
+            String[] array = str.split("\\?");
+            XLog.debug(array.length+"");
+            if (array.length > 1) {
+                String[] paramArray = array[1].split("&");
+                for (int i = 0; i < paramArray.length; i++) {
+                    String it = paramArray[i];
+                    if ("meta".equals(it.split("=")[0])) {
+                        return it.split("=")[1];
+                    }
+                }
+            }
+        }catch (Exception e){XLog.error("", e);}
+        return null;
     }
 
     /**

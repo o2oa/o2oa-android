@@ -84,7 +84,7 @@
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_marginTop="@dimen/spacing_normal"
-            android:background="@color/divider"
+            android:background="@color/send_file_divider_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cb_create_calendar_is_open" />
@@ -107,7 +107,7 @@
             android:id="@+id/view_create_calendar_color_divider"
             android:layout_width="match_parent"
             android:layout_height="1px"
-            android:background="@color/divider"
+            android:background="@color/send_file_divider_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ll_create_calendar_color_layout" />
@@ -155,7 +155,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_marginTop="@dimen/spacing_normal"
-                android:background="@color/divider" />
+                android:background="@color/send_file_divider_color" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -194,7 +194,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_marginTop="@dimen/spacing_normal"
-                android:background="@color/divider" />
+                android:background="@color/send_file_divider_color" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -234,7 +234,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_marginTop="@dimen/spacing_normal"
-                android:background="@color/divider" />
+                android:background="@color/send_file_divider_color" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -274,7 +274,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="1px"
                 android:layout_marginTop="@dimen/spacing_normal"
-                android:background="@color/divider" />
+                android:background="@color/send_file_divider_color" />
 
             <LinearLayout
                 android:layout_width="match_parent"
@@ -318,7 +318,7 @@
             android:layout_width="match_parent"
             android:layout_height="1px"
             android:layout_marginTop="@dimen/spacing_normal"
-            android:background="@color/divider"
+            android:background="@color/send_file_divider_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/ll_create_calendar_org_args" />

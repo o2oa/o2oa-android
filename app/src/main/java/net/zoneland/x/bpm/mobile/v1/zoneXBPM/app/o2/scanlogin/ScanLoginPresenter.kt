@@ -31,4 +31,27 @@ class ScanLoginPresenter : BasePresenterImpl<ScanLoginContract.View>(), ScanLogi
 
         }
     }
+
+    override fun checkInMeeting(id: String) {
+        if (TextUtils.isEmpty(id)) {
+            XLog.error("签到会议id为空！！！")
+            mView?.checkInFail()
+            return
+        }
+        getMeetingAssembleControlService(mView?.getContext())?.let { service ->
+            service.meetingCheckIn(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext {
+                        mView?.checkInSuccess()
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.checkInFail()
+                    }
+                }
+
+        }
+    }
 }

@@ -5,7 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.net.Uri
 import android.provider.MediaStore
-import android.text.TextUtils
 import android.view.Gravity
 import android.view.View
 import android.webkit.ValueCallback
@@ -15,7 +14,6 @@ import android.widget.FrameLayout
 import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
-import net.muliba.fancyfilepickerlibrary.PicturePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileUtil
@@ -23,6 +21,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import org.jetbrains.anko.dip
 import java.io.File
@@ -37,8 +36,8 @@ import java.io.IOException
 class WebChromeClientWithProgressAndValueCallback private constructor (val activity: Activity?) : WebChromeClient() {
 
     companion object {
-        const val TAKE_FROM_CAMERA_KEY = 100999
-        const val TAKE_FROM_PICTURES_KEY = 100998
+        const val TAKE_FROM_CAMERA_KEY = 1099
+        const val TAKE_FROM_PICTURES_KEY = 1098
         fun with(activity: Activity): WebChromeClientWithProgressAndValueCallback =
                 WebChromeClientWithProgressAndValueCallback(activity)
         fun with(fragment: Fragment): WebChromeClientWithProgressAndValueCallback =
@@ -50,6 +49,8 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
 
     var progressBar: ProgressBar? = null
 
+    var onO2ReceivedTitle: ((String) -> Unit)? = null
+
 
     init {
         progressBar = ProgressBar(activity, null, android.R.attr.progressBarStyleHorizontal)
@@ -57,6 +58,19 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
         val drawable = ContextCompat.getDrawable(activity!!, R.drawable.web_view_progress_bar)
         if (drawable != null) {
             progressBar?.progressDrawable = drawable
+        }
+    }
+
+    override fun onReceivedTitle(view: WebView?, title: String?) {
+        super.onReceivedTitle(view, title)
+        getWebviewTitle(view)
+    }
+
+    private fun getWebviewTitle(view: WebView?) {
+        val list = view?.copyBackForwardList()
+        val current = list?.currentItem
+        if (current?.title != null && onO2ReceivedTitle != null) {
+            onO2ReceivedTitle?.invoke(current.title)
         }
     }
 
@@ -80,6 +94,10 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
         return true
     }
 
+    override fun onCloseWindow(window: WebView?) {
+        super.onCloseWindow(window)
+        activity?.finish()
+    }
 
     /**
      * 接收activity返回的数据
@@ -88,23 +106,7 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
     fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?): Boolean {
         if (resultCode == Activity.RESULT_OK) {
             when(requestCode) {
-                TAKE_FROM_PICTURES_KEY -> {
-                    //选择照片
-                    data?.let {
-                        val result = it.extras?.getString(PicturePicker.FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY, "")
-                        if (!TextUtils.isEmpty(result)) {
-                            XLog.debug("照片 path:$result")
-                            if (uploadMessageAboveL != null && activity!=null)   {
-                                val uri = FileUtil.getUriFromFile(activity, File(result))
-                                val list = ArrayList<Uri>()
-                                list.add(uri)
-                                uploadMessageAboveL?.onReceiveValue(list.toTypedArray())
-                            }
-                        }
-                    }
-                    return true
-                }
-                TAKE_FROM_CAMERA_KEY -> {
+                 TAKE_FROM_CAMERA_KEY -> {
                     //拍照
                     XLog.debug("拍照//// ")
                     if (uploadMessageAboveL != null && cameraImageUri!=null)   {
@@ -124,13 +126,13 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
         if (activity != null) {
             BottomSheetMenu(activity)
                     .setTitle("上传照片")
-                    .setItem("从相册选择", activity.resources.getColor(R.color.z_color_text_primary)) {
+                    .setItem("从相册选择", ContextCompat.getColor(activity, R.color.z_color_text_primary)) {
                         takeFromPictures()
                     }
-                    .setItem("拍照", activity.resources.getColor(R.color.z_color_text_primary)) {
+                    .setItem("拍照", ContextCompat.getColor(activity, R.color.z_color_text_primary)) {
                         takeFromCamera()
                     }
-                    .setCancelButton("取消", activity.resources.getColor(R.color.z_color_text_hint)) {
+                    .setCancelButton("取消", ContextCompat.getColor(activity, R.color.z_color_text_hint)) {
                         XLog.debug("取消。。。。。")
                         if (uploadMessageAboveL!=null) {
                             uploadMessageAboveL?.onReceiveValue(null)
@@ -146,11 +148,19 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
 
     private fun takeFromPictures() {
         if (activity != null) {
-            PicturePicker()
-                    .withActivity(activity)
-                    .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
-                    .requestCode(TAKE_FROM_PICTURES_KEY)
-                    .start()
+            PicturePickUtil().withAction(activity)
+                .forResult { files ->
+                    if (files!=null && files.isNotEmpty()) {
+                        XLog.debug("照片 path:${files[0]}")
+                        if (uploadMessageAboveL != null)   {
+                            val uri = FileUtil.getUriFromFile(activity, File(files[0]))
+                            val uriList = ArrayList<Uri>()
+                            uriList.add(uri)
+                            uploadMessageAboveL?.onReceiveValue(uriList.toTypedArray())
+                        }
+                    }
+                }
+
         }else {
             XLog.error("activity 不存在， 无法打开图片选择器!")
         }

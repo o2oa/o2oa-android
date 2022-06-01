@@ -3,6 +3,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.service
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ApiResponse
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.IdData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.BuildingInfoJson
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.MeetingCheckInRes
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.MeetingInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.RoomInfoJson
 import okhttp3.MultipartBody
@@ -198,4 +199,10 @@ interface MeetingAssembleControlService {
      */
     @GET("jaxrs/building/{id}")
     fun getBuildingDetail(@Path("id") id : String): Observable<ApiResponse<BuildingInfoJson>>
+
+    /**
+     * 会议签到
+     */
+    @GET("jaxrs/meeting/{id}/checkin")
+    fun meetingCheckIn(@Path("id") id: String): Observable<ApiResponse<MeetingCheckInRes>>
 }

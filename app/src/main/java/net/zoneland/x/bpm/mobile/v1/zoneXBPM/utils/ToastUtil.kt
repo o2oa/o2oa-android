@@ -16,6 +16,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
  * 可以自定义背景和字体
  * Created by FancyLou on 2015/12/11.
  */
+@Deprecated(message = "Android R开始不能自定义Toast样式")
 class ToastUtil(context: Context) {
 
     /**
@@ -26,8 +27,8 @@ class ToastUtil(context: Context) {
 
     init {
         toast = Toast(context)
-        val view = LayoutInflater.from(context).inflate(R.layout.toast, null)
-        toast.view = view
+//        val view = LayoutInflater.from(context).inflate(R.layout.toast, null)
+//        toast.view = view
     }
 
 
@@ -38,26 +39,22 @@ class ToastUtil(context: Context) {
      * @return
      */
     fun setToastColor(messageColor: Int, backgroundColor: Int): ToastUtil {
-        val view = toast.view
-        if (view != null) {
-            val message = view.findViewById<View>(R.id.tv_toast_message) as TextView
-            view.setBackgroundColor(backgroundColor)
-            message.setTextColor(messageColor)
-        }
+//        val view = toast.view
+//        if (view != null) {
+//            val message = view.findViewById<View>(R.id.tv_toast_message) as TextView
+//            view.setBackgroundColor(backgroundColor)
+//            message.setTextColor(messageColor)
+//        }
         return this
     }
 
     fun setToastBackgroundDrawable(messageColor: Int, background: Drawable): ToastUtil {
-        val view = toast.view
-        if (view != null) {
-            val message = view.findViewById<View>(R.id.tv_toast_message) as TextView
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                view.background = background
-            } else {
-                view.setBackgroundDrawable(background)
-            }
-            message.setTextColor(messageColor)
-        }
+//        val view = toast.view
+//        if (view != null) {
+//            val message = view.findViewById<View>(R.id.tv_toast_message) as TextView
+//            view.background = background
+//            message.setTextColor(messageColor)
+//        }
         return this
     }
 
@@ -68,12 +65,12 @@ class ToastUtil(context: Context) {
      * @return
      */
     fun setToastBackground(messageColor: Int, background: Int): ToastUtil {
-        val view = toast.view
-        if (view != null) {
-            val message = view.findViewById<View>(R.id.tv_toast_message) as TextView
-            view.setBackgroundResource(background)
-            message.setTextColor(messageColor)
-        }
+//        val view = toast.view
+//        if (view != null) {
+//            val message = view.findViewById<View>(R.id.tv_toast_message) as TextView
+//            view.setBackgroundResource(background)
+//            message.setTextColor(messageColor)
+//        }
         return this
     }
 
@@ -82,10 +79,10 @@ class ToastUtil(context: Context) {
      * 短时间显示Toast
      */
     fun Short(message: CharSequence): ToastUtil {
-        toast.duration = Toast.LENGTH_SHORT
-        val view = toast.view
-        val textView = view.findViewById<View>(R.id.tv_toast_message) as TextView
-        textView.text = message
+//        toast.duration = Toast.LENGTH_SHORT
+//        val view = toast.view
+//        val textView = view.findViewById<View>(R.id.tv_toast_message) as TextView
+//        textView.text = message
         return this
     }
 
@@ -93,10 +90,10 @@ class ToastUtil(context: Context) {
      * 短时间显示Toast
      */
     fun Short(message: Int): ToastUtil {
-        toast.duration = Toast.LENGTH_SHORT
-        val view = toast.view
-        val textView = view.findViewById<View>(R.id.tv_toast_message) as TextView
-        textView.setText(message)
+//        toast.duration = Toast.LENGTH_SHORT
+//        val view = toast.view
+//        val textView = view.findViewById<View>(R.id.tv_toast_message) as TextView
+//        textView.setText(message)
         return this
     }
 
@@ -104,10 +101,10 @@ class ToastUtil(context: Context) {
      * 长时间显示Toast
      */
     fun Long(message: CharSequence): ToastUtil {
-        toast.duration = Toast.LENGTH_LONG
-        val view = toast.view
-        val textView = view.findViewById<View>(R.id.tv_toast_message) as TextView
-        textView.text = message
+//        toast.duration = Toast.LENGTH_LONG
+//        val view = toast.view
+//        val textView = view.findViewById<View>(R.id.tv_toast_message) as TextView
+//        textView.text = message
         return this
     }
 
@@ -117,10 +114,10 @@ class ToastUtil(context: Context) {
      * @param message
      */
     fun Long(message: Int): ToastUtil {
-        toast.duration = Toast.LENGTH_LONG
-        val view = toast.view
-        val textView = view.findViewById<View>(R.id.tv_toast_message) as TextView
-        textView.setText(message)
+//        toast.duration = Toast.LENGTH_LONG
+//        val view = toast.view
+//        val textView = view.findViewById<View>(R.id.tv_toast_message) as TextView
+//        textView.setText(message)
         return this
     }
 
@@ -131,10 +128,10 @@ class ToastUtil(context: Context) {
      * @param duration
      */
     fun Indefinite(message: CharSequence, duration: Int): ToastUtil {
-        toast.duration = duration
-        val view = toast.view
-        val textView = view.findViewById<View>(R.id.tv_toast_message) as TextView
-        textView.text = message
+//        toast.duration = duration
+//        val view = toast.view
+//        val textView = view.findViewById<View>(R.id.tv_toast_message) as TextView
+//        textView.text = message
         return this
     }
 
@@ -145,10 +142,10 @@ class ToastUtil(context: Context) {
      * @param duration
      */
     fun Indefinite(message: Int, duration: Int): ToastUtil {
-        toast.duration = duration
-        val view = toast.view
-        val textView = view.findViewById<View>(R.id.tv_toast_message) as TextView
-        textView.setText(message)
+//        toast.duration = duration
+//        val view = toast.view
+//        val textView = view.findViewById<View>(R.id.tv_toast_message) as TextView
+//        textView.setText(message)
         return this
     }
 
@@ -157,7 +154,7 @@ class ToastUtil(context: Context) {
      * @return
      */
     fun show(): ToastUtil {
-        toast.show()
+//        toast.show()
         return this
     }
 }

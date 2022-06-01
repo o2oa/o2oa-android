@@ -13,6 +13,9 @@ object O2 {
 
     const val O2_Process_start_mode_draft = "draft"
 
+    // tbs 内核是否已经下载完成
+    const val TBS_INSTALL_STATUS = "TBS_INSTALL_STATUS"
+
     /**
      * 项目文件存储路径
      * 根目录
@@ -123,6 +126,7 @@ object O2 {
     val PRE_CENTER_URL_KEY = "PRE_CENTER_URL_KEY"
     val PRE_BIND_UNIT_ID_KEY = "PRE_BIND_UNIT_ID_KEY"//绑定的公司的id unitId
     val PRE_BIND_UNIT_KEY = "PRE_BIND_UNIT_KEY"//绑定的公司 unitName
+    val PRE_BIND_UNIT_URLMAPPING_KEY = "PRE_BIND_UNIT_URLMAPPING_KEY"// urlMapping
     val PRE_BIND_PHONE_KEY = "PRE_BIND_PHONE_KEY"//绑定手机号码
     val PRE_BIND_PHONE_TOKEN_KEY = "PRE_BIND_PHONE_TOKEN_JPUSH_KEY"//绑定手机唯一编码 @date 2018-04-19 修改成极光推送
 
@@ -147,7 +151,14 @@ object O2 {
 
     val PRE_ATTENDANCE_VERSION_KEY = "PRE_ATTENDANCE_VERSION_KEY" //考勤版本兼容问题的key  1表示新版本 其他表示老版本 切换打卡页面使用
 
+    val PRE_CLOUD_FILE_VERSION_KEY = "PRE_CLOUD_FILE_VERSION_KEY" //V3版本网盘是否存在
+
     val PRE_SEARCH_HISTORY_KEY = "PRE_SEARCH_HISTORY_KEY" //搜索历史的key
+
+    val PRE_IM_CONFIG_KEY = "PRE_IM_CONFIG_KEY" //
+
+    val PRE_MEETING_CONFIG_KEY = "PRE_MEETING_CONFIG_KEY" // 会议配置数据的key
+
 
     val BUSINESS_TYPE_MESSAGE_CENTER = 0//信息中心
     val BUSINESS_TYPE_WORK_CENTER = 1//工作中心

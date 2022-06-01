@@ -289,6 +289,17 @@
 
 # Addidional for x5.sdk classes for apps
 
+-dontwarn dalvik.**
+-dontwarn com.tencent.smtt.**
+
+-keep class com.tencent.smtt.** {
+    *;
+}
+
+-keep class com.tencent.tbs.** {
+    *;
+}
+
 -keep class com.tencent.smtt.export.external.**{
     *;
 }
@@ -593,3 +604,16 @@
 -keep class com.huawei.hianalytics.**{*;}
 -keep class com.huawei.updatesdk.**{*;}
 -keep class com.huawei.hms.**{*;}
+
+
+# 图片选择器
+-keep class com.luck.picture.lib.** { *; }
+
+# use Camerax
+-keep class com.luck.lib.camerax.** { *; }
+
+# use uCrop
+-dontwarn com.yalantis.ucrop**
+-keep class com.yalantis.ucrop** { *; }
+-keep interface com.yalantis.ucrop** { *; }
+

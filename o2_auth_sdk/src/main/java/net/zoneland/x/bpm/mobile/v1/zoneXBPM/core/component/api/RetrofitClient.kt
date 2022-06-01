@@ -241,8 +241,9 @@ class RetrofitClient private constructor() {
      * @return
      */
     fun api(baseUrl: String): ApiService {
+        val newUrl = O2SDKManager.instance().urlTransfer2Mapping(baseUrl)
         val retrofit = Retrofit.Builder()
-                .baseUrl(baseUrl)
+                .baseUrl(newUrl)
                 .client(o2HttpClient)
                 .addConverterFactory(GsonConverterFactory.create(gson))
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
@@ -405,6 +406,20 @@ class RetrofitClient private constructor() {
                 .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
                 .build()
         return retrofit.create(CloudFileControlService::class.java)
+    }
+
+    /**
+     * V3版本云盘服务
+     */
+    fun cloudFileV3ControlApi(): CloudFileV3ControlService {
+        val url = helper.getAPIDistribute(APIDistributeTypeEnum.x_pan_assemble_control)
+        val retrofit = Retrofit.Builder()
+            .baseUrl(url)
+            .client(o2HttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+            .build()
+        return retrofit.create(CloudFileV3ControlService::class.java)
     }
 
     /**

@@ -28,12 +28,16 @@ enum class MessageType(val key:String) {
     image("image"),
     audio("audio"),
     location("location"),
-    file("file")
+    file("file"),
+    process("process"),
+    cms("cms")
 }
 
 enum class MessageBody(val body:String) {
     image("[图片]"),
     audio("[语音]"),
     location("[位置]"),
-    file("[文件]")
+    file("[文件]"),
+    process("[流程工作]"),
+    cms("[信息文章]")
 }

@@ -131,8 +131,8 @@ class CMSApplicationActivity : BaseMVPActivity<CMSApplicationContract.View, CMSA
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if(item?.itemId == R.id.menu_cms_create) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if(item.itemId == R.id.menu_cms_create) {
             showPublishCategoriesList()
             return true
         }

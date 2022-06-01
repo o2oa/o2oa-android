@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_marginTop="@dimen/spacing_tiny"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <EditText
+        android:id="@+id/et_cloud_file_zone_form_name"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/cloud_file_zone_create_name_hint"/>
+
+    <EditText
+        android:id="@+id/et_cloud_file_zone_form_desc"
+        android:layout_below="@+id/et_cloud_file_zone_form_name"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:hint="@string/cloud_file_zone_create_desc_hint"/>
+
+</RelativeLayout>

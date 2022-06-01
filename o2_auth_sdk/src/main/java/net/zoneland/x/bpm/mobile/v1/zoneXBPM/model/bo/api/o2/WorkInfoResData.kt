@@ -41,5 +41,7 @@ data class WorkInfoRes(
     var destinationRoute: String = "",
     var destinationRouteName: String = "",
     var destinationActivityType: String = "",
-    var destinationActivity: String = ""
+    var destinationActivity: String = "",
+
+    var completedTime:String? // 用来判断work是否已经完成，已完成的才有这个字段
 )

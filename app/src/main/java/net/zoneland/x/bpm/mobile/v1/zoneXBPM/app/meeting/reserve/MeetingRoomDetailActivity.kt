@@ -78,8 +78,8 @@ class MeetingRoomDetailActivity : BaseMVPActivity<MeetingRoomDetailContract.View
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.menu_meeting_edit_delete -> {
                 val bundle = Bundle()
                 go<MeetingApplyActivity>(bundle)
@@ -120,7 +120,7 @@ class MeetingRoomDetailActivity : BaseMVPActivity<MeetingRoomDetailContract.View
                 }
 
                 holder.getView<TextView>(R.id.tv_meeting_list_item_meeting_participants).tag = t.id
-                for (participants: String in t.invitePersonList) {
+                for (participants: String in t.inviteMemberList) {
                     mPresenter.asyncLoadPersonName(
                             holder.getView(R.id.tv_meeting_list_item_meeting_participants), t.id, participants)
                 }

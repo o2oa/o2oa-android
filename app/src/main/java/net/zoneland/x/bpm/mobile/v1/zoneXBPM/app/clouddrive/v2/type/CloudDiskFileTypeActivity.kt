@@ -1,14 +1,10 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.type
 
 import android.app.Activity
-import android.content.Intent
 import android.os.Bundle
-import androidx.core.app.ActivityCompat
-import androidx.core.app.ActivityOptionsCompat
+import android.view.View
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
-import android.view.View
-import android.widget.ImageView
 import kotlinx.android.synthetic.main.activity_cloud_disk_file_type.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
@@ -17,7 +13,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskFileDownloadHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.yunpan.FileJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.MiscUtilK
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast

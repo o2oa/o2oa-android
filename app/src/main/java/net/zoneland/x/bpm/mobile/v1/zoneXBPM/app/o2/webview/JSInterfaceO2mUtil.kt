@@ -1,6 +1,10 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview
 
 import android.Manifest
+import android.content.Intent
+import android.content.pm.ActivityInfo
+import android.content.res.Configuration
+import android.net.Uri
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
@@ -68,6 +72,7 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
                         "calendar.chooseOneDay" -> calendarDatePicker(message!!)
                         "calendar.chooseDateTime" -> calendarDateTimePicker(message!!)
                         "calendar.chooseInterval" -> calendarDateIntervalPicker(message!!)
+                        "device.rotate" -> rotateToggle(message!!)
                         "device.getPhoneInfo" -> deviceGetPhoneInfo(message!!)
                         "device.scan" -> deviceScan(message!!)
                         "device.location" -> deviceGetLocation(message!!)
@@ -75,6 +80,7 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
                         "navigation.setTitle" -> navigationSetTitle(message!!)
                         "navigation.close" -> navigationClose(message!!)
                         "navigation.goBack" -> navigationGoBack(message!!)
+                        "navigation.openOtherApp" -> navigationOpenOtherApp(message!!)
                     }
                 } else {
                     XLog.error("message 格式错误！！！")
@@ -270,7 +276,40 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
         }
     }
 
+    /**
+     * 打开第三方 app
+     */
+    private fun navigationOpenOtherApp(message: String) {
+        val type = object : TypeToken<O2JsPostMessage<O2UtilNavigationOpenOtherAppMessage>>() {}.type
+        val value: O2JsPostMessage<O2UtilNavigationOpenOtherAppMessage> = gson.fromJson(message, type)
+        val callback = value.callback
+        val schema = value.data?.schema
+        if (activity != null) {
+            if (TextUtils.isEmpty(schema)) {
+                if (!TextUtils.isEmpty(callback)) {
+                    callbackJs("$callback('{\"result\": false, \"message\": \"没有传入schema！\"}')")
+                }
+            } else {
+                activity.runOnUiThread {
+                    val uri = Uri.parse(schema)   //   o2oa://" 相当于 http://www.baidu.com
+                    val intent =  Intent(Intent.ACTION_VIEW, uri)
+                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                    activity.startActivity(intent)
+                }
+                if (!TextUtils.isEmpty(callback)) {
+                    callbackJs("$callback('{\"result\": true, \"message\": \"\"}')")
+                }
+            }
 
+
+        } else {
+            XLog.error("activity不存在 navigationOpenOtherApp 失败 ！！")
+        }
+    }
+
+    /**
+     * 关闭当前窗口
+     */
     private fun navigationClose(message: String) {
         val type = object : TypeToken<O2JsPostMessage<O2UtilNavigationMessage>>() {}.type
         val value: O2JsPostMessage<O2UtilNavigationMessage> = gson.fromJson(message, type)
@@ -287,6 +326,9 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
         }
     }
 
+    /**
+     * 返回，如果是最后一层就关闭
+     */
     private fun navigationGoBack(message: String) {
         val type = object : TypeToken<O2JsPostMessage<O2UtilNavigationMessage>>() {}.type
         val value: O2JsPostMessage<O2UtilNavigationMessage> = gson.fromJson(message, type)
@@ -310,6 +352,9 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
         }
     }
 
+    /**
+     * 设置当前窗口的title
+     */
     private fun navigationSetTitle(message: String) {
         val type = object : TypeToken<O2JsPostMessage<O2UtilNavigationMessage>>() {}.type
         val value: O2JsPostMessage<O2UtilNavigationMessage> = gson.fromJson(message, type)
@@ -335,6 +380,9 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
         }
     }
 
+    /**
+     * 调用扫码
+     */
     private fun deviceScan(message: String) {
         val type = object : TypeToken<O2JsPostMessage<O2UtilNavigationMessage>>() {}.type
         val value: O2JsPostMessage<O2UtilNavigationMessage> = gson.fromJson(message, type)
@@ -369,6 +417,9 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
         }
     }
 
+    /**
+     * 获取设备信息
+     */
     private fun deviceGetPhoneInfo(message: String) {
         val type = object : TypeToken<O2JsPostMessage<O2UtilNavigationMessage>>() {}.type
         val value: O2JsPostMessage<O2UtilNavigationMessage> = gson.fromJson(message, type)
@@ -395,7 +446,36 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
         }
     }
 
+    /**
+     * 屏幕旋转
+     */
+    private fun rotateToggle(message: String) {
+        val type = object : TypeToken<O2JsPostMessage<O2UtilNavigationMessage>>() {}.type
+        val value: O2JsPostMessage<O2UtilNavigationMessage> = gson.fromJson(message, type)
+        val callback = value.callback
+        if (activity != null) {
+            activity.runOnUiThread {
+                if (activity is TaskWebViewActivity || activity is CMSWebViewActivity || activity is PortalWebViewActivity) {
+                    if (activity.resources.configuration.orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_PORTRAIT)
+                    } else {
+                        activity.setRequestedOrientation(ActivityInfo.SCREEN_ORIENTATION_LANDSCAPE)
+                    }
+                }
+            }
+            if (!TextUtils.isEmpty(callback)) {
+                callbackJs("$callback('{}')")
+            }
 
+        } else {
+            XLog.error("activity不存在 navigationClose失败 ！！")
+        }
+    }
+
+
+    /**
+     * 获取定位信息
+     */
     private fun deviceGetLocation(message: String) {
         val type = object : TypeToken<O2JsPostMessage<O2UtilNavigationMessage>>() {}.type
         val value: O2JsPostMessage<O2UtilNavigationMessage> = gson.fromJson(message, type)
@@ -462,8 +542,9 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
     }
 
 
-
-
+    /**
+     * 打开地图
+     */
     private fun deviceOpenMap(message: String) {
         val type = object : TypeToken<O2JsPostMessage<O2LocationActivity.LocationData>>() {}.type
         val value: O2JsPostMessage<O2LocationActivity.LocationData> = gson.fromJson(message, type)

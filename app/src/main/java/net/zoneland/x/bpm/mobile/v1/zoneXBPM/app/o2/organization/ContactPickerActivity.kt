@@ -167,8 +167,8 @@ class ContactPickerActivity : BaseMVPActivity<ContactPickerActivityContract.View
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
             R.id.org_menu_choose -> {
                 val count = mSelectDepartments.size + mSelectIdentities.size + mSelectGroups.size + mSelectUsers.size
                 XLog.debug("选择了$count")

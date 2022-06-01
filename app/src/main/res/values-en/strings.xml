@@ -138,7 +138,7 @@
     <!-- login activity -->
     <string name="login_bind_server">Current binding server</string>
     <string name="login_sample_alert_1">The current binding server is：演示服务器。</string>
-    <string name="login_sample_alert_2">Trial account：开发部经理、开发部员工2、财务部员工1\n 密码统一为：o2</string>
+    <string name="login_sample_alert_2">Trial account：https://sample.o2oa.net obtain username \n Passwords are unified as：o2</string>
     <string name="login_sample_alert_3">Please switch password to login</string>
     <string name="activity_login_username">User name or mobile number</string>
     <string name="login_phone">Enter mobile phone number</string>
@@ -238,6 +238,7 @@
     <string name="yunpan_rename">Rename</string>
     <string name="yunpan_delete">Delete</string>
     <string name="yunpan_share">Share</string>
+    <string name="yunpan_save_to_my_pan">Save To My Disk</string>
     <string name="yunpan_send">Send</string>
     <string name="yunpan_move">Move</string>
     <string name="yunpan_menu_list">List display</string>
@@ -257,7 +258,46 @@
     <string name="yunpan_share_cancel">Cancel sharing</string>
     <string name="yunpan_share_shield">Shield</string>
 
-<!--    <string name="share_file_menu_test">Test</string>-->
+    <string name="cloud_file_my">My Files</string>
+    <string name="cloud_file_my_desc">Personal Files</string>
+    <string name="cloud_file_org">Corporate Files</string>
+    <string name="cloud_file_org_desc">Share Files Internally</string>
+    <string name="cloud_file_my_favorite">My Favorite</string>
+    <string name="cloud_file_my_zone">My Zone</string>
+    <string name="cloud_file_zone_create_title">Create a shared workspace</string>
+    <string name="cloud_file_zone_update_title">Update a shared workspace</string>
+    <string name="cloud_file_zone_create_name_hint">Please enter a name for the shared workspace</string>
+    <string name="cloud_file_zone_create_desc_hint">Please enter a description of the shared workspace</string>
+    <string name="cloud_file_zone_menu_cancel_favorite">Unfavorite</string>
+    <string name="cloud_file_zone_menu_rename_favorite">Rename</string>
+    <string name="cloud_file_zone_menu_add_favorite">Add To Favorites</string>
+    <string name="cloud_file_zone_menu_edit_zone">Edit</string>
+    <string name="cloud_file_zone_menu_delete_zone">Delete</string>
+
+    <string name="message_cloud_rename_alert">Please select an item to rename !</string>
+    <string name="message_cloud_delete_alert">Please select at least one piece of data to delete !</string>
+    <string name="message_cloud_save_to_my_pan_alert">Please select at least one piece of data to save to the network disk !</string>
+    <string name="message_cloud_move_alert">Please select at least one piece of data to move !</string>
+    <string name="message_cloud_share_alert">Please select at least one piece of data to share !</string>
+    <string name="message_cloud_confirm_delete_data">Are you sure you want to delete the selected data ?</string>
+    <string name="message_cloud_not_empty_name_alert">Name is required !</string>
+    <string name="message_cloud_move_success">Move successfully !</string>
+    <string name="message_cloud_create_folder_success">Folder created successfully !</string>
+    <string name="message_cloud_upload_success">Uploaded successfully !</string>
+    <string name="message_cloud_share_success">Share success !</string>
+    <string name="message_cloud_open_file_fail">Open file exception !</string>
+    <string name="message_cloud_folder_name_not_empty">Folder name cannot be empty !</string>
+    <string name="message_cloud_create_folder_fail">Folder creation failed !</string>
+    <string name="message_cloud_upload_fail">upload failed !</string>
+    <string name="message_cloud_create_zone_success">Create shared area successfully !</string>
+    <string name="message_cloud_update_zone_success">Update shared area successfully !</string>
+    <string name="message_cloud_delete_zone_success">Delete shared area successfully !</string>
+    <string name="message_cloud_add_favorite_success">添加收藏成功！</string>
+    <string name="message_cloud_cancel_favorite_success">取消收藏成功！</string>
+    <string name="message_cloud_rename_favorite_success">重命名成功！</string>
+
+
+    <!--    <string name="share_file_menu_test">Test</string>-->
 
     <!--chat activity -->
 <!--    <string name="title_activity_chat">Real time message</string>-->
@@ -283,6 +323,7 @@
     <string name="activity_location_open">Open</string>
     <string name="menu_im_tribe_name_update">Modify group name</string>
     <string name="menu_im_tribe_member_update">Modify members</string>
+    <string name="menu_im_tribe_clear_msg">Clear chat</string>
     <string name="menu_im_report">report</string>
     <string name="im_hint_input_tribe_name">Please enter the group name！</string>
     <string name="im_tribe_name_cannot_empty">Group name cannot be empty！</string>
@@ -290,6 +331,10 @@
     <string name="im_report_desc">detail description</string>
     <string name="im_system_message">Notification message</string>
     <string name="im_manager_member">Managing members</string>
+    <string name="im_message_confirm_delete_msgs">Are you sure you want to clear the chat records? After clearing, everyone in the current session will not see these chat records?</string>
+    <string name="im_message_clear_msg_success">Empty chat record successfully!</string>
+    <string name="im_message_clear_msg_no_conversationId">No session ID passed in, unable to empty the chat record!</string>
+    <string name="im_message_revoke_fail">Failed to recall message！</string>
     <string name="im_location_click_choose">Click on the map to select the location</string>
     <string name="im_location">Location</string>
     <string name="im_file">File</string>
@@ -320,6 +365,7 @@
     <!-- notice setting -->
     <string name="title_activity_notice_setting">New news notification</string>
     <string name="title_clean_cache_setting">Clear cache</string>
+    <string name="title_logs_setting">System log</string>
     <string name="title_share_setting">Share and download</string>
     <string name="notice_setting_message_receive_help">Mobile new message notification settings</string>
     <string name="title_notice_setting_message_receive_help">Help - Mobile new message notification settings</string>
@@ -339,6 +385,9 @@
     <string name="message_unbind_fail">Failed to unbind！</string>
     <string name="message_change_skin_will_reboot">Are you sure you want to switch skin? Switching will restart the application？</string>
     <string name="message_camera_file_create_error">Unable to take photos, unable to get the stored file!</string>
+    <string name="message_update_success">update completed !</string>
+    <string name="message_back_error">return error !</string>
+
 
     <!-- group activity -->
     <string name="title_activity_group">My Groups </string>
@@ -426,6 +475,12 @@
 <!--    <string name="meeting_end_time">结束时间</string>-->
 <!--    <string name="meeting_end_time_hint">请选择结束时间</string>-->
     <string name="meeting_room">Conference Room</string>
+    <string name="meeting_form_type">Meeting type</string>
+    <string name="meeting_form_type_hint">Please select a meeting type</string>
+    <string name="meeting_form_hostPerson">Host</string>
+    <string name="meeting_form_hostPerson_hint">Please select the host</string>
+    <string name="meeting_form_hostUnit">Host Unit</string>
+    <string name="meeting_form_hostUnit_hint">Please select the Host Unit</string>
     <string name="meeting_room_hint">Please select conference room</string>
     <string name="meeting_invite_people">Participants</string>
     <string name="meeting_file">Conference materials</string>
@@ -439,6 +494,7 @@
 <!--    <string name="title_activity_meeting_accept_wait_list">会议邀请</string>-->
     <string name="title_activity_meeting_edit_form">Modify meeting application</string>
     <string name="meeting_delete_label">Cancel the meeting</string>
+    <string name="meeting_delete_message_confirm">Are you sure you want to cancel the meeting ? </string>
 <!--    <string name="meeting_room_filter">过滤：</string>-->
 <!--    <string name="meeting_invited_list">会议列表</string>-->
     <string name="meeting_tip_info">Pro, you don not have a meeting yet！</string>
@@ -530,6 +586,11 @@
         <item>My collection</item>
         <item>Section</item>
     </string-array>
+    <string name="bbs_send_reply_btn">Send</string>
+    <string name="bbs_mute_send_reply_btn">Forbidden</string>
+    <string name="bbs_write_reply_hint">Write comments...</string>
+    <string name="bbs_mute_reply_hint">Forbidden comments...</string>
+
 <!--    <string-array name="bbs_publish_subject_type_list">-->
 <!--        <item>讨论</item>-->
 <!--        <item>投票</item>-->
@@ -721,6 +782,7 @@
     <string name="message_get_process_fail">Failed to get process list！</string>
     <string name="message_get_current_identity_fail">The identity of the current user was not obtained！</string>
     <string name="message_start_process_fail">The incoming parameter is empty, unable to start the process, identity:%1$s,processId:%2$s</string>
+    <string name="message_start_process_success">Start process succeeded!</string>
     <string name="message_start_process_back_data_error">Return data exception！%1$s</string>
     <string name="message_start_process_fail_with_error">Failed to start the process, %1$s</string>
     <string name="message_open_draft_error">Open draft exception！</string>
@@ -733,6 +795,7 @@
     <string name="message_update_fail">Modification failed！</string>
     <string name="message_download_document_fail">Failed to download document！</string>
     <string name="message_download_fail">Download failed！</string>
+    <string name="message_upload_file_max_number">The number of uploaded attachments exceeds the limit!</string>
     <string name="message_upload_fail">File upload exception！</string>
     <string name="message_arg_error">Incorrect incoming parameters！</string>
     <string name="message_file_not_exist">File does not exist！</string>
@@ -756,9 +819,13 @@
     <string name="message_members_cannot_less_three">The number of members should not be less than 3！</string>
     <string name="message_share_file_not_exist">The shared file does not exist</string>
     <string name="message_contact_new_no_permission_for_search">The current user is restricted from querying the address book</string>
+    <string name="message_save_image_album">Successfully saved the picture to the album !</string>
+    <string name="message_copy_success">Copy successfully !</string>
+    <string name="message_im_audio_too_short">Recording time is too short !</string>
 
     <!--    dialog -->
     <string name="dialog_msg_bind_to_server_fail">Failed to bind the server. Please check whether the current server configuration is correct? You can also bind to the o2oa demo server to experience！</string>
+    <string name="dialog_msg_get_o2collect_unit_list_fail">You can bind to the o2oa demo server to experience the information you can bind without getting it!</string>
     <string name="dialog_title_sample_server">Demo server</string>
     <string name="dialog_msg_root_refuse">The current environment is root, app is forbidden to use！</string>
     <string name="dialog_msg_go_to_set_storage_permission">I am very sorry, the application needs to store permissions to run normally, go to set it now</string>
@@ -767,7 +834,8 @@
     <string name="dialog_msg_clean_cache">Are you sure you want to clear the cache？</string>
     <string name="dialog_msg_logout">Are you sure you want to log out？</string>
     <string name="dialog_msg_need_rebind_phone_number">Are you sure you want to rebind the mobile phone number? This operation will clear the current login information and you need to login again？</string>
-
+    <string name="dialog_msg_audio_need_permission">Voice messages need permission, go to settings</string>
+    <string name="dialog_msg_camera_need_permission">Taking pictures requires permission, go to settings</string>
 
     <string name="choose">Choose</string>
     <string name="sign">Personal signature</string>
@@ -792,6 +860,8 @@
     <string name="chat_input_message">Please enter a message…</string>
     <string name="search_taskcompleted">Search for work done</string>
     <string name="secret">Privacy policy</string>
+    <string name="and"> And </string>
+    <string name="user_service">User agreement</string>
     <string name="search_no_result">No relevant results were found</string>
     <string name="search_hint">Please enter search keywords</string>
     <string name="search_delete_all_history">Delete all history</string>
@@ -799,6 +869,8 @@
     <string name="search_process">Process: </string>
     <string name="search_service_error">Query interface exception, server does not exist！</string>
     <string name="search_error">Error！%1$s</string>
+    <string name="agree_login_privacy">I have read and agree</string>
+    <string name="agree_login_privacy_alert_message">You must first agree to our product service agreement, otherwise you cannot register to use this product !</string>
 
 
 </resources>

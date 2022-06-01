@@ -20,8 +20,8 @@ class O2ImageLoaderStrategyWithGlide : O2ImageLoaderStrategy {
     override fun showImage(v: View, url: String, options: O2ImageLoaderOptions?) {
         if (v is ImageView) {
             val glideUrl =  GlideUrl(url, LazyHeaders.Builder().addHeader(O2SDKManager.instance().tokenName()) { O2SDKManager.instance().zToken }.build())
-            val request = Glide.with(v.context).load(glideUrl)
-            request.dontAnimate()//Glide bug 圆形头像有问题 必须使用dontAnimate
+            val request = Glide.with(v.context).load(glideUrl).dontAnimate()
+                //Glide bug 圆形头像有问题 必须使用dontAnimate
             if (options == null) {
                 request.into(v)
             }else {
@@ -31,9 +31,9 @@ class O2ImageLoaderStrategyWithGlide : O2ImageLoaderStrategy {
                 if (options.errorDrawable != -1) {
                     request.error(options.errorDrawable)
                 }
-                if (options.isCrossFade) {
-                    request.crossFade()
-                }
+//                if (options.isCrossFade) {
+//                    request.crossFade()
+//                }
                 if (options.isSkipCache) {
                     request.skipMemoryCache(true)
                     request.diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -61,9 +61,9 @@ class O2ImageLoaderStrategyWithGlide : O2ImageLoaderStrategy {
                  if (options.errorDrawable != -1) {
                      request.error(options.errorDrawable)
                  }
-                 if (options.isCrossFade) {
-                     request.crossFade()
-                 }
+//                 if (options.isCrossFade) {
+//                     request.crossFade()
+//                 }
                  if (options.isSkipCache) {
                      request.skipMemoryCache(true)
                      request.diskCacheStrategy(DiskCacheStrategy.NONE)
@@ -89,9 +89,9 @@ class O2ImageLoaderStrategyWithGlide : O2ImageLoaderStrategy {
                 if (options.errorDrawable != -1) {
                     request.error(options.errorDrawable)
                 }
-                if (options.isCrossFade) {
-                    request.crossFade()
-                }
+//                if (options.isCrossFade) {
+//                    request.crossFade()
+//                }
                 if (options.isSkipCache) {
                     request.skipMemoryCache(true)
                     request.diskCacheStrategy(DiskCacheStrategy.NONE)

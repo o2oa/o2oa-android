@@ -2,6 +2,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
@@ -14,6 +15,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskFileDown
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.copyToAlbum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.LoadingDialog
@@ -23,6 +25,7 @@ import java.io.File
 class BigImageViewActivity : AppCompatActivity() {
 
     companion object {
+        const val IMAGE_IS_V3_KEY = "IMAGE_IS_V3_KEY"
         const val IMAGE_TITLE_KEY = "IMAGE_TITLE_KEY"
         const val IMAGE_ID_KEY = "IMAGE_ID_KEY"
         const val IMAGE_EXTENSION_KEY = "IMAGE_EXTENSION_KEY"
@@ -32,7 +35,16 @@ class BigImageViewActivity : AppCompatActivity() {
             bundle.putString(IMAGE_ID_KEY, fileId)
             bundle.putString(IMAGE_EXTENSION_KEY, extension)
             bundle.putString(IMAGE_TITLE_KEY, title)
-            activity?.go<BigImageViewActivity>(bundle)
+            activity.go<BigImageViewActivity>(bundle)
+        }
+        fun startForV3(activity: Activity, fileId: String, extension: String, title: String = "") {
+            val bundle = Bundle()
+            bundle.putString(IMAGE_ID_KEY, fileId)
+            bundle.putString(IMAGE_EXTENSION_KEY, extension)
+            bundle.putString(IMAGE_TITLE_KEY, title)
+            bundle.putString(IMAGE_TITLE_KEY, title)
+            bundle.putBoolean(IMAGE_IS_V3_KEY, true)
+            activity.go<BigImageViewActivity>(bundle)
         }
         fun startLocalFile(activity: Activity, filePath: String) {
             val bundle = Bundle()
@@ -86,6 +98,13 @@ class BigImageViewActivity : AppCompatActivity() {
             if (fileId.isEmpty() || extension.isEmpty()) {
                 XToast.toastShort(this, "没有传入文件id 或 扩展名 ，无法下载大图！")
             } else {
+
+                // 企业网盘下载地址不一样
+                val isV3 = intent.getBooleanExtra(IMAGE_IS_V3_KEY, false)
+                if (isV3) {
+                    downloader.isV3 = true
+                }
+
                 downloader.showLoading = {
                     showLoadingDialog()
                 }
@@ -96,7 +115,9 @@ class BigImageViewActivity : AppCompatActivity() {
                     XLog.debug("返回了。。。。")
                     if (file != null) {
                         currentImage = file
+                        addClickSave()
                         O2ImageLoaderManager.instance().showImage(zoomImage_big_picture_view, file)
+
                     }else {
                         XToast.toastShort(this, "下载大图失败！")
                     }
@@ -106,6 +127,7 @@ class BigImageViewActivity : AppCompatActivity() {
             val file = File(localPath)
             currentImage = file
             tv_big_picture_title.text = file.name
+            addClickSave()
             O2ImageLoaderManager.instance().showImage(zoomImage_big_picture_view, file)
         }
 
@@ -116,6 +138,28 @@ class BigImageViewActivity : AppCompatActivity() {
         super.onStop()
     }
 
+    /**
+     * 保存图片事件
+     */
+    private fun addClickSave() {
+        rl_big_picture_download_btn.setOnClickListener {
+            saveToAlbum()
+        }
+    }
+
+    /**
+     * 保存到相册
+     */
+    private fun saveToAlbum() {
+        currentImage?.let {
+            it.copyToAlbum(this, it.name, null)
+        }
+        XToast.toastShort(this, R.string.message_save_image_album)
+    }
+
+    /**
+     * 分享图片
+     */
     private fun share() {
         currentImage?.let {
             AndroidUtils.shareFile(this, it)

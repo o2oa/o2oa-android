@@ -11,6 +11,7 @@ import android.provider.MediaStore
 import android.text.TextUtils
 import android.util.TypedValue.COMPLEX_UNIT_SP
 import android.view.Gravity
+import android.view.KeyEvent
 import android.view.View
 import android.webkit.JavascriptInterface
 import android.webkit.SslErrorHandler
@@ -19,17 +20,17 @@ import android.webkit.WebViewClient
 import android.widget.*
 import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_work_web_view.*
-import net.muliba.fancyfilepickerlibrary.FilePicker
-import net.muliba.fancyfilepickerlibrary.PicturePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.WorkNewActionItem
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.WorkControl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ProcessDraftWorkData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ReadData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.WorkInfoRes
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.WorkOpinionData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.O2UploadImageData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
@@ -38,7 +39,10 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.O2WebviewDownloadListener
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.WebChromeClientWithProgressAndValueCallback
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import org.jetbrains.anko.dip
@@ -74,8 +78,10 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
         }
     }
 
-    private  val WORK_WEB_VIEW_UPLOAD_REQUEST_CODE = 1001
-    private  val WORK_WEB_VIEW_REPLACE_REQUEST_CODE = 1002
+    private  val WORK_WEB_VIEW_UPLOAD_REQUEST_CODE = 1001 // 表单上传附件
+    private  val WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE = 10010 // 表单数据表格中的上传附件
+    private  val WORK_WEB_VIEW_REPLACE_REQUEST_CODE = 1002 // 表单替换附件
+    private  val WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE = 10020 // 表单数据表格中的替换附件
     private  val TAKE_FROM_PICTURES_CODE = 1003
     private  val TAKE_FROM_CAMERA_CODE = 1004
 
@@ -88,7 +94,8 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 
     private var control: WorkControl? = null
     private var read: ReadData? = null
-    private var site = ""
+    private var site = "" // 上传附件使用
+    private var datagridParam = ""; // 数据表格上传附件使用
     private var attachmentId = ""
     private var formData: String? = ""//表单json数据
     private var formOpinion: String? = ""// 在表单内的意见信息
@@ -135,9 +142,11 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             if (isWorkCompleted) {
                 url = APIAddressHelper.instance().getWorkCompletedUrl()
                 url = String.format(url, workCompletedId)
+                mPresenter.getWorkInfoByWorkOrWorkCompletedId(workCompletedId) // 后台请求工作对象
             } else {
                 url = APIAddressHelper.instance().getWorkUrlPre()
                 url = String.format(url, workId)
+                mPresenter.getWorkInfoByWorkOrWorkCompletedId(workId) // 后台请求工作对象
             }
         }
         url += "&time=" + System.currentTimeMillis()
@@ -156,6 +165,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
         web_view.addJavascriptInterface(jsNotification, JSInterfaceO2mNotification.JSInterfaceName)
         web_view.addJavascriptInterface(jsUtil, JSInterfaceO2mUtil.JSInterfaceName)
         web_view.addJavascriptInterface(jsBiz, JSInterfaceO2mBiz.JSInterfaceName)
+        web_view.setDownloadListener(O2WebviewDownloadListener(this))
         web_view.webChromeClient = webChromeClient
         web_view.webViewClient = object : WebViewClient() {
             override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
@@ -164,11 +174,11 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             }
             override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
                 XLog.debug("shouldOverrideUrlLoading:$url")
-                if (ZoneUtil.checkUrlIsInner(url)) {
+//                if (ZoneUtil.checkUrlIsInner(url)) {
                     view?.loadUrl(url)
-                } else {
-                    AndroidUtils.runDefaultBrowser(this@TaskWebViewActivity, url)
-                }
+//                } else {
+//                    AndroidUtils.runDefaultBrowser(this@TaskWebViewActivity, url)
+//                }
                 return true
             }
 
@@ -177,6 +187,20 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 
         web_view.webViewSetCookie(this, url)
         web_view.loadUrl(url)
+        // 设置标题
+
+        webChromeClient.onO2ReceivedTitle = { title ->
+            updateToolbarTitle(title)
+        }
+    }
+
+
+    override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            processCheckNew()
+            return true
+        }
+        return super.onKeyDown(keyCode, event)
     }
 
 
@@ -188,36 +212,46 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                 return
             }
             when (requestCode) {
-                WORK_WEB_VIEW_UPLOAD_REQUEST_CODE -> {
-                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-                    if (!TextUtils.isEmpty(result)) {
-                        XLog.debug("uri path:$result")
-                        showLoadingDialog()
-                        mPresenter.uploadAttachment(result!!, site, workId)
-                    } else {
-                        XLog.error("FilePicker 没有返回值！")
-                    }
-                }
-                WORK_WEB_VIEW_REPLACE_REQUEST_CODE -> {
-                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-                    if (!TextUtils.isEmpty(result)) {
-                        XLog.debug("uri path:$result")
-                        showLoadingDialog()
-                        mPresenter.replaceAttachment(result!!, site, attachmentId, workId)
-                    } else {
-                        XLog.error("FilePicker 没有返回值！")
-                    }
-                }
-                TAKE_FROM_PICTURES_CODE -> {
-                    //选择照片
-                    data?.let {
-                        val result = it.extras?.getString(PicturePicker.FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY, "")
-                        if (!TextUtils.isEmpty(result)) {
-                            XLog.debug("照片 path:$result")
-                            uploadImage2FileStorageStart(result!!)
-                        }
-                    }
-                }
+//                WORK_WEB_VIEW_UPLOAD_REQUEST_CODE -> {
+//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+//                    if (!TextUtils.isEmpty(result)) {
+//                        XLog.debug("uri path:$result")
+//                        showLoadingDialog()
+//                        mPresenter.uploadAttachment(result!!, site, workId, "")
+//                    } else {
+//                        XLog.error("FilePicker 没有返回值！")
+//                    }
+//                }
+//                WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE -> {
+//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+//                    if (!TextUtils.isEmpty(result)) {
+//                        XLog.debug("uri path:$result")
+//                        showLoadingDialog()
+//                        mPresenter.uploadAttachment(result!!, site, workId, datagridParam)
+//                    } else {
+//                        XLog.error("FilePicker 没有返回值！")
+//                    }
+//                }
+//                WORK_WEB_VIEW_REPLACE_REQUEST_CODE -> {
+//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+//                    if (!TextUtils.isEmpty(result)) {
+//                        XLog.debug("uri path:$result")
+//                        showLoadingDialog()
+//                        mPresenter.replaceAttachment(result!!, site, attachmentId, workId, "")
+//                    } else {
+//                        XLog.error("FilePicker 没有返回值！")
+//                    }
+//                }
+//                WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE -> {
+//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+//                    if (!TextUtils.isEmpty(result)) {
+//                        XLog.debug("uri path:$result")
+//                        showLoadingDialog()
+//                        mPresenter.replaceAttachment(result!!, site, attachmentId, workId, datagridParam)
+//                    } else {
+//                        XLog.error("FilePicker 没有返回值！")
+//                    }
+//                }
                 TAKE_FROM_CAMERA_CODE -> {
                     //拍照
                     XLog.debug("拍照//// ")
@@ -307,7 +341,9 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     @JavascriptInterface
     fun closeWork(result: String) {
         XLog.debug("关闭表单 closeWork ：$result")
-        finish()
+        runOnUiThread {
+            finish()
+        }
     }
 
     /**
@@ -374,13 +410,35 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
      */
     @JavascriptInterface
     fun uploadAttachment(site: String) {
-        XLog.debug("upload site:$site")
+        XLog.debug("uploadAttachment site:$site")
         if (TextUtils.isEmpty(site)) {
             XLog.error("没有传入site")
             return
         }
         this.site = site
-        openFancyFilePicker(WORK_WEB_VIEW_UPLOAD_REQUEST_CODE)
+        runOnUiThread {
+            openFancyFilePicker(WORK_WEB_VIEW_UPLOAD_REQUEST_CODE, true)
+        }
+    }
+
+    /**
+     * 数据表格内的附件上传
+     * @param site
+     * @param param
+     */
+    @JavascriptInterface
+    fun uploadAttachmentForDatagrid(site: String, param: String) {
+        XLog.debug("uploadAttachmentForDatagrid site:$site, param: $param")
+        if (TextUtils.isEmpty(site)) {
+            XLog.error("没有传入site")
+            return
+        }
+
+        runOnUiThread {
+            this.site = site
+            this.datagridParam = param
+            openFancyFilePicker(WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE, true)
+        }
     }
 
     /**
@@ -391,14 +449,36 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
      */
     @JavascriptInterface
     fun replaceAttachment(attachmentId: String, site: String) {
-        XLog.debug("replace site:$site, attachmentId:$attachmentId")
+        XLog.debug("replaceAttachment site:$site, attachmentId:$attachmentId")
         if (TextUtils.isEmpty(attachmentId) || TextUtils.isEmpty(site)) {
             XLog.error("没有传入attachmentId 或 site")
             return
         }
-        this.site = site
-        this.attachmentId = attachmentId
-        openFancyFilePicker(WORK_WEB_VIEW_REPLACE_REQUEST_CODE)
+        runOnUiThread {
+            this.site = site
+            this.attachmentId = attachmentId
+            openFancyFilePicker(WORK_WEB_VIEW_REPLACE_REQUEST_CODE, false)
+        }
+    }
+
+    /**
+     * 数据表格内的附件替换
+     * @param site
+     * @param param
+     */
+    @JavascriptInterface
+    fun  replaceAttachmentForDatagrid(attachmentId: String, site: String, param: String) {
+        XLog.debug("replaceAttachmentForDatagrid site:$site, attachmentId:$attachmentId , param: $param")
+        if (TextUtils.isEmpty(attachmentId) || TextUtils.isEmpty(site)) {
+            XLog.error("没有传入attachmentId 或 site")
+            return
+        }
+        runOnUiThread {
+            this.site = site
+            this.attachmentId = attachmentId
+            this.datagridParam = param
+            openFancyFilePicker(WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE, false)
+        }
     }
 
     /**
@@ -473,6 +553,14 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 
     //region view implements
 
+    override fun workOrWorkCompletedInfo(info: WorkInfoRes?) {
+        if (info != null && !TextUtils.isEmpty(info.completedTime)) {
+            XLog.info("当前工作已完成！")
+            workCompletedId = info.id
+            isWorkCompleted = true
+        }
+    }
+
     override fun finishLoading() {
         XLog.debug("finishLoading.........")
         hideLoadingDialog()
@@ -517,19 +605,36 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
         XToast.toastShort(this, getString(R.string.message_delete_fail))
     }
 
-    override fun uploadAttachmentSuccess(attachmentId: String, site: String) {
-        XLog.debug("uploadAttachmentResponse attachmentId:$attachmentId, site:$site")
+    override fun uploadMaxFiles() {
         hideLoadingDialog()
-        web_view.evaluateJavascript("layout.app.appForm.uploadedAttachment(\"$site\", \"$attachmentId\")"){
-            value -> XLog.debug("uploadedAttachment， onReceiveValue value=$value")
+        XToast.toastShort(this, getString(R.string.message_upload_file_max_number))
+    }
+
+    override fun uploadAttachmentSuccess(attachmentId: String, site: String, datagridParam:String) {
+        XLog.debug("uploadAttachmentResponse attachmentId:$attachmentId, site:$site datagridParam：$datagridParam")
+        hideLoadingDialog()
+        if (TextUtils.isEmpty(datagridParam)) {
+            web_view.evaluateJavascript("layout.app.appForm.uploadedAttachment(\"$site\", \"$attachmentId\")") { value ->
+                XLog.debug("uploadedAttachment， onReceiveValue value=$value")
+            }
+        }  else {
+            web_view.evaluateJavascript("layout.app.appForm.uploadedAttachmentDatagrid(\"$site\", \"$attachmentId\", \"$datagridParam\")") { value ->
+                XLog.debug("uploadedAttachmentDatagrid， onReceiveValue value=$value")
+            }
         }
     }
 
-    override fun replaceAttachmentSuccess(attachmentId: String, site: String) {
+    override fun replaceAttachmentSuccess(attachmentId: String, site: String, datagridParam:String) {
         XLog.debug("replaceAttachmentResponse attachmentId:$attachmentId, site:$site")
         hideLoadingDialog()
-        web_view.evaluateJavascript("layout.app.appForm.replacedAttachment(\"$site\", \"$attachmentId\")"){
-            value -> XLog.debug("replacedAttachment， onReceiveValue value=$value")
+        if (TextUtils.isEmpty(datagridParam)) {
+            web_view.evaluateJavascript("layout.app.appForm.replacedAttachment(\"$site\", \"$attachmentId\")") { value ->
+                XLog.debug("replacedAttachment， onReceiveValue value=$value")
+            }
+        } else {
+            web_view.evaluateJavascript("layout.app.appForm.replacedAttachmentDatagrid(\"$site\", \"$attachmentId\", \"$datagridParam\")") { value ->
+                XLog.debug("replacedAttachment， onReceiveValue value=$value")
+            }
         }
     }
 
@@ -538,7 +643,8 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 //        if (file.exists()) AndroidUtils.openFileWithDefaultApp(this, file)
         if (file.exists()){
             if (FileExtensionHelper.isImageFromFileExtension(file.extension)) {
-                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
+//                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
+                BigImageViewActivity.startLocalFile(this, file.absolutePath)
             }else {
                 go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
 //                QbSdk.openFileReader(this, file.absolutePath, HashMap<String, String>()) { p0 -> XLog.info("打开文件返回。。。。。$p0") }
@@ -580,17 +686,33 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 
     //region  private function
 
+
+    /**
+     * webview 返回上级一层
+     */
+    private fun goBack(): Boolean{
+        return if (web_view?.canGoBack() == true) {
+            web_view.goBack()
+            true
+        } else {
+            false
+        }
+    }
+
+
     /**
      * 检查新建
      * 关闭页面的时候检查一下 是否要删除草稿
      */
     private fun processCheckNew() {
-        web_view.evaluateJavascript("layout.app.appForm.finishOnMobile()"){
-            value -> XLog.debug("finishOnMobile /。。。。。。。。。。。。。。$value")
-            try {
-                finish()
-            }catch (e: Exception){
-                XLog.error("", e)
+        if (!goBack()) {
+            web_view.evaluateJavascript("layout.app.appForm.finishOnMobile()"){
+                    value -> XLog.debug("finishOnMobile /。。。。。。。。。。。。。。$value")
+                try {
+                    finish()
+                }catch (e: Exception){
+                    XLog.error("", e)
+                }
             }
         }
     }
@@ -905,24 +1027,25 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     private fun showPictureChooseMenu() {
         BottomSheetMenu(this)
                 .setTitle(getString(R.string.upload_photo))
-                .setItem(getString(R.string.take_from_album), resources.getColor(R.color.z_color_text_primary)) {
+                .setItem(getString(R.string.take_from_album), ContextCompat.getColor(this, R.color.z_color_text_primary)) {
                     takeFromPictures()
                 }
-                .setItem(getString(R.string.take_photo), resources.getColor(R.color.z_color_text_primary)) {
+                .setItem(getString(R.string.take_photo), ContextCompat.getColor(this, R.color.z_color_text_primary)) {
                     takeFromCamera()
                 }
-                .setCancelButton(getString(R.string.cancel), resources.getColor(R.color.z_color_text_hint)) {
+                .setCancelButton(getString(R.string.cancel), ContextCompat.getColor(this, R.color.z_color_text_hint)) {
                     XLog.debug("取消。。。。。")
                 }
                 .show()
     }
 
     private fun takeFromPictures() {
-        PicturePicker()
-                .withActivity(this)
-                .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
-                .requestCode(TAKE_FROM_PICTURES_CODE)
-                .start()
+        PicturePickUtil().withAction(this)
+            .forResult { files ->
+                if (files!=null && files.isNotEmpty()) {
+                    uploadImage2FileStorageStart(files[0])
+                }
+            }
     }
 
     private fun takeFromCamera() {
@@ -974,10 +1097,46 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 
 
 
-    private fun openFancyFilePicker(requestCode: Int) {
-        FilePicker().withActivity(this).requestCode(requestCode)
-                .chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
-                .start()
+    private fun openFancyFilePicker(requestCode: Int, multiple: Boolean) {
+        PicturePickUtil().withAction(this)
+            .setMode(PickTypeMode.File)
+            .allowMultiple(multiple)
+            .forResult { files ->
+                if (files !=null && files.isNotEmpty()) {
+                     when(requestCode) {
+                         WORK_WEB_VIEW_UPLOAD_REQUEST_CODE -> {
+                             showLoadingDialog()
+                             mPresenter.uploadAttachmentList(files, site, workId, "")
+                         }
+                         WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE -> {
+                             showLoadingDialog()
+                             mPresenter.uploadAttachmentList(files, site, workId, datagridParam)
+                         }
+                         WORK_WEB_VIEW_REPLACE_REQUEST_CODE -> {
+                             val result = files[0]
+                             if (!TextUtils.isEmpty(result)) {
+                                 XLog.debug("uri path:$result")
+                                 showLoadingDialog()
+                                 mPresenter.replaceAttachment(result, site, attachmentId, workId, "")
+                             } else {
+                                 XLog.error("FilePicker 没有返回值！")
+                             }
+                         }
+                         WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE -> {
+                             val result = files[0]
+                             if (!TextUtils.isEmpty(result)) {
+                                 XLog.debug("uri path:$result")
+                                 showLoadingDialog()
+                                 mPresenter.replaceAttachment(result, site, attachmentId, workId, datagridParam)
+                             } else {
+                                 XLog.error("FilePicker 没有返回值！")
+                             }
+                         }
+                     }
+                } else {
+                    XLog.error("FilePicker 没有返回值！")
+                }
+            }
     }
 
 

@@ -9,6 +9,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.APIDistributeTypeEnum
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ApiResponse
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.IdData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AttachmentInfo
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ReadData
@@ -31,6 +32,37 @@ import java.io.File
 
 class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), TaskWebViewContract.Presenter {
 
+
+    override fun getWorkInfoByWorkOrWorkCompletedId(workOrWorkCompletedId: String) {
+        if (TextUtils.isEmpty(workOrWorkCompletedId)) {
+            XLog.error("没有传入workOrWorkCompletedId ！")
+            mView?.workOrWorkCompletedInfo(null)
+            return;
+        }
+        val service = getProcessAssembleSurfaceServiceAPI(mView?.getContext())
+        if (service != null) {
+            service.getWorkInfo(workOrWorkCompletedId)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext { res->
+                       if (res != null && res.data != null && res.data.work!=null) {
+                           mView?.workOrWorkCompletedInfo(res.data.work)
+                       } else {
+                           XLog.error("getWorkInfo 返回结果为空。。。 ")
+                           mView?.workOrWorkCompletedInfo(null)
+                       }
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.workOrWorkCompletedInfo(null)
+                    }
+                }
+        } else {
+            XLog.error("服务为空。。。 ")
+            mView?.workOrWorkCompletedInfo(null)
+        }
+    }
 
     override fun save(workId: String, formData: String) {
         XLog.debug("save ....... workid:$workId formData:$formData")
@@ -129,7 +161,7 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
         }
     }
 
-    override fun uploadAttachment(attachmentFilePath: String, site: String, workId: String) {
+    override fun uploadAttachment(attachmentFilePath: String, site: String, workId: String, datagridParam:String) {
         if (TextUtils.isEmpty(attachmentFilePath) || TextUtils.isEmpty(site) || TextUtils.isEmpty(workId)) {
             mView?.invalidateArgs()
             XLog.error("arguments is null  workid:$workId， site:$site, attachmentFilePath:$attachmentFilePath")
@@ -144,14 +176,77 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
             service.uploadAttachment(body, siteBody, workId)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(ResponseHandler<IdData> { id -> mView?.uploadAttachmentSuccess(id.id, site) },
+                    .subscribe(ResponseHandler<IdData> { id -> mView?.uploadAttachmentSuccess(id.id, site, datagridParam) },
                             ExceptionHandler(mView?.getContext()) { e ->
                                 XLog.error("$e")
                                 mView?.finishLoading() })
         }
     }
 
-    override fun replaceAttachment(attachmentFilePath: String, site: String, attachmentId: String, workId: String) {
+
+
+    override fun uploadAttachmentList(attachmentFilePaths: List<String>, site: String, workId: String, datagridParam:String) {
+        if (attachmentFilePaths.isEmpty() || TextUtils.isEmpty(site) || TextUtils.isEmpty(workId)) {
+            mView?.invalidateArgs()
+            XLog.error("uploadAttachmentList arguments is null  workid:$workId， site:$site ")
+            mView?.finishLoading()
+            return
+        } else {
+
+            if (attachmentFilePaths.size > 9) {
+                mView?.uploadMaxFiles()
+                XLog.error("太多附件了，超过9个。。。。。。")
+                return
+            }
+
+            val list: List<Observable<ApiResponse<IdData>>> = attachmentFilePaths.mapNotNull { path ->
+                uploadAttachmentObservable(
+                    path,
+                    site,
+                    workId
+                )
+            }
+            Observable.zip(list) { results ->
+                val idList = ArrayList<String>()
+                for (result in results) {
+                    val s = result as? ApiResponse<IdData>
+                    if (s != null && s.data != null ) {
+                        idList.add(s.data.id)
+                    }
+                }
+                XLog.debug("uploadAttachmentList idList: ${idList.size}")
+                idList
+            }.subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext { d ->
+                        for (s in d) {
+                            mView?.uploadAttachmentSuccess(s, site, datagridParam)
+                        }
+                    }
+                    onError { e, _ ->
+                        XLog.error("$e")
+                        mView?.finishLoading()
+                    }
+                }
+
+        }
+    }
+
+
+    private fun uploadAttachmentObservable(attachmentFilePath: String, site: String, workId: String) : Observable<ApiResponse<IdData>>? {
+        val file = File(attachmentFilePath)
+        if (!file.exists()) {
+            return null
+        }
+        val requestBody = RequestBody.create(MediaType.parse("application/octet-stream"), file)
+        val body = MultipartBody.Part.createFormData("file", file.name, requestBody)
+        val siteBody = RequestBody.create(MediaType.parse("text/plain"), site)
+        return getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.uploadAttachment(body, siteBody, workId)
+    }
+
+
+    override fun replaceAttachment(attachmentFilePath: String, site: String, attachmentId: String, workId: String, datagridParam:String) {
         if (TextUtils.isEmpty(attachmentFilePath) || TextUtils.isEmpty(site) || TextUtils.isEmpty(attachmentId) || TextUtils.isEmpty(workId)) {
             mView?.invalidateArgs()
             XLog.error("arguments is null att:$attachmentId, workid:$workId， site:$site, attachmentFilePath:$attachmentFilePath")
@@ -187,7 +282,7 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                             }
                         })
                     }.observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(Action1<String> { id -> mView?.replaceAttachmentSuccess(id, site) },
+                    .subscribe(Action1<String> { id -> mView?.replaceAttachmentSuccess(id, site, datagridParam) },
                             ExceptionHandler(mView?.getContext()) { e ->
                                 XLog.error("", e)
                                 mView?.finishLoading() })
@@ -201,13 +296,16 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
             mView?.finishLoading()
             return
         }
+        XLog.info("下载附件， attId ：$attachmentId , workId: $workId")
         getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service->
             service.getWorkAttachmentInfo(attachmentId, workId)
                     .subscribeOn(Schedulers.io())
                     .flatMap { response ->
                         val info: AttachmentInfo? = response.data
                         if (info != null) {
-                            val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(info.name, mView?.getContext())
+                            XLog.info("获取到附件对象，${info.name}")
+                            // 防止文件名相同 附件id作为文件夹名称
+                            val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(info.id + File.separator + info.name, mView?.getContext())
                             if (O2FileDownloadHelper.fileNeedDownload(info.updateTime, path)) {
                                 val downloadUrl = APIAddressHelper.instance()
                                         .getCommonDownloadUrl(APIDistributeTypeEnum.x_processplatform_assemble_surface, "jaxrs/attachment/download/$attachmentId/work/$workId/stream")
@@ -216,47 +314,10 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                                             Observable.just(File(path))
                                         }
                             } else {
+                                XLog.info("文件存在 无需下载，path $path")
                                 Observable.just(File(path))
                             }
 
-
-
-//                            val file = File(path)
-//                            if (!file.exists()) { //下载
-//                                try {
-//                                    SDCardHelper.generateNewFile(path)
-//                                    val call = service.downloadWorkAttachment(attachmentId, workId)
-//                                    val downloadRes = call.execute()
-//                                    val headerDisposition = downloadRes.headers().get("Content-Disposition")
-//                                    XLog.debug("header disposition: $headerDisposition")
-//                                    val dataInput = DataInputStream(downloadRes.body()?.byteStream())
-//                                    val fileOut = DataOutputStream(FileOutputStream(file))
-//                                    val buffer = ByteArray(4096)
-//                                    var count = 0
-//                                    do {
-//                                        count = dataInput.read(buffer)
-//                                        if (count > 0) {
-//                                            fileOut.write(buffer, 0, count)
-//                                        }
-//                                    } while (count > 0)
-//                                    fileOut.close()
-//                                    dataInput.close()
-//                                } catch (e: Exception) {
-//                                    XLog.error("下载附件失败！", e)
-//                                    if (file.exists()) {
-//                                        file.delete()
-//                                    }
-//                                }
-//                            }
-//                            Observable.create { t ->
-//                                val thisfile = File(path)
-//                                if (file.exists()) {
-//                                    t?.onNext(thisfile)
-//                                } else {
-//                                    t?.onError(Exception("附件下载异常，找不到文件！"))
-//                                }
-//                                t?.onCompleted()
-//                            }
                         } else {
                             Observable.create(object : Observable.OnSubscribe<File> {
                                 override fun call(t: Subscriber<in File>?) {
@@ -268,9 +329,18 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
 
                     }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ file -> mView?.downloadAttachmentSuccess(file) }, { e ->
-                        mView?.downloadFail(mView?.getContext()?.getString(R.string.message_download_fail) ?:  "下载附件失败，${e.message}")
-                    })
+                .o2Subscribe {
+                    onNext {  file ->
+                        mView?.downloadAttachmentSuccess(file)
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.downloadFail(mView?.getContext()?.getString(R.string.message_download_fail) ?:  "下载附件失败，${e?.message}")
+                    }
+                }
+//                    .subscribe({ file -> mView?.downloadAttachmentSuccess(file) }, { e ->
+//                        mView?.downloadFail(mView?.getContext()?.getString(R.string.message_download_fail) ?:  "下载附件失败，${e.message}")
+//                    })
         }
     }
 
@@ -282,13 +352,16 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
             mView?.finishLoading()
             return
         }
+        XLog.info("下载附件， attId ：$attachmentId , workCompleted: $workCompleted")
         getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service->
             service.getWorkCompletedAttachmentInfo(attachmentId, workCompleted)
                     .subscribeOn(Schedulers.io())
                     .flatMap { response ->
                         val info: AttachmentInfo? = response.data
                         if (info != null) {
-                            val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(info.name, mView?.getContext())
+                            XLog.info("获取到附件对象，${info.name}")
+                            // 防止文件名相同 附件id作为文件夹名称
+                            val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName( info.id + File.separator + info.name, mView?.getContext())
                             if (O2FileDownloadHelper.fileNeedDownload(info.updateTime, path)) {
                                 val downloadUrl = APIAddressHelper.instance()
                                         .getCommonDownloadUrl(APIDistributeTypeEnum.x_processplatform_assemble_surface, "jaxrs/attachment/download/$attachmentId/workcompleted/$workCompleted/stream")
@@ -297,6 +370,7 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
                                             Observable.just(File(path))
                                         }
                             }else {
+                                XLog.info("文件存在 无需下载，path $path")
                                 Observable.just(File(path))
                             }
 
@@ -349,9 +423,18 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
 
                     }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe({ file -> mView?.downloadAttachmentSuccess(file) }, { e ->
-                        mView?.downloadFail( mView?.getContext()?.getString(R.string.message_download_fail) ?: "下载附件失败，${e.message}")
-                    })
+                .o2Subscribe {
+                    onNext { file ->
+                        mView?.downloadAttachmentSuccess(file)
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.downloadFail( mView?.getContext()?.getString(R.string.message_download_fail) ?: "下载附件失败，${e?.message}")
+                    }
+                }
+//                    .subscribe({ file -> mView?.downloadAttachmentSuccess(file) }, { e ->
+//                        mView?.downloadFail( mView?.getContext()?.getString(R.string.message_download_fail) ?: "下载附件失败，${e.message}")
+//                    })
         }
     }
 

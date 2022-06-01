@@ -1,5 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.bind
 
+import android.content.pm.PackageManager
 import android.text.TextUtils
 import android.view.View
 import com.google.gson.reflect.TypeToken
@@ -23,6 +24,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goThenKill
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.hideSoftInput
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CountDownButtonHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
@@ -36,6 +38,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
     var phone = ""
     var code = ""
     val countDownHelper: CountDownButtonHelper by lazy { CountDownButtonHelper(button_login_phone_code, getString(R.string.login_button_code), 60, 1) }
+    private var isDemoAccount = false // 上架测试账号
 
     override var mPresenter: FirstStepContract.Presenter = FirstStepPresenter()
     override fun layoutResId(): Int = R.layout.fragment_fluid_login_phone
@@ -45,6 +48,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         button_login_phone_next.setOnClickListener(this)
         button_login_phone_code.setOnClickListener(this)
         tv_secret_login.setOnClickListener(this)
+        tv_user_service_login.setOnClickListener(this)
         edit_login_phone.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
                 view_bind_phone_step_one_number_bottom.setBackgroundColor(FancySkinManager.instance().getColor(activity!!, R.color.z_color_input_line_focus))
@@ -64,6 +68,11 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                 view_bind_phone_step_one_code_bottom.setBackgroundColor(FancySkinManager.instance().getColor(activity!!, R.color.z_color_input_line_blur))
                 image_login_phone_code_icon.setImageDrawable(FancySkinManager.instance().getDrawable(activity!!, R.mipmap.icon_verification_code_normal))
             }
+        }
+        // 华为需要同意协议
+        if (isHuaweiChannel()) {
+            ll_fluid_login_agree_bar.visible()
+
         }
     }
 
@@ -86,7 +95,10 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
     }
 
     override fun receiveUnitFail() {
-        XToast.toastLong(activity, getString(R.string.message_get_o2collect_unit_list_fail))
+//        XToast.toastLong(activity, getString(R.string.message_get_o2collect_unit_list_fail))
+        O2DialogSupport.openConfirmDialog(activity, getString(R.string.dialog_msg_get_o2collect_unit_list_fail), { _ ->
+            bind2SampleServer()
+        }, positiveText = getString(R.string.dialog_title_sample_server))
     }
 
     override fun bindSuccess(distributeData: APIDistributeData) {
@@ -134,7 +146,12 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         O2SDKManager.instance().prefs().edit {
             putBoolean(O2.PRE_DEMO_O2_KEY, true)
         }
-        activity?.goThenKill<LoginActivity>()
+        // 上架测试账号 直接登录
+        if (isDemoAccount && phone == "13912345678") {
+            mPresenter.login(phone, "o2") // 自动登录到演示服务器
+        } else {
+            activity?.goThenKill<LoginActivity>()
+        }
     }
 
     override fun err(msg: String) {
@@ -154,6 +171,16 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                     XLog.debug("重复点了。。。。。。。。。。。。")
                     return
                 }
+
+                // 必须同意协议
+                if (isHuaweiChannel()) {
+                    val isCheck = radio_fluid_login_agree.isChecked
+                    if (!isCheck) {
+                        XToast.toastShort(activity, getString(R.string.agree_login_privacy_alert_message))
+                        return
+                    }
+                }
+
                 val phone = edit_login_phone.text.toString()
                 val code = edit_login_code.text.toString()
                 if (TextUtils.isEmpty(phone)) {
@@ -171,7 +198,13 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                 activity?.hideSoftInput()
                 this.phone = phone
                 this.code = code
-                mPresenter.getUnitList(phone, code)
+                // 应用上架用的测试账户 手机号码：13912345678 验证码：5678
+                if ("13912345678" == phone && "5678" == code) {
+                    isDemoAccount = true
+                    bind2SampleServer()
+                } else {
+                    mPresenter.getUnitList(phone, code)
+                }
             }
             R.id.button_login_phone_code -> {
                 if (CheckButtonDoubleClick.isFastDoubleClick(R.id.button_login_phone_code)) {
@@ -202,6 +235,11 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
             R.id.tv_secret_login -> {
                 activity?.let {
                     O2WebViewActivity.openWebView(it, getString(R.string.secret), "https://www.o2oa.net/secret.html")
+                }
+            }
+            R.id.tv_user_service_login -> {
+                activity?.let {
+                    O2WebViewActivity.openWebView(it, getString(R.string.user_service), "https://www.o2oa.net/userService.html")
                 }
             }
             else -> XLog.error("no implements this view ,id:${v?.id}")
@@ -241,6 +279,31 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
 
     private fun gotoLogin() {
         mPresenter.login(phone, code)//@date 2018-03-20 绑定成功 直接登陆
+    }
+
+
+    /**
+     * 读取当前渠道
+     * 是否华为
+     */
+    private fun isHuaweiChannel() : Boolean {
+        var value = ""
+        value = try {
+            if (TextUtils.isEmpty(activity?.packageName)) {
+                ""
+            } else {
+                val applicationInfo = activity?.packageManager?.getApplicationInfo(
+                    activity!!.packageName,
+                    PackageManager.GET_META_DATA
+                )
+                applicationInfo?.metaData?.getString("BUGLY_APP_CHANNEL") ?: ""
+            }
+        } catch(e: Exception) {
+            ""
+        }
+        XLog.info("渠道。。。。$value")
+        return (value == "huawei")
+//        return true
     }
 
 

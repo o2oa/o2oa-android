@@ -11,8 +11,7 @@
         android:layout_height="wrap_content">
         <ImageView
             android:id="@+id/my_app_top_image"
-            android:layout_width="375dp"
-            android:layout_marginStart="@dimen/spacing_small"
+            android:layout_width="match_parent"
             android:layout_marginTop="@dimen/spacing_small"
             android:layout_height="195dp"
             android:scaleType="fitXY"

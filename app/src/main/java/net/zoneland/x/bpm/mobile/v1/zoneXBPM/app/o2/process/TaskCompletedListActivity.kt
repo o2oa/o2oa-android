@@ -19,6 +19,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.TaskCompletedListPagerAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.ViewHolder
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.WorkTypeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.PictureLoaderService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.TaskApplicationData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
@@ -86,10 +87,10 @@ class TaskCompletedListActivity : BaseMVPActivity<TaskCompletedListContract.View
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.menu_task_complete_search -> {
-                go<TaskCompletedSearchActivity>()
+                TaskCompletedSearchActivity.openSearch(WorkTypeEnum.TaskCompleted, this)
                 return true
             }
         }

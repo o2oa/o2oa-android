@@ -9,8 +9,8 @@ import java.io.File
 object CMSWebViewContract {
     interface View : BaseView {
         fun finishLoading()
-        fun uploadAttachmentSuccess(attachmentId:String, site:String)
-        fun replaceAttachmentSuccess(attachmentId:String, site:String)
+        fun uploadAttachmentSuccess(attachmentId:String, site:String, datagridParam: String)
+        fun replaceAttachmentSuccess(attachmentId:String, site:String, datagridParam: String)
         fun downloadAttachmentSuccess(file: File)
         fun downloadAttachmentFail(message: String)
         fun upload2FileStorageFail(message: String)
@@ -18,8 +18,8 @@ object CMSWebViewContract {
     }
 
     interface Presenter : BasePresenter<View> {
-        fun uploadAttachment(attachmentFilePath: String, site: String, docId: String)
-        fun replaceAttachment(attachmentFilePath: String, site: String, attachmentId: String, docId: String)
+        fun uploadAttachment(attachmentFilePath: String, site: String, docId: String, datagridParam: String)
+        fun replaceAttachment(attachmentFilePath: String, site: String, attachmentId: String, docId: String, datagridParam: String)
         fun downloadAttachment(attachmentId: String, filePath: String)
         fun upload2FileStorage(filePath: String, referenceType: String , reference: String , scale: Int = 500)
     }

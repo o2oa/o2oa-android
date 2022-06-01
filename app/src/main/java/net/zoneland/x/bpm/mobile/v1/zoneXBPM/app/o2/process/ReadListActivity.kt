@@ -5,6 +5,8 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.TextUtils
+import android.view.Menu
+import android.view.MenuItem
 import android.view.View
 import kotlinx.android.synthetic.main.activity_read_list.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
@@ -14,6 +16,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.TaskWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.SwipeRefreshCommonRecyclerViewAdapter
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.WorkTypeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.PictureLoaderService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ReadData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.MiscUtilK
@@ -97,6 +100,22 @@ class ReadListActivity : BaseMVPActivity<ReadListContract.View, ReadListContract
     override fun onPause() {
         super.onPause()
         pictureLoaderService?.close()
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_task_complete, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.menu_task_complete_search -> {
+                TaskCompletedSearchActivity.openSearch(WorkTypeEnum.READ, this)
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
     }
 
     override fun returnReadList(list: List<ReadData>) {

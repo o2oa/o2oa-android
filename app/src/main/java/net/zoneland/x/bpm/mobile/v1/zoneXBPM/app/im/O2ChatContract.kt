@@ -18,6 +18,10 @@ object O2ChatContract  {
         fun downloadFileFail(msg: String)
         fun updateSuccess(info: IMConversationInfo)
         fun updateFail(msg: String)
+        fun deleteAllChatMsgSuccess()
+        fun deleteAllChatMsgFail(msg: String)
+        fun revokeMsgSuccess()
+        fun revokeMsgFail(msg: String)
     }
     interface Presenter: BasePresenter<View> {
         fun sendIMMessage(msg: IMMessage)
@@ -27,5 +31,7 @@ object O2ChatContract  {
         fun getFileFromNetOrLocal(position: Int, body: IMMessageBody)
         fun updateConversationTitle(id: String, title: String)
         fun updateConversationPeople(id: String, users: ArrayList<String>)
+        fun deleteAllChatMsg(conversationId: String)
+        fun revokeMsg(id: String)
     }
 }

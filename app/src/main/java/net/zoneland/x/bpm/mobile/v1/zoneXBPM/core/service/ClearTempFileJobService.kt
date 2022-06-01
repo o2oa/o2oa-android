@@ -4,7 +4,7 @@ import android.annotation.TargetApi
 import android.app.job.JobParameters
 import android.app.job.JobService
 import android.os.Build
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
+import android.text.TextUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import rx.Observable
@@ -36,23 +36,25 @@ class ClearTempFileJobService : JobService() {
             try {
                 val baseFolderPath = FileUtil.o2AppExternalBaseDir(baseContext)?.absolutePath
                 XLog.info("ClearTempFile Base Folder:$baseFolderPath")
-                val baseFolder = File(baseFolderPath)
-                if (baseFolder.exists()) {
-                    baseFolder.listFiles { file ->
-                        file.isDirectory
-                    }.map { folder ->
-                        folder.listFiles().map { file ->
-                            try {
-                                val time = file.lastModified()
-                                val sevenDay = 1000 * 60 * 60 * 24 * 7
-                                val now = System.currentTimeMillis()
-                                if (now - sevenDay > time) {
-                                    val filename = file.name
-                                    file.delete()
-                                    XLog.info("delete success, File:$filename")
+                if (!TextUtils.isEmpty(baseFolderPath)) {
+                    val baseFolder = File(baseFolderPath!!)
+                    if (baseFolder.exists()) {
+                        baseFolder.listFiles()?.filter{ file ->
+                            file.isDirectory
+                        }?.map { folder ->
+                            folder.listFiles()?.map { file ->
+                                try {
+                                    val time = file.lastModified()
+                                    val sevenDay = 1000 * 60 * 60 * 24 * 7
+                                    val now = System.currentTimeMillis()
+                                    if (now - sevenDay > time) {
+                                        val filename = file.name
+                                        file.delete()
+                                        XLog.info("delete success, File:$filename")
+                                    }
+                                } catch (e: Exception) {
+                                    XLog.error("删除临时文件失败", e)
                                 }
-                            } catch(e: Exception) {
-                                XLog.error("删除临时文件失败", e)
                             }
                         }
                     }

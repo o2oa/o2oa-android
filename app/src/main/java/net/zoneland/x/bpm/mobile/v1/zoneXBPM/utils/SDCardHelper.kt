@@ -129,7 +129,7 @@ object SDCardHelper {
             return false
         }
         val folderPath = filePath.substring(0, filePath.lastIndexOf(File.separator))
-        XLog.debug("SDCardHelper ,folder:" + folderPath)
+        XLog.debug("SDCardHelper ,folder:$folderPath")
         val folder = File(folderPath)
         if (!folder.exists()) {
             folder.mkdirs()

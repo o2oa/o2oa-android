@@ -45,10 +45,9 @@
                     android:id="@+id/image_login_logo"
                     android:layout_width="87dp"
                     android:layout_height="87dp"
-                    android:layout_marginTop="4dp"
                     android:layout_centerHorizontal="true"
-                    android:src="@mipmap/logo_round"
-                    />
+                    android:layout_marginTop="4dp"
+                    android:src="@mipmap/logo_round" />
 
                 <LinearLayout
                     android:id="@+id/relative_login_form"

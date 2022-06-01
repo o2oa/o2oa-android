@@ -18,13 +18,20 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.tbs.WordReadHelper
 import java.io.File
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.tbs.WordReadView
+
+
+
 
 class FileReaderActivity : BaseO2BindActivity() {
 
 
     private val viewModel: FileReaderViewModel by lazy { ViewModelProviders.of(this).get(FileReaderViewModel::class.java) }
-    private var mTbsReaderView: TbsReaderView?=null
+//    private var mTbsReaderView: TbsReaderView?=null
+
+    private var wordReadView: WordReadView? = null
 
     companion object {
         const val file_reader_file_path_key = "file_reader_file_path_key"
@@ -45,14 +52,21 @@ class FileReaderActivity : BaseO2BindActivity() {
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         setupToolBar(getString(R.string.file_preview), true)
-        mTbsReaderView = TbsReaderView(this) { arg, arg1, arg2 ->
-            XLog.info("arg:$arg, 1:$arg1, 2:$arg2")
+        if(WordReadHelper.initFinish()){
+            wordReadView = WordReadView(this)
+//        mTbsReaderView = TbsReaderView(this) { arg, arg1, arg2 ->
+//            XLog.info("arg:$arg, 1:$arg1, 2:$arg2")
+//        }
+            fl_file_reader_container.addView(wordReadView, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
+            filePath = intent.extras?.getString(file_reader_file_path_key) ?: ""
+            XLog.info("打开文件 ：$filePath")
+            if (!TextUtils.isEmpty(filePath)) {
+                openFileWithTBS(filePath)
+            }
+        } else {
+            XToast.toastShort(this, "文件预览器内核还在加载中，请稍后再试！")
         }
-        fl_file_reader_container.addView(mTbsReaderView, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
-        filePath = intent.extras?.getString(file_reader_file_path_key) ?: ""
-        if (!TextUtils.isEmpty(filePath)) {
-            openFileWithTBS(filePath)
-        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -61,15 +75,16 @@ class FileReaderActivity : BaseO2BindActivity() {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.menu_share) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_share) {
             share()
         }
         return super.onOptionsItemSelected(item)
     }
 
     override fun onDestroy() {
-        mTbsReaderView?.onStop()
+        wordReadView?.destroy()
+//        mTbsReaderView?.onStop()
         super.onDestroy()
     }
 
@@ -81,28 +96,30 @@ class FileReaderActivity : BaseO2BindActivity() {
 
     private fun openFileWithTBS(file: String) {
         XLog.info("打开文件：$file")
-        val type = getFileType(file)
-        val b = mTbsReaderView?.preOpen(type, false)
-        if (b == true) {
-            val bund = Bundle()
-            bund.putString("filePath", file)
-            bund.putString("tempPath", FileExtensionHelper.getXBPMTempFolder(this))
-            mTbsReaderView?.openFile(bund)
-        }else {
-            XLog.error("type is error , $type")
-            XToast.toastShort(this, getString(R.string.message_file_type_cannot_be_previewed))
-            fl_file_reader_container.removeAllViews()
-            val btn = Button(this)
-            btn.text = getString(R.string.message_use_other_application_open_file)
-            val param = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-            param.gravity = Gravity.CENTER
-            fl_file_reader_container.addView(btn, param)
-            btn.setOnClickListener {
-                val f = File(file)
-                AndroidUtils.openFileWithDefaultApp(this, f)
-                finish()
-            }
-        }
+        wordReadView?.loadFile(file)
+
+//        val type = getFileType(file)
+//        val b = mTbsReaderView?.preOpen(type, false)
+//        if (b == true) {
+//            val bund = Bundle()
+//            bund.putString(TbsReaderView.KEY_FILE_PATH, file)
+//            bund.putString(TbsReaderView.KEY_TEMP_PATH, FileExtensionHelper.getXBPMTempFolder(this))
+//            mTbsReaderView?.openFile(bund)
+//        }else {
+//            XLog.error("type is error , $type")
+//            XToast.toastShort(this, getString(R.string.message_file_type_cannot_be_previewed))
+//            fl_file_reader_container.removeAllViews()
+//            val btn = Button(this)
+//            btn.text = getString(R.string.message_use_other_application_open_file)
+//            val param = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
+//            param.gravity = Gravity.CENTER
+//            fl_file_reader_container.addView(btn, param)
+//            btn.setOnClickListener {
+//                val f = File(file)
+//                AndroidUtils.openFileWithDefaultApp(this, f)
+//                finish()
+//            }
+//        }
 
     }
 

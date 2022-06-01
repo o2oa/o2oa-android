@@ -151,7 +151,8 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
         }else {
             tv_bioauth_btn.visible()
             login_edit_password_id.setHint(R.string.login_code)
-            login_edit_password_id.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
+//            login_edit_password_id.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
+            login_edit_password_id.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD // 不限制只有数字
             button_login_phone_code.visible()
             button_login_phone_code.setOnClickListener(this)
             tv_rebind_btn.visible()
@@ -340,7 +341,8 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
         }else {
             ll_login_captcha.gone()
             login_edit_password_id.setHint(R.string.login_code)
-            login_edit_password_id.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
+//            login_edit_password_id.inputType = InputType.TYPE_CLASS_NUMBER or InputType.TYPE_NUMBER_VARIATION_NORMAL
+            login_edit_password_id.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD // 不限制只有数字
             button_login_phone_code.visible()
             button_login_phone_code.setOnClickListener(this)
             loginType = 0

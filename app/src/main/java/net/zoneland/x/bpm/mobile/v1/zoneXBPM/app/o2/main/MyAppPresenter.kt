@@ -140,51 +140,93 @@ class MyAppPresenter : BasePresenterImpl<MyAppContract.View>(), MyAppContract.Pr
     }
 
     override fun getPortalAppList() {
-        val result = ArrayList<MyAppListObject>()
-        service.findAllPortalList()
-                ?.subscribeOn(Schedulers.io())
-                ?.flatMap { list ->
-                    XLog.info("portal app list from realm database : ${list?.size}")
-                    list.filter { portal -> portal.enable }.map {
-                        val obj = MyAppListObject()
-                        obj.appId = it.id
-                        obj.appTitle = it.name
-                        result.add(obj)
+        Observable.zip(getProtalAppObservable(), getPortalMobileListFromNet()) {localList, netList ->
+            if (netList != null && netList.isNotEmpty()) {
+                val newResult = ArrayList<MyAppListObject>()
+                for (myAppListObject in localList) {
+                    var flag = false
+                    for (portalData in netList) {
+                        if (portalData.id == myAppListObject.appId) {
+                            flag = true
+                        }
                     }
-                    if (result.isEmpty()) {
-                        val url = O2SDKManager.instance().prefs().getString(O2.PRE_CENTER_URL_KEY, "") ?: ""
-                        getApiService(mView?.getContext(), url)
-                                ?.getCustomStyle()
-                                ?.subscribeOn(Schedulers.immediate())
-                                ?.flatMap { response ->
-                                    val data = response.data
-                                    XLog.info("customStyle:$data")
-                                    if (data != null) {
-                                        val portalList = data.portalList
-
-                                        portalList.filter { portal -> portal.enable }.map {
-                                            val obj = MyAppListObject()
-                                            obj.appId = it.id
-                                            obj.appTitle = it.name
-                                            result.add(obj)
-                                        }
-                                        storagePortalList(portalList)
-                                    }
-                                    Observable.just(true)
-                                }
-                    } else {
-                        Observable.just(true)
+                    if (flag) {
+                        newResult.add(myAppListObject)
                     }
+                }
+                newResult
+            } else {
+                localList
+            }
+        }.observeOn(AndroidSchedulers.mainThread()).o2Subscribe {
+            onNext { result ->
+                XLog.debug("newPortalList..........")
+                mView?.setPortalAppList(result)
+            }
+            onError { e, _ ->
+                XLog.error("", e)
+                // 再查一次。。。
+                XLog.debug("再查一次..........")
+                getProtalAppObservable()?.flatMap { localList ->
+                    Observable.just(localList)
                 }?.observeOn(AndroidSchedulers.mainThread())?.o2Subscribe {
-                    onNext {
+                    onNext { result ->
                         mView?.setPortalAppList(result)
                     }
                     onError { e, _ ->
                         XLog.error("", e)
-                        mView?.setPortalAppList(result)
+                        mView?.setPortalAppList(ArrayList())
                     }
                 }
+
+            }
+        }
     }
+
+    private fun getPortalMobileListFromNet() =  getPortalAssembleSurfaceService(mView?.getContext())?.portalMobileList()
+            ?.subscribeOn(Schedulers.io())
+            ?.flatMap { myPortalResponse ->
+                val myPortalList = myPortalResponse.data
+                Observable.just(myPortalList)
+            }
+
+
+    private fun getProtalAppObservable() = service.findAllPortalList()
+        ?.subscribeOn(Schedulers.io())
+        ?.flatMap { list ->
+            val result = ArrayList<MyAppListObject>()
+            XLog.info("portal app list from realm database : ${list?.size}")
+            list.filter { portal -> portal.enable }.map {
+                val obj = MyAppListObject()
+                obj.appId = it.id
+                obj.appTitle = it.name
+                result.add(obj)
+            }
+            if (result.isEmpty()) {
+                val url = O2SDKManager.instance().prefs().getString(O2.PRE_CENTER_URL_KEY, "") ?: ""
+                getApiService(mView?.getContext(), url)
+                    ?.getCustomStyle()
+                    ?.subscribeOn(Schedulers.immediate())
+                    ?.flatMap { response ->
+                        val data = response.data
+                        XLog.info("customStyle:$data")
+                        if (data != null) {
+                            val portalList = data.portalList
+
+                            portalList.filter { portal -> portal.enable }.map {
+                                val obj = MyAppListObject()
+                                obj.appId = it.id
+                                obj.appTitle = it.name
+                                result.add(obj)
+                            }
+                            storagePortalList(portalList)
+                        }
+                        Observable.just(result)
+                    }
+            } else {
+                Observable.just(result)
+            }
+        }
 
     override fun getMyAppList() {
         mView.let {

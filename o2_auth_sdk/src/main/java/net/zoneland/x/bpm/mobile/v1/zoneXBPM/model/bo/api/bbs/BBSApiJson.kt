@@ -190,6 +190,18 @@ data class SubjectReplyInfoJson(var id: String = "",
 )
 
 
-
+/**
+ * 禁言对象
+ */
+data class BBSMuteInfo(
+    var id: String = "",
+    var operator: String = "", // 操作人
+    var person: String = "", // 被禁言人
+    var unmuteDate: String = "", // 解禁日期
+    var unmuteDateTime: String = "",
+    var reason: String = "", // 禁言理由
+    var createTime: String = "",
+    var updateTime: String = ""
+)
 
 

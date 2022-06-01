@@ -30,13 +30,13 @@ class WebSocketService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        XLog.debug("WebSocketService onCreate..............")
+        XLog.verbose("WebSocketService onCreate..............")
         val handlerThread = HandlerThread("serviceCalculate")
         handlerThread.start()
         heartbeatHandler = object : Handler(handlerThread.looper) {
-            override fun handleMessage(msg: Message?) {
-                if (msg != null &&  msg.what == heartbeatMsgWhat) {
-                    XLog.debug("发送 ws 心跳消息。。。。。")
+            override fun handleMessage(msg: Message) {
+                if (msg.what == heartbeatMsgWhat) {
+                    XLog.verbose("发送 ws 心跳消息。。。。。")
                     sendWsMessage("heartbeat")//发送心跳
                 }
                 //30秒发送一次心跳
@@ -46,17 +46,17 @@ class WebSocketService : Service() {
     }
 
     override fun onBind(intent: Intent?): IBinder? {
-        XLog.debug("WebSocketService onBind...........")
+        XLog.verbose("WebSocketService onBind...........")
         return WebSocketBinder()
     }
 
     override fun onUnbind(intent: Intent?): Boolean {
-        XLog.debug("WebSocketService onUnbind...........")
+        XLog.warn("WebSocketService onUnbind...........")
         return super.onUnbind(intent)
     }
 
     override fun onDestroy() {
-        XLog.debug("WebSocketService onDestroy...........")
+        XLog.warn("WebSocketService onDestroy...........")
         webSocketClose()
         super.onDestroy()
     }
@@ -66,7 +66,7 @@ class WebSocketService : Service() {
      * 开启 webSocket连接 登录成功的时候、MainActivity绑定的时候
      */
     fun webSocketOpen() {
-        XLog.debug("WebSocketService webSocketOpen...........")
+        XLog.verbose("WebSocketService webSocketOpen...........")
         RetrofitClient.instance().openWebSocket(O2WebSocketListener())
     }
 
@@ -74,7 +74,7 @@ class WebSocketService : Service() {
      * 关闭 webSocket连接 退出登录的时候、Service销毁的时候
      */
     fun webSocketClose() {
-        XLog.debug("WebSocketService webSocketClose...........")
+        XLog.warn("WebSocketService webSocketClose...........")
         heartbeatHandler.removeMessages(heartbeatMsgWhat)
         if (mWebSocket != null) {
             mWebSocket?.close(1000, "close")
@@ -148,7 +148,7 @@ class WebSocketService : Service() {
             super.onMessage(webSocket, text)
             //忽略心跳消息
             if ("heartbeat" != text) {
-                XLog.info("webSocket 收到消息， message:$text")
+                XLog.verbose("webSocket 收到消息， message:$text")
                 val json = JSONTokener(text).nextValue()
                 if (json is JSONObject) {
                     try {

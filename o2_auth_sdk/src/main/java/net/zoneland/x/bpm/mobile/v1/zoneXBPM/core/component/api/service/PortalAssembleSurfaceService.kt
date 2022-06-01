@@ -16,4 +16,7 @@ interface PortalAssembleSurfaceService {
 
     @GET("jaxrs/portal/list")
     fun portalList(): Observable<ApiResponse<List<PortalData>>>
+
+    @GET("jaxrs/portal/list/mobile")
+    fun portalMobileList(): Observable<ApiResponse<List<PortalData>>>
 }

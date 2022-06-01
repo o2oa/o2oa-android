@@ -1,8 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.f
 
 import android.graphics.Typeface
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import android.text.TextUtils
 import android.util.TypedValue
 import android.view.Menu
@@ -11,9 +9,10 @@ import android.view.MenuItem
 import android.widget.EditText
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.fragment_file_folder_list.*
 import net.muliba.changeskin.FancySkinManager
-import net.muliba.fancyfilepickerlibrary.FilePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskActivity
@@ -30,9 +29,23 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import java.io.File
-import java.util.HashMap
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.List
+import kotlin.collections.arrayListOf
+import kotlin.collections.first
+import kotlin.collections.firstOrNull
+import kotlin.collections.forEach
+import kotlin.collections.isNotEmpty
+import kotlin.collections.last
+import kotlin.collections.map
+import kotlin.collections.mapIndexed
+import kotlin.collections.set
+import kotlin.collections.toList
 
 
 class FileFolderListFragment : BaseMVPFragment<FileFolderListContract.View, FileFolderListContract.Presenter>(), FileFolderListContract.View {
@@ -133,7 +146,7 @@ class FileFolderListFragment : BaseMVPFragment<FileFolderListContract.View, File
 
     override fun createFolderSuccess() {
         hideLoadingDialog()
-        XToast.toastShort(activity, "文件夹创建成功！")
+        XToast.toastShort(activity, R.string.message_cloud_create_folder_success)
         refreshView()
     }
 
@@ -141,32 +154,32 @@ class FileFolderListFragment : BaseMVPFragment<FileFolderListContract.View, File
 
     override fun uploadSuccess() {
         hideLoadingDialog()
-        XToast.toastShort(activity, "上传成功！")
+        XToast.toastShort(activity, R.string.message_cloud_upload_success)
         refreshView()
     }
 
     override fun updateSuccess() {
         hideLoadingDialog()
-        XToast.toastShort(activity, "更新成功！")
+        XToast.toastShort(activity, getString(R.string.message_update_success))
         refreshView()
     }
 
     override fun deleteSuccess() {
         hideLoadingDialog()
-        XToast.toastShort(activity, "删除成功！")
+        XToast.toastShort(activity, R.string.message_delete_success)
         refreshView()
     }
 
     override fun shareSuccess() {
         hideLoadingDialog()
         refreshView()
-        XToast.toastShort(activity, "分享成功！")
+        XToast.toastShort(activity, R.string.message_cloud_share_success)
     }
 
     override fun moveSuccess() {
         hideLoadingDialog()
         refreshView()
-        XToast.toastShort(activity, "移动成功！")
+        XToast.toastShort(activity, R.string.message_cloud_move_success)
     }
 
     private fun refreshView() {
@@ -194,7 +207,7 @@ class FileFolderListFragment : BaseMVPFragment<FileFolderListContract.View, File
             if (adapter.mSelectIds.size == 1) {
                 renameFile()
             } else {
-                XToast.toastShort(activity, "请选择一条数据进行重命名！")
+                XToast.toastShort(activity, R.string.message_cloud_rename_alert)
             }
         }
         btn_file_folder_delete.setOnClickListener {
@@ -202,7 +215,7 @@ class FileFolderListFragment : BaseMVPFragment<FileFolderListContract.View, File
             if (adapter.mSelectIds.isNotEmpty()) {
                 delete()
             } else {
-                XToast.toastShort(activity, "请至少选择一条数据进行删除操作！")
+                XToast.toastShort(activity, R.string.message_cloud_delete_alert)
             }
         }
         btn_file_folder_share.setOnClickListener {
@@ -210,7 +223,7 @@ class FileFolderListFragment : BaseMVPFragment<FileFolderListContract.View, File
             if (adapter.mSelectIds.isNotEmpty()) {
                 share()
             } else {
-                XToast.toastShort(activity, "请至少选择一条数据进行分享操作！")
+                XToast.toastShort(activity, R.string.message_cloud_share_alert)
             }
         }
         btn_file_folder_move.setOnClickListener {
@@ -218,7 +231,7 @@ class FileFolderListFragment : BaseMVPFragment<FileFolderListContract.View, File
             if (adapter.mSelectIds.isNotEmpty()) {
                 move()
             } else {
-                XToast.toastShort(activity, "请至少选择一条数据进行移动操作！")
+                XToast.toastShort(activity, R.string.message_cloud_move_alert)
             }
         }
     }
@@ -259,7 +272,7 @@ class FileFolderListFragment : BaseMVPFragment<FileFolderListContract.View, File
     }
 
     private fun delete() {
-        O2DialogSupport.openConfirmDialog(activity, "确定要删除选中的数据吗？", { dialog ->
+        O2DialogSupport.openConfirmDialog(activity, getString(R.string.message_cloud_confirm_delete_data), { dialog ->
             val fileids = ArrayList<String>()
             val folderids = ArrayList<String>()
             adapter.mSelectIds.forEach { id ->
@@ -285,7 +298,7 @@ class FileFolderListFragment : BaseMVPFragment<FileFolderListContract.View, File
                 val text = dialog.findViewById<EditText>(R.id.dialog_name_editText_id)
                 val content = text.text.toString()
                 if (TextUtils.isEmpty(content)) {
-                    XToast.toastShort(activity, "名称不能为空！")
+                    XToast.toastShort(activity, R.string.message_cloud_not_empty_name_alert)
                 } else {
                     showLoadingDialog()
                     if (item is CloudDiskItem.FolderItem) {
@@ -417,22 +430,23 @@ class FileFolderListFragment : BaseMVPFragment<FileFolderListContract.View, File
 
 
     private fun menuUploadFile() {
-        FilePicker()
-                .withActivity(activity!!)
-                .chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
-                .forResult { filePaths ->
-                    if (filePaths.isNotEmpty()) {
-                        uploadFile(filePaths[0])
+        if (activity != null) {
+            PicturePickUtil().withAction(activity!!)
+                .setMode(PickTypeMode.FileWithMedia)
+                .allowMultiple(true)
+                .forResult { files ->
+                    if (files != null && files.isNotEmpty()) {
+                        uploadFile(files)
                     }
                 }
+        }
     }
-    private fun uploadFile(filePath: String) {
-        XLog.debug("filePath=$filePath")
+    private fun uploadFile(filePaths: List<String>) {
         try {
-            val upFile = File(filePath)
+//            val upFile = File(filePath)
             val bean = breadcrumbBeans.last()//最后一个
             showLoadingDialog()
-            mPresenter.uploadFile(bean.folderId, upFile)
+            mPresenter.uploadFileList(bean.folderId, filePaths)
         } catch (e: Exception) {
             XLog.error("", e)
             XToast.toastShort(activity, "上传文件失败！")
@@ -448,7 +462,7 @@ class FileFolderListFragment : BaseMVPFragment<FileFolderListContract.View, File
             val text = dialog.findViewById<EditText>(R.id.dialog_name_editText_id)
             val content = text.text.toString()
             if (TextUtils.isEmpty(content)) {
-                XToast.toastShort(activity, "文件夹名称不能为空！")
+                XToast.toastShort(activity, R.string.message_cloud_folder_name_not_empty)
             } else {
                 createFolderOnLine(content)
                 dialog.dismiss()

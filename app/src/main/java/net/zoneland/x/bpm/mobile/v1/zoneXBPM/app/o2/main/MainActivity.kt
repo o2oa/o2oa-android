@@ -12,7 +12,6 @@ import android.util.DisplayMetrics
 import android.view.KeyEvent
 import android.view.View
 import androidx.fragment.app.Fragment
-import cn.jpush.android.api.JPushInterface
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main_bottom_bar_image.*
 import net.muliba.changeskin.FancySkinManager
@@ -34,6 +33,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.addOnPageChangeList
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.tbs.WordReadHelper
 import org.jetbrains.anko.doAsync
 
 
@@ -137,8 +137,6 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
 //            OrganizationPermissionManager.instance().initData(data)
             mPresenter.loadOrganizationPermission()
         }
-
-
         content_fragmentView_id.adapter = adapter
         content_fragmentView_id.offscreenPageLimit = if(simpleMode){2}else{5}
         content_fragmentView_id.addOnPageChangeListener {
@@ -154,23 +152,26 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
             }
         }
 
-
-
         selectTab(mCurrentSelectIndex)
 
         //register scheduler job
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            registerSchedulerJob()
-        }
+        registerSchedulerJob()
         //注册设备号 推送消息用
         mPresenter.jPushBindDevice()
+
         //绑定启动webSocket 服务
         val webSocketServiceIntent = Intent(this, WebSocketService::class.java)
         bindService(webSocketServiceIntent, serviceConnect, BIND_AUTO_CREATE)
 
+        // IM 消息接收广播
         registerBroadcast()
 
+        // 检查考勤版本
         mPresenter.checkAttendanceFeature()
+
+        // 检测网盘是否存在V3版本
+        mPresenter.checkCloudFileV3()
+
     }
 
 
@@ -199,6 +200,15 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
                 webSocketService?.webSocketOpen()
             }
         }
+
+        // 清除通知 清除角标 这句写了好像角标不会再出现了
+//        JPushInterface.setBadgeNumber(this, 0)
+        XLog.info("onResume ... 清除通知！！")
+        O2App.instance.clearAllNotification()
+
+        // 触发一次 tbs 内核下载
+        val isX5Init = WordReadHelper.initFinish()
+        XLog.info("x5内核是否已经完成，$isX5Init")
     }
 
 
@@ -376,12 +386,6 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
                 .setRequiresCharging(true)//充电的时候才执行
                 .setPeriodic(24 * 60 * 60 * 1000)
                 .build()
-//        val collectLogComponent = ComponentName(this, CollectLogJobService::class.java)
-//        val jobCollectLog = JobInfo.Builder(O2.O2_COLLECT_LOG_JOB_ID, collectLogComponent)
-//                .setPersisted(true)
-//                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-//                .setPeriodic(1000 * 60 * 60 * 12)
-//                .build()
 
         val jobScheduler = applicationContext.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         val result = jobScheduler.schedule(jobInfo)

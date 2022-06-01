@@ -2,10 +2,10 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.reserve
 
 import android.widget.TextView
 import net.muliba.accounting.app.ExceptionHandler
-import net.muliba.fancyfilepickerlibrary.ext.concat
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.concat
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 

@@ -4,19 +4,22 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseView
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ReadData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.TaskData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.WorkInfoRes
 import java.io.File
 
 
 object TaskWebViewContract {
     interface View : BaseView {
+        fun workOrWorkCompletedInfo(info: WorkInfoRes?)
         fun finishLoading()
         fun submitSuccess()
         fun saveSuccess()
         fun setReadCompletedSuccess()
-        fun uploadAttachmentSuccess(attachmentId:String, site:String)
-        fun replaceAttachmentSuccess(attachmentId:String, site:String)
+        fun uploadAttachmentSuccess(attachmentId:String, site:String, datagridParam:String )
+        fun replaceAttachmentSuccess(attachmentId:String, site:String, datagridParam:String )
         fun downloadAttachmentSuccess(file:File)
         fun invalidateArgs()
+        fun uploadMaxFiles()
         fun downloadFail(message:String)
         fun retractSuccess()
         fun retractFail()
@@ -27,8 +30,10 @@ object TaskWebViewContract {
     }
 
     interface Presenter : BasePresenter<View> {
-        fun uploadAttachment(attachmentFilePath: String, site: String, workId: String)
-        fun replaceAttachment(attachmentFilePath: String, site: String, attachmentId: String, workId: String)
+        fun getWorkInfoByWorkOrWorkCompletedId(workOrWorkCompletedId: String)
+        fun uploadAttachment(attachmentFilePath: String, site: String, workId: String, datagridParam:String )
+        fun uploadAttachmentList(attachmentFilePaths: List<String>, site: String, workId: String, datagridParam:String) //多附件上传
+        fun replaceAttachment(attachmentFilePath: String, site: String, attachmentId: String, workId: String, datagridParam:String )
         fun downloadAttachment(attachmentId: String, workId: String)
         fun downloadWorkCompletedAttachment(attachmentId: String, workCompleted: String)
         fun save(workId: String, formData: String)

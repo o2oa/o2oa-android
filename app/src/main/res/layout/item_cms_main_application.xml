@@ -23,7 +23,7 @@
         android:layout_marginTop="@dimen/spacing_small"
         android:layout_below="@id/image_cms_main_application_icon"
         tools:text="标题"
-        android:textColor="@color/primary_text"
+        android:textColor="@color/z_color_text_primary"
         android:textSize="@dimen/font_large" />
 
 </RelativeLayout>

@@ -3,8 +3,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.apply
 import android.app.Activity
 import android.content.Intent
 import android.os.Bundle
-import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
@@ -12,10 +10,13 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.ContextCompat
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.borax12.materialdaterangepicker.time.RadialPickerLayout
 import com.borax12.materialdaterangepicker.time.TimePickerDialog
 import kotlinx.android.synthetic.main.content_meeting_create_form.*
-import net.muliba.fancyfilepickerlibrary.FilePicker
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
@@ -24,10 +25,14 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.ContactPickerAc
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.process.ProcessDataJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.MeetingInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goWithRequestCode
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
 import java.io.File
 import java.util.*
@@ -43,9 +48,14 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
     val invitePersonList = ArrayList<String>()
     val fileList = ArrayList<String>()
     private val fileIdList = ArrayList<String>()
+    private val typeList = ArrayList<String>()
     private var addFile = ""
     private var meetingId = ""
     private var roomId: String = ""
+
+    private var type: String = ""  // 会议类型
+    private var hostPerson: String = "" // 主持人 默认当前用户
+    private var hostUnit: String = "" // 承办部门
 
     companion object {
         val MEETING_CHOOSE_ROOM = 1001
@@ -76,6 +86,9 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
         ll_meeting_time.setOnClickListener(this)
         edit_meeting_create_form_start_day.setOnClickListener(this)
         rl_choose_room.setOnClickListener(this)
+        rl_choose_meeting_type.setOnClickListener(this)
+        rl_choose_meeting_hostPerson.setOnClickListener(this)
+        rl_choose_meeting_hostUnit.setOnClickListener(this)
         //button_submit_meeting.setOnClickListener(this)
         iv_meeting_file_add.setOnClickListener(this)
 
@@ -112,6 +125,19 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
             mPresenter.deleteMeetingFile(fileIdList[position],position)
         }
 
+        refreshHostPerson(O2SDKManager.instance().distinguishedName)
+
+        // 读取配置 获取会议类型
+        val config = O2SDKManager.instance().prefs().getString(O2.PRE_MEETING_CONFIG_KEY, "")
+        if (!TextUtils.isEmpty(config)) {
+            val meetingConfig = O2SDKManager.instance().gson.fromJson<ProcessDataJson>(config, ProcessDataJson::class.java)
+            if (meetingConfig.typeList != null && meetingConfig.typeList?.isNotEmpty() == true) {
+                val list = meetingConfig.typeList!!
+                typeList.clear()
+                typeList.addAll(list)
+            }
+        }
+
     }
 
     override fun onClick(v: View?) {
@@ -123,9 +149,28 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
             R.id.ll_meeting_time -> showTimePicker()
             R.id.rl_choose_room -> chooseMeetingRoom()
             R.id.iv_meeting_file_add -> {
-                FilePicker().withActivity(this).requestCode(MEETING_FILE_CODE)
-                        .chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
-                        .start()
+
+                PicturePickUtil().withAction(this)
+                    .setMode(PickTypeMode.File)
+                    .forResult { files ->
+                        if (files !=null && files.isNotEmpty()) {
+                            XLog.debug("uri path:" + files[0])
+                            showLoadingDialog()
+                            addFile = files[0]
+                            updateFileList()
+                        }
+                    }
+
+
+            }
+            R.id.rl_choose_meeting_type -> {
+                chooseMeetingType()
+            }
+            R.id.rl_choose_meeting_hostPerson -> {
+                chooseHostPerson()
+            }
+            R.id.rl_choose_meeting_hostUnit -> {
+                chooseHostUnit()
             }
             /*R.id.button_submit_meeting -> {
                 val subject = edit_meeting_create_form_name.text.toString()
@@ -173,8 +218,8 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.menu_meeting_main_accept -> {
                 val subject = edit_meeting_create_form_name.text.toString()
                 if (TextUtils.isEmpty(subject)) {
@@ -196,16 +241,7 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
                     XToast.toastShort(this, "请选择与会人员！")
                     return true
                 }
-                val info = MeetingInfoJson()
-                info.subject = subject
-                info.startTime = "$startDay $startTime:00"
-                info.completedTime = "$startDay $endTime:00"
-                info.summary = edit_meeting_create_form_desc.text.toString()
-                val savePersonList = invitePersonList
-                savePersonList.remove(invitePersonAdd)
-                info.invitePersonList = savePersonList
-                info.room = roomId
-                info.applicant = O2SDKManager.instance().distinguishedName
+                val info = newMeetingInfoJson(subject, startDay, startTime, endTime)
                 if (TextUtils.isEmpty(meetingId)) {
                     mPresenter.saveMeetingNoFile(info)
                 } else {
@@ -215,6 +251,29 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
             }
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun newMeetingInfoJson(
+        subject: String,
+        startDay: String,
+        startTime: String,
+        endTime: String
+    ): MeetingInfoJson {
+        val info = MeetingInfoJson()
+        info.subject = subject
+        info.startTime = "$startDay $startTime:00"
+        info.completedTime = "$startDay $endTime:00"
+        info.summary = edit_meeting_create_form_desc.text.toString()
+        val savePersonList = invitePersonList
+        savePersonList.remove(invitePersonAdd)
+        info.invitePersonList = savePersonList
+        info.inviteMemberList = savePersonList
+        info.room = roomId
+        info.type = type
+        info.hostPerson = hostPerson
+        info.hostUnit = hostUnit
+        info.applicant = O2SDKManager.instance().distinguishedName
+        return info
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -230,17 +289,17 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
                         roomId = resultRoomId
                     }
                 }
-                MEETING_FILE_CODE -> {
-                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-                    if (!TextUtils.isEmpty(result)) {
-                        XLog.debug("uri path:" + result)
-                        showLoadingDialog()
-                        addFile = result!!
-                        updateFileList()
-                    } else {
-                        XLog.error("FilePicker 没有返回值！")
-                    }
-                }
+//                MEETING_FILE_CODE -> {
+//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+//                    if (!TextUtils.isEmpty(result)) {
+//                        XLog.debug("uri path:" + result)
+//                        showLoadingDialog()
+//                        addFile = result!!
+//                        updateFileList()
+//                    } else {
+//                        XLog.error("FilePicker 没有返回值！")
+//                    }
+//                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data)
@@ -294,6 +353,77 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
         //hideLoadingDialog()
     }
 
+    /**
+     * 选择会议类型
+     */
+    private fun chooseMeetingType() {
+        if (typeList.isNotEmpty()) {
+            BottomSheetMenu(this)
+            .setTitle(getString(R.string.meeting_form_type))
+                .setItems(typeList, ContextCompat.getColor(this, R.color.z_color_text_primary)) { index ->
+                    setMeetingType(index)
+                }.show()
+        }
+    }
+
+    private fun setMeetingType(index: Int) {
+        type = typeList[index]
+        edit_meeting_type.text = type
+    }
+
+    /**
+     * 选择主持人
+     */
+    private fun chooseHostPerson() {
+        val bundle = ContactPickerActivity.startPickerBundle(
+            arrayListOf(ContactPickerActivity.personPicker),
+            multiple = false)
+        contactPicker(bundle) { result ->
+            if (result != null) {
+                val users = result.users.map { it.distinguishedName }
+                XLog.debug("选择了主持人, list:$users ")
+                if (users.isNotEmpty()) {
+                    refreshHostPerson(users[0])
+                }
+            }
+        }
+    }
+
+    /**
+     * 设置主持人
+     */
+    private fun refreshHostPerson(person: String) {
+        hostPerson = person
+        if (!TextUtils.isEmpty(hostPerson) && hostPerson.contains("@")) {
+            edit_meeting_hostPerson.text = hostPerson.split("@")[0]
+        }
+    }
+
+    /**
+     * 选择承办部门
+     */
+    private fun chooseHostUnit() {
+        val bundle = ContactPickerActivity.startPickerBundle(
+            arrayListOf(ContactPickerActivity.departmentPicker),
+            multiple = false)
+        contactPicker(bundle) { result ->
+            if (result != null) {
+                val depts = result.departments.map { it.distinguishedName }
+                XLog.debug("选择了承办部门, list:$depts ")
+                if (depts.isNotEmpty()) {
+                    refreshHostUnit(depts[0])
+                }
+            }
+        }
+    }
+
+    private fun refreshHostUnit(unit: String) {
+        hostUnit = unit
+        if (!TextUtils.isEmpty(hostUnit) && hostUnit.contains("@")) {
+            edit_meeting_hostUnit.text = hostUnit.split("@")[0]
+        }
+    }
+
     private fun chooseMeetingRoom() {
         val startDay = edit_meeting_create_form_start_day.text.toString()
         val startTime = edit_meeting_create_form_start_time.text.toString()
@@ -340,15 +470,7 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
                 XToast.toastShort(this, "请选择与会人员！")
                 return
             }
-            val info = MeetingInfoJson()
-            info.subject = subject
-            info.startTime = "$startDay $startTime:00"
-            info.completedTime = "$startDay $endTime:00"
-            info.summary = edit_meeting_create_form_desc.text.toString()
-            val savePersonList = invitePersonList
-            savePersonList.remove(invitePersonAdd)
-            info.invitePersonList = savePersonList
-            info.room = roomId
+            val info = newMeetingInfoJson(subject, startDay, startTime, endTime)
             mPresenter.saveMeeting(info,addFile)
         }
     }

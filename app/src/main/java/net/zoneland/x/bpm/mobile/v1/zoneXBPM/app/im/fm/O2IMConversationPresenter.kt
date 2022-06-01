@@ -1,9 +1,13 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.fm
 
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2.PRE_IM_CONFIG_KEY
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMConfig
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMConversationInfo
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
@@ -99,5 +103,37 @@ class O2IMConversationPresenter : BasePresenterImpl<O2IMConversationContract.Vie
         }
     }
 
+    override fun loadImConfig() {
 
+        val service = getMessageCommunicateService(mView?.getContext())
+        service?.let {
+            it.getImConfig()
+                .subscribeOn(Schedulers.io())
+                .map { res ->
+                    val data = res.data
+                    if (data != null) {
+                        val imConfigJson = O2SDKManager.instance().gson.toJson(data)
+                        O2SDKManager.instance().prefs().edit {
+                            putString(PRE_IM_CONFIG_KEY, imConfigJson)
+                        }
+                        data
+                    } else {
+                        O2SDKManager.instance().prefs().edit {
+                            putString(PRE_IM_CONFIG_KEY, "")
+                        }
+                        IMConfig()
+                    }
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext {
+                        mView?.loadImConfig(it)
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.loadImConfig(null)
+                    }
+                }
+        }
+    }
 }

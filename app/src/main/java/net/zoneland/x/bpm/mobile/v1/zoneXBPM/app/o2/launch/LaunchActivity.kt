@@ -76,9 +76,7 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         getJpushToken()
-
     }
-
 
     /**
      * 极光推送设备号
@@ -111,16 +109,6 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
     }
 
 
-    private fun sendRegTokenToServer(token: String?) {
-        Log.i("LaunchActivity", "sending token to server. token:$token")
-        if (!TextUtils.isEmpty(token)) {
-            O2SDKManager.instance().prefs().edit {
-                putString(O2.PRE_PUSH_HUAWEI_DEVICE_ID_KEY, token)
-            }
-        }
-    }
-
-
     override fun onResume() {
         super.onResume()
         val filter = IntentFilter()
@@ -146,22 +134,29 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
         setIntent(intent)
     }
 
+    var isStarted = false // 保证start执行一次
     fun start() {
+        if (isStarted) {
+            Log.d("LaunchActivity", "已经开始！！！！")
+            return
+        }
+        isStarted = true
         tv_launch_status.text = getString(R.string.launch_start) //开始启动
         circleProgressBar_launch.visible()
         if (CheckRoot.isDeviceRooted()) {
             O2DialogSupport.openAlertDialog(this, getString(R.string.dialog_msg_root_refuse))
         }else {
             PermissionRequester(this)
-                    .request(Manifest.permission.WRITE_EXTERNAL_STORAGE)
-                    .o2Subscribe {
+                .request(Manifest.permission.READ_EXTERNAL_STORAGE).o2Subscribe {
                         onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
                             Log.d("LaunchActivity", "granted:$granted, show:$shouldShowRequestPermissionRationale, deniedList:$deniedPermissions")
-                            if (!granted) {
-                                O2DialogSupport.openAlertDialog(this@LaunchActivity, getString(R.string.dialog_msg_go_to_set_storage_permission), { permissionSetting() })
-                            } else {
-                                checkNetwork()
-                            }
+                            // 关闭存储权限控制
+//                            if (!granted) {
+//                                //O2DialogSupport.openAlertDialog(this@LaunchActivity, getString(R.string.dialog_msg_go_to_set_storage_permission), { permissionSetting() })
+//                            } else {
+//                                checkNetwork()
+//                            }
+                            checkNetwork()
                         }
                         onError { e, _ ->
                             Log.e("LaunchActivity", "检查权限出错", e)
@@ -434,6 +429,7 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
         constraint_launch_main_content.gone()
         //生成indicator
         indicatorList.clear()
+        linear_launch_introduction_bottom_indicator.removeAllViews()
         introductionArray.map {
             val indicator = ImageView(this@LaunchActivity)
             indicator.setImageResource(R.mipmap.ic_launch_introduction_indicator_dark)

@@ -3,6 +3,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.picker
 import android.app.Activity
 import android.graphics.Typeface
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.util.TypedValue
 import android.view.KeyEvent
@@ -20,6 +21,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.FileBreadcrumbBean
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.yunpan.FolderItemForPicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.CloudDiskItem
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
@@ -31,12 +33,17 @@ class CloudDiskFolderPickerActivity : BaseMVPActivity<CloudDiskFolderPickerContr
     override fun layoutResId(): Int = R.layout.activity_cloud_disk_folder_picker
 
 
-    private var items = ArrayList<CloudDiskItem>()
+    private var items = ArrayList<FolderItemForPicker>()
     companion object {
         val RESULT_BACK_KEY = "RESULT_BACK_KEY"
         val ARG_FOLDER_ID_KEY = "ARG_FOLDER_ID_KEY"
+        val ARG_ZONE_ID_KEY = "ARG_ZONE_ID_KEY"
+        val ARG_ZONE_NAME_KEY = "ARG_ZONE_NAME_KEY"
         val LPWW = LinearLayout.LayoutParams(LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT)
 
+        /**
+         * 个人网盘选择
+         */
         fun pickFolder(activity: Activity, result: (String) -> Unit) {
             ActivityResult.of(activity)
                     .className(CloudDiskFolderPickerActivity::class.java)
@@ -51,16 +58,47 @@ class CloudDiskFolderPickerActivity : BaseMVPActivity<CloudDiskFolderPickerContr
                     }
         }
 
+        /**
+         * 企业网盘目录选择
+         * @param zoneId 共享区id
+         */
+        fun pickFolderV3(activity: Activity, zoneId: String, zoneName: String, result: (String) -> Unit) {
+            ActivityResult.of(activity)
+                .className(CloudDiskFolderPickerActivity::class.java)
+                .params(ARG_ZONE_ID_KEY, zoneId)
+                .params(ARG_ZONE_NAME_KEY, zoneName)
+                .greenChannel()
+                .forResult { resultCode, data ->
+                    if (resultCode == Activity.RESULT_OK) {
+                        val r = data.getStringExtra(RESULT_BACK_KEY)
+                        if (r!=null) {
+                            result(r)
+                        }
+                    }
+                }
+        }
+
     }
     private val font: Typeface by lazy { Typeface.createFromAsset(assets, "fonts/fontawesome-webfont.ttf") }
     private val breadcrumbBeans = ArrayList<FileBreadcrumbBean>()//面包屑导航对象
     private var fileLevel = 0//默认进入的时候是第一层
+    private var isV3 = false // 是否企业网盘选择
 
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         setupToolBar("目录选择", setupBackButton = true, isCloseBackIcon = true)
-
-        if (breadcrumbBeans.isEmpty()) {
+        // 支持 企业网盘 V3 目录选择
+        val zoneId = intent.extras?.getString(ARG_ZONE_ID_KEY)
+        if (!TextUtils.isEmpty(zoneId)) {
+            isV3 = true
+            val top = FileBreadcrumbBean()
+            val zoneName = intent.extras?.getString(ARG_ZONE_NAME_KEY)
+            top.displayName = zoneName ?: getString(R.string.yunpan_all_file)
+            top.folderId = zoneId
+            top.level = 0
+            breadcrumbBeans.add(top)
+        } else {
+            isV3 = false
             val top = FileBreadcrumbBean()
             top.displayName = getString(R.string.yunpan_all_file)
             top.folderId = ""
@@ -92,8 +130,8 @@ class CloudDiskFolderPickerActivity : BaseMVPActivity<CloudDiskFolderPickerContr
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        if (item?.itemId == R.id.menu_cloud_disk_picker_top) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        if (item.itemId == R.id.menu_cloud_disk_picker_top) {
             backResult("")
             return true
         }
@@ -114,7 +152,7 @@ class CloudDiskFolderPickerActivity : BaseMVPActivity<CloudDiskFolderPickerContr
     }
 
 
-    override fun itemList(list: List<CloudDiskItem>) {
+    override fun itemList(list: List<FolderItemForPicker>) {
         hideLoadingDialog()
         items.clear()
         items.addAll(list)
@@ -122,8 +160,8 @@ class CloudDiskFolderPickerActivity : BaseMVPActivity<CloudDiskFolderPickerContr
     }
 
     override fun error(error: String) {
-        XToast.toastShort(this, error)
         hideLoadingDialog()
+        XToast.toastShort(this, error)
     }
 
     private fun refreshView() {
@@ -135,7 +173,11 @@ class CloudDiskFolderPickerActivity : BaseMVPActivity<CloudDiskFolderPickerContr
     private fun loadFileList(id: String, newLevel: Int) {
         fileLevel = newLevel
         showLoadingDialog()
-        mPresenter.getItemList(id)
+        if (isV3) {
+            mPresenter.getFolderListV3(id)
+        } else {
+            mPresenter.getItemList(id)
+        }
     }
 
     /**
@@ -194,10 +236,10 @@ class CloudDiskFolderPickerActivity : BaseMVPActivity<CloudDiskFolderPickerContr
         loadBreadcrumb()
     }
 
-    private val adapter: CommonRecycleViewAdapter<CloudDiskItem> by lazy {
-        object : CommonRecycleViewAdapter<CloudDiskItem>(this, items, R.layout.item_folder_list_picker) {
-            override fun convert(holder: CommonRecyclerViewHolder?, t: CloudDiskItem?) {
-                if (holder != null && t != null && t is CloudDiskItem.FolderItem) {
+    private val adapter: CommonRecycleViewAdapter<FolderItemForPicker> by lazy {
+        object : CommonRecycleViewAdapter<FolderItemForPicker>(this, items, R.layout.item_folder_list_picker) {
+            override fun convert(holder: CommonRecyclerViewHolder?, t: FolderItemForPicker?) {
+                if (holder != null && t != null ) {
                     holder.setImageViewResource(R.id.file_list_icon_id, R.mipmap.icon_folder)
                             .setText(R.id.file_list_name_id, t.name)
                             .setText(R.id.tv_file_list_time, t.updateTime)

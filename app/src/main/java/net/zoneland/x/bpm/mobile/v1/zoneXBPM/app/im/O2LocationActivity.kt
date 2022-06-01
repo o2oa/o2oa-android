@@ -136,8 +136,8 @@ class O2LocationActivity : AppCompatActivity(), BDLocationListener {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
             R.id.location_send -> {
                 if (locationData == null){
                     XToast.toastShort(this, getString(R.string.message_please_choose_location))

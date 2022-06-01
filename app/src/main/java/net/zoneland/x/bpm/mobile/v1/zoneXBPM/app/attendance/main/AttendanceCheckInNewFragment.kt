@@ -393,7 +393,7 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
      * 找到最近的打卡地点
      */
     private fun calNearestWorkplace() {
-        if (myLocation!=null) {
+        if ( myLocation!=null) {
             if (workplaceList.isNotEmpty()) {
                 var minDistance: Double = -1.0
                 XLog.debug("calNearestWorkplace...................")

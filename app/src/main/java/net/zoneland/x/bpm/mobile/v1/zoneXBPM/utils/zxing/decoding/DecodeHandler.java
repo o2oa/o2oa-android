@@ -22,19 +22,23 @@ import android.os.Looper;
 import android.os.Message;
 import android.util.Log;
 
+import com.google.zxing.BarcodeFormat;
 import com.google.zxing.BinaryBitmap;
 import com.google.zxing.DecodeHintType;
 import com.google.zxing.MultiFormatReader;
 import com.google.zxing.ReaderException;
 import com.google.zxing.Result;
 import com.google.zxing.common.HybridBinarizer;
+import com.google.zxing.qrcode.QRCodeReader;
 
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R;
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.zxing.AutoFocusUtils;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.zxing.activity.CaptureActivity;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.zxing.camera.CameraManager;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.zxing.camera.PlanarYUVLuminanceSource;
 
 import java.util.Hashtable;
+import java.util.Map;
 
 
 final class DecodeHandler extends Handler {
@@ -42,12 +46,20 @@ final class DecodeHandler extends Handler {
   private static final String TAG = DecodeHandler.class.getSimpleName();
 
   private final CaptureActivity activity;
-  private final MultiFormatReader multiFormatReader;
+//  private final MultiFormatReader multiFormatReader;
+  private final QRCodeReader mQrCodeReader;
+  private final Map<DecodeHintType, Object> mHints;
 
   DecodeHandler(CaptureActivity activity, Hashtable<DecodeHintType, Object> hints) {
-    multiFormatReader = new MultiFormatReader();
-    multiFormatReader.setHints(hints);
+//    multiFormatReader = new MultiFormatReader();
+//    multiFormatReader.setHints(hints);
     this.activity = activity;
+    mQrCodeReader = new QRCodeReader();
+    mHints = new Hashtable<>();
+    // 使用一种编码 二维码
+    mHints.put(DecodeHintType.CHARACTER_SET, "utf-8");
+    mHints.put(DecodeHintType.TRY_HARDER, Boolean.TRUE);
+    mHints.put(DecodeHintType.POSSIBLE_FORMATS, BarcodeFormat.QR_CODE);
   }
 
   @Override
@@ -89,12 +101,15 @@ final class DecodeHandler extends Handler {
             .get().buildLuminanceSource(rotatedData, width, height);
     BinaryBitmap bitmap = new BinaryBitmap(new HybridBinarizer(source));
 //    BinaryBitmap bitmap = new BinaryBitmap(new GlobalHistogramBinarizer(source));
+//    AutoFocusUtils.autoFocus(bitmap,mHints);
     try {
-      rawResult = multiFormatReader.decodeWithState(bitmap);
+//      rawResult = multiFormatReader.decodeWithState(bitmap);
+      rawResult = mQrCodeReader.decode(bitmap);
     } catch (ReaderException re) {
       // continue
     } finally {
-      multiFormatReader.reset();
+//      multiFormatReader.reset();
+      mQrCodeReader.reset();
     }
 
     if (rawResult != null) {

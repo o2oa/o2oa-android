@@ -16,6 +16,16 @@ import rx.Observable
  */
 
 interface BBSAssembleControlService {
+
+
+    /**
+     * 当前用户的禁言信息
+     * 如果没有禁言对象为空
+     */
+    @GET("jaxrs/shutup/get/shutup")
+    fun getMuteInfo(): Observable<ApiResponse<BBSMuteInfo>>
+
+
     /**
      * 获取分区列表 以及 分区下所有板块
 

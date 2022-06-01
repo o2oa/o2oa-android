@@ -5,6 +5,7 @@ import android.os.Looper
 import android.text.TextUtils
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.ValueCallback
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
@@ -45,6 +46,7 @@ class DownloadDocument(val context: Activity) {
                 conn.setRequestProperty("Accept-Encoding", "identity")
                 val newCookie = O2SDKManager.instance().tokenName() + ":" + O2SDKManager.instance().zToken
                 conn.setRequestProperty("Cookie", newCookie)
+                conn.setRequestProperty("x-client", O2.DEVICE_TYPE)
                 conn.setRequestProperty(O2SDKManager.instance().tokenName(), O2SDKManager.instance().zToken)
                 conn.connect()
                 val inputStream = conn.inputStream
@@ -56,6 +58,11 @@ class DownloadDocument(val context: Activity) {
                 val path = FileExtensionHelper.getXBPMWORKAttachmentFileByName(fileName, context)
                 XLog.debug("本地文件存储地址： $path")
                 file = File(path)
+                val parentDir = file.parent
+                val parent = File(parentDir)
+                if (!parent.exists()) {
+                    parent.mkdirs()
+                }
                 val fos = FileOutputStream(file)
                 val buf = ByteArray(1024 * 8)
                 var currentLength = 0
@@ -90,7 +97,7 @@ class DownloadDocument(val context: Activity) {
                 .o2Subscribe {
                     onNext { result ->
                         XLog.info("下载文档：$result")
-                        if (TextUtils.isEmpty(result)) {
+                        if (!TextUtils.isEmpty(result)) {
                             openFileWithTBS(result, "")
                         } else {
                             XToast.toastShort(context, context.getString(R.string.message_download_document_fail))

@@ -14,6 +14,18 @@ public class CollectUnitData {
     private int centerPort; //对应的服务器port  如30080
     private String httpProtocol; //http协议 http https
 
+    private String urlMapping;// 代理地址
+
+
+
+    public String getUrlMapping() {
+        return urlMapping;
+    }
+
+    public void setUrlMapping(String urlMapping) {
+        this.urlMapping = urlMapping;
+    }
+
     public String getId() {
         return id;
     }

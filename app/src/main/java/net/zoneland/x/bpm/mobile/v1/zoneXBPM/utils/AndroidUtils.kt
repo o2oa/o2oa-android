@@ -247,10 +247,14 @@ object AndroidUtils {
      * 获取当前应用的版本号
      *
      */
-    fun getAppVersionCode(context: Context): Int {
-        val versionCode: Int
+    fun getAppVersionCode(context: Context): Long {
+        val versionCode: Long
         try {
-            versionCode = context.packageManager.getPackageInfo(context.packageName, 0).versionCode
+            versionCode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                context.packageManager.getPackageInfo(context.packageName, 0).longVersionCode
+            } else {
+                context.packageManager.getPackageInfo(context.packageName, 0).versionCode.toLong()
+            }
         }catch (e: PackageManager.NameNotFoundException) {
             throw java.lang.RuntimeException(this.javaClass.simpleName + " this application not found! ")
         }
@@ -320,12 +324,16 @@ object AndroidUtils {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
                 val contentUri = FileProvider.getUriForFile(activity, BuildConfig.APPLICATION_ID + ".fileProvider", file)
                 share.putExtra(Intent.EXTRA_STREAM, contentUri)
+                val type = activity.contentResolver.getType(contentUri)
                 share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                XLog.debug("分享 type: $type")
+                share.type = type//此处可发送多种文件
             } else {
                 share.putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file))
             }
-            val type = FileUtil.getMIMEType(file)
-            share.type = type//此处可发送多种文件
+//            val type = FileUtil.getMIMEType(file)
+//            XLog.debug("分享 type: $type")
+//            share.type = type//此处可发送多种文件
             share.flags = Intent.FLAG_ACTIVITY_NEW_TASK
             share.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
             activity.startActivity(Intent.createChooser(share, activity.getString(R.string.yunpan_share_file)))

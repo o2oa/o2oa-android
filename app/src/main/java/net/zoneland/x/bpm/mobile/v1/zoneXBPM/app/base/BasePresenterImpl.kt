@@ -195,6 +195,20 @@ open class BasePresenterImpl<V: BaseView> : BasePresenter<V> {
         }
     }
 
+    /**
+     * 新版云盘服务
+     */
+    fun getCloudFileV3ControlService(context: Context?): CloudFileV3ControlService? {
+        return try {
+            RetrofitClient.instance().cloudFileV3ControlApi()
+        }catch (e:Exception){
+            XLog.error("", e)
+            if (context!=null){
+                XToast.toastLong(context, "云盘服务模块异常，请联系管理员！")
+            }
+            null
+        }
+    }
 
     /**
      * 会议管理服务
@@ -357,7 +371,6 @@ open class BasePresenterImpl<V: BaseView> : BasePresenter<V> {
                 .o2Subscribe {
                     onNext { res ->
                         XLog.info("绑定设备，结果：${res.data.isValue}")
-                        XLog.info("绑定设备，message：${res.message}")
                     }
                     onError { e, _ ->
                         XLog.error("绑定设备出错，", e)
@@ -381,11 +394,11 @@ open class BasePresenterImpl<V: BaseView> : BasePresenter<V> {
                 .observeOn(AndroidSchedulers.mainThread())
                 .o2Subscribe {
                     onNext { res ->
-                        XLog.info("绑定设备，结果：${res.data.isValue}")
-                        XLog.info("绑定设备，message：${res.message}")
+                        XLog.info("老版接口： 绑定设备，结果：${res.data.isValue}")
+                        XLog.info("老版接口： 绑定设备，message：${res.message}")
                     }
                     onError { e, _ ->
-                        XLog.error("绑定设备出错，", e)
+                        XLog.error("老版接口： 绑定设备出错，", e)
                     }
                 }
         }

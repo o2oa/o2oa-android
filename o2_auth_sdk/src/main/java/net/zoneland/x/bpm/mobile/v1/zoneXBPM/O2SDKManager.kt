@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.text.TextUtils
 import android.util.Log
+import android.view.TextureView
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2.SECURITY_IS_UPDATE
@@ -12,13 +13,16 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.LaunchState
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.exception.NoLoginException
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ApiResponse
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.bbs.BBSMuteInfo
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AuthenticationInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectUnitData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.portal.PortalData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.SharedPreferencesHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.security.SecuritySharedPreference
+import org.w3c.dom.Text
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -91,6 +95,8 @@ class O2SDKManager private constructor()  {
     var cRoleList: String = ""//角色
     //扩展信息
     var zToken: String = ""//用户登录的token
+
+    var bbsMuteInfo: BBSMuteInfo? = null // 论坛禁言对象
 
 
 
@@ -166,7 +172,7 @@ class O2SDKManager private constructor()  {
             return
         }
         try {
-            val client = RetrofitClient.instance()
+//            val client = RetrofitClient.instance()
             showState(LaunchState.ConnectO2Collect)
             val demoKey = prefs().getBoolean(O2.PRE_DEMO_O2_KEY, false)
             if (demoKey) { // 不验证
@@ -192,18 +198,19 @@ class O2SDKManager private constructor()  {
                             }
                         }
             }else {
-                client.collectApi().checkBindDeviceNew(deviceToken, phone, unit, O2.DEVICE_TYPE)
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .o2Subscribe {
-                            onNext { collectUnitRes ->
-                                saveCollectInfo(collectUnitRes.data, showState)
-                            }
-                            onError { e, _ ->
-                                Log.e(TAG, "检查绑定异常", e)
-                                showState(LaunchState.NoBindError)
-                            }
-                        }
+                // 检查绑定设备取消 绑定后直接读取本地存储的服务器信息
+//                client.collectApi().checkBindDeviceNew(deviceToken, phone, unit, O2.DEVICE_TYPE)
+//                        .subscribeOn(Schedulers.io())
+//                        .observeOn(AndroidSchedulers.mainThread())
+//                        .o2Subscribe {
+//                            onNext { collectUnitRes ->
+                                saveCollectInfo(null, showState)
+//                            }
+//                            onError { e, _ ->
+//                                Log.e(TAG, "检查绑定异常", e)
+//                                showState(LaunchState.NoBindError)
+//                            }
+//                        }
             }
         }catch (e: RuntimeException) {
             Log.e(TAG, "catch到的异常", e)
@@ -245,6 +252,45 @@ class O2SDKManager private constructor()  {
     }
 
     /**
+     * 转化成urlMapping后的地址
+     * @param url 转化前的地址
+     * @param urlMapping 默认情况下读取prefs中PRE_BIND_UNIT_URLMAPPING_KEY的值，特殊情况下（暂时没有存储）使用这个值解析
+     */
+    fun urlTransfer2Mapping(url: String, urlMapping: String? = null): String {
+        var mapping = if (!TextUtils.isEmpty(urlMapping)) {
+            urlMapping
+        } else {
+            prefs().getString(O2.PRE_BIND_UNIT_URLMAPPING_KEY, "")
+        }
+        if (TextUtils.isEmpty(mapping)) { // 没有值 直接返回原地址
+            return url
+        } else {
+            try {
+                val map = gson.fromJson<HashMap<String, String>>(mapping, HashMap::class.java)
+                if (map != null) {
+                    var newUrl = ""
+                    map.keys.forEach { key->
+                        val value = map[key]
+                        if (url.contains(key) && value != null) {
+                            newUrl = url.replace(key, value, false)
+                        }
+                    }
+                    return if (TextUtils.isEmpty(newUrl)) {
+                        url
+                    } else {
+                        newUrl
+                    }
+                }else {
+                    return url
+                }
+            } catch (e: Exception) {
+                Log.e(TAG, "urlMapping 解析失败", e)
+                return url
+            }
+        }
+    }
+
+    /**
      * 绑定信息存储
      */
     fun bindUnit(unit: CollectUnitData, phone: String, deviceToken: String) {
@@ -257,6 +303,7 @@ class O2SDKManager private constructor()  {
             putInt(O2.PRE_CENTER_PORT_KEY, unit.centerPort)
             putString(O2.PRE_BIND_UNIT_ID_KEY, unit.id)
             putString(O2.PRE_BIND_UNIT_KEY, unit.name)
+            putString(O2.PRE_BIND_UNIT_URLMAPPING_KEY, unit.urlMapping)
             putString(O2.PRE_BIND_PHONE_KEY, phone)
             putString(O2.PRE_BIND_PHONE_TOKEN_KEY, deviceToken)
         }
@@ -274,31 +321,49 @@ class O2SDKManager private constructor()  {
             putInt(O2.PRE_CENTER_PORT_KEY, 0)
             putString(O2.PRE_BIND_UNIT_ID_KEY, "")
             putString(O2.PRE_BIND_UNIT_KEY, "")
+            putString(O2.PRE_BIND_UNIT_URLMAPPING_KEY, "")
             putString(O2.PRE_BIND_PHONE_KEY, "")
             putString(O2.PRE_BIND_PHONE_TOKEN_KEY, "")
         }
     }
 
 
-    private fun saveCollectInfo(unit: CollectUnitData, showState:(state: LaunchState)->Unit) {
-        Log.d(TAG, "unit: ${unit.centerHost}, port: ${unit.centerPort} , id: ${unit.id}")
-        //更新http协议
-        RetrofitClient.instance().setO2ServerHttpProtocol(unit.httpProtocol)
-        APIAddressHelper.instance().setHttpProtocol(unit.httpProtocol)
-        val host = unit.centerHost
-        val newUrl = APIAddressHelper.instance().getCenterUrl(unit.centerHost, unit.centerContext, unit.centerPort)
-        prefs().edit {
-            putString(O2.PRE_BIND_UNIT_ID_KEY, unit.id)
-            putString(O2.PRE_CENTER_URL_KEY, newUrl)
-            putString(O2.PRE_CENTER_HTTP_PROTOCOL_KEY, unit.httpProtocol)
-            putString(O2.PRE_CENTER_HOST_KEY, unit.centerHost)
-            putString(O2.PRE_CENTER_CONTEXT_KEY, unit.centerContext)
-            putInt(O2.PRE_CENTER_PORT_KEY, unit.centerPort)
-            putString(O2.PRE_BIND_UNIT_KEY, unit.name)
+
+
+    private fun saveCollectInfo(unit: CollectUnitData?, showState:(state: LaunchState)->Unit) {
+        var newUrl = ""
+        var host = ""
+        if (unit != null) {
+            Log.d(TAG, "unit: ${unit.centerHost}, port: ${unit.centerPort} , id: ${unit.id}")
+            //更新http协议
+            RetrofitClient.instance().setO2ServerHttpProtocol(unit.httpProtocol)
+            APIAddressHelper.instance().setHttpProtocol(unit.httpProtocol)
+            host = unit.centerHost
+            newUrl = APIAddressHelper.instance().getCenterUrl(unit.centerHost, unit.centerContext, unit.centerPort)
+            prefs().edit {
+                putString(O2.PRE_BIND_UNIT_ID_KEY, unit.id)
+                putString(O2.PRE_CENTER_URL_KEY, newUrl)
+                putString(O2.PRE_CENTER_HTTP_PROTOCOL_KEY, unit.httpProtocol)
+                putString(O2.PRE_CENTER_HOST_KEY, unit.centerHost)
+                putString(O2.PRE_CENTER_CONTEXT_KEY, unit.centerContext)
+                putInt(O2.PRE_CENTER_PORT_KEY, unit.centerPort)
+                putString(O2.PRE_BIND_UNIT_KEY, unit.name)
+                putString(O2.PRE_BIND_UNIT_URLMAPPING_KEY, unit.urlMapping)
+            }
+            Log.d(TAG, "保存 服务器信息成功！！！！newUrl：$newUrl")
+            Log.d(TAG, "httpProtocol:${unit.httpProtocol}")
+            Log.d(TAG, "host:$host")
+        } else {
+            Log.d(TAG, "没有单位信息，读取本地存储信息")
+            host = prefs().getString(O2.PRE_CENTER_HOST_KEY, null) ?: ""
+            newUrl = prefs().getString(O2.PRE_CENTER_URL_KEY, null) ?: ""
+            if (TextUtils.isEmpty(host) || TextUtils.isEmpty(newUrl)) {
+                Log.e(TAG, "本地检查异常， 没有获取到本地存储的服务器信息")
+                showState(LaunchState.NoBindError)
+                return
+            }
         }
-        Log.d(TAG, "保存 服务器信息成功！！！！newUrl：$newUrl")
-        Log.d(TAG, "httpProtocol:${unit.httpProtocol}")
-        Log.d(TAG, "host:$host")
+
 
         /////////////////////////// 开始业务逻辑  ////////////////////////////////////
 
@@ -627,4 +692,28 @@ class O2SDKManager private constructor()  {
         prefs().edit().putString(CURRENT_PERSON_SIGNATURE_KEY, cSignature).apply()
     }
 
+    /**
+     * 网盘是否是V3版本
+     * V3 版本 使用CloudFileV3ControlService
+     * x_pan_assemble_control
+     */
+    fun appCloudDiskIsV3(): Boolean {
+        val cloudFileV3 =  prefs().getString(O2.PRE_CLOUD_FILE_VERSION_KEY, "")
+        return !(TextUtils.isEmpty(cloudFileV3) || cloudFileV3 != "1")
+    }
+
+    /**
+     * 当前用户是否禁言
+     */
+    fun isBBSMute(): Boolean {
+        if (bbsMuteInfo == null){
+            return false
+        }
+        val expiredDate = bbsMuteInfo?.unmuteDate ?: return false
+        return try {
+            DateHelper.lsOrEq(DateHelper.nowByFormate("yyyy-MM-dd"), expiredDate, "yyyy-MM-dd")
+        } catch (e: Exception) {
+            false
+        }
+    }
 }

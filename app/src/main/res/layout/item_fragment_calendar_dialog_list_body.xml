@@ -60,7 +60,7 @@
         android:id="@+id/view_item_fragment_calendar_dialog_list_body_divider"
         android:layout_width="match_parent"
         android:layout_height="1px"
-        android:background="@color/divider"
+        android:background="@color/send_file_divider_color"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"

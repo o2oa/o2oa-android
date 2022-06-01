@@ -4,8 +4,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.view
 import android.Manifest
 import android.app.Activity
 import android.content.Intent
-import android.graphics.Bitmap
-import android.net.Uri
 import android.net.http.SslError
 import android.os.Bundle
 import android.provider.MediaStore
@@ -15,12 +13,15 @@ import android.webkit.JavascriptInterface
 import android.webkit.SslErrorHandler
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import androidx.core.content.ContextCompat
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_cms_web_view_document.*
-import net.muliba.fancyfilepickerlibrary.FilePicker
-import net.muliba.fancyfilepickerlibrary.PicturePicker
+import kotlinx.android.synthetic.main.activity_cms_web_view_document.bottom_operate_button_layout
+import kotlinx.android.synthetic.main.activity_cms_web_view_document.fl_bottom_operation_bar
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
@@ -32,11 +33,16 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.O2WebviewDownloadListener
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.WebChromeClientWithProgressAndValueCallback
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import java.io.File
 import java.io.IOException
+import java.net.URLEncoder
+
 
 
 class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewContract.Presenter>(), CMSWebViewContract.View {
@@ -47,6 +53,7 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
     companion object {
         const val CMS_VIEW_DOCUMENT_ID_KEY = "CMS_VIEW_DOCUMENT_ID_KEY"
         const val CMS_VIEW_DOCUMENT_TITLE_KEY = "CMS_VIEW_DOCUMENT_TITLE_KEY"
+        const val CMS_VIEW_DOCUMENT_OPTIONS_KEY = "CMS_VIEW_DOCUMENT_OPTIONS_KEY"
 
         fun startBundleData(docId: String, docTitle:String): Bundle {
             val bundle = Bundle()
@@ -54,9 +61,19 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
             bundle.putString(CMS_VIEW_DOCUMENT_TITLE_KEY, docTitle)
             return bundle
         }
+
+        fun startBundleDataWithOptions(docId: String, docTitle: String, options: String?): Bundle {
+            val bundle = Bundle()
+            bundle.putString(CMS_VIEW_DOCUMENT_ID_KEY, docId)
+            bundle.putString(CMS_VIEW_DOCUMENT_TITLE_KEY, docTitle)
+            bundle.putString(CMS_VIEW_DOCUMENT_OPTIONS_KEY, options)
+            return bundle
+        }
     }
     private val UPLOAD_REQUEST_CODE = 10086
+    private val UPLOAD_DATAGRID_REQUEST_CODE = 100860
     private val REPLACE_REQUEST_CODE = 10087
+    private val REPLACE_DATAGRID_REQUEST_CODE = 100870
     private val TAKE_FROM_PICTURES_CODE = 10088
     private val TAKE_FROM_CAMERA_CODE = 10089
     private var docId = ""
@@ -72,6 +89,7 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
     private var cameraImagePath: String? = null
     //上传附件
     private var site = ""
+    private var datagridParam = ""; // 数据表格上传附件使用
     //replace 附件
     private var attachmentId = ""
     // 图片控制器
@@ -80,15 +98,41 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         docId = intent.extras?.getString(CMS_VIEW_DOCUMENT_ID_KEY) ?: ""
         docTitle = intent.extras?.getString(CMS_VIEW_DOCUMENT_TITLE_KEY) ?: ""
-
+        val options = intent.extras?.getString(CMS_VIEW_DOCUMENT_OPTIONS_KEY) ?: ""
         //初始化附件存储目录  权限
         val folder = File(FileExtensionHelper.getXBPMCMSAttachFolder(this))
         if (!folder.exists()) {
             folder.mkdirs()
         }
         url = APIAddressHelper.instance().getCMSWebViewUrl(docId)
+        // 把options 放到url的query里面去
+        try {
+            if (!TextUtils.isEmpty(options)) {
+                XLog.info("options : $options")
+                val type = object : TypeToken<HashMap<String, String>>() {}.type
+                val jsonMap: HashMap<String, String>? =
+                    O2SDKManager.instance().gson.fromJson(options, type)
+                if (jsonMap != null) {
+                    if (jsonMap.containsKey("readonly")) {
+                        val read = jsonMap["readonly"]
+                        XLog.info("read 【$read】")
+                        if (!TextUtils.isEmpty(read) && read == "false") { // 编辑模式 使用带操作按钮的页面
+                            url = APIAddressHelper.instance().getCMSWebViewUrlWithAction(docId)
+                        }
+                    }
+                    jsonMap.entries.forEach { item ->
+                        XLog.info("key ${item.key} value ${item.value}")
+                        val valueEncode = URLEncoder.encode(item.value, "utf-8")
+                        url += "&${item.key}=${valueEncode}"
+                    }
+                }
+
+            }
+        }catch (e: Exception) {
+            XLog.error("", e)
+        }
         url += "&time="+System.currentTimeMillis()
-        XLog.debug("url=$url")
+        XLog.info("document url=$url")
 
         setupToolBar(docTitle, true)
 
@@ -101,6 +145,7 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
         web_view_cms_document_content.addJavascriptInterface(jsNotification, JSInterfaceO2mNotification.JSInterfaceName)
         web_view_cms_document_content.addJavascriptInterface(jsUtil, JSInterfaceO2mUtil.JSInterfaceName)
         web_view_cms_document_content.addJavascriptInterface(jsBiz, JSInterfaceO2mBiz.JSInterfaceName)
+        web_view_cms_document_content.setDownloadListener(O2WebviewDownloadListener(this))
         web_view_cms_document_content.webChromeClient = webChromeClient
         web_view_cms_document_content.webViewClient = object : WebViewClient() {
             override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
@@ -108,17 +153,24 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
                 handler?.proceed()
             }
             override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
-                XLog.debug("shouldOverrideUrlLoading:$url")
-                if (ZoneUtil.checkUrlIsInner(url)) {
+                XLog.info("shouldOverrideUrlLoading:$url")
+//                if (ZoneUtil.checkUrlIsInner(url)) {
                     view?.loadUrl(url)
-                } else {
-                    AndroidUtils.runDefaultBrowser(this@CMSWebViewActivity, url)
-                }
+//                } else {
+//                    AndroidUtils.runDefaultBrowser(this@CMSWebViewActivity, url)
+//                }
                 return true
             }
+
         }
         web_view_cms_document_content.webViewSetCookie(this, url)
         web_view_cms_document_content.loadUrl(url)
+
+        // 标题
+        webChromeClient.onO2ReceivedTitle = { title ->
+            XLog.info("设置标题 $title")
+            updateToolbarTitle(title)
+        }
 
     }
 
@@ -129,38 +181,51 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
         }
         if(resultCode == Activity.RESULT_OK) {
             when (requestCode) {
-                UPLOAD_REQUEST_CODE ->{
-                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-                    if (!TextUtils.isEmpty(result)) {
-                        XLog.debug("uri path:$result")
-                        showLoadingDialog()
-                        //上传附件
-                        mPresenter.uploadAttachment(result!!, site, docId)
-                    } else {
-                        XLog.error("FilePicker 没有返回值！")
-                    }
-                }
-                REPLACE_REQUEST_CODE -> {
-                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-                    if (!TextUtils.isEmpty(result)) {
-                        XLog.debug("uri path:$result")
-                        showLoadingDialog()
-                        //替换附件
-                        mPresenter.replaceAttachment(result!!, site, attachmentId, docId)
-                    } else {
-                        XLog.error("FilePicker 没有返回值！")
-                    }
-                }
-                TAKE_FROM_PICTURES_CODE -> {
-                    //选择照片
-                    data?.let {
-                        val result = it.extras?.getString(PicturePicker.FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY, "")
-                        if (!TextUtils.isEmpty(result)) {
-                            XLog.debug("照片 path:$result")
-                            uploadImage2FileStorageStart(result!!)
-                        }
-                    }
-                }
+//                UPLOAD_REQUEST_CODE ->{
+//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+//                    if (!TextUtils.isEmpty(result)) {
+//                        XLog.debug("uri path:$result")
+//                        showLoadingDialog()
+//                        //上传附件
+//                        mPresenter.uploadAttachment(result!!, site, docId, "")
+//                    } else {
+//                        XLog.error("FilePicker 没有返回值！")
+//                    }
+//                }
+//                UPLOAD_DATAGRID_REQUEST_CODE -> {
+//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+//                    if (!TextUtils.isEmpty(result)) {
+//                        XLog.debug("uri path:$result")
+//                        showLoadingDialog()
+//                        //上传附件
+//                        mPresenter.uploadAttachment(result!!, site, docId, datagridParam)
+//                    } else {
+//                        XLog.error("FilePicker 没有返回值！")
+//                    }
+//                }
+//                REPLACE_REQUEST_CODE -> {
+//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+//                    if (!TextUtils.isEmpty(result)) {
+//                        XLog.debug("uri path:$result")
+//                        showLoadingDialog()
+//                        //替换附件
+//                        mPresenter.replaceAttachment(result!!, site, attachmentId, docId, "")
+//                    } else {
+//                        XLog.error("FilePicker 没有返回值！")
+//                    }
+//                }
+//                REPLACE_DATAGRID_REQUEST_CODE -> {
+//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
+//                    if (!TextUtils.isEmpty(result)) {
+//                        XLog.debug("uri path:$result")
+//                        showLoadingDialog()
+//                        //替换附件
+//                        mPresenter.replaceAttachment(result!!, site, attachmentId, docId, datagridParam)
+//                    } else {
+//                        XLog.error("FilePicker 没有返回值！")
+//                    }
+//                }
+
                 TAKE_FROM_CAMERA_CODE -> {
                     //拍照
                     XLog.debug("拍照//// ")
@@ -177,19 +242,31 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
         hideLoadingDialog()
     }
 
-    override fun uploadAttachmentSuccess(attachmentId: String, site: String) {
+    override fun uploadAttachmentSuccess(attachmentId: String, site: String, datagridParam: String) {
         XLog.debug("uploadAttachmentResponse attachmentId:$attachmentId, site:$site")
         hideLoadingDialog()
-        web_view_cms_document_content.evaluateJavascript("layout.appForm.uploadedAttachment(\"$site\", \"$attachmentId\")"){
-            value -> XLog.debug("uploadedAttachment， onReceiveValue value=$value")
+        if (TextUtils.isEmpty(datagridParam)) {
+            web_view_cms_document_content.evaluateJavascript("layout.appForm.uploadedAttachment(\"$site\", \"$attachmentId\")") { value ->
+                XLog.debug("uploadedAttachment， onReceiveValue value=$value")
+            }
+        } else {
+            web_view_cms_document_content.evaluateJavascript("layout.appForm.uploadedAttachmentDatagrid(\"$site\", \"$attachmentId\", \"$datagridParam\")") { value ->
+                XLog.debug("uploadedAttachment， onReceiveValue value=$value")
+            }
         }
     }
 
-    override fun replaceAttachmentSuccess(attachmentId: String, site: String) {
+    override fun replaceAttachmentSuccess(attachmentId: String, site: String, datagridParam: String) {
         XLog.debug("replaceAttachmentResponse attachmentId:$attachmentId, site:$site")
         hideLoadingDialog()
-        web_view_cms_document_content.evaluateJavascript("layout.appForm.replacedAttachment(\"$site\", \"$attachmentId\")"){
-            value -> XLog.debug("replacedAttachment， onReceiveValue value=$value")
+        if (TextUtils.isEmpty(datagridParam)) {
+            web_view_cms_document_content.evaluateJavascript("layout.appForm.replacedAttachment(\"$site\", \"$attachmentId\")") { value ->
+                XLog.debug("replacedAttachment， onReceiveValue value=$value")
+            }
+        } else {
+            web_view_cms_document_content.evaluateJavascript("layout.appForm.replacedAttachment(\"$site\", \"$attachmentId\", \"$datagridParam\")") { value ->
+                XLog.debug("replacedAttachment， onReceiveValue value=$value")
+            }
         }
     }
 
@@ -197,7 +274,8 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
         hideLoadingDialog()
         if (file.exists()){
             if (FileExtensionHelper.isImageFromFileExtension(file.extension)) {
-                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
+//                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
+                BigImageViewActivity.startLocalFile(this, file.absolutePath)
             }else {
                 go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
             }
@@ -279,6 +357,7 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
      */
     @JavascriptInterface
     fun closeDocumentWindow(result: String) {
+        XLog.debug("关闭文档 closeDocumentWindow ：$result")
         finish()
     }
 
@@ -357,6 +436,25 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
     }
 
     /**
+     * 数据表格内的附件上传
+     * @param site
+     * @param param
+     */
+    @JavascriptInterface
+    fun uploadAttachmentForDatagrid(site: String, param: String) {
+        XLog.debug("uploadAttachmentForDatagrid site:$site, param: $param")
+        if (TextUtils.isEmpty(site)) {
+            XLog.error("没有传入site")
+            return
+        }
+        this.site = site
+        this.datagridParam = param
+        runOnUiThread {
+            openFancyFilePicker(UPLOAD_DATAGRID_REQUEST_CODE)
+        }
+    }
+
+    /**
      * 替换附件
      *
      * @param attachmentId
@@ -374,6 +472,24 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
         runOnUiThread {
             openFancyFilePicker(REPLACE_REQUEST_CODE)
         }
+    }
+
+    /**
+     * 数据表格内的附件替换
+     * @param site
+     * @param param
+     */
+    @JavascriptInterface
+    fun  replaceAttachmentForDatagrid(attachmentId: String, site: String, param: String) {
+        XLog.debug("replaceAttachmentForDatagrid site:$site, attachmentId:$attachmentId , param: $param")
+        if (TextUtils.isEmpty(attachmentId) || TextUtils.isEmpty(site)) {
+            XLog.error("没有传入attachmentId 或 site")
+            return
+        }
+        this.site = site
+        this.attachmentId = attachmentId
+        this.datagridParam = param
+        openFancyFilePicker(REPLACE_DATAGRID_REQUEST_CODE)
     }
 
     /**
@@ -434,32 +550,83 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
 
 
     private fun openFancyFilePicker(requestCode: Int) {
-        FilePicker().withActivity(this).requestCode(requestCode)
-                .chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
-                .start()
+
+        PicturePickUtil().withAction(this)
+            .setMode(PickTypeMode.File)
+            .forResult { files ->
+                if (files != null && files.isNotEmpty()) {
+                     when(requestCode) {
+                         UPLOAD_REQUEST_CODE ->{
+                             val result = files[0]
+                             if (!TextUtils.isEmpty(result)) {
+                                 XLog.debug("uri path:$result")
+                                 showLoadingDialog()
+                                 //上传附件
+                                 mPresenter.uploadAttachment(result, site, docId, "")
+                             } else {
+                                 XLog.error("FilePicker 没有返回值！")
+                             }
+                         }
+                         UPLOAD_DATAGRID_REQUEST_CODE -> {
+                             val result = files[0]
+                             if (!TextUtils.isEmpty(result)) {
+                                 XLog.debug("uri path:$result")
+                                 showLoadingDialog()
+                                 //上传附件
+                                 mPresenter.uploadAttachment(result, site, docId, datagridParam)
+                             } else {
+                                 XLog.error("FilePicker 没有返回值！")
+                             }
+                         }
+                         REPLACE_REQUEST_CODE -> {
+                             val result = files[0]
+                             if (!TextUtils.isEmpty(result)) {
+                                 XLog.debug("uri path:$result")
+                                 showLoadingDialog()
+                                 //替换附件
+                                 mPresenter.replaceAttachment(result, site, attachmentId, docId, "")
+                             } else {
+                                 XLog.error("FilePicker 没有返回值！")
+                             }
+                         }
+                         REPLACE_DATAGRID_REQUEST_CODE -> {
+                             val result = files[0]
+                             if (!TextUtils.isEmpty(result)) {
+                                 XLog.debug("uri path:$result")
+                                 showLoadingDialog()
+                                 //替换附件
+                                 mPresenter.replaceAttachment(result, site, attachmentId, docId, datagridParam)
+                             } else {
+                                 XLog.error("FilePicker 没有返回值！")
+                             }
+                         }
+                     }
+                }
+            }
     }
 
     private fun showPictureChooseMenu() {
         BottomSheetMenu(this)
                 .setTitle("上传照片")
-                .setItem("从相册选择", resources.getColor(R.color.z_color_text_primary)) {
+                .setItem("从相册选择", ContextCompat.getColor(this, R.color.z_color_text_primary)) {
                     takeFromPictures()
                 }
-                .setItem("拍照", resources.getColor(R.color.z_color_text_primary)) {
+                .setItem("拍照", ContextCompat.getColor(this, R.color.z_color_text_primary)) {
                     takeFromCamera()
                 }
-                .setCancelButton("取消", resources.getColor(R.color.z_color_text_hint)) {
+                .setCancelButton("取消", ContextCompat.getColor(this, R.color.z_color_text_hint)) {
                     XLog.debug("取消。。。。。")
                 }
                 .show()
     }
 
     private fun takeFromPictures() {
-        PicturePicker()
-                .withActivity(this)
-                .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
-                .requestCode(TAKE_FROM_PICTURES_CODE)
-                .start()
+        PicturePickUtil().withAction(this)
+            .forResult { files ->
+                if (files!=null && files.isNotEmpty()) {
+                    uploadImage2FileStorageStart(files[0])
+                }
+            }
     }
 
     private fun takeFromCamera() {

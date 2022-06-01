@@ -24,7 +24,7 @@ import java.io.File
 class CMSWebViewPresenter : BasePresenterImpl<CMSWebViewContract.View>(), CMSWebViewContract.Presenter {
 
 
-    override fun uploadAttachment(attachmentFilePath: String, site: String, docId: String) {
+    override fun uploadAttachment(attachmentFilePath: String, site: String, docId: String, datagridParam: String) {
         if (TextUtils.isEmpty(attachmentFilePath) || TextUtils.isEmpty(site) || TextUtils.isEmpty(docId)) {
             XLog.error("arguments is null  workid:$docId， site:$site, attachmentFilePath:$attachmentFilePath")
             mView?.finishLoading()
@@ -38,14 +38,14 @@ class CMSWebViewPresenter : BasePresenterImpl<CMSWebViewContract.View>(), CMSWeb
                 ?.uploadAttachment(body, siteBody, docId)
                 ?.subscribeOn(Schedulers.io())
                     ?.observeOn(AndroidSchedulers.mainThread())
-                    ?.subscribe(ResponseHandler { id -> mView?.uploadAttachmentSuccess(id.id, site) },
+                    ?.subscribe(ResponseHandler { id -> mView?.uploadAttachmentSuccess(id.id, site, datagridParam) },
                             ExceptionHandler(mView?.getContext()) { e ->
                                 XLog.error("$e")
                                 mView?.finishLoading() })
 
     }
 
-    override fun replaceAttachment(attachmentFilePath: String, site: String, attachmentId: String, docId: String) {
+    override fun replaceAttachment(attachmentFilePath: String, site: String, attachmentId: String, docId: String, datagridParam: String) {
         if (TextUtils.isEmpty(attachmentFilePath) || TextUtils.isEmpty(site) || TextUtils.isEmpty(attachmentId) || TextUtils.isEmpty(docId)) {
             XLog.error("arguments is null att:$attachmentId, workid:$docId， site:$site, attachmentFilePath:$attachmentFilePath")
             mView?.finishLoading()
@@ -78,7 +78,7 @@ class CMSWebViewPresenter : BasePresenterImpl<CMSWebViewContract.View>(), CMSWeb
                             t?.onCompleted()
                         })
                     }?.observeOn(AndroidSchedulers.mainThread())
-                    ?.subscribe(Action1<String> { id -> mView?.replaceAttachmentSuccess(id, site) },
+                    ?.subscribe(Action1<String> { id -> mView?.replaceAttachmentSuccess(id, site, datagridParam) },
                             ExceptionHandler(mView?.getContext()) { e ->
                                 XLog.error("", e)
                                 mView?.finishLoading() })
@@ -97,7 +97,7 @@ class CMSWebViewPresenter : BasePresenterImpl<CMSWebViewContract.View>(), CMSWeb
                     .flatMap { res->
                         val attachInfo = res.data
                         if (attachInfo != null) {
-                            val filePath = FileExtensionHelper.getXBPMCMSAttachFolder(mView?.getContext()) + File.separator + attachInfo.name
+                            val filePath = FileExtensionHelper.getXBPMCMSAttachFolder(mView?.getContext()) + File.separator + attachInfo.id + File.separator + attachInfo.name
                             if (O2FileDownloadHelper.fileNeedDownload(attachInfo.updateTime, filePath)) {
                                 val downloadUrl = APIAddressHelper.instance()
                                         .getCommonDownloadUrl(APIDistributeTypeEnum.x_cms_assemble_control, "jaxrs/fileinfo/download/document/$attachmentId/stream")

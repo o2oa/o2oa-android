@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="60dp"
+    android:orientation="vertical"
+    android:layout_marginStart="@dimen/spacing_small"
+    android:layout_marginEnd="@dimen/spacing_small">
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:background="@android:color/white"
+        android:paddingStart="15dp"
+        android:paddingEnd="8dp">
+        <LinearLayout
+            android:id="@+id/ll_item_cloud_file_body"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:layout_alignParentStart="true"
+            android:gravity="center_vertical"
+            android:layout_toStartOf="@+id/ll_item_cloud_file_more_btn">
+        <ImageView
+            android:id="@+id/image_item_cloud_file_zone_icon"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@mipmap/cloud_file_zone"
+            />
+
+        <TextView
+            android:id="@+id/tv_item_cloud_file_zone_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/spacing_small"
+            tools:text="共享区名称"
+            android:textColor="@color/z_color_text_primary_dark"
+            android:textSize="@dimen/font_normal" />
+
+        </LinearLayout>
+        <LinearLayout
+            android:id="@+id/ll_item_cloud_file_more_btn"
+            android:layout_width="64dp"
+            android:layout_height="match_parent"
+            android:layout_alignParentEnd="true"
+            android:gravity="end|center_vertical"
+            android:orientation="vertical">
+            <ImageView
+                android:layout_width="22dp"
+                android:layout_height="22dp"
+                android:src="@mipmap/share_more"
+                />
+        </LinearLayout>
+
+    </RelativeLayout>
+    <View
+        android:id="@+id/view_item_cloud_file_zone_bottom"
+        android:layout_width="match_parent"
+        android:layout_height="10dp"
+        android:visibility="gone"
+        android:background="@drawable/background_white_bottom_radius"/>
+</LinearLayout>

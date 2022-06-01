@@ -67,8 +67,10 @@ class CustomStyleFragmentPresenter : BasePresenterImpl<CustomStyleFragmentContra
 
     private fun sendMessage(handler: Handler?, process: Int) {
         val messageIndex = handler?.obtainMessage()
-        messageIndex?.arg1 = process
-        handler?.sendMessage(messageIndex)
+        if (messageIndex != null) {
+            messageIndex.arg1 = process
+            handler.sendMessage(messageIndex)
+        }
     }
 
     private fun storageNativeList(nativeAppList: List<AppItemOnlineVo>) {

@@ -135,7 +135,7 @@
     <!-- login activity -->
     <string name="login_bind_server">当前绑定服务器</string>
     <string name="login_sample_alert_1">当前绑定服务器是：演示服务器。</string>
-    <string name="login_sample_alert_2">试用账号：开发部经理、开发部员工2、财务部员工1\n 密码统一为：o2</string>
+    <string name="login_sample_alert_2">试用账号：请到https://sample.o2oa.net获取\n 密码统一为：o2</string>
     <string name="login_sample_alert_3">请切换密码方式进行登录</string>
     <string name="activity_login_username">用户名或手机号码</string>
     <string name="login_phone">输入手机号码</string>
@@ -235,6 +235,7 @@
     <string name="yunpan_rename">重命名</string>
     <string name="yunpan_delete">删除</string>
     <string name="yunpan_share">分享</string>
+    <string name="yunpan_save_to_my_pan">保存到网盘</string>
     <string name="yunpan_send">发送</string>
     <string name="yunpan_move">移动</string>
     <string name="yunpan_menu_list">列表展现</string>
@@ -253,6 +254,49 @@
     <string name="yunpan_all_file">全部文件</string>
     <string name="yunpan_share_cancel">取消分享</string>
     <string name="yunpan_share_shield">屏蔽</string>
+
+    <string name="cloud_file_my">我的文件</string>
+    <string name="cloud_file_my_desc">个人文件</string>
+
+    <string name="cloud_file_org">企业文件</string>
+    <string name="cloud_file_org_desc">内部共享区</string>
+
+    <string name="cloud_file_my_favorite">我的收藏</string>
+    <string name="cloud_file_my_zone">共享工作区</string>
+    <string name="cloud_file_zone_menu_cancel_favorite">取消收藏</string>
+    <string name="cloud_file_zone_menu_rename_favorite">重命名</string>
+    <string name="cloud_file_zone_menu_add_favorite">加入收藏</string>
+    <string name="cloud_file_zone_menu_edit_zone">编辑</string>
+    <string name="cloud_file_zone_menu_delete_zone">删除</string>
+
+    <string name="cloud_file_zone_create_title">创建共享工作区</string>
+    <string name="cloud_file_zone_update_title">修改共享工作区</string>
+    <string name="cloud_file_zone_create_name_hint">请输入共享工作区的名称</string>
+    <string name="cloud_file_zone_create_desc_hint">请输入共享工作区的描述信息</string>
+
+    <string name="message_cloud_rename_alert">请选择一条数据进行重命名！</string>
+    <string name="message_cloud_delete_alert">请至少选择一条数据进行删除操作！</string>
+    <string name="message_cloud_save_to_my_pan_alert">请至少选择一条数据进行保存到网盘操作！</string>
+    <string name="message_cloud_move_alert">请至少选择一条数据进行移动操作！</string>
+    <string name="message_cloud_share_alert">请至少选择一条数据进行分享操作！</string>
+    <string name="message_cloud_confirm_delete_data">确定要删除选中的数据吗？</string>
+    <string name="message_cloud_not_empty_name_alert">名称不能为空！</string>
+    <string name="message_cloud_move_success">移动成功！</string>
+
+    <string name="message_cloud_create_folder_success">文件夹创建成功！</string>
+    <string name="message_cloud_upload_success">上传成功！</string>
+    <string name="message_cloud_share_success">分享成功！</string>
+    <string name="message_cloud_open_file_fail">打开文件异常！</string>
+    <string name="message_cloud_folder_name_not_empty">文件夹名称不能为空！</string>
+    <string name="message_cloud_create_folder_fail">文件夹创建失败！</string>
+    <string name="message_cloud_upload_fail">上传失败！</string>
+
+    <string name="message_cloud_create_zone_success">创建共享区成功！</string>
+    <string name="message_cloud_update_zone_success">修改共享区成功！</string>
+    <string name="message_cloud_delete_zone_success">删除共享区成功！</string>
+    <string name="message_cloud_add_favorite_success">添加收藏成功！</string>
+    <string name="message_cloud_cancel_favorite_success">取消收藏成功！</string>
+    <string name="message_cloud_rename_favorite_success">重命名成功！</string>
 
     <!--    <string name="share_file_menu_test">测试</string>-->
 
@@ -283,6 +327,7 @@
     <string name="im_report_desc">详情描述</string>
     <string name="menu_im_tribe_name_update">修改群名</string>
     <string name="menu_im_tribe_member_update">修改成员</string>
+    <string name="menu_im_tribe_clear_msg">清空聊天记录</string>
     <string name="im_system_message">通知消息</string>
     <string name="im_manager_member">管理成员</string>
     <string name="im_location_click_choose">点击地图选择位置</string>
@@ -291,6 +336,10 @@
     <string name="im_camera">拍摄</string>
     <string name="im_album">相册</string>
     <string name="im_hint_input_tribe_name">请输入群名！</string>
+    <string name="im_message_confirm_delete_msgs">确定要清空聊天记录吗，清空后当前会话所有人都将看不到这些聊天记录？</string>
+    <string name="im_message_clear_msg_success">清空聊天记录成功！</string>
+    <string name="im_message_clear_msg_no_conversationId">没有传入会话id，无法清空聊天记录！</string>
+    <string name="im_message_revoke_fail">撤回消息失败！</string>
     <string name="im_tribe_name_cannot_empty">群名不能为空！</string>
     <string name="baidu_map">百度地图</string>
     <string name="baidu_map_error_message">未安装百度地图，无法打开</string>
@@ -317,6 +366,7 @@
     <!-- notice setting -->
     <string name="title_activity_notice_setting">新消息通知</string>
     <string name="title_clean_cache_setting">清除缓存</string>
+    <string name="title_logs_setting">系统日志</string>
     <string name="title_share_setting">分享下载</string>
     <string name="notice_setting_message_receive_help">手机新消息通知设置</string>
     <string name="title_notice_setting_message_receive_help">帮助-手机新消息通知设置</string>
@@ -422,6 +472,12 @@
     <!--    <string name="meeting_end_time">结束时间</string>-->
     <!--    <string name="meeting_end_time_hint">请选择结束时间</string>-->
     <string name="meeting_room">会议室</string>
+    <string name="meeting_form_type">会议类型</string>
+    <string name="meeting_form_type_hint">请选择会议类型</string>
+    <string name="meeting_form_hostPerson">主持人</string>
+    <string name="meeting_form_hostPerson_hint">请选择主持人</string>
+    <string name="meeting_form_hostUnit">承办部门</string>
+    <string name="meeting_form_hostUnit_hint">请选择承办部门</string>
     <string name="meeting_room_hint">请选择会议室</string>
     <string name="meeting_invite_people">参会人员</string>
     <string name="meeting_file">会议材料</string>
@@ -435,6 +491,7 @@
     <!--    <string name="title_activity_meeting_accept_wait_list">会议邀请</string>-->
     <string name="title_activity_meeting_edit_form">修改会议申请</string>
     <string name="meeting_delete_label">取消会议</string>
+    <string name="meeting_delete_message_confirm">确定要取消会议？</string>
     <!--    <string name="meeting_room_filter">过滤：</string>-->
     <!--    <string name="meeting_invited_list">会议列表</string>-->
     <string name="meeting_tip_info">亲，您当前还没有会议哦！</string>
@@ -526,6 +583,10 @@
         <item>我的收藏</item>
         <item>版块</item>
     </string-array>
+    <string name="bbs_send_reply_btn">发送</string>
+    <string name="bbs_mute_send_reply_btn">禁用</string>
+    <string name="bbs_write_reply_hint">写评论...</string>
+    <string name="bbs_mute_reply_hint">禁止评论...</string>
 
 
     <string-array name="ai_command_stop">
@@ -695,6 +756,7 @@
     <string name="message_get_process_fail">获取流程列表失败！</string>
     <string name="message_get_current_identity_fail">没有获取到当前用户的身份！</string>
     <string name="message_start_process_fail">传入参数为空，无法启动流程, identity:%1$s,processId:%2$s</string>
+    <string name="message_start_process_success">启动流程成功！</string>
     <string name="message_start_process_back_data_error">返回数据异常！%1$s</string>
     <string name="message_start_process_fail_with_error">启动流程失败, %1$s</string>
     <string name="message_open_draft_error">打开草稿异常！</string>
@@ -716,6 +778,7 @@
     <string name="message_withdraw_fail">撤回失败！</string>
     <string name="message_delete_success">删除成功！</string>
     <string name="message_delete_fail">删除失败！</string>
+    <string name="message_upload_file_max_number">上传附件超过限制个数！</string>
     <string name="message_task_data_load_fail">任务数据获取不到！</string>
     <string name="message_data_parse_fail">解析数据异常！</string>
     <string name="message_need_choose_decision">请选择决策！</string>
@@ -731,9 +794,16 @@
     <string name="message_share_file_not_exist">分享文件不存在</string>
     <string name="message_contact_new_no_permission_for_search">当前用户被限制查询通讯录</string>
     <string name="message_camera_file_create_error">无法拍照，存储文件获取不到！</string>
+    <string name="message_update_success">更新成功！</string>
+    <string name="message_back_error">返回错误！</string>
+    <string name="message_save_image_album">成功保存图片到相册！</string>
+    <string name="message_copy_success">复制成功！</string>
+    <string name="message_im_audio_too_short">录音时间太短！</string>
+
 
     <!--    dialog -->
     <string name="dialog_msg_bind_to_server_fail">绑定服务器失败，请检查当前服务器配置是否正确？您也可以先绑定到O2OA演示服务器进行体验！</string>
+    <string name="dialog_msg_get_o2collect_unit_list_fail">未获取可以绑定的信息，您可以先绑定到O2OA演示服务器进行体验！</string>
     <string name="dialog_title_sample_server">演示服务器</string>
     <string name="dialog_msg_root_refuse">当前是Root环境，App禁止使用！</string>
     <string name="dialog_msg_go_to_set_storage_permission">非常抱歉，应用需要存储权限才能正常运行， 马上去设置</string>
@@ -742,6 +812,8 @@
     <string name="dialog_msg_clean_cache">确认要清除缓存吗？</string>
     <string name="dialog_msg_logout">确定要退出登录吗？</string>
     <string name="dialog_msg_need_rebind_phone_number">确定要重新绑定手机号码吗,该操作会清空当前登录信息，需要重新登录？</string>
+    <string name="dialog_msg_audio_need_permission">语音消息需要权限, 去设置</string>
+    <string name="dialog_msg_camera_need_permission">拍照需要权限, 去设置</string>
 
     <string name="choose">选择</string>
     <string name="sign">个性签名</string>
@@ -763,7 +835,9 @@
     <string name="btn_send">发送</string>
     <string name="chat_input_message">请输入消息…</string>
     <string name="search_taskcompleted">搜索已办工作</string>
-    <string name="secret">隐私政策</string>
+    <string name="secret">《隐私政策》</string>
+    <string name="user_service">《用户协议》</string>
+    <string name="and"> 和 </string>
     <string name="search_no_result">未搜到相关结果</string>
     <string name="search_hint">请输入搜索关键字</string>
     <string name="search_delete_all_history">删除全部历史记录</string>
@@ -771,6 +845,9 @@
     <string name="search_process">流程: </string>
     <string name="search_service_error">查询接口异常，服务器不存在！</string>
     <string name="search_error">错误！%1$s</string>
+    <string name="agree_login_privacy">我已阅读并同意</string>
+    <string name="agree_login_privacy_alert_message">必须先同意我们的产品服务协议，否则无法注册使用本产品!</string>
+
 
 
 </resources>

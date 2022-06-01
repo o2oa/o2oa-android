@@ -40,19 +40,33 @@ class MeetingDetailInfoActivity : BaseMVPActivity<MeetingDetailInfoContract.View
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         setupToolBar(getString(R.string.meeting_detail),true,false)
 
-        if (intent.extras?.getSerializable(meetingDetail)  ==null) {
+        if (intent.extras?.getSerializable(meetingDetail)  == null) {
             XToast.toastShort(this, "没有获取到会议详细信息！")
             finish()
+            return
         }
 
         val meetingDetailInfo = intent.extras?.getSerializable(meetingDetail) as MeetingInfoJson
-        notAcceptPersonList.addAll(meetingDetailInfo.invitePersonList)
+        notAcceptPersonList.addAll(meetingDetailInfo.inviteMemberList)
         notAcceptPersonList.removeAll(meetingDetailInfo.acceptPersonList)
         acceptPersonList.addAll(meetingDetailInfo.acceptPersonList)
         edit_meeting_invited_name.text = meetingDetailInfo.subject
         edit_meeting_invited_start_day.text = meetingDetailInfo.startTime.substring(0,10)
         edit_meeting_time.text = meetingDetailInfo.startTime.substring(11,16)+"-"+meetingDetailInfo.completedTime.substring(11,16)
-        meeting_people_sum.text = Integer.toString(meetingDetailInfo.invitePersonList.size+1)+"人"
+        meeting_people_sum.text =  "${(meetingDetailInfo.inviteMemberList.size+1)}人"
+        edit_meeting_type.text = meetingDetailInfo.type
+        val hostPerson = if (!TextUtils.isEmpty(meetingDetailInfo.hostPerson) && meetingDetailInfo.hostPerson.contains("@")) {
+            meetingDetailInfo.hostPerson.split("@")[0]
+        } else {
+            ""
+        }
+        edit_meeting_hostPerson.text = hostPerson
+        val hostUnit = if (!TextUtils.isEmpty(meetingDetailInfo.hostUnit) && meetingDetailInfo.hostUnit.contains("@")) {
+            meetingDetailInfo.hostUnit.split("@")[0]
+        } else {
+            ""
+        }
+        edit_meeting_hostUnit.text = hostUnit
         edit_meeting_create_form_desc.text = meetingDetailInfo.summary
         mPresenter.asyncLoadRoomName(edit_meeting_invited_room,meetingDetailInfo.room)
 

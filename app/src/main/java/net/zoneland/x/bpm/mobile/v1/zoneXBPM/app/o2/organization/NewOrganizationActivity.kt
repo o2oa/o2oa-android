@@ -344,8 +344,8 @@ class NewOrganizationActivity : BaseMVPActivity<NewOrganizationContract.View, Ne
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
             R.id.org_menu_choose -> {
                 when (mode) {
                     MULTI_IDENTITY_CHOOSE_MODE -> {

@@ -18,6 +18,8 @@ import android.widget.TextView
 import androidx.annotation.ColorRes
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.Base64ImageUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import org.jetbrains.anko.ctx
@@ -168,4 +170,13 @@ fun View.layoutSelf(x: Int, y: Int) {
     margin.setMargins(x, y, 0, 0)
     val layoutParams = FrameLayout.LayoutParams(margin)
     this.layoutParams = layoutParams
+}
+
+/**
+ * o2oa 自定义刷新loading样式
+ */
+fun SwipeRefreshLayout.o2oaColorScheme() {
+    this.setColorSchemeResources(
+        R.color.z_color_refresh_scuba_blue,
+        R.color.z_color_refresh_red, R.color.z_color_refresh_purple, R.color.z_color_refresh_orange)
 }

@@ -2,13 +2,13 @@
 
 
 
-O2OA 平台Android客户端，最低支持Android版本4.4 Android KitKat，编程语言主要使用kotlin。
+O2OA 平台Android客户端，最低支持Android版本5.0 Android L，编程语言主要使用kotlin。
 
 
 
 ## 环境安装
 
-请使用最新版本的`Android Studio`进行导入编译，编译的Android SDK版本是 28。 `Android Studio`下载地址https://developer.android.google.cn/studio/
+请使用最新版本的`Android Studio`进行导入编译，编译的Android SDK版本是 30。 `Android Studio`下载地址https://developer.android.google.cn/studio/
 
 
 
@@ -16,13 +16,13 @@ O2OA 平台Android客户端，最低支持Android版本4.4 Android KitKat，编�
 
 ![image](./img/1577344557429-5f5242d4-89b0-426e-bf59-057a2e52686f.png)
 
-选择**Android 9.0 (Pie)** ，安装SDK。
+选择**Android 11.0 (R)** ，安装SDK。
 
 ![image.png](./img/1598252598869-65ccd9b0-f539-4846-a56e-d242fb75225f.png)
 
-然后选择SDK Tools 选项卡，勾选右下角的Show Package Details，然后选择Android SDK Build-Tools 下面的**28.0.3**版本进行安装。
+然后选择SDK Tools 选项卡，勾选右下角的Show Package Details，然后选择Android SDK Build-Tools 下面的**30.0.3**版本进行安装。
 
-![image.png](https://cdn.nlark.com/yuque/0/2020/png/501589/1598252653094-fa973e3c-95a7-405b-8d29-2d4813892656.png?x-oss-process=image%2Fresize%2Cw_1500)
+![image.png](./img/2022-03-31_10.17.07.png)
 
 
 
@@ -121,7 +121,6 @@ signingConfig.storeFilePath=密钥文件
 signingConfig.storePassword=存储密码
 ```
 
- 
 
 ## 直连版本配置 
 

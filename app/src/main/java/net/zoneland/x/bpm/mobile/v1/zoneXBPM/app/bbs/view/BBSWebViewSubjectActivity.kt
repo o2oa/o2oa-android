@@ -1,8 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.bbs.view
 
 
-import android.app.Activity
-import android.content.Intent
 import android.net.http.SslError
 import android.os.Bundle
 import android.text.TextUtils
@@ -18,12 +16,11 @@ import android.widget.ImageView
 import android.widget.LinearLayout
 import android.widget.RelativeLayout
 import kotlinx.android.synthetic.main.activity_bbs_web_view_subject.*
-import net.muliba.fancyfilepickerlibrary.PicturePicker
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.APIDistributeTypeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.BBSUploadImageBO
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.bbs.ReplyFormJson
@@ -35,16 +32,13 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.hideSoftInput
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.AttachPopupWindow
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.O2WebviewDownloadListener
 import org.jetbrains.anko.dip
-import org.jetbrains.anko.doAsync
-import org.jetbrains.anko.uiThread
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import java.io.DataInputStream
-import java.io.DataOutputStream
 import java.io.File
-import java.io.FileOutputStream
 import java.util.*
 import java.util.concurrent.Future
 
@@ -94,6 +88,7 @@ class BBSWebViewSubjectActivity : BaseMVPActivity<BBSWebViewSubjectContract.View
         keyHeight = metric.heightPixels/3*/
         //init webview
         web_view_bbs_web_view_subject_content.addJavascriptInterface(this, "o2bbs")
+        web_view_bbs_web_view_subject_content.setDownloadListener(O2WebviewDownloadListener(this))
         web_view_bbs_web_view_subject_content.webViewClient = object : WebViewClient() {
             override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
                 XLog.error("ssl error, $error")
@@ -101,11 +96,11 @@ class BBSWebViewSubjectActivity : BaseMVPActivity<BBSWebViewSubjectContract.View
             }
             override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
                 XLog.debug("shouldOverrideUrlLoading:$url")
-                if (ZoneUtil.checkUrlIsInner(url)) {
+//                if (ZoneUtil.checkUrlIsInner(url)) {
                     view?.loadUrl(url)
-                } else {
-                    AndroidUtils.runDefaultBrowser(this@BBSWebViewSubjectActivity, url)
-                }
+//                } else {
+//                    AndroidUtils.runDefaultBrowser(this@BBSWebViewSubjectActivity, url)
+//                }
                 return true
             }
         }
@@ -122,11 +117,12 @@ class BBSWebViewSubjectActivity : BaseMVPActivity<BBSWebViewSubjectContract.View
         }
         //图片附件
         image_bbs_reply_subject_attachment_add_button.setOnClickListener {
-            PicturePicker()
-                    .withActivity(this)
-                    .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE)
-                    .requestCode(BBS_TAKE_FROM_PICTURES_CODE)
-                    .start()
+            PicturePickUtil().withAction(this)
+                .forResult { files ->
+                    if (files!=null && files.isNotEmpty()) {
+                        readyUploadImages(files[0])
+                    }
+                }
         }
         //监听软键盘
         //activity_bbs_web_view_subject.addOnLayoutChangeListener(this)
@@ -150,20 +146,14 @@ class BBSWebViewSubjectActivity : BaseMVPActivity<BBSWebViewSubjectContract.View
         XLog.debug("bbs webView attachment : $attachment")
         val canReply  =  attachment.canReply
         val hasAttach = attachment.hasAttach
-//        if (!canReply && !hasAttach) {
-//            layout_bbs_subject_operation_bar.gone()
-//            button_bbs_subject_attach.gone()
-//        } else if (canReply && !hasAttach) {
-//            button_bbs_subject_attach.setOnClickListener {
-//                XToast.toastShort(this,"没有附件")
-//            }
-//        } else
-        if (!canReply){
+        // 被禁言或者没有回帖权限
+        if (O2SDKManager.instance().isBBSMute() || !canReply) {
             edit_bbs_reply_subject_content.isClickable = false
+            edit_bbs_reply_subject_content.isEnabled = false
+            edit_bbs_reply_subject_content.hint = getString(R.string.bbs_mute_reply_hint)
             button_bbs_subject_reply.isClickable = false
-            button_bbs_subject_reply.text = "禁止评论"
+            button_bbs_subject_reply.text =getString(R.string.bbs_mute_send_reply_btn)
         }
-
         if (hasAttach) {
             button_bbs_subject_attach.visible()
             attachList.clear()
@@ -232,7 +222,7 @@ class BBSWebViewSubjectActivity : BaseMVPActivity<BBSWebViewSubjectContract.View
      */
     @JavascriptInterface
     fun reply(parentId:String) {
-        XLog.debug("回复 parent id:"+parentId)
+        XLog.debug("回复 parent id:$parentId")
         this.parentId = parentId
         runOnUiThread { showLoadingDialog() }
         mPresenter.getReplyParentInfo(parentId)
@@ -299,23 +289,10 @@ class BBSWebViewSubjectActivity : BaseMVPActivity<BBSWebViewSubjectContract.View
 
     private fun getAttachFileLocalPath(id:String) : String{
         var path  = ""
-        attachList.asSequence().filter { it.id == id }.map { path = FileExtensionHelper.getXBPMBBSAttachFolder(this) + File.separator + it.fileName }.toList()
+        attachList.asSequence().filter { it.id == id }.map { path = FileExtensionHelper.getXBPMBBSAttachFolder(this) + File.separator + it.id + File.separator + it.fileName }.toList()
         return path
     }
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
-        if (resultCode == Activity.RESULT_OK) {
-            when (requestCode) {
-                BBS_TAKE_FROM_PICTURES_CODE -> {
-                    val result = data?.extras?.getString(PicturePicker.FANCY_PICTURE_PICKER_SINGLE_RESULT_KEY, "")
-                    if (!TextUtils.isEmpty(result)) {
-                        readyUploadImages(result!!)
-                    }
-                }
-            }
-        }
-    }
 
     private fun readyUploadImages(result: String) {
         if (!uploadingImageMap.containsKey(result) && !uploadedImageMap.containsKey(result)) {

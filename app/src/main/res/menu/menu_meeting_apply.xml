@@ -5,6 +5,5 @@
     <item android:id="@+id/menu_meeting_main_accept"
         app:showAsAction="ifRoom"
         android:orderInCategory="90"
-        android:icon="@mipmap/menu_save"
-        android:title="@string/clip_avatar_save" />
+        android:title="@string/save" />
 </menu>

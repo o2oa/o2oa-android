@@ -2,12 +2,12 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main
 
 import android.text.TextUtils
 import android.view.View
-import cn.jpush.android.api.JPushInterface
 import kotlinx.android.synthetic.main.fragment_main_settings.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPViewPagerFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.about.AboutActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.login.LoginActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.logs.LogsActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.my.MyInfoActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.notice.NoticeSettingActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.security.AccountSecurityActivity
@@ -15,11 +15,9 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.skin.SkinManagerActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.BitmapUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.HttpCacheUtil
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goAndClearBefore
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderOptions
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.AndroidShareDialog
@@ -50,7 +48,13 @@ class SettingsFragment : BaseMVPViewPagerFragment<SettingsContract.View, Setting
         setting_button_skin.setOnClickListener(this)
         setting_button_about_id.setOnClickListener(this)
         setting_button_remind_setting_id.setOnClickListener(this)
+        setting_button_logs_id.setOnClickListener(this)
         setting_button_common_set_id.setOnClickListener(this)
+        setting_button_common_set_id.setOnLongClickListener {
+            XLog.info("长按清除缓存按钮！！！")
+            longClickClearCache()
+            true
+        }
         if (BuildConfig.InnerServer) {
             id_setting_button_customer_service_split.gone()
             setting_button_customer_service_id.gone()
@@ -90,6 +94,7 @@ class SettingsFragment : BaseMVPViewPagerFragment<SettingsContract.View, Setting
                     HttpCacheUtil.clearCache(activity, 0)
                 }, icon = O2AlertIconEnum.CLEAR)
             }
+            R.id.setting_button_logs_id -> activity?.go<LogsActivity>()
             R.id.setting_button_customer_service_id -> shareDialog.show()
 //            R.id.setting_button_feedback_id -> startFeedBack()
             R.id.setting_button_about_id -> activity?.go<AboutActivity>()
@@ -119,6 +124,17 @@ class SettingsFragment : BaseMVPViewPagerFragment<SettingsContract.View, Setting
             }
             mPresenter.logout()
         })
+    }
+
+    private fun longClickClearCache() {
+        O2DialogSupport.openConfirmDialog(activity, "确认要深度清除缓存吗，深度清除后，请清除当前app进程重新再打开？", {
+            HttpCacheUtil.clearCache(activity, 0)
+            // 删除本地sp数据
+            O2SDKManager.instance().prefs().edit {
+                clear()
+            }
+            logoutThenJump2Login()
+        }, icon = O2AlertIconEnum.CLEAR)
     }
 
 //    private fun startFeedBack() {

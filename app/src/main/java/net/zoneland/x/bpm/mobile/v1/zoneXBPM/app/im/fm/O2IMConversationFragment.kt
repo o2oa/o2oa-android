@@ -1,5 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.fm
 
+import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuInflater
 import android.view.MenuItem
@@ -8,6 +9,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.wugang.activityresult.library.ActivityResult
 import kotlinx.android.synthetic.main.fragment_o2_im_conversation.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2CustomStyle
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPViewPagerFragment
@@ -20,9 +22,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.InstantMessage
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMConversationInfo
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMMessage
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.MessageType
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.CustomStyleData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.ContactPickerResult
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
@@ -89,6 +90,13 @@ class O2IMConversationFragment : BaseMVPViewPagerFragment<O2IMConversationContra
                                 text.text = lastMessageBody.body
                                 text.visible()
                             }
+                            MessageType.process.key -> {
+                                val image = holder.getView<ImageView>(R.id.tv_o2_im_con_last_message_emoji)
+                                image.gone()
+                                val text = holder.getView<TextView>(R.id.tv_o2_im_con_last_message)
+                                text.text = MessageBody.process.body
+                                text.visible()
+                            }
                             else -> {
                                 val image = holder.getView<ImageView>(R.id.tv_o2_im_con_last_message_emoji)
                                 image.gone()
@@ -106,15 +114,32 @@ class O2IMConversationFragment : BaseMVPViewPagerFragment<O2IMConversationContra
         }
     }
 
+    private var systemMessageSwitch = true // 消息列表中 是否显示系统通知
+
+    private var imConfig: IMConfig = IMConfig()
+
     override fun initUI() {
         rv_o2_im_conversation.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         rv_o2_im_conversation.adapter = adapter
         adapter.setOnItemClickListener { _, position ->
             O2ChatActivity.startChat(activity!!, cList[position].id!!)
         }
-        ll_o2_instant_message.setOnClickListener {
-            if (instantList.isNotEmpty()) {
-                O2InstantMessageActivity.openInstantActivity(instantList, activity!!)
+
+        val style = O2SDKManager.instance().prefs().getString(O2CustomStyle.CUSTOM_STYLE_JSON_KEY, "")
+        if (TextUtils.isEmpty(style)) {
+            XLog.error("配置内容为空！")
+        }else {
+            val data = O2SDKManager.instance().gson.fromJson<CustomStyleData>(
+                style,
+                CustomStyleData::class.java
+            )
+            systemMessageSwitch = data.systemMessageSwitch
+        }
+        if (systemMessageSwitch) {
+            ll_o2_instant_message.setOnClickListener {
+                if (instantList.isNotEmpty()) {
+                    O2InstantMessageActivity.openInstantActivity(instantList, activity!!)
+                }
             }
         }
     }
@@ -122,6 +147,7 @@ class O2IMConversationFragment : BaseMVPViewPagerFragment<O2IMConversationContra
 
     override fun lazyLoad() {
         XLog.debug("lazy load im conversation。。。。。。。。。。")
+        mPresenter.loadImConfig()
         mPresenter.getMyConversationList()
     }
 
@@ -163,7 +189,9 @@ class O2IMConversationFragment : BaseMVPViewPagerFragment<O2IMConversationContra
             }
             setUnreadNumber(allnumbers)
         }
-        mPresenter.getMyInstantMessageList()
+        if (systemMessageSwitch) {
+            mPresenter.getMyInstantMessageList()
+        }
     }
 
 
@@ -192,6 +220,12 @@ class O2IMConversationFragment : BaseMVPViewPagerFragment<O2IMConversationContra
 
     override fun createConvFail(message: String) {
         XToast.toastShort(activity, message)
+    }
+
+    override fun loadImConfig(config: IMConfig?) {
+        if (config != null) {
+            imConfig = config
+        }
     }
 
     fun receiveMessageFromWebsocket(message: IMMessage) {

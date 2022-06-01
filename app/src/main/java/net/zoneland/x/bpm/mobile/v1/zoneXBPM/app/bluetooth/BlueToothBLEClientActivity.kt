@@ -103,6 +103,7 @@ class BlueToothBLEClientActivity : BaseMVPActivity<BlueToothContract.View, BlueT
         }
     }
 
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         if (resultCode == Activity.RESULT_OK) {
             when (requestCode) {
@@ -111,6 +112,7 @@ class BlueToothBLEClientActivity : BaseMVPActivity<BlueToothContract.View, BlueT
                 }
             }
         }
+        super.onActivityResult(requestCode, resultCode, data)
     }
 
 
@@ -139,10 +141,10 @@ class BlueToothBLEClientActivity : BaseMVPActivity<BlueToothContract.View, BlueT
                 BluetoothDevice.ACTION_FOUND -> {
                     XLog.info("找到一个蓝牙设备")
                     //  EXTRA_DEVICE  , EXTRA_CLASS
-                    val device = intent?.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
-                    XLog.info("name: ${device.name}, address:${device.address}, state:${device.bondState}")
+                    val device = intent.getParcelableExtra<BluetoothDevice>(BluetoothDevice.EXTRA_DEVICE)
+                    XLog.info("name: ${device?.name}, address:${device?.address}, state:${device?.bondState}")
 
-                    if (address == device.address && device.bondState == BluetoothDevice.BOND_NONE) {
+                    if (address == device?.address && device.bondState == BluetoothDevice.BOND_NONE) {
                         connect2Device(device)
                     }
 

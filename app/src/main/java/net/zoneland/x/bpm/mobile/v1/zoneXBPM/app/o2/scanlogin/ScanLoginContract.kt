@@ -8,9 +8,12 @@ object ScanLoginContract {
     interface View : BaseView {
         fun confirmSuccess()
         fun confirmFail()
+        fun checkInSuccess()
+        fun checkInFail()
     }
 
     interface Presenter : BasePresenter<View> {
         fun confirmWebLogin(meta:String)
+        fun checkInMeeting(id: String)
     }
 }

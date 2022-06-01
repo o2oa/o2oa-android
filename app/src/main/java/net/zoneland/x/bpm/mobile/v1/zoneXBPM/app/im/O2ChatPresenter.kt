@@ -6,7 +6,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileUtil
@@ -19,9 +18,7 @@ import okhttp3.RequestBody
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import java.io.*
-import java.net.HttpURLConnection
-import java.net.URL
+import java.io.File
 
 class O2ChatPresenter : BasePresenterImpl<O2ChatContract.View>(), O2ChatContract.Presenter  {
 
@@ -231,9 +228,48 @@ class O2ChatPresenter : BasePresenterImpl<O2ChatContract.View>(), O2ChatContract
                         }
                     }
 
+        }
+    }
 
+    override fun deleteAllChatMsg(conversationId: String) {
+        if (TextUtils.isEmpty(conversationId)) {
+            mView?.deleteAllChatMsgFail(mView?.getContext()?.getString(R.string.im_message_clear_msg_no_conversationId) ?: "unknown")
+            return
+        } else {
+            getMessageCommunicateService(mView?.getContext())
+                ?.deleteAllChatMsg(conversationId)
+                ?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.o2Subscribe {
+                    onNext {
+                        mView?.deleteAllChatMsgSuccess()
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.deleteAllChatMsgFail(e?.message ?: "unknown")
+                    }
+                }
+        }
+    }
 
-
+    override fun revokeMsg(id: String) {
+        if (TextUtils.isEmpty(id)) {
+            mView?.revokeMsgFail(mView?.getContext()?.getString(R.string.message_arg_error) ?: "unknown")
+            return
+        } else {
+            getMessageCommunicateService(mView?.getContext())
+                ?.revokeChatMsg(id)
+                ?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.o2Subscribe {
+                    onNext {
+                        mView?.revokeMsgSuccess()
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.revokeMsgFail(e?.message ?: "unknown")
+                    }
+                }
         }
     }
 }

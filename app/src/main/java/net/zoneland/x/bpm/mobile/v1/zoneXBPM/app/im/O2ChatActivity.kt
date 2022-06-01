@@ -34,12 +34,12 @@ import com.zlw.main.recorderlib.recorder.RecordConfig
 import com.zlw.main.recorderlib.recorder.RecordHelper
 import com.zlw.main.recorderlib.recorder.listener.RecordStateListener
 import kotlinx.android.synthetic.main.activity_o2_chat.*
-import net.muliba.fancyfilepickerlibrary.FilePicker
-import net.muliba.fancyfilepickerlibrary.PicturePicker
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.LocalImageViewActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.TaskWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
@@ -50,11 +50,14 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import pl.droidsonroids.gif.GifImageView
 import java.io.File
 import java.io.IOException
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Presenter>(), O2ChatContract.View, View.OnTouchListener, SensorEventListener {
@@ -73,7 +76,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 
     override fun layoutResId(): Int = R.layout.activity_o2_chat
 
-
+    private var imConfig: IMConfig = IMConfig()
     private val adapter: O2ChatMessageAdapter by lazy { O2ChatMessageAdapter() }
     private val emojiList = O2IM.im_emoji_hashMap.keys.toList().sortedBy { it }
     private val emojiAdapter: CommonRecycleViewAdapter<String> by lazy {
@@ -139,19 +142,26 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
-        // 起初的布局可自动调整大小
-        window.setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
+        // 起初的布局可自动调整大小 WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or
+        window.setSoftInputMode( WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN)
 
         setupToolBar(defaultTitle, setupBackButton = true)
+        val json = O2SDKManager.instance().prefs().getString(O2.PRE_IM_CONFIG_KEY, "") ?: ""
+        if (!TextUtils.isEmpty(json)) {
+            val c = O2SDKManager.instance().gson.fromJson(json, IMConfig::class.java)
+            if (c != null) {
+                imConfig = c
+            }
+        }
 
         conversationId = intent.getStringExtra(con_id_key) ?: ""
         if (TextUtils.isEmpty(conversationId)) {
             XToast.toastShort(this, "缺少参数！")
             finish()
+            return
         }
         //消息列表初始化
         sr_o2_chat_message_layout.setOnRefreshListener {
-            XLog.debug("下啦零零落落零零落落来了")
             getPageData()
         }
         rv_o2_chat_messages.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
@@ -162,11 +172,12 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             }
 
             override fun playAudio(position: Int, msgBody: IMMessageBody) {
-                XLog.debug("audio play position: $position")
+                showLoadingDialog()
                 mPresenter.getFileFromNetOrLocal(position, msgBody)
             }
 
             override fun openOriginImage(position: Int, msgBody: IMMessageBody) {
+                showLoadingDialog()
                  mPresenter.getFileFromNetOrLocal(position, msgBody)
             }
 
@@ -177,7 +188,18 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             }
 
             override fun openFile(position: Int, msgBody: IMMessageBody) {
+                showLoadingDialog()
                 mPresenter.getFileFromNetOrLocal(position, msgBody)
+            }
+
+            override fun onCreateContextMenu(menu: ContextMenu?, message: IMMessage) {
+                createContextMenu(menu, message)
+            }
+
+            override fun openProcessWork(position: Int, msgBody: IMMessageBody) {
+                if (!TextUtils.isEmpty(msgBody.work)) {
+                    go<TaskWebViewActivity>(TaskWebViewActivity.start(msgBody.work, "", ""))
+                }
             }
         }
         //输入法切换的时候滚动到底部
@@ -212,19 +234,75 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         sensorListen()
     }
 
+    /**
+     * 聊天消息
+     * 长按菜单
+     */
+    private fun createContextMenu(menu: ContextMenu?, message: IMMessage) {
+        val menuList = ArrayList<String>()
+        // 撤回菜单
+        if (imConfig.enableRevokeMsg) {
+            if (message.createPerson == O2SDKManager.instance().distinguishedName) {
+                menuList.add(O2IM.IM_Message_Menu_name_Revoke)
+            } else if (conversationInfo?.adminPerson == O2SDKManager.instance().distinguishedName) {
+                menuList.add(O2IM.IM_Message_Menu_name_Revoke_group)
+            }
+        }
+        val messageBody = message.messageBody()
+        if (messageBody != null) {
+            if (messageBody.type == MessageType.text.key) {
+                menuList.add(O2IM.IM_Message_Menu_text_copy)
+            }
+        }
+        if (menuList.isNotEmpty()) {
+            val groupId = 0
+            menuList.forEachIndexed { index, s ->
+                menu?.add(groupId, index, index, s)
+                menu?.getItem(index)?.setOnMenuItemClickListener { item ->
+                    if (item.title == O2IM.IM_Message_Menu_name_Revoke || item.title == O2IM.IM_Message_Menu_name_Revoke_group) {
+                        revokeMsg(message)
+                    } else if (item.title == O2IM.IM_Message_Menu_text_copy) {
+                        copyText(message)
+                    }
+                    true
+                }
+            }
+        }
+    }
+
+    /**
+     * 撤回
+     */
+    private fun revokeMsg(message: IMMessage) {
+        XLog.debug("撤回消息，${message.createPerson}" )
+        adapter.removeMessage(message)
+        mPresenter.revokeMsg(message.id)
+    }
+
+    /**
+     * 复制文字内容到剪贴板
+     */
+    private fun copyText(message: IMMessage) {
+        AndroidUtils.copyTextToClipboard(message.messageBody()?.body ?: "" , this)
+        XToast.toastShort(this, getString(R.string.message_copy_success))
+    }
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.clear()
         if (canUpdate) {
-            menuInflater.inflate(R.menu.menu_chat, menu)
+            if (imConfig.enableClearMsg) {
+                menuInflater.inflate(R.menu.menu_chat_with_clear, menu)
+            } else {
+                menuInflater.inflate(R.menu.menu_chat, menu)
+            }
         } else {
             menuInflater.inflate(R.menu.menu_chat_no_update, menu)
         }
         return super.onPrepareOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        when(item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
             R.id.menu_chat_report -> {
                 openReportDialog()
                 return true
@@ -235,6 +313,10 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             }
             R.id.menu_chat_update_member -> {
                 updateMembers()
+                return true
+            }
+            R.id.menu_chat_clear_msg -> {
+                clearAllMsg()
                 return true
             }
         }
@@ -260,6 +342,16 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 
             XToast.toastShort(this, "感谢您的提交，我们会尽快核实并处理！")
         }
+    }
+
+    /**
+     * 清空聊天记录
+     */
+    private fun clearAllMsg() {
+        O2DialogSupport.openConfirmDialog(this, getString(R.string.im_message_confirm_delete_msgs), {
+            _ ->
+            mPresenter.deleteAllChatMsg(conversationId)
+        })
     }
 
     private fun updateTitle() {
@@ -476,6 +568,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     }
 
     override fun localFile(filePath: String, msgType: String, position: Int) {
+        hideLoadingDialog()
         XLog.debug("local file :$filePath type:$msgType")
         when (msgType) {
             MessageType.audio.key -> {
@@ -483,7 +576,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             }
             MessageType.image.key -> {
                 //打开大图
-                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(filePath))
+                BigImageViewActivity.startLocalFile(this, filePath)
             }
             else -> go<FileReaderActivity>(FileReaderActivity.startBundle(filePath))
         }
@@ -491,7 +584,28 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     }
 
     override fun downloadFileFail(msg: String) {
+        hideLoadingDialog()
         XToast.toastShort(this, msg)
+    }
+
+    override fun deleteAllChatMsgSuccess() {
+        XToast.toastShort(this, getString(R.string.im_message_clear_msg_success))
+        page = 0
+        adapter.clearAllMessage()
+        getPageData()
+    }
+
+    override fun deleteAllChatMsgFail(msg: String) {
+        XToast.toastShort(this, msg)
+    }
+
+    override fun revokeMsgSuccess() {
+        //XToast.toastShort(this, getString(R.string.im_message_clear_msg_success))
+        XLog.info("撤回消息成功！")
+    }
+
+    override fun revokeMsgFail(msg: String) {
+        XToast.toastShort(this, getString(R.string.im_message_revoke_fail) + msg)
     }
 
     /**
@@ -609,7 +723,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                     .o2Subscribe {
                         onNext { (granted, _, _) ->
                             if (!granted){
-                                O2DialogSupport.openAlertDialog(this@O2ChatActivity, "语音消息需要权限, 去设置", { permissionSetting() })
+                                O2DialogSupport.openAlertDialog(this@O2ChatActivity, getString(R.string.dialog_msg_audio_need_permission), { permissionSetting() })
                             }
                         }
                         onError { e, _ ->
@@ -641,20 +755,19 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             }
         }
         ll_o2_chat_album_btn.setOnClickListener {
-            PicturePicker()
-                    .withActivity(this)
-                    .chooseType(PicturePicker.CHOOSE_TYPE_SINGLE).forResult { files ->
-                        if (files.isNotEmpty()) {
-                            newImageMessage(files[0])
-                        }
+            PicturePickUtil().withAction(this)
+                .forResult { files ->
+                    if (files!=null && files.isNotEmpty()) {
+                        newImageMessage(files[0])
                     }
+                }
         }
         ll_o2_chat_camera_btn.setOnClickListener {
             PermissionRequester(this@O2ChatActivity).request(Manifest.permission.CAMERA)
                     .o2Subscribe {
                         onNext {  (granted, _, _) ->
                             if (!granted){
-                                O2DialogSupport.openAlertDialog(this@O2ChatActivity, "拍照需要权限, 去设置", { permissionSetting() })
+                                O2DialogSupport.openAlertDialog(this@O2ChatActivity, getString(R.string.dialog_msg_camera_need_permission), { permissionSetting() })
                             } else {
                                 openCamera()
                             }
@@ -680,14 +793,13 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         }
         ll_o2_chat_file_btn.setOnClickListener {
             //文件选择器
-            FilePicker()
-                    .withActivity(this@O2ChatActivity)
-                    .chooseType(FilePicker.CHOOSE_TYPE_SINGLE)
-                    .forResult { filePaths ->
-                        if (filePaths.isNotEmpty()) {
-                            newFileMessage(filePaths[0])
-                        }
+            PicturePickUtil().withAction(this)
+                .setMode(PickTypeMode.File)
+                .forResult { files ->
+                    if (files !=null && files.isNotEmpty()) {
+                        newFileMessage(files[0])
                     }
+                }
         }
     }
 
@@ -769,7 +881,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                 XLog.debug("录音结束 返回结果 ${result.path} ， 是否取消：$isAudioRecordCancel, 录音时间：$audioRecordTime")
                 if (audioRecordTime < 1) {
                     runOnUiThread {
-                        XToast.toastShort(this@O2ChatActivity, "录音时间太短！")
+                        XToast.toastShort(this@O2ChatActivity, getString(R.string.message_im_audio_too_short))
                     }
                 } else {
                     if (!isAudioRecordCancel) {

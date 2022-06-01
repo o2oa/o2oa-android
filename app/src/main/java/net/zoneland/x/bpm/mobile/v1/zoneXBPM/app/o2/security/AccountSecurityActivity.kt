@@ -20,6 +20,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.biometric.OnBiometryAuthCallb
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
+import java.lang.Exception
 
 
 class AccountSecurityActivity : BaseMVPActivity<AccountSecurityContract.View, AccountSecurityContract.Presenter>(), AccountSecurityContract.View {
@@ -81,6 +82,7 @@ class AccountSecurityActivity : BaseMVPActivity<AccountSecurityContract.View, Ac
         XToast.toastShort(this, getString(R.string.message_setting_update_password_success))
     }
 
+
     /**
      * 选择访问环境
      */
@@ -108,9 +110,16 @@ class AccountSecurityActivity : BaseMVPActivity<AccountSecurityContract.View, Ac
         goAndClearBefore<LaunchActivity>()
     }
 
-    private val bioManager: BiometryManager by lazy { BiometryManager(this) }
+
+    private var bioManager: BiometryManager?  = null
+
     private fun initBiometryAuthView() {
 
+        try {
+            bioManager = BiometryManager(this)
+        }catch (e: Exception) {
+            XLog.error("", e)
+        }
         tv_account_security_biometry_name.text = getString(R.string.login_type_fingerprint)
         val bioAuthUser = O2SDKManager.instance().prefs().getString(BioConstants.O2_bio_auth_user_id_prefs_key, "") ?: ""
         var isAuthed = false
@@ -131,9 +140,16 @@ class AccountSecurityActivity : BaseMVPActivity<AccountSecurityContract.View, Ac
             image_btn_account_security_biometry_enable.setImageResource(R.mipmap.icon_toggle_off_29dp)
         }
 
-        if (bioManager.isBiometricPromptEnable()) {
+        var isBioEnable = false
+        try {
+            isBioEnable = bioManager?.isBiometricPromptEnable() ?: false
+        }catch (e: Exception) {
+            XLog.error("",e)
+        }
+
+        if (isBioEnable) {
             image_btn_account_security_biometry_enable.setOnClickListener {
-                bioManager.authenticate(object : OnBiometryAuthCallback{
+                bioManager?.authenticate(object : OnBiometryAuthCallback{
                     override fun onUseFallBack() {
                         XLog.error("点击了《其他方式》按钮。。。。。")
                     }

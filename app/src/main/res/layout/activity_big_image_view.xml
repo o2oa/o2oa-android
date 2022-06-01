@@ -56,6 +56,34 @@
 
     </LinearLayout>
 
+    <RelativeLayout
+        android:id="@+id/rl_big_picture_download_btn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        app:layout_constraintEnd_toEndOf="parent">
+        <ImageView
+            android:id="@+id/image_big_image_down"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:src="@mipmap/save_to_album"
+            android:layout_centerHorizontal="true"
+            />
+        <TextView
+            android:id="@+id/tv_big_image_down"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/spacing_small"
+            android:text="保存到相册"
+            android:textColor="@color/white"
+            android:layout_below="@+id/image_big_image_down"
+            android:layout_centerHorizontal="true"
+            />
+
+    </RelativeLayout>
+
 <!--    <net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleProgressBar-->
 <!--        android:id="@+id/cpb_big_picture_progressbar_id"-->
 <!--        android:layout_width="wrap_content"-->

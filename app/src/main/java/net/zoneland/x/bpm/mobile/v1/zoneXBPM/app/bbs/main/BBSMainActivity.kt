@@ -41,6 +41,7 @@ class BBSMainActivity : BaseMVPActivity<BBSMainContract.View, BBSMainContract.Pr
         toolbar_snippet_tab_layout.setupWithViewPager(view_pager_bbs_main)
         tv_bottom_bbs_main_cancel_collect_button.setOnClickListener { (fragments[0] as BBSMainCollectionFragment).cancelCollection() }
         mPresenter.whetherThereHasCollections()
+        mPresenter.checkHasMute()
     }
 
     override fun onBackPressed() {
