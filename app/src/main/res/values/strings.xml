@@ -847,7 +847,8 @@
     <string name="search_error">错误！%1$s</string>
     <string name="agree_login_privacy">我已阅读并同意</string>
     <string name="agree_login_privacy_alert_message">必须先同意我们的产品服务协议，否则无法注册使用本产品!</string>
-
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
 </resources>

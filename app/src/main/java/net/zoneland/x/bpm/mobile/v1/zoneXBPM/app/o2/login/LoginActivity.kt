@@ -18,6 +18,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.DownloadAPKFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.bind.BindPhoneActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.launch.LaunchActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main.MainActivity
@@ -29,10 +30,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.biometric.BioConstants
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.biometric.BiometryManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.biometric.OnBiometryAuthCallback
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goAndClearBefore
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goThenKill
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CountDownButtonHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
@@ -93,6 +91,9 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
     //验证码
     private var useCaptcha = true
     private var captcha : CaptchaImgData? = null
+
+    // 演示服务器账号获取提示dialog
+    private var tipsFragment: SampleTipsFragment? = null
 
 
 
@@ -167,6 +168,11 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
         mPresenter.getCaptcha()
         // 登录模式检查 是否有验证码登录 短信登录这些
         mPresenter.getLoginMode()
+
+        tv_login_sample_tips.setOnClickListener {
+            popupSampleTipsDialog()
+        }
+        checkPopupPrompt()
     }
 
 
@@ -297,14 +303,28 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
         goAndClearBefore<LaunchActivity>()
     }
 
-
-
-    private fun checkShowSampleAlert() {
-        val unit = O2SDKManager.instance().prefs().getString(O2.PRE_CENTER_HOST_KEY, "")
-        if (!TextUtils.isEmpty(unit) && unit == "sample.o2oa.net") {
-            login_sample_alert.visible()
+    // 检查是否首次打开， 首次打开就弹出提示窗
+    private fun checkPopupPrompt() {
+        val isPopup = O2SDKManager.instance().prefs().getBoolean("sampleTips", false)
+        if (!isPopup) {
+            popupSampleTipsDialog()
         }
     }
+
+    //弹出提示框
+    private fun popupSampleTipsDialog() {
+        if (tipsFragment == null) {
+            XLog.debug("new SampleTipsFragment .........1.")
+            tipsFragment = SampleTipsFragment.newInstance()
+        }
+        tipsFragment?.show(supportFragmentManager, "sampleTips")
+        XLog.debug("show SampleTipsFragment .........1.")
+        O2SDKManager.instance().prefs().edit {
+            putBoolean("sampleTips", true)
+        }
+        XLog.debug("done SampleTipsFragment .........1.")
+    }
+
 
     //切换登录方式
     private fun showChangeLoginTypeMenu() {

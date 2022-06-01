@@ -56,7 +56,7 @@ class SampleEditionManger {
         if (currentUnit == null) {
             currentUnit = CollectUnitData()
             currentUnit!!.id = "sample"
-            currentUnit!!.name = "演示环境"
+            currentUnit!!.name = "企业通用办公平台"
             currentUnit!!.centerHost = "sample.o2oa.net"
             currentUnit!!.centerContext = "/x_program_center"
             currentUnit!!.httpProtocol = "https"

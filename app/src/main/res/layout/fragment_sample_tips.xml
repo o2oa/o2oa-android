@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".app.o2.login.SampleTipsFragment">
+
+    <LinearLayout
+        android:layout_width="300dp"
+        android:layout_height="475dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        android:background="@drawable/background_white_radius"
+        android:orientation="vertical">
+        <ImageButton
+            android:id="@+id/ib_sample_tips_fragment_close"
+            android:layout_width="22dp"
+            android:layout_height="22dp"
+            android:src="@mipmap/icon_off_round_666"
+            android:layout_gravity="end"
+            android:layout_marginEnd="15dp"
+            android:layout_marginTop="10dp" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="获取体验账户密码的途径"
+            android:textColor="@color/z_color_text_primary_dark"
+            android:textSize="@dimen/text_big_size"
+            android:textAlignment="center"
+            android:layout_marginTop="33dp"
+            />
+        <TextView
+            android:id="@+id/tv_sample_tips_fragment_wx_name"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="15dp"
+            android:text="关注“浙江兰德网络”微信公众号，点击最右侧“体验环境”再点击“体验账号”获取。"
+            android:textColor="#ff666666"
+            android:textSize="14sp"
+            />
+
+        <ImageView
+            android:id="@+id/image_sample_tips_fragment_wx_code"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/pic_code_weixin"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center_horizontal"
+            />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="8dp"
+            android:gravity="center_horizontal"
+            android:text="长按图片可保存到相册"
+            android:textColor="#999999"
+            android:textSize="12sp"
+            />
+
+        <TextView
+            android:id="@+id/tv_sample_tips_fragment_more"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="25dp"
+            android:layout_marginEnd="25dp"
+            android:layout_marginTop="15dp"
+            android:text="更多案例体验，请访问O2OA官网 www.o2oa.net，点击菜单“立即体验”。"
+            android:textColor="#ff666666"
+            android:textSize="14sp"
+            />
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

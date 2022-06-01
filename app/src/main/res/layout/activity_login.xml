@@ -252,12 +252,23 @@
 
                 </LinearLayout>
 
+                <TextView
+                    android:id="@+id/tv_login_sample_tips"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/spacing_normal"
+                    android:layout_below="@+id/relative_login_form"
+                    android:layout_centerHorizontal="true"
+                    android:textSize="@dimen/font_normal"
+                    android:textColor="@color/z_color_text_primary"
+                    android:text="点击查看如何获取体验账号密码" />
+
                 <LinearLayout
                     android:id="@+id/login_sample_alert"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="@dimen/spacing_normal"
-                    android:layout_below="@+id/relative_login_form"
+                    android:layout_below="@+id/tv_login_sample_tips"
                     android:layout_centerHorizontal="true"
                     android:padding="@dimen/spacing_small"
                     android:visibility="visible"
