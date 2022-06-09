@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
               xmlns:android="http://schemas.android.com/apk/res/android"
-              xmlns:app="http://schemas.android.com/apk/res-auto"
-              android:layout_width="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
               android:layout_height="205dp"
               android:layout_marginBottom="@dimen/spacing_normal"
               android:layout_marginEnd="@dimen/spacing_normal"
@@ -15,29 +15,33 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="@dimen/spacing_normal"
-        android:maxLines="1"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginTop="@dimen/spacing_normal"
         android:ellipsize="end"
-        android:text="222"
-        android:textSize="@dimen/font_meeting_time"
-        android:textColor="@color/z_color_title_font"/>
+        android:maxLines="1"
+        tools:text="222"
+        android:textColor="@color/z_color_title_font"
+        android:textSize="@dimen/font_meeting_time" />
+
 
     <ImageView
         android:id="@+id/tv_bbs_main_collect_icon"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/icon_collect_nor"
-        android:layout_alignParentEnd="true"
         android:layout_alignParentTop="true"
-        android:layout_margin="@dimen/spacing_normal"
-        android:paddingEnd="@dimen/spacing_normal"/>
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="@dimen/spacing_normal"
+        android:layout_marginEnd="@dimen/spacing_normal"
+        android:src="@mipmap/icon_collect_nor" />
 
-    <ImageView
+    <net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
         android:id="@+id/tv_bbs_main_content_section_item_icon"
         android:layout_width="100dp"
         android:layout_height="100dp"
         android:src="@mipmap/icon_forum_default"
-        android:layout_centerInParent="true"/>
+        android:scaleType="fitXY"
+        android:layout_centerInParent="true"
+        />
 
     <TextView
         android:id="@+id/tv_bbs_main_content_section_date"
@@ -45,12 +49,13 @@
         android:layout_height="wrap_content"
         android:layout_alignParentStart="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/spacing_normal"
-        android:maxLines="1"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_marginBottom="@dimen/spacing_normal"
         android:ellipsize="end"
-        android:text="7-28"
-        android:textSize="@dimen/font_meeting_time"
-        android:textColor="@color/z_color_title_font"/>
+        android:maxLines="1"
+        tools:text="7-28"
+        android:textColor="@color/z_color_text_hint"
+        android:textSize="@dimen/font_small" />
 
     <TextView
         android:id="@+id/tv_bbs_main_content_section_number"
@@ -58,19 +63,19 @@
         android:layout_height="wrap_content"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"
-        android:layout_margin="@dimen/spacing_normal"
-        android:paddingEnd="@dimen/spacing_normal"
+        android:layout_marginBottom="@dimen/spacing_normal"
+        android:layout_marginEnd="@dimen/spacing_normal"
         android:maxLines="1"
         android:ellipsize="end"
-        android:text="18个"
-        android:textSize="@dimen/font_meeting_time"
-        android:textColor="@color/z_color_title_font"/>
+        tools:text="18个"
+        android:textColor="@color/z_color_text_hint"
+        android:textSize="@dimen/font_small"/>
 
     <ImageView
         android:id="@+id/tv_bbs_main_content_section_item_sign"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:visibility="visible"
+        android:visibility="gone"
         android:src="@mipmap/bbs_section_new_sign"
         android:layout_alignParentEnd="true"
         android:layout_alignParentBottom="true"/>

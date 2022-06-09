@@ -14,6 +14,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.setImageBase64
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
 
 
 class BBSMainCollectionFragment : BaseMVPViewPagerFragment<BBSMainCollectionContract.View, BBSMainCollectionContract.Presenter>(), BBSMainCollectionContract.View {
@@ -28,7 +29,7 @@ class BBSMainCollectionFragment : BaseMVPViewPagerFragment<BBSMainCollectionCont
     val adapter: CommonRecycleViewAdapter<BBSCollectionSectionVO> by lazy { object : CommonRecycleViewAdapter<BBSCollectionSectionVO>(context, items, R.layout.item_bbs_main_content_section_item){
         override fun convert(holder: CommonRecyclerViewHolder, child: BBSCollectionSectionVO) {
             holder.setText(R.id.tv_bbs_main_content_section_item_body, child.sectionName)
-            val sectionIcon = holder.getView<ImageView>(R.id.tv_bbs_main_content_section_item_icon)
+            val sectionIcon = holder.getView<CircleImageView>(R.id.tv_bbs_main_content_section_item_icon)
             sectionIcon.setImageResource(R.mipmap.icon_forum_default)
             sectionIcon.tag = child.id
             sectionIcon.setImageBase64(child.sectionIcon, child.id)
@@ -53,7 +54,7 @@ class BBSMainCollectionFragment : BaseMVPViewPagerFragment<BBSMainCollectionCont
 
     override fun queryAllMyCollectionsResponse(list: List<BBSCollectionSectionVO>) {
         items.clear()
-        if (!list.isEmpty()){
+        if (list.isNotEmpty()){
             items.addAll(list)
             recycler_bbs_main_collection_content.visible()
             tv_bbs_main_collection_empty.gone()

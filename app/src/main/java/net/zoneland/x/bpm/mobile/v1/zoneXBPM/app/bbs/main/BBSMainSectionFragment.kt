@@ -14,6 +14,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.setImageBase64
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
 
 
 class BBSMainSectionFragment : BaseMVPViewPagerFragment<BBSMainSectionContract.View, BBSMainSectionContract.Presenter>(), BBSMainSectionContract.View {
@@ -43,7 +44,7 @@ class BBSMainSectionFragment : BaseMVPViewPagerFragment<BBSMainSectionContract.V
                 } else {
                     collectionIcon.setImageResource(R.mipmap.icon_collect_nor)
                 }
-                val sectionIcon = holder.getView<ImageView>(R.id.tv_bbs_main_content_section_item_icon)
+                val sectionIcon = holder.getView<CircleImageView>(R.id.tv_bbs_main_content_section_item_icon)
                 sectionIcon.setImageResource(R.mipmap.icon_forum_default)
                 sectionIcon.tag = child.id
                 sectionIcon.setImageBase64(child.icon, child.id)
