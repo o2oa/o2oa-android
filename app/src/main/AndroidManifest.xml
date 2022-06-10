@@ -354,9 +354,10 @@
         <!-- android:name=".app.o2.main.MyAppActivity" -->
         <!-- android:label="所有应用" /> -->
         <!-- ai -->
-        <activity
-            android:name=".app.o2.ai.O2AIActivity"
-            android:launchMode="singleTask" /> <!-- calendar -->
+<!--        <activity-->
+<!--            android:name=".app.o2.ai.O2AIActivity"-->
+<!--            android:launchMode="singleTask" /> -->
+        <!-- calendar -->
         <activity
             android:name=".app.calendar.CalendarMainActivity"
             android:label="@string/calendar_name"
@@ -392,7 +393,8 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="${BAIDU_MAP_APPKEY}" /> <!-- baidu yuyin -->
+            android:value="${BAIDU_MAP_APPKEY}" />
+        <!-- baidu yuyin
         <service
             android:name="com.baidu.speech.VoiceRecognitionService"
             android:exported="false" />
@@ -405,7 +407,9 @@
             android:value="${BAIDU_SPEECH_APPKEY}" />
         <meta-data
             android:name="com.baidu.speech.SECRET_KEY"
-            android:value="${BAIDU_SPEECH_SECRET}" /> <!-- 删除临时文件任务 -->
+            android:value="${BAIDU_SPEECH_SECRET}" />
+            -->
+        <!-- 删除临时文件任务 -->
         <service
             android:name=".core.service.ClearTempFileJobService"
             android:exported="true"

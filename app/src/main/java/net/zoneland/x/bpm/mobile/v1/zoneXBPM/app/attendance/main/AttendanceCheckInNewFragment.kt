@@ -8,12 +8,10 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import android.widget.ImageView
 import android.widget.TextView
-import com.baidu.location.BDLocation
-import com.baidu.location.BDLocationListener
-import com.baidu.location.LocationClient
-import com.baidu.location.LocationClientOption
+import com.baidu.location.*
 import com.baidu.mapapi.model.LatLng
 import com.baidu.mapapi.utils.DistanceUtil
+import com.xiaomi.push.it
 import kotlinx.android.synthetic.main.fragment_attendance_check_in.*
 import kotlinx.android.synthetic.main.fragment_attendance_check_in_new.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
@@ -39,7 +37,7 @@ import kotlin.collections.ArrayList
  */
 
 class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInContract.View, AttendanceCheckInContract.Presenter>(),
-        AttendanceCheckInContract.View, BDLocationListener {
+        AttendanceCheckInContract.View {
     override var mPresenter: AttendanceCheckInContract.Presenter = AttendanceCheckInPresenter()
     override fun layoutResId(): Int = R.layout.fragment_attendance_check_in_new
 
@@ -87,7 +85,7 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
 
     //刷新打卡按钮的时间
     private val handler = Handler { msg ->
-        if (msg?.what == 1) {
+        if (msg.what == 1) {
             val nowTime = DateHelper.nowByFormate("HH:mm:ss")
             tv_attendance_check_in_new_now_time?.text = nowTime
         }
@@ -109,8 +107,18 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
     }
 
     override fun initUI() {
+        LocationClient.setAgreePrivacy(true)
         //定位
-        mLocationClient.registerLocationListener(this)
+        mLocationClient.registerLocationListener(object : BDAbstractLocationListener() {
+            override fun onReceiveLocation(location: BDLocation?) {
+                XLog.debug("onReceive locType:${location?.locType}, latitude:${location?.latitude}, longitude:${location?.longitude}")
+                if (location != null) {
+                    myLocation = location
+                    //计算
+                    calNearestWorkplace()
+                }
+            }
+        })
         initBaiduLocation()
         mLocationClient.start()
 
@@ -349,19 +357,19 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
         mPresenter.listMyRecords()
     }
 
-    override fun onReceiveLocation(location: BDLocation?) {
-        // 刷新定位信息
-        XLog.debug("onReceive locType:${location?.locType}, latitude:${location?.latitude}, longitude:${location?.longitude}")
-        if (location != null) {
-            myLocation = location
-            //计算
-            calNearestWorkplace()
-        }
-    }
+//    override fun onReceiveLocation(location: BDLocation?) {
+//        // 刷新定位信息
+//        XLog.debug("onReceive locType:${location?.locType}, latitude:${location?.latitude}, longitude:${location?.longitude}")
+//        if (location != null) {
+//            myLocation = location
+//            //计算
+//            calNearestWorkplace()
+//        }
+//    }
 
-    override fun onConnectHotSpotMessage(p0: String?, p1: Int) {
-        XLog.debug("onConnectHotSpotMessage, p0:$p0, p1:$p1")
-    }
+//    override fun onConnectHotSpotMessage(p0: String?, p1: Int) {
+//        XLog.debug("onConnectHotSpotMessage, p0:$p0, p1:$p1")
+//    }
 
     /**
      * 检查是否进入打卡范围

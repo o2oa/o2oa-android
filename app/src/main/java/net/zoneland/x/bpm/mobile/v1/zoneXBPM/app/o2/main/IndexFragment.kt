@@ -2,8 +2,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main
 
 import android.Manifest
 import android.app.Activity
-import android.graphics.drawable.ColorDrawable
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.View
@@ -13,6 +11,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bigkoo.convenientbanner.ConvenientBanner
+import com.xiaomi.push.it
 import kotlinx.android.synthetic.main.fragment_main_todo.*
 import kotlinx.android.synthetic.main.snippet_shimmer_content.*
 import net.muliba.changeskin.FancySkinManager
@@ -29,7 +28,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v3.CloudDiskV3Activi
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.index.CMSIndexActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.view.CMSWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.main.MeetingMainActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.ai.O2AIActivity
+//import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.ai.O2AIActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.PortalWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.TaskWebViewActivity
@@ -47,12 +46,12 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.persistence.MyAppListObject
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.ToDoFragmentListViewItemVO
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderOptions
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.zxing.activity.CaptureActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.DividerItemDecoration
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.SpacesItemDecoration
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
@@ -87,22 +86,23 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
                     activity.go<FlutterConnectActivity>(FlutterConnectActivity.startFlutterAppWithRoute(ApplicationEnum.MindMap.key))
                 }
                 ApplicationEnum.O2AI.key -> {
-                    PermissionRequester(activity)
-                            .request(Manifest.permission.RECORD_AUDIO)
-                            .o2Subscribe {
-                                onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
-                                    XLog.info("granted:$granted , shouldShowRequest:$shouldShowRequestPermissionRationale, denied:$deniedPermissions")
-                                    if (!granted) {
-                                        O2DialogSupport.openAlertDialog(activity, activity.getString(R.string.message_login_ai_permission_error))
-                                    } else {
-                                        activity.go<O2AIActivity>()
-                                    }
-                                }
-                                onError { e, _ ->
-                                    XLog.error("检查权限出错", e)
-                                    O2DialogSupport.openAlertDialog(activity, activity.getString(R.string.message_login_ai_permission_error))
-                                }
-                            }
+                    XToast.toastShort(activity, "不支持！")
+//                    PermissionRequester(activity)
+//                            .request(Manifest.permission.RECORD_AUDIO)
+//                            .o2Subscribe {
+//                                onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
+//                                    XLog.info("granted:$granted , shouldShowRequest:$shouldShowRequestPermissionRationale, denied:$deniedPermissions")
+//                                    if (!granted) {
+//                                        O2DialogSupport.openAlertDialog(activity, activity.getString(R.string.message_login_ai_permission_error))
+//                                    } else {
+//                                        activity.go<O2AIActivity>()
+//                                    }
+//                                }
+//                                onError { e, _ ->
+//                                    XLog.error("检查权限出错", e)
+//                                    O2DialogSupport.openAlertDialog(activity, activity.getString(R.string.message_login_ai_permission_error))
+//                                }
+//                            }
 
                 }
                 ALL_APP_ID -> {
