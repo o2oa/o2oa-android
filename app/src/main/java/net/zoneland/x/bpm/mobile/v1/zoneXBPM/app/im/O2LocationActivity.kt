@@ -71,7 +71,7 @@ class O2LocationActivity : AppCompatActivity(), BDLocationListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_o2_location)
-
+        LocationClient.setAgreePrivacy(true) // 百度地图必须添加的
         //数据初始化
         mode = intent.getIntExtra(mode_key, 0)
         locationData = intent.getParcelableExtra(location_data_key)
