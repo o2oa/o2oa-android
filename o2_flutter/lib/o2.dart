@@ -1,4 +1,42 @@
 
+import 'package:flutter/material.dart';
+
+///
+/// 主题色
+///
+const String blueThemeKey = 'blue';
+const String redThemeKey = 'red';
+const Color o2Red = Color.fromARGB(255, 251, 71, 71);
+const Color o2Blue = Color.fromARGB(255, 0, 139, 230);
+const Color o2Dark = Color.fromARGB(255, 58, 60, 65);
+final MaterialColor o2RedSwatch =  MaterialColor(o2Red.value,
+  const <int, Color>{
+    50:  o2Red,
+    100: o2Red,
+    200: o2Red,
+    300: o2Red,
+    400: o2Red,
+    500: o2Red,
+    600: o2Red,
+    700: o2Red,
+    800: o2Red,
+    900: o2Red,
+  },
+);
+final MaterialColor o2BlueSwatch =  MaterialColor(o2Blue.value,
+  const <int, Color>{
+    50:  o2Blue,
+    100: o2Blue,
+    200: o2Blue,
+    300: o2Blue,
+    400: o2Blue,
+    500: o2Blue,
+    600: o2Blue,
+    700: o2Blue,
+    800: o2Blue,
+    900: o2Blue,
+  },
+);
 ///
 /// web服务器上下文
 ///

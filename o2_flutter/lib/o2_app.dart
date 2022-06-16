@@ -1,7 +1,13 @@
 
-
+import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:o2_flutter/common/routers/application.dart';
+import 'package:o2_flutter/common/routers/routers.dart';
+import 'package:o2_flutter/common/utils/o2_api_manager.dart';
+import 'package:o2_flutter/common/utils/o2_user_manager.dart';
+import 'package:o2_flutter/common/utils/shared_preference_manager.dart';
+import 'package:o2_flutter/common/utils/toast_util.dart';
 import 'package:o2_flutter/o2.dart';
 
 ///
@@ -9,12 +15,14 @@ import 'package:o2_flutter/o2.dart';
 ///
 class O2App extends StatefulWidget {
   final String route;
-  O2App(this.route);
+  O2App(this.route, {Key? key}) : super(key: key) {
+    final router = FluroRouter();
+    Routes.configureRoutes(router);
+    AppRouterManager.instance.initRouter(router);
+  }
 
   @override
-  State<StatefulWidget> createState() {
-    return _O2AppState(this.route);
-  }
+  State<StatefulWidget> createState()  => _O2AppState();
 }
 
 
@@ -22,59 +30,136 @@ class _O2AppState extends State<O2App> {
   //创建一个通道，通道的name字符串要和Native端的一样
   static const methodChannel = MethodChannel(native_channel_name);
 
-  final String route;
+  MaterialColor primarySwatch = o2RedSwatch;
+  bool isInit = false;
+  String toRoute = '';
 
-  _O2AppState(this.route);
-
-
+  void setTheme() {
+    //初始化主题
+    String? theme = SharedPreferenceManager.instance.theme;
+    if (theme != null && theme == blueThemeKey) {
+      primarySwatch = o2BlueSwatch;
+    }
+  }
+  /// 读取从 android端 同步过来的服务器信息
   void initO2Config() async {
     try {
       var map = await methodChannel.invokeMethod(method_name_o2_config);
       if (map != null) {
-        print('找到了Native的频道。。。。。。。。');
+        debugPrintStack(label: '找到了Native的频道。。。。。。。。');
         if (map is Map) {
           if (map.containsKey(param_name_o2_theme)) {
-            var theme = map[param_name_o2_theme];
-            print(theme);
+            await SharedPreferenceManager.instance
+                .initTheme(map[param_name_o2_theme]);
           }
           if (map.containsKey(param_name_o2_user)) {
-            var user = map[param_name_o2_user];
-            print(user);
+            await O2UserManager.instance.initUser(map[param_name_o2_user]);
           }
           if (map.containsKey(param_name_o2_unit)) {
-            var unit = map[param_name_o2_unit];
-            print(unit);
+            await O2ApiManager.instance.initO2Unit(map[param_name_o2_unit]);
           }
           if (map.containsKey(param_name_o2_center_server)) {
-            var server = map[param_name_o2_center_server];
-            print(server);
+            await O2ApiManager.instance
+                .initO2CenterServer(map[param_name_o2_center_server]);
           }
         } else {
-          print('.....不知道是啥。。。');
+          debugPrintStack(label: '.....不知道是啥。。。');
         }
+        setState(() {
+          setTheme();
+          isInit = true;
+        });
+         
       } else {
-        print('没有找到Native的频道。。。。。。。。');
+         setState(() {
+          setTheme();
+          isInit = true;
+          // 错误页面
+          toRoute = Routes.errorLoad;
+        });
       }
     } catch (e) {
       print(e);
+      setState(() {
+          setTheme();
+          isInit = true;
+          // 错误页面
+          toRoute = Routes.errorLoad;
+        });
     }
   }
-
   
   @override
   void initState() {
     super.initState();
-    print("进来的路由： $route");
+    toRoute = widget.route;
     initO2Config();
   }
 
   
   @override
   Widget build(BuildContext context) {
-    return Container(
+    if (isInit) {
+      return MaterialApp(
+        title: '',
+        theme: ThemeData(
+          primarySwatch: primarySwatch,
+        ),
+        home:  O2SplashPage(toRoute),
+        onGenerateRoute: AppRouterManager.instance.router?.generator,
+      );
+    } else {
+      return Container(
         color: Colors.white,
         child: const Center(child: CircularProgressIndicator()),
       );
+    }
   }
 
+}
+
+class O2SplashPage extends StatefulWidget {
+  final String route;
+
+  const O2SplashPage(this.route, {Key? key}) : super(key: key);
+
+  @override
+  State<StatefulWidget> createState() {
+    return _O2SplashPageState();
+  }
+}
+
+
+class _O2SplashPageState extends State<O2SplashPage> {
+  _O2SplashPageState();
+
+
+  @override
+  void initState() {
+    super.initState();
+    countDown();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    // 初始化
+    ToastHelper.init(context);
+    
+    return Scaffold(
+      body: Container(
+        color: Colors.white,
+        child: const Center(child: CircularProgressIndicator()),
+      ),
+    );
+  }
+
+  void countDown() {
+    var duration = const Duration(milliseconds: 500);
+    Future.delayed(duration, routeTo);
+  }
+
+  void routeTo() {
+    debugPrintStack(label: 'route To ...route: $widget.route');
+    AppRouterManager.instance.router?.navigateTo(context,  widget.route, clearStack: true);
+  }
 }
