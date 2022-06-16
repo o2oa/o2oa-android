@@ -37,7 +37,7 @@ allprojects {
             url "https://oss.sonatype.org/content/repositories/snapshots/"
         }
         //o2oa
-        maven { url "http://maven.o2oa.net/repository/maven-public/" }
+//        maven { url "http://maven.o2oa.net/repository/maven-public/" }
     }
 
 }

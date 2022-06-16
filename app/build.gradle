@@ -65,8 +65,8 @@ task printVersionName {
 
 
 android {
-    compileSdkVersion 30
-    buildToolsVersion "30.0.3"
+    compileSdkVersion 31
+    buildToolsVersion "31.0.0"
     sourceSets {
         main {
             jniLibs.srcDir 'libs'
@@ -99,14 +99,15 @@ android {
     defaultConfig {
         applicationId "net.zoneland.x.bpm.mobile.v1.zoneXBPM"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode project.property("o2.versionCode").toInteger()
         versionName project.property("o2.versionName").toString()
         multiDexEnabled true
         ndk {
             //选择要添加的对应cpu类型的.so库。
 //            abiFilters 'armeabi', 'armeabi-v7a'
-            abiFilters 'armeabi-v7a', 'arm64-v8a'
+//            abiFilters 'armeabi-v7a', 'arm64-v8a'
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
         }
         multiDexKeepProguard file('multidex_keep_file.pro')
         vectorDrawables.useSupportLibrary = true
@@ -228,10 +229,8 @@ dependencies {
     implementation(name: 'material-calendarview-fancy-1.1', ext: 'aar')
     implementation project(path: ':o2_auth_sdk')
 
-    implementation(name: 'flutterpack-release', ext: 'aar')
-    implementation(name: 'shared_preferences-release', ext: 'aar')
-    implementation(name: 'image_picker-release', ext: 'aar')
-    implementation(name: 'path_provider-release', ext: 'aar')
+//    // flutter 相关的aar
+    implementation project(':flutter')
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.anko:anko-common:$anko_version"

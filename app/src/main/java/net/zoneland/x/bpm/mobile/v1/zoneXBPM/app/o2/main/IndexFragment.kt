@@ -11,7 +11,7 @@ import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bigkoo.convenientbanner.ConvenientBanner
-import com.xiaomi.push.it
+import io.flutter.embedding.android.FlutterActivity.createDefaultIntent
 import kotlinx.android.synthetic.main.fragment_main_todo.*
 import kotlinx.android.synthetic.main.snippet_shimmer_content.*
 import net.muliba.changeskin.FancySkinManager
@@ -28,7 +28,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v3.CloudDiskV3Activi
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.index.CMSIndexActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.view.CMSWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.main.MeetingMainActivity
-//import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.ai.O2AIActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.PortalWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.TaskWebViewActivity
