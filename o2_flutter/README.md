@@ -1,11 +1,12 @@
 # o2_flutter
 
-A new Flutter module project.
+flutter 模块，目前脑图使用flutter开发的。这里包含了所有的flutter源码。
 
-## Getting Started
+在这个目录下执行，如下命令打包成aar包
+```shell
+flutter build aar
+```
 
-For help getting started with Flutter development, view the online
-[documentation](https://flutter.dev/).
+在 `app/build.gradle` 文件中引入打包结果。
 
-For instructions integrating Flutter modules to your existing applications,
-see the [add-to-app documentation](https://flutter.dev/docs/development/add-to-app).
+具体可以参考flutter官方文档：[https://docs.flutter.dev/development/add-to-app/android/project-setup](https://docs.flutter.dev/development/add-to-app/android/project-setup)

@@ -66,7 +66,7 @@ task printVersionName {
 
 android {
     compileSdkVersion 31
-    buildToolsVersion "31.0.0"
+    buildToolsVersion "30.0.3"
     sourceSets {
         main {
             jniLibs.srcDir 'libs'
@@ -200,6 +200,7 @@ android {
 buildscript {
     repositories {
         mavenCentral()
+
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -211,6 +212,11 @@ buildscript {
 repositories {
     flatDir {
         dirs 'libs'
+    }
+    //o2oa
+    maven { url "../o2_flutter/buildAAR/host/outputs/repo" }
+    maven {
+        url 'https://storage.googleapis.com/download.flutter.io'
     }
 }
 
@@ -230,7 +236,16 @@ dependencies {
     implementation project(path: ':o2_auth_sdk')
 
 //    // flutter 相关的aar
-    implementation project(':flutter')
+    // flutter模块开发调试用
+//    implementation project(':flutter')
+//    debugImplementation 'io.flutter.plugins.pathprovider:path_provider_android_debug:1.0'
+    implementation 'io.flutter.plugins.pathprovider:path_provider_android_release:1.0'
+//    debugImplementation 'io.flutter.plugins.sharedpreferences:shared_preferences_android_debug:1.0'
+    implementation 'io.flutter.plugins.sharedpreferences:shared_preferences_android_release:1.0'
+//    debugImplementation 'net.o2oa.app.flutter.o2_flutter:flutter_debug:1.0'
+    implementation 'net.o2oa.app.flutter.o2_flutter:flutter_release:1.0'
+
+
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.anko:anko-common:$anko_version"
