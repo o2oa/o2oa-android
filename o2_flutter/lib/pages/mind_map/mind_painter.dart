@@ -19,14 +19,14 @@ typedef RefreshImage = Function(String, String);
 
 class MindMapPainter extends CustomPainter {
 
-  final LinePaintElement linePaintElement;
+  final LinePaintElement? linePaintElement;
   final NodePaintElement root ;
-  final RRectPaintElement selectRect;
+  final RRectPaintElement? selectRect;
 
   final Map<String, ui.Image> mindMapImages;
   final Map<int, ui.Image> priorityImages;
   final Map<int, ui.Image> progressImages;
-  final ui.Image linkIconImage;
+  final ui.Image? linkIconImage;
   ui.Paint myPaint =  ui.Paint();
 
   MindMapPainter({
@@ -43,10 +43,13 @@ class MindMapPainter extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     paintNodeInner(canvas, root);
     paintLines(canvas);
-    myPaint.style = selectRect.style.style;
-    myPaint.color = selectRect.style.color;
-    myPaint.strokeWidth = selectRect.style.strokeWidth;
-    canvas.drawRRect(selectRect.rrect, myPaint);
+    if (selectRect != null) {
+      myPaint.style = selectRect!.style.style;
+      myPaint.color = selectRect!.style.color;
+      myPaint.strokeWidth = selectRect!.style.strokeWidth;
+      canvas.drawRRect(selectRect!.rrect, myPaint);
+    }
+    
   }
 
   ///
@@ -135,12 +138,12 @@ class MindMapPainter extends CustomPainter {
     // 超链接
     if(elements.containsKey(NodeElement.hyperlink)) {
       ImagePaintElement? image = elements[NodeElement.hyperlink] as ImagePaintElement?;
-      if (image != null){
+      if (image != null && linkIconImage != null) {
         myPaint.style = image.style.style;
         myPaint.color = image.style.color;
         canvas.drawImageRect(
-            linkIconImage,
-            Rect.fromLTWH(0.0, 0.0, linkIconImage.width.toDouble(), linkIconImage.height.toDouble()),
+            linkIconImage!,
+            Rect.fromLTWH(0.0, 0.0, linkIconImage!.width.toDouble(), linkIconImage!.height.toDouble()),
             image.rect,
             myPaint);
       }
@@ -159,11 +162,11 @@ class MindMapPainter extends CustomPainter {
   /// 画连接线
   ///
   void paintLines(Canvas canvas) {
-    final lines = linePaintElement.lines;
-    if(lines.isNotEmpty) {
-      myPaint.style = linePaintElement.style.style;
-      myPaint.strokeWidth = linePaintElement.style.strokeWidth;
-      myPaint.color = linePaintElement.style.color;
+    final lines = linePaintElement?.lines;
+    if(lines !=null && lines.isNotEmpty) {
+      myPaint.style = linePaintElement!.style.style;
+      myPaint.strokeWidth = linePaintElement!.style.strokeWidth;
+      myPaint.color = linePaintElement!.style.color;
       for (var line in lines) {
 //          final bezierControlX = line.start.dx < line.end.dx ? line.start.dx + (line.end.dx - line.start.dx) / 3: line.start.dx - (line.start.dx - line.end.dx) / 3;
 //          final bezierControlY = line.end.dy;
@@ -233,15 +236,15 @@ class MindMapPainter extends CustomPainter {
   }
 
   bool checkLinesChanged(LinePaintElement oldlinePaint) {
-    if(linePaintElement.lines.length != oldlinePaint.lines.length) {
+    if(linePaintElement?.lines.length != oldlinePaint.lines.length) {
       return true;
     }
-    if(linePaintElement.style.style != oldlinePaint.style.style
-        || linePaintElement.style.color != oldlinePaint.style.color
-        || linePaintElement.style.strokeWidth != oldlinePaint.style.strokeWidth) {
+    if(linePaintElement?.style.style != oldlinePaint.style.style
+        || linePaintElement?.style.color != oldlinePaint.style.color
+        || linePaintElement?.style.strokeWidth != oldlinePaint.style.strokeWidth) {
       return true;
     }
-    var list = linePaintElement.lines;
+    var list = linePaintElement?.lines ?? [];
     var oldlist = oldlinePaint.lines;
     for(var line in list) {
       bool isInOld = false;

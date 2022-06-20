@@ -11,7 +11,7 @@ class MindMapTextEdit extends StatefulWidget {
   final double inputHeight;
   final Color inputFillColor;
   final bool autoFocus;
-  final TextSpan textSpan;
+  final TextSpan? textSpan;
   final MindMapTextEditDone textEditDone;
 
   const MindMapTextEdit(
@@ -44,7 +44,7 @@ class MindMapState extends State<MindMapTextEdit> {
 
   @override
   Widget build(BuildContext context) {
-    final text = widget.textSpan.text ?? ' ';
+    final text = widget.textSpan?.text ?? ' ';
     _controller.text = text;
     _controller.selection = TextSelection(baseOffset: text.length, extentOffset: text.length);
     if (widget.autoFocus) {
@@ -60,7 +60,7 @@ class MindMapState extends State<MindMapTextEdit> {
       height: widget.inputHeight,
       child: widget.autoFocus ? TextField(
         focusNode: _textNode,
-        style: widget.textSpan.style,
+        style: widget.textSpan?.style,
         decoration: InputDecoration.collapsed(
             hintText: '',
             filled: true,

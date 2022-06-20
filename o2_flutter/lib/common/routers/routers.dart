@@ -11,5 +11,6 @@ class Routes {
     router.notFoundHandler = notFoundHandler;
     router.define(errorLoad, handler: errorLoadHandler);
     router.define(mindMap, handler: mindMapHandler);
+    router.define(mindMapView, handler: mindMapViewHandler);
   }
 }

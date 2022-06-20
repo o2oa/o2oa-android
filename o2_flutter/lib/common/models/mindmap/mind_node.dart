@@ -66,7 +66,7 @@ class NodeData {
       image: json['image'],
       imageId: json['imageId'],
       imageTitle: json['imageTitle'],
-      imageSize: ImageSize.fromJson((json['imageSize'] is String) ? null : json['imageSize']),
+      imageSize: json['imageSize'] == null ? null : ImageSize.fromJson(json['imageSize'] as Map<String, dynamic>),
       hyperlink: json['hyperlink'],
       hyperlinkTitle: json['hyperlinkTitle'],
     );

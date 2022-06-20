@@ -60,7 +60,7 @@ class O2ApiManager {
   ///
   /// 文件地址
   ///
-  String getFileURL(String fileId) {
+  String getFileURL(String? fileId) {
     //http://dev.o2oa.net:20020/x_file_assemble_control/jaxrs/file/b871a896-93f7-4245-8e5a-100fd4a67d9d/download/stream
     String? baseUrl = getModuleBaseUrl(O2DistributeModuleEnum.x_file_assemble_control);
     if(fileId != null && fileId != 'null' && fileId.isNotEmpty && baseUrl != null && baseUrl.isNotEmpty) {

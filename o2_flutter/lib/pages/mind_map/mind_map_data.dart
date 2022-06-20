@@ -22,9 +22,9 @@ class MindMapData {
   factory MindMapData.fromJson(Map<String, dynamic> json) {
     return  MindMapData(
         Node.fromJson(json['root']),
-        json['template'],
-        json['theme'],
-        json['version']
+        json['template'] ?? 'default',
+        json['theme'] ?? 'fresh-blue',
+        json['version'] ?? '1.0'
     );
   }
 

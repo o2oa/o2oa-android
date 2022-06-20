@@ -1,7 +1,6 @@
 
 import 'package:fluro/fluro.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:o2_flutter/common/routers/application.dart';
 import 'package:o2_flutter/common/routers/routers.dart';
 import 'package:o2_flutter/common/utils/o2_api_manager.dart';
@@ -16,9 +15,12 @@ import 'package:o2_flutter/o2.dart';
 class O2App extends StatefulWidget {
   final String route;
   O2App(this.route, {Key? key}) : super(key: key) {
+    // 初始化路由
     final router = FluroRouter();
     Routes.configureRoutes(router);
     AppRouterManager.instance.initRouter(router);
+    // 创建一个通道 和 原生通信
+    O2MethodChannelManager.instance.initMethodChannel();
   }
 
   @override
@@ -27,9 +29,7 @@ class O2App extends StatefulWidget {
 
 
 class _O2AppState extends State<O2App> {
-  //创建一个通道，通道的name字符串要和Native端的一样
-  static const methodChannel = MethodChannel(native_channel_name);
-
+ 
   MaterialColor primarySwatch = o2RedSwatch;
   bool isInit = false;
   String toRoute = '';
@@ -44,7 +44,7 @@ class _O2AppState extends State<O2App> {
   /// 读取从 android端 同步过来的服务器信息
   void initO2Config() async {
     try {
-      var map = await methodChannel.invokeMethod(method_name_o2_config);
+      var map = await O2MethodChannelManager.instance.methodChannel.invokeMethod(method_name_o2_config);
       if (map != null) {
         debugPrintStack(label: '找到了Native的频道。。。。。。。。');
         if (map is Map) {

@@ -1,5 +1,12 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.flutter
 
+import android.Manifest
+import android.app.Activity
+import android.content.Intent
+import android.net.Uri
+import android.provider.MediaStore
+import android.provider.Settings
+import android.text.TextUtils
 import io.flutter.embedding.android.FlutterFragment
 import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.BinaryMessenger
@@ -9,12 +16,22 @@ import io.flutter.plugins.GeneratedPluginRegistrant
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.APIAssemblesData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.APIDistributeData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.APIWebServerData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AuthenticationInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectUnitData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
+import java.io.File
+import java.io.IOException
 
 /**
  * flutter 程序的容器
@@ -100,9 +117,115 @@ class FlutterConnectFragment: FlutterFragment(), MethodChannel.MethodCallHandler
                 XLog.error("$e")
             }
             result.success(map)
+        } else if (call.method == FlutterO2Utils.MethodNameO2PickImage) {
+            imagePicker(call, result)
         } else {
             XLog.error("没有实现当前方法, method:${call.method}")
-            result.error("没有实现当前方法", "", "")
+            result.error("没有实现当前方法", "没有实现当前方法", "")
+        }
+    }
+
+    private fun imagePicker(call: MethodCall, result: MethodChannel.Result) {
+        var source = "gallery" // gallery,camera
+        if (call.hasArgument("source")) {
+            source = call.argument<String>("source") ?: "gallery"
+            XLog.debug("有source： $source")
+        }
+        XLog.debug("打开图片选择器： $source")
+        when (source) {
+            "gallery" -> {
+                openAlbum { file ->
+                    backImagePicker(file, result)
+                }
+            }
+            "camera" -> {
+                checkCameraPermission { file ->
+                    backImagePicker(file, result)
+                }
+            }
+            else -> {
+                result.error("参数错误", "参数错误", "")
+            }
+        }
+    }
+
+    private fun backImagePicker(file: String?, result: MethodChannel.Result) {
+        val map = HashMap<String, String>()
+        map[FlutterO2Utils.parameterNamePickerImageFile] = file ?: ""
+        result.success(map)
+    }
+
+    // 选择图片
+    private fun openAlbum(callback: (String?)->Unit) {
+            PicturePickUtil().withAction(requireActivity())
+                .forResult { files ->
+                    if (files != null && files.isNotEmpty()) {
+                        callback(files[0])
+                    } else {
+                        callback(null)
+                    }
+                }
+    }
+
+    private fun checkCameraPermission(callback: (String?)->Unit) {
+        PermissionRequester(requireActivity()).request(Manifest.permission.CAMERA)
+            .o2Subscribe {
+                onNext {  (granted, _, _) ->
+                    if (!granted){
+                        O2DialogSupport.openAlertDialog(requireActivity(), getString(R.string.dialog_msg_camera_need_permission), { permissionSetting() })
+                        callback(null)
+                    } else {
+                        openCamera(callback)
+                    }
+                }
+                onError { e, _ ->
+                    XLog.error("", e)
+                    callback(null)
+                }
+            }
+
+    }
+    private fun permissionSetting() {
+        val packageUri = Uri.parse("package:${requireActivity().packageName}")
+        startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageUri))
+    }
+    private var cameraImagePath: String? = null
+    private  val TAKE_FROM_CAMERA_CODE = 1004
+    private var pickCameraBack: ((String?)->Unit)? = null
+
+    // 拍照
+    private fun openCamera(callback: (String?)->Unit) {
+        Intent(MediaStore.ACTION_IMAGE_CAPTURE).also { takePictureIntent ->
+            // Ensure that there's a camera activity to handle the intent
+            takePictureIntent.resolveActivity(requireActivity().packageManager)?.also {
+                // Create the File where the photo should go
+                val photoFile: File? = try {
+                    FileExtensionHelper.createImageFile(requireActivity())
+                } catch (ex: IOException) {
+                    XToast.toastShort(requireActivity(), getString(R.string.message_camera_file_create_error))
+                    null
+                }
+                // Continue only if the File was successfully created
+                photoFile?.also {
+                    pickCameraBack = callback
+                    cameraImagePath = it.absolutePath
+                    val photoURI = FileUtil.getUriFromFile(requireActivity(), it)
+                    takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
+                    startActivityForResult(takePictureIntent, TAKE_FROM_CAMERA_CODE)
+                }
+            }
+        }
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == Activity.RESULT_OK && requestCode == TAKE_FROM_CAMERA_CODE) {
+            //拍照
+            XLog.debug("拍照////返回 ")
+            if (pickCameraBack != null) {
+                pickCameraBack?.invoke(cameraImagePath)
+                pickCameraBack = null
+            }
         }
     }
 

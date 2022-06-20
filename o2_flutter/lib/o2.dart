@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 ///
 /// 主题色
@@ -65,6 +66,12 @@ const String native_channel_name = 'net.o2oa.flutter/native_get';
 ///
 // 获取配置信息 包括user、unit、webServer、assembleServer
 const String method_name_o2_config = 'o2Config';
+
+/// 
+/// native传输的方法名称
+/// 这个方法调用原生代码 打开图片选择器
+const String method_name_o2_pick_image = 'o2PickImage';
+
 ///
 /// native传输的字段key
 ///
@@ -76,3 +83,23 @@ const String param_name_o2_user = 'o2UserInfo';
 const String param_name_o2_unit = 'o2UnitInfo';
 // web server json字段
 const String param_name_o2_center_server = 'o2CenterServerInfo';
+
+const String param_name_o2_picker_image_file = 'file';
+
+
+
+class O2MethodChannelManager {
+  static final O2MethodChannelManager _instance = O2MethodChannelManager._internal();
+  // 私有化
+  O2MethodChannelManager._internal();
+
+  static O2MethodChannelManager get instance  => _instance;
+  
+  late MethodChannel methodChannel;
+
+  void initMethodChannel() {
+     //创建一个通道，通道的name字符串要和Native端的一样
+    methodChannel = const MethodChannel(native_channel_name);
+
+  }
+}
