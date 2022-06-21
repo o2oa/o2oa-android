@@ -4,6 +4,7 @@ import android.graphics.drawable.GradientDrawable
 import android.os.Handler
 import android.os.Message
 import android.text.TextUtils
+import android.widget.EditText
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import android.widget.ImageView
@@ -163,23 +164,46 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
             return
         }
 
-        if (myLocation != null ){
+        if (myLocation != null && !TextUtils.isEmpty(myLocation?.addrStr)){
             tv_attendance_check_in_new_check_in.text = getString(R.string.attendance_check_in_knock_loading)
             tv_attendance_check_in_new_now_time.gone()
             val signDate = DateHelper.nowByFormate("yyyy-MM-dd")
             val signTime = DateHelper.nowByFormate("HH:mm:ss")
             val checkType = calCheckType()
             if (!isInCheckInPositionRange) {
-                O2DialogSupport.openConfirmDialog(activity, getString(R.string.attendance_message_work_out), { _ ->
-                    mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
-                        myLocation!!.addrStr, "", signDate, signTime, "", checkType, true, "")
-                })
+                if (activity != null) {
+                    val dialog = O2DialogSupport.openCustomViewDialog(
+                        activity!!,
+                        getString(R.string.attendance_message_work_out),
+                        R.layout.dialog_name_modify
+                    ) { dialog ->
+                        val text = dialog.findViewById<EditText>(R.id.dialog_name_editText_id)
+                        mPresenter.checkIn(
+                            myLocation!!.latitude.toString(),
+                            myLocation!!.longitude.toString(),
+                            myLocation!!.addrStr,
+                            text.text.toString(),
+                            signDate,
+                            signTime,
+                            "",
+                            checkType,
+                            true,
+                            ""
+                        )
+                    }
+                    val text = dialog.findViewById<EditText>(R.id.dialog_name_editText_id)
+                    text.hint = getString(R.string.attendance_message_work_out_hint)
+                }
+//                O2DialogSupport.openConfirmDialog(activity, getString(R.string.attendance_message_work_out), { _ ->
+//
+//                })
             }else {
                 mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
                     myLocation!!.addrStr, "", signDate, signTime, "", checkType, false, checkInPosition?.placeName)
             }
 
         }else {
+            XLog.error("没有定位到信息，可能是定位权限没开！！！")
             XToast.toastShort(activity!!, R.string.attendance_message_no_location_info)
         }
     }
@@ -195,7 +219,7 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
                 XToast.toastShort(activity, R.string.attendance_message_donot_need_check_in)
                 return
             }
-            if (myLocation != null ) {
+            if (myLocation != null && !TextUtils.isEmpty(myLocation?.addrStr) ) {
                 if (previewCheckInData?.signSeq != 1) {
                     O2DialogSupport.openConfirmDialog(activity, "确定要进行【${previewCheckInData?.getSignSeqString()}】打开？", {_ ->
                         checkInPostNewConfirm()
@@ -204,6 +228,7 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
                     checkInPostNewConfirm()
                 }
             }else {
+                XLog.error("没有定位到信息，可能是定位权限没开！！！")
                 XToast.toastShort(activity!!, R.string.attendance_message_no_location_info)
             }
         }
@@ -231,12 +256,53 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
      * 更新打卡
      */
     private fun updateCheckIn(info: MobileScheduleInfo) {
-        O2DialogSupport.openConfirmDialog(activity, "确定要更新这条打卡记录？",{ _ ->
+        if (myLocation != null && !TextUtils.isEmpty(myLocation?.addrStr) ) {
             val signDate = DateHelper.nowByFormate("yyyy-MM-dd")
             val signTime = DateHelper.nowByFormate("HH:mm:ss")
-            mPresenter.checkIn(myLocation!!.latitude.toString(), myLocation!!.longitude.toString(),
-                    myLocation!!.addrStr, "", signDate, signTime, info.recordId, info.checkinType, !isInCheckInPositionRange, checkInPosition?.placeName)
-        })
+            if (isInCheckInPositionRange) {
+                O2DialogSupport.openConfirmDialog(activity, getString(R.string.attendance_message_update_check_in_record_confirm), { _ ->
+                    mPresenter.checkIn(
+                        myLocation!!.latitude.toString(),
+                        myLocation!!.longitude.toString(),
+                        myLocation!!.addrStr,
+                        "",
+                        signDate,
+                        signTime,
+                        info.recordId,
+                        info.checkinType,
+                        false,
+                        checkInPosition?.placeName
+                    )
+                })
+            } else {
+                if (activity != null) {
+                    val dialog = O2DialogSupport.openCustomViewDialog(
+                        activity!!,
+                        getString(R.string.attendance_message_work_out),
+                        R.layout.dialog_name_modify
+                    ) { dialog ->
+                        val text = dialog.findViewById<EditText>(R.id.dialog_name_editText_id)
+                        mPresenter.checkIn(
+                            myLocation!!.latitude.toString(),
+                            myLocation!!.longitude.toString(),
+                            myLocation!!.addrStr,
+                            text.text.toString(),
+                            signDate,
+                            signTime,
+                            info.recordId,
+                            info.checkinType,
+                            true,
+                            ""
+                        )
+                    }
+                    val text = dialog.findViewById<EditText>(R.id.dialog_name_editText_id)
+                    text.hint = getString(R.string.attendance_message_work_out_hint)
+                }
+            }
+        } else {
+            XLog.error("没有定位到信息，可能是定位权限没开！！！")
+            XToast.toastShort(activity!!, R.string.attendance_message_no_location_info)
+        }
     }
 
 

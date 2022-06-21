@@ -65,12 +65,12 @@ class AttendanceMainActivity : BaseMVPActivity<AttendanceMainContract.View, Atte
         selected(0)
 
         mPresenter.loadAttendanceAdmin()
-
+        checkPermission()
     }
 
     override fun onResume() {
         super.onResume()
-        checkPermission()
+
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
