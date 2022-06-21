@@ -178,18 +178,22 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
                         R.layout.dialog_name_modify
                     ) { dialog ->
                         val text = dialog.findViewById<EditText>(R.id.dialog_name_editText_id)
-                        mPresenter.checkIn(
-                            myLocation!!.latitude.toString(),
-                            myLocation!!.longitude.toString(),
-                            myLocation!!.addrStr,
-                            text.text.toString(),
-                            signDate,
-                            signTime,
-                            "",
-                            checkType,
-                            true,
-                            ""
-                        )
+                        if (TextUtils.isEmpty(text.text.toString())) {
+                            XToast.toastShort(activity!!, R.string.attendance_message_work_out_hint)
+                        } else {
+                            mPresenter.checkIn(
+                                myLocation!!.latitude.toString(),
+                                myLocation!!.longitude.toString(),
+                                myLocation!!.addrStr,
+                                text.text.toString(),
+                                signDate,
+                                signTime,
+                                "",
+                                checkType,
+                                true,
+                                ""
+                            )
+                        }
                     }
                     val text = dialog.findViewById<EditText>(R.id.dialog_name_editText_id)
                     text.hint = getString(R.string.attendance_message_work_out_hint)
@@ -282,18 +286,22 @@ class AttendanceCheckInNewFragment : BaseMVPViewPagerFragment<AttendanceCheckInC
                         R.layout.dialog_name_modify
                     ) { dialog ->
                         val text = dialog.findViewById<EditText>(R.id.dialog_name_editText_id)
-                        mPresenter.checkIn(
-                            myLocation!!.latitude.toString(),
-                            myLocation!!.longitude.toString(),
-                            myLocation!!.addrStr,
-                            text.text.toString(),
-                            signDate,
-                            signTime,
-                            info.recordId,
-                            info.checkinType,
-                            true,
-                            ""
-                        )
+                        if (TextUtils.isEmpty(text.text.toString())) {
+                            XToast.toastShort(activity!!, R.string.attendance_message_work_out_hint)
+                        } else {
+                            mPresenter.checkIn(
+                                myLocation!!.latitude.toString(),
+                                myLocation!!.longitude.toString(),
+                                myLocation!!.addrStr,
+                                text.text.toString(),
+                                signDate,
+                                signTime,
+                                info.recordId,
+                                info.checkinType,
+                                true,
+                                ""
+                            )
+                        }
                     }
                     val text = dialog.findViewById<EditText>(R.id.dialog_name_editText_id)
                     text.hint = getString(R.string.attendance_message_work_out_hint)
