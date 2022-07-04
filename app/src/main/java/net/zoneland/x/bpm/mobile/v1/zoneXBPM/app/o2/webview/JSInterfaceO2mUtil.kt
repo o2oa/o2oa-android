@@ -290,8 +290,16 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
                 activity.runOnUiThread {
                     val uri = Uri.parse(schema)   //   o2oa://" 相当于 http://www.baidu.com
                     val intent =  Intent(Intent.ACTION_VIEW, uri)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    activity.startActivity(intent)
+//                    if (intent.resolveActivity(activity.packageManager) != null) {
+                        try {
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            activity.startActivity(intent)
+                        } catch (e: Exception) {
+                            XLog.error("没有安装第三方app，schema: $schema", e)
+                        }
+//                    } else {
+//                        XLog.error("没有安装第三方app，schema: $schema")
+//                    }
                 }
                 if (!TextUtils.isEmpty(callback)) {
                     callbackJs("$callback('{\"result\": true, \"message\": \"\"}')")

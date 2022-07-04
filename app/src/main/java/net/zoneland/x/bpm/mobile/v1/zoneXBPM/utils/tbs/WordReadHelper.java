@@ -64,6 +64,11 @@ public class WordReadHelper {
                 }
                 Log.d(TAG, "finish" + i);
                 //内核安装完成回调，
+                if (mInit) {
+                    SecurityEditor editor = O2SDKManager.Companion.instance().prefs().edit();
+                    editor.putBoolean(O2.TBS_INSTALL_STATUS, true);
+                    editor.commit();
+                }
             }
 
             @Override
@@ -123,8 +128,9 @@ public class WordReadHelper {
         if (!mInit && !TbsDownloader.isDownloading()) {
             QbSdk.reset(mContext);
             resetSdk(mContext);
-            if (!mOnlyWifi || isWifi(mContext))
+            if (!mOnlyWifi || isWifi(mContext)) {
                 TbsDownloader.startDownload(mContext);
+            }
         }
         return mInit;
     }

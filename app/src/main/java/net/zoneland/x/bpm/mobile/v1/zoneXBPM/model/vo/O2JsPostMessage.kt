@@ -72,3 +72,22 @@ class O2BizPreviewDocMessage(
         var url: String?,
         var fileName: String?
 )
+
+class O2TaskUploadAttachmentMessage(
+        var site: String?,
+        var param: String?
+)
+
+class O2TaskReplaceAttachmentMessage(
+        var attachmentId: String?,
+        var site: String?,
+        var param: String?
+)
+
+class O2TaskDownloadAttachmentMessage(
+        var attachmentId: String?,
+)
+
+class O2TaskOpenDocumentMessage(
+        var url: String?,
+)
