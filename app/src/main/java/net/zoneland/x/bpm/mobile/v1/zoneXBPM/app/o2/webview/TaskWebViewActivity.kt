@@ -21,14 +21,23 @@ import android.widget.*
 import androidx.core.content.ContextCompat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
+import com.wugang.activityresult.library.ActivityResult
 import kotlinx.android.synthetic.main.activity_work_web_view.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.O2ChatActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.fm.O2IMConversationPickerActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.ContactPickerActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.WorkNewActionItem
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.WorkControl
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMConversationInfo
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMMessage
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMMessageBody
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.MessageType
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ProcessDraftWorkData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ReadData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.WorkInfoRes
@@ -52,6 +61,8 @@ import org.json.JSONTokener
 import java.io.File
 import java.io.IOException
 import java.net.URLEncoder
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebViewContract.Presenter>(), TaskWebViewContract.View {
@@ -95,6 +106,8 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     private  var url = ""
     private var draft: ProcessDraftWorkData? = null
 
+
+    private var workinfo: WorkInfoRes? = null
     private var control: WorkControl? = null
     private var read: ReadData? = null
     private var site = "" // 上传附件使用
@@ -429,6 +442,19 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                                 XLog.error("uploadImage2FileStorage 参数不正确，无法上传图片")
                             }
                         }
+                        // 将当前工作分享到聊天
+                        "shareToIMChat" -> {
+                            runOnUiThread {
+                                ActivityResult.of(this)
+                                    .className(O2IMConversationPickerActivity::class.java)
+                                    .greenChannel().forResult { _, data ->
+                                        val result = data?.getParcelableExtra<IMConversationInfo>(O2IMConversationPickerActivity.IM_CONVERSATION_PICKED_RESULT)
+                                        if (result != null) {
+                                            shareToIMChat(result)
+                                        }
+                                    }
+                            }
+                        }
                     }
                 } else {
                     XLog.error("message 格式错误！！！")
@@ -658,6 +684,29 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             }
         }
     }
+
+    /**
+     * 分享到聊天会话
+     */
+    private fun shareToIMChat(con: IMConversationInfo) {
+        if (workinfo != null) {
+            val body = IMMessageBody(type = MessageType.process.key,body = "", title = workinfo?.title ,
+                job = workinfo?.job, process = workinfo?.process,
+                processName = workinfo?.processName, application = workinfo?.application,
+                applicationName = workinfo?.applicationName, work = workinfo?.id)
+            val bodyJson = O2SDKManager.instance().gson.toJson(body)
+            XLog.debug("body: $bodyJson")
+            val uuid = UUID.randomUUID().toString()
+            val time = DateHelper.now()
+            val message = IMMessage(uuid, con.id!!, bodyJson,
+                O2SDKManager.instance().distinguishedName, time, 1)
+            showLoadingDialog()
+            mPresenter.sendImMessage(message)
+        } else {
+            XToast.toastShort(this, getString(R.string.message_work_info_not_exist))
+        }
+    }
+
     //endregion
 
     //MARK: - view implements
@@ -665,6 +714,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     //region view implements
 
     override fun workOrWorkCompletedInfo(info: WorkInfoRes?) {
+        workinfo = info
         if (info != null && !TextUtils.isEmpty(info.completedTime)) {
             XLog.info("当前工作已完成！")
             workCompletedId = info.id
@@ -792,6 +842,19 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             XLog.error("图片控件对象不存在。。。。。。。。")
         }
     }
+
+    override fun sendImMessageSuccess(convId: String) {
+        hideLoadingDialog()
+        O2DialogSupport.openConfirmDialog(this, getString(R.string.dialog_msg_confirm_open_im_chat), { _ ->
+            O2ChatActivity.startChat(this@TaskWebViewActivity, convId)
+        })
+    }
+
+    override fun sendImMessageFail(err: String) {
+        hideLoadingDialog()
+        XToast.toastShort(this, err)
+    }
+
     //endregion
 
 
