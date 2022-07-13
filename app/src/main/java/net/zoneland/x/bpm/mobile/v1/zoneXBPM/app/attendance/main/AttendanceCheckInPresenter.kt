@@ -113,7 +113,7 @@ class AttendanceCheckInPresenter : BasePresenterImpl<AttendanceCheckInContract.V
         if (!TextUtils.isEmpty(id)) {
             form.id = id
         }
-        form.signDescription = signDesc
+        form.description = signDesc
         form.latitude = latitude
         form.longitude = longitude
         form.recordDateString = signDate

@@ -19,7 +19,9 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.setImageBase64
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
 import rx.Observable
 import rx.Subscriber
 import rx.android.schedulers.AndroidSchedulers
@@ -34,22 +36,30 @@ class CMSIndexActivity : BaseMVPActivity<CMSIndexContract.View, CMSIndexContract
 
     val applicationList = ArrayList<CMSApplicationInfoJson>()
     val adapter: CommonRecycleViewAdapter<CMSApplicationInfoJson> by lazy {
-        object : CommonRecycleViewAdapter<CMSApplicationInfoJson>(this, applicationList, R.layout.item_cms_main_application) {
+        object : CommonRecycleViewAdapter<CMSApplicationInfoJson>(this, applicationList, R.layout.item_bbs_main_content_section_item) {
             override fun convert(holder: CommonRecyclerViewHolder?, t: CMSApplicationInfoJson?) {
-                val icon = holder?.getView<ImageView>(R.id.image_cms_main_application_icon)
-                icon?.setImageResource(R.mipmap.icon_cms_application_default)
-                icon?.tag = t?.id
-                refreshApplicationIcon(icon, t?.id, t?.appIcon)
-                holder?.setText(R.id.tv_cms_main_application_name, t?.appName?:"")
+                if (t != null) {
+                    val sectionIcon = holder?.getView<CircleImageView>(R.id.tv_bbs_main_content_section_item_icon)
+                    sectionIcon?.setImageResource(R.mipmap.icon_cms_application_default)
+                    sectionIcon?.tag = t.id
+                    sectionIcon?.setImageBase64(t.appIcon, t.id)
+                    holder?.setText(R.id.tv_bbs_main_content_section_date, t.description)
+                    val num = t.categoryList.size
+                    holder?.setText(R.id.tv_bbs_main_content_section_number, "分类：$num")
+                }
+                holder?.setText(R.id.tv_bbs_main_content_section_item_body, t?.appName?:"")
+                val start = holder?.getView<ImageView>(R.id.tv_bbs_main_collect_icon)
+                start?.gone()
+
             }
         }
     }
 
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
-        setupToolBar(getString(R.string.cms), true, true)
+        setupToolBar(getString(R.string.cms), setupBackButton = true, isCloseBackIcon = true)
 
-        recycler_cms_main_content.layoutManager = GridLayoutManager(this, 4)
+        recycler_cms_main_content.layoutManager = GridLayoutManager(this, 2)
         recycler_cms_main_content.adapter = adapter
         adapter.setOnItemClickListener { _, position ->
             val info = applicationList[position]
@@ -74,7 +84,7 @@ class CMSIndexActivity : BaseMVPActivity<CMSIndexContract.View, CMSIndexContract
     }
 
     override fun loadApplicationSuccess(list: List<CMSApplicationInfoJson>) {
-        if (list!=null && !list.isEmpty()) {
+        if (list.isNotEmpty()) {
             recycler_cms_main_content.visible()
             tv_cms_main_empty.gone()
             applicationList.clear()
@@ -110,7 +120,7 @@ class CMSIndexActivity : BaseMVPActivity<CMSIndexContract.View, CMSIndexContract
         }).subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe({bitmap->
-                    if (bitmap != null && id!!.equals(icon.tag)) {
+                    if (bitmap != null && id!! == icon.tag) {
                         icon.setImageBitmap(bitmap)
                     }
                 }, {e-> XLog.error("", e)})

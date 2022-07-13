@@ -66,20 +66,22 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
 //    private var canTalkTo = false
     private var attributeList: ArrayList<PersonAttributeJson> = ArrayList()
 
+
+    override fun beforeSetContentView() {
+        super.beforeSetContentView()
+        window.setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN)//去掉信息栏
+    }
+
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         //透明
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.LOLLIPOP) {
-            //5.0 全透明实现
-            //getWindow.setStatusBarColor(Color.TRANSPARENT)
-            val window: Window = window
-            window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-            window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-            window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
-            window.statusBarColor = Color.TRANSPARENT
-        } else if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
-            //4.4 全透明状态栏
-            window.addFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
-        }
+        //5.0 全透明实现
+        val window: Window = window
+        window.clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS)
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN or View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+        window.addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS)
+        window.statusBarColor = Color.TRANSPARENT
+
+
         personId = intent.extras?.getString(PERSON_NAME_KEY, "")?:""
         if (TextUtils.isEmpty(personId)) {
             XToast.toastShort(this, getString(R.string.message_no_person_id_error))
@@ -118,8 +120,6 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
                 // 开始聊天
                 if (!TextUtils.isEmpty(loadedPersonDN) && O2SDKManager.instance().distinguishedName != loadedPersonDN) {
                     startTalk()
-                }else {
-
                 }
             }
         }

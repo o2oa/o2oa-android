@@ -19,20 +19,30 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import android.widget.*
 import androidx.core.content.ContextCompat
+import com.google.gson.Gson
+import com.google.gson.reflect.TypeToken
+import com.wugang.activityresult.library.ActivityResult
 import kotlinx.android.synthetic.main.activity_work_web_view.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.O2ChatActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.fm.O2IMConversationPickerActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.ContactPickerActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.WorkNewActionItem
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.WorkControl
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMConversationInfo
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMMessage
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMMessageBody
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.MessageType
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ProcessDraftWorkData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ReadData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.WorkInfoRes
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.WorkOpinionData
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.O2UploadImageData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
@@ -46,9 +56,13 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.O2WebviewDownloadListener
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.WebChromeClientWithProgressAndValueCallback
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import org.jetbrains.anko.dip
+import org.json.JSONObject
+import org.json.JSONTokener
 import java.io.File
 import java.io.IOException
 import java.net.URLEncoder
+import java.util.*
+import kotlin.collections.ArrayList
 
 
 class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebViewContract.Presenter>(), TaskWebViewContract.View {
@@ -92,6 +106,8 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     private  var url = ""
     private var draft: ProcessDraftWorkData? = null
 
+
+    private var workinfo: WorkInfoRes? = null
     private var control: WorkControl? = null
     private var read: ReadData? = null
     private var site = "" // 上传附件使用
@@ -110,6 +126,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     private val jsNotification: JSInterfaceO2mNotification by lazy { JSInterfaceO2mNotification.with(this) }
     private val jsUtil: JSInterfaceO2mUtil by lazy { JSInterfaceO2mUtil.with(this) }
     private val jsBiz: JSInterfaceO2mBiz by lazy { JSInterfaceO2mBiz.with(this) }
+    private val gson: Gson by lazy { Gson() }
 
 
 
@@ -131,7 +148,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                 url = String.format(url, draft!!.id)
             }else {
                 url = APIAddressHelper.instance().getProcessDraftUrl()
-                val json = O2SDKManager.instance().gson.toJson(draft)
+                val json = gson.toJson(draft)
                 XLog.debug("草稿对象:$json")
                 val enJson = URLEncoder.encode(json, "utf-8")
                 XLog.debug("草稿对象 encode:$enJson")
@@ -338,6 +355,127 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     // MARK: - javascriptInterface
 
     //region javascriptInterface
+
+    /**
+     * 统一处理
+     */
+    @JavascriptInterface
+    fun postMessage(message: String?) {
+        XLog.debug("进入postMessage 。。。。。。。")
+        if (!TextUtils.isEmpty(message)) {
+            XLog.debug(message)
+            try {
+                val json = JSONTokener(message).nextValue()
+                if (json is JSONObject) {
+                    when (json.getString("type")) {
+                        // 关闭当前页面
+                        "closeWork" -> runOnUiThread { finish() }
+                        // 表单加载成功后
+                        "appFormLoaded" -> appFormLoaded(message!!)
+                        // 附件控件的上传
+                        "uploadAttachment" -> {
+                            val type = object : TypeToken<O2JsPostMessage<O2TaskUploadAttachmentMessage>>() {}.type
+                            val value: O2JsPostMessage<O2TaskUploadAttachmentMessage> = gson.fromJson(message, type)
+                            if (value.data != null && !TextUtils.isEmpty(value.data?.site)) {
+                                uploadAttachment(value.data!!.site!!)
+                            } else {
+                                XLog.error("uploadAttachment 参数不正确，缺少site，无法上传附件")
+                            }
+                        }
+                        // 附件控件的上传 在数据表格中
+                        "uploadAttachmentForDatagrid" -> {
+                            val type = object : TypeToken<O2JsPostMessage<O2TaskUploadAttachmentMessage>>() {}.type
+                            val value: O2JsPostMessage<O2TaskUploadAttachmentMessage> = gson.fromJson(message, type)
+                            if (value.data != null && !TextUtils.isEmpty(value.data?.site) && !TextUtils.isEmpty(value.data?.param)) {
+                                uploadAttachmentForDatagrid(value.data!!.site!!, value.data!!.param!!)
+                            } else {
+                                XLog.error("uploadAttachmentForDatagrid 参数不正确，缺少site或param，无法上传附件")
+                            }
+                        }
+                        // 附件控件的替换
+                        "replaceAttachment" -> {
+                            val type = object : TypeToken<O2JsPostMessage<O2TaskReplaceAttachmentMessage>>() {}.type
+                            val value: O2JsPostMessage<O2TaskReplaceAttachmentMessage> = gson.fromJson(message, type)
+                            if (value.data != null && !TextUtils.isEmpty(value.data?.site) && !TextUtils.isEmpty(value.data?.attachmentId)) {
+                                replaceAttachment(value.data!!.attachmentId!!, value.data!!.site!!)
+                            } else {
+                                XLog.error("replaceAttachment 参数不正确，缺少 attachmentId 或 site，无法替换附件")
+                            }
+                        }
+                        // 附件控件的替换 在数据表格中
+                        "replaceAttachmentForDatagrid" -> {
+                            val type = object : TypeToken<O2JsPostMessage<O2TaskReplaceAttachmentMessage>>() {}.type
+                            val value: O2JsPostMessage<O2TaskReplaceAttachmentMessage> = gson.fromJson(message, type)
+                            if (value.data != null && !TextUtils.isEmpty(value.data?.site) && !TextUtils.isEmpty(value.data?.attachmentId) && !TextUtils.isEmpty(value.data?.param)) {
+                                replaceAttachmentForDatagrid(value.data!!.attachmentId!!, value.data!!.site!!, value.data!!.param!!)
+                            } else {
+                                XLog.error("replaceAttachmentForDatagrid 参数不正确，缺少 attachmentId 或 site，无法替换附件")
+                            }
+                        }
+                        // 下载附件 并预览
+                        "downloadAttachment" -> {
+                            val type = object : TypeToken<O2JsPostMessage<O2TaskDownloadAttachmentMessage>>() {}.type
+                            val value: O2JsPostMessage<O2TaskDownloadAttachmentMessage> = gson.fromJson(message, type)
+                            if (value.data != null && !TextUtils.isEmpty(value.data?.attachmentId)) {
+                                downloadAttachment(value.data!!.attachmentId!!)
+                            } else {
+                                XLog.error("downloadAttachment 参数不正确，缺少 attachmentId，无法下载附件")
+                            }
+                        }
+                        // 打开正文
+                        "openDocument" -> {
+                            val type = object : TypeToken<O2JsPostMessage<O2TaskOpenDocumentMessage>>() {}.type
+                            val value: O2JsPostMessage<O2TaskOpenDocumentMessage> = gson.fromJson(message, type)
+                            if (value.data != null && !TextUtils.isEmpty(value.data?.url)) {
+                                openDocument(value.data!!.url!!)
+                            } else {
+                                XLog.error("openDocument 参数不正确，缺少 url，无法打开正文")
+                            }
+                        }
+                        // 表单的图片控件
+                        "uploadImage2FileStorage" -> {
+                            val type = object : TypeToken<O2JsPostMessage<O2UploadImageData>>() {}.type
+                            val value: O2JsPostMessage<O2UploadImageData> = gson.fromJson(message, type)
+                            if (value.data != null ) {
+                                uploadImage2FileStorage(gson.toJson(value.data!!))
+                            } else {
+                                XLog.error("uploadImage2FileStorage 参数不正确，无法上传图片")
+                            }
+                        }
+                        // 将当前工作分享到聊天
+                        "shareToIMChat" -> {
+                            runOnUiThread {
+                                ActivityResult.of(this)
+                                    .className(O2IMConversationPickerActivity::class.java)
+                                    .greenChannel().forResult { _, data ->
+                                        val result = data?.getParcelableExtra<IMConversationInfo>(O2IMConversationPickerActivity.IM_CONVERSATION_PICKED_RESULT)
+                                        if (result != null) {
+                                            shareToIMChat(result)
+                                        }
+                                    }
+                            }
+                        }
+                    }
+                } else {
+                    XLog.error("message 格式错误！！！")
+                }
+            } catch (e: Exception) {
+                XLog.error("", e)
+            }
+        } else {
+            XLog.error("o2android.postMessage error, 没有传入message内容！")
+        }
+    }
+
+//    private fun postMessageCallback(callback: String?) {
+//        if (!TextUtils.isEmpty(callback)) {
+//            web_view.evaluateJavascript("layout.app.appForm.uploadedAttachment(\"$site\", \"$attachmentId\")") { value ->
+//                XLog.debug("uploadedAttachment， onReceiveValue value=$value")
+//            }
+//        }
+//    }
+
+
     @JavascriptInterface
     fun closeWork(result: String) {
         XLog.debug("关闭表单 closeWork ：$result")
@@ -539,14 +677,36 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
         XLog.debug("打开图片上传控件， $json")
         runOnUiThread {
             if (json != null) {
-                imageUploadData = O2SDKManager.instance().gson.fromJson(json, O2UploadImageData::class.java)
+                imageUploadData =  gson.fromJson(json, O2UploadImageData::class.java)
                 showPictureChooseMenu()
-
             }else {
                 XToast.toastShort(this, getString(R.string.message_arg_error))
             }
         }
     }
+
+    /**
+     * 分享到聊天会话
+     */
+    private fun shareToIMChat(con: IMConversationInfo) {
+        if (workinfo != null) {
+            val body = IMMessageBody(type = MessageType.process.key,body = "", title = workinfo?.title ,
+                job = workinfo?.job, process = workinfo?.process,
+                processName = workinfo?.processName, application = workinfo?.application,
+                applicationName = workinfo?.applicationName, work = workinfo?.id)
+            val bodyJson = O2SDKManager.instance().gson.toJson(body)
+            XLog.debug("body: $bodyJson")
+            val uuid = UUID.randomUUID().toString()
+            val time = DateHelper.now()
+            val message = IMMessage(uuid, con.id!!, bodyJson,
+                O2SDKManager.instance().distinguishedName, time, 1)
+            showLoadingDialog()
+            mPresenter.sendImMessage(message)
+        } else {
+            XToast.toastShort(this, getString(R.string.message_work_info_not_exist))
+        }
+    }
+
     //endregion
 
     //MARK: - view implements
@@ -554,6 +714,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     //region view implements
 
     override fun workOrWorkCompletedInfo(info: WorkInfoRes?) {
+        workinfo = info
         if (info != null && !TextUtils.isEmpty(info.completedTime)) {
             XLog.info("当前工作已完成！")
             workCompletedId = info.id
@@ -671,7 +832,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
         if (imageUploadData != null) {
             imageUploadData!!.fileId = id
             val callback = imageUploadData!!.callback
-            val json = O2SDKManager.instance().gson.toJson(imageUploadData)
+            val json = gson.toJson(imageUploadData)
             val js = "$callback('$json')"
             XLog.debug("执行js:$js")
             web_view.evaluateJavascript(js){
@@ -681,6 +842,19 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             XLog.error("图片控件对象不存在。。。。。。。。")
         }
     }
+
+    override fun sendImMessageSuccess(convId: String) {
+        hideLoadingDialog()
+        O2DialogSupport.openConfirmDialog(this, getString(R.string.dialog_msg_confirm_open_im_chat), { _ ->
+            O2ChatActivity.startChat(this@TaskWebViewActivity, convId)
+        })
+    }
+
+    override fun sendImMessageFail(err: String) {
+        hideLoadingDialog()
+        XToast.toastShort(this, err)
+    }
+
     //endregion
 
 
@@ -949,7 +1123,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                 }else {
                     var result = ""
                     try {
-                        val woData = O2SDKManager.instance().gson.fromJson<WorkOpinionData>(value, WorkOpinionData::class.java)
+                        val woData = gson.fromJson(value, WorkOpinionData::class.java)
                         result = woData.opinion ?: ""
                     } catch (e: Exception) {
                     }

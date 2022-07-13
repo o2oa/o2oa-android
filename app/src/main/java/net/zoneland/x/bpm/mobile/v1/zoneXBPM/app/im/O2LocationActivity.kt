@@ -71,7 +71,7 @@ class O2LocationActivity : AppCompatActivity(), BDLocationListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_o2_location)
-
+        LocationClient.setAgreePrivacy(true) // 百度地图必须添加的
         //数据初始化
         mode = intent.getIntExtra(mode_key, 0)
         locationData = intent.getParcelableExtra(location_data_key)
@@ -101,12 +101,11 @@ class O2LocationActivity : AppCompatActivity(), BDLocationListener {
                     searchAddress(latLng)
                 }
 
-                override fun onMapPoiClick(poi: MapPoi?): Boolean {
+                override fun onMapPoiClick(poi: MapPoi?) {
                     val latLng = poi?.position
                     XLog.debug("onMapPoiClick latitude:${latLng?.latitude}, longitude:${latLng?.longitude}")
                     markerPoint(latLng, null)
                     searchAddress(latLng)
-                    return false
                 }
             })
             // 开启定位图层
@@ -189,10 +188,10 @@ class O2LocationActivity : AppCompatActivity(), BDLocationListener {
 
         }
     }
-
-    override fun onConnectHotSpotMessage(p0: String?, p1: Int) {
-        XLog.debug("onConnectHotSpotMessage, p0:$p0, p1:$p1")
-    }
+//
+//    override fun onConnectHotSpotMessage(p0: String?, p1: Int) {
+//        XLog.debug("onConnectHotSpotMessage, p0:$p0, p1:$p1")
+//    }
 
     private fun setupToolBar(title:String = "") {
         toolbar_snippet_top_bar.title = ""

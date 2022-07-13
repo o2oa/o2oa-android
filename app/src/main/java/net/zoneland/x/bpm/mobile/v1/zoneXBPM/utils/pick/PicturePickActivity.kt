@@ -9,6 +9,7 @@ import android.provider.OpenableColumns
 import android.text.TextUtils
 import androidx.appcompat.app.AppCompatActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import java.io.File
 import java.io.FileOutputStream
@@ -141,6 +142,10 @@ class PicturePickActivity : AppCompatActivity() {
             // 打开 Uri 的输入流
             imageInputStream = contentResolver.openInputStream(uri)
             val file = File(path)
+            if(!file.exists()) {
+                file.parentFile?.mkdirs()
+                file.createNewFile()
+            }
             val fos = FileOutputStream(file, true)
             val buf = ByteArray(1024 * 8)
             var currentLength = 0
@@ -181,7 +186,11 @@ class PicturePickActivity : AppCompatActivity() {
 
                 // Note it's called "Display Name". This is
                 // provider-specific, and might not necessarily be the file name.
-                return it.getString(it.getColumnIndex(OpenableColumns.DISPLAY_NAME))
+                val index = it.getColumnIndex(OpenableColumns.DISPLAY_NAME)
+                if (index < 0) {
+                    return null
+                }
+                return it.getString(index)
 
 //                val sizeIndex: Int = it.getColumnIndex(OpenableColumns.SIZE)
                 // If the size is unknown, the value stored is null. But because an

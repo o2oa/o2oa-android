@@ -327,6 +327,7 @@
     <string name="menu_im_tribe_clear_msg">清空聊天记录</string>
     <string name="im_system_message">通知消息</string>
     <string name="im_manager_member">管理成员</string>
+    <string name="im_choose_conversation">选择一个聊天</string>
     <string name="im_location_click_choose">点击地图选择位置</string>
     <string name="im_location">位置</string>
     <string name="im_file">文件</string>
@@ -551,7 +552,9 @@
     <string name="attendance_work_place_error_range_hint">请输入打卡范围，单位(米)</string>
     <string name="attendance_message_no_location_info">没有获取到你的位置信息，请确认是否开启定位功能！</string>
     <string name="attendance_message_donot_need_check_in">今日已经不需要打卡！</string>
+    <string name="attendance_message_update_check_in_record_confirm">确定要更新这条打卡记录？</string>
     <string name="attendance_message_work_out">当前不在打卡范围内，你确定要进行外勤打卡？</string>
+    <string name="attendance_message_work_out_hint">请输入外勤打卡说明</string>
 
     <!-- bbs -->
     <string name="bbs">论坛</string>
@@ -796,6 +799,7 @@
     <string name="message_save_image_album">成功保存图片到相册！</string>
     <string name="message_copy_success">复制成功！</string>
     <string name="message_im_audio_too_short">录音时间太短！</string>
+    <string name="message_work_info_not_exist">工作对象不存在，无法分享！</string>
 
     <!--    dialog -->
     <string name="dialog_msg_bind_to_server_fail">绑定服务器失败，请检查当前服务器配置是否正确？您也可以先绑定到O2OA演示服务器进行体验！</string>
@@ -810,6 +814,7 @@
     <string name="dialog_msg_need_rebind_phone_number">确定要重新绑定手机号码吗,该操作会清空当前登录信息，需要重新登录？</string>
     <string name="dialog_msg_audio_need_permission">语音消息需要权限, 去设置</string>
     <string name="dialog_msg_camera_need_permission">拍照需要权限, 去设置</string>
+    <string name="dialog_msg_confirm_open_im_chat">分享成功，是否打开聊天窗口？</string>
 
     <string name="choose">选择</string>
     <string name="sign">个性签名</string>
@@ -843,7 +848,6 @@
     <string name="search_error">错误！%1$s</string>
     <string name="agree_login_privacy">我已阅读并同意</string>
     <string name="agree_login_privacy_alert_message">必须先同意我们的产品服务协议，否则无法注册使用本产品!</string>
-
 
 
 </resources>

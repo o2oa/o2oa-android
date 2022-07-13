@@ -28,6 +28,7 @@ import org.jetbrains.anko.uiThread
 import java.util.*
 import com.baidu.mapapi.map.MapStatusUpdateFactory
 import com.baidu.mapapi.map.MapStatus
+import com.xiaomi.push.it
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
@@ -87,6 +88,7 @@ class AttendanceCheckInFragment : BaseMVPViewPagerFragment<AttendanceCheckInCont
 
 
     override fun initUI() {
+        LocationClient.setAgreePrivacy(true)
         mBaiduMap = map_baidu_attendance_check_in.map
         val builder = MapStatus.Builder()
         builder.zoom(19.0f)
@@ -189,9 +191,9 @@ class AttendanceCheckInFragment : BaseMVPViewPagerFragment<AttendanceCheckInCont
     }
 
 
-    override fun onConnectHotSpotMessage(p0: String?, p1: Int) {
-        XLog.debug("onConnectHotSpotMessage, p0:$p0, p1:$p1")
-    }
+//    override fun onConnectHotSpotMessage(p0: String?, p1: Int) {
+//        XLog.debug("onConnectHotSpotMessage, p0:$p0, p1:$p1")
+//    }
 
     override fun workplaceList(list: List<MobileCheckInWorkplaceInfoJson>) {
         // 画公司打卡范围蓝圈

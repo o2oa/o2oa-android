@@ -5,10 +5,7 @@ import android.os.Bundle
 import android.text.TextUtils
 import android.view.Menu
 import android.view.MenuItem
-import com.baidu.location.BDLocation
-import com.baidu.location.BDLocationListener
-import com.baidu.location.LocationClient
-import com.baidu.location.LocationClientOption
+import com.baidu.location.*
 import com.baidu.mapapi.map.*
 import com.baidu.mapapi.model.LatLng
 import kotlinx.android.synthetic.main.activity_attendance_location_setting.*
@@ -22,7 +19,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
 
 class AttendanceLocationSettingActivity : BaseMVPActivity<AttendanceLocationSettingContract.View, AttendanceLocationSettingContract.Presenter>(),
-        AttendanceLocationSettingContract.View, BDLocationListener {
+        AttendanceLocationSettingContract.View {
     override var mPresenter: AttendanceLocationSettingContract.Presenter = AttendanceLocationSettingPresenter()
     override fun layoutResId(): Int = R.layout.activity_attendance_location_setting
 
@@ -37,7 +34,26 @@ class AttendanceLocationSettingActivity : BaseMVPActivity<AttendanceLocationSett
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         setupToolBar(getString(R.string.title_activity_attendance_location_setting), true)
-        mLocationClient.registerLocationListener(this)
+        LocationClient.setAgreePrivacy(true)
+        mLocationClient.registerLocationListener(object: BDAbstractLocationListener() {
+            override fun onReceiveLocation(location: BDLocation?) {
+                if (location == null) {
+                    return
+                }
+                XLog.debug("onReceiveLocation locType:${location.locType}")
+                val latitude = location.latitude
+                val longitude = location.longitude
+                XLog.info("定位成功,address:${location.addrStr}, latitude:$latitude, longitude:$longitude")
+                //定义Maker坐标点
+                val point = LatLng(latitude, longitude)
+                //地图显示在当前位置
+                val builder = MapStatus.Builder().target(point).zoom(18.0f)
+                mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()))
+                //完成定位
+                mLocationClient.stop()
+            }
+
+        })
 
         initBaiduLocation()
         mBaiduMap = map_attendance_location_setting_baidu.map
@@ -48,11 +64,10 @@ class AttendanceLocationSettingActivity : BaseMVPActivity<AttendanceLocationSett
                 markerPoint(latLng)
             }
 
-            override fun onMapPoiClick(poi: MapPoi?): Boolean {
+            override fun onMapPoiClick(poi: MapPoi?) {
                 val latLng = poi?.position
                 XLog.debug("onMapPoiClick latitude:${latLng?.latitude}, longitude:${latLng?.longitude}")
                 markerPoint(latLng)
-                return false
             }
         })
         mBaiduMap.setOnMarkerClickListener { marker ->
@@ -98,26 +113,26 @@ class AttendanceLocationSettingActivity : BaseMVPActivity<AttendanceLocationSett
         map_attendance_location_setting_baidu.onDestroy()
     }
 
-    override fun onReceiveLocation(location: BDLocation?) {
-        if (location == null) {
-            return
-        }
-        XLog.debug("onReceiveLocation locType:${location.locType}")
-        val latitude = location.latitude
-        val longitude = location.longitude
-        XLog.info("定位成功,address:${location.addrStr}, latitude:$latitude, longitude:$longitude")
-        //定义Maker坐标点
-        val point = LatLng(latitude, longitude)
-        //地图显示在当前位置
-        val builder = MapStatus.Builder().target(point).zoom(18.0f)
-        mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()))
-        //完成定位
-        mLocationClient.stop()
-    }
+//    override fun onReceiveLocation(location: BDLocation?) {
+//        if (location == null) {
+//            return
+//        }
+//        XLog.debug("onReceiveLocation locType:${location.locType}")
+//        val latitude = location.latitude
+//        val longitude = location.longitude
+//        XLog.info("定位成功,address:${location.addrStr}, latitude:$latitude, longitude:$longitude")
+//        //定义Maker坐标点
+//        val point = LatLng(latitude, longitude)
+//        //地图显示在当前位置
+//        val builder = MapStatus.Builder().target(point).zoom(18.0f)
+//        mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()))
+//        //完成定位
+//        mLocationClient.stop()
+//    }
 
-    override fun onConnectHotSpotMessage(p0: String?, p1: Int) {
-        XLog.info("connectHotSpot $p0, $p1")
-    }
+//    override fun onConnectHotSpotMessage(p0: String?, p1: Int) {
+//        XLog.info("connectHotSpot $p0, $p1")
+//    }
 
     override fun deleteWorkplace(flag: Boolean) {
         hideLoadingDialog()

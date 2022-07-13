@@ -85,7 +85,7 @@ class MeetingApplyPresenter : BasePresenterImpl<MeetingApplyContract.View>(), Me
 
     override fun saveMeetingNoFile(info: MeetingInfoJson) {
             val json = O2SDKManager.instance().gson.toJson(info)
-            XLog.debug("meeting:" + json)
+            XLog.debug("meeting:$json")
             val body = RequestBody.create(MediaType.parse("text/json"), json)
             getMeetingAssembleControlService(mView?.getContext())?.let { service->
                 service.saveMeeting(body)

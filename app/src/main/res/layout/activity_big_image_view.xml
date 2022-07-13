@@ -64,13 +64,13 @@
         android:layout_marginEnd="@dimen/spacing_normal"
         android:layout_marginBottom="@dimen/spacing_normal"
         app:layout_constraintEnd_toEndOf="parent">
+
         <ImageView
             android:id="@+id/image_big_image_down"
             android:layout_width="32dp"
             android:layout_height="32dp"
-            android:src="@mipmap/save_to_album"
             android:layout_centerHorizontal="true"
-            />
+            android:src="@mipmap/save_to_album" />
         <TextView
             android:id="@+id/tv_big_image_down"
             android:layout_width="wrap_content"

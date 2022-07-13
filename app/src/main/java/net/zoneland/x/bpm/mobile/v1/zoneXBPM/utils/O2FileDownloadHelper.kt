@@ -59,7 +59,7 @@ object O2FileDownloadHelper {
                     val inputStream = conn.inputStream
                     var fileName = conn.getHeaderField("Content-Disposition")
                     if (fileName!=null) {
-                        fileName = fileName.substringAfterLast("''")
+                        fileName = fileName.substringAfterLast("''", fileName)
                     }
                     XLog.debug("下载文件名称: $fileName")
                     val fos = FileOutputStream(file, true)

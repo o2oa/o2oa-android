@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<metadata>
+  <groupId>io.flutter.plugins.sharedpreferences</groupId>
+  <artifactId>shared_preferences_android_release</artifactId>
+  <versioning>
+    <release>1.0</release>
+    <versions>
+      <version>1.0</version>
+    </versions>
+    <lastUpdated>20220620013219</lastUpdated>
+  </versioning>
+</metadata>

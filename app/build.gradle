@@ -65,7 +65,7 @@ task printVersionName {
 
 
 android {
-    compileSdkVersion 30
+    compileSdkVersion 31
     buildToolsVersion "30.0.3"
     sourceSets {
         main {
@@ -99,13 +99,15 @@ android {
     defaultConfig {
         applicationId "net.zoneland.x.bpm.mobile.v1.zoneXBPM"
         minSdkVersion 21
-        targetSdkVersion 30
+        targetSdkVersion 31
         versionCode project.property("o2.versionCode").toInteger()
         versionName project.property("o2.versionName").toString()
         multiDexEnabled true
         ndk {
             //选择要添加的对应cpu类型的.so库。
-            abiFilters 'armeabi', 'armeabi-v7a'
+//            abiFilters 'armeabi', 'armeabi-v7a'
+//            abiFilters 'armeabi-v7a', 'arm64-v8a'
+            abiFilters 'armeabi-v7a', 'arm64-v8a', 'x86_64'
         }
         multiDexKeepProguard file('multidex_keep_file.pro')
         vectorDrawables.useSupportLibrary = true
@@ -198,6 +200,7 @@ android {
 buildscript {
     repositories {
         mavenCentral()
+
     }
     dependencies {
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
@@ -210,12 +213,20 @@ repositories {
     flatDir {
         dirs 'libs'
     }
+    //o2oa
+    maven { url "../o2_flutter/buildAAR/host/outputs/repo" }
+    maven {
+        url 'https://storage.googleapis.com/download.flutter.io'
+    }
 }
 
 dependencies {
+    // 百度地图
     implementation files('libs/BaiduLBS_Android.jar')
-    implementation files('libs/bdasr_V3_20180320_9066860.jar')
-    implementation files('libs/com.baidu.tts_2.3.1.20170808_e39ea89.jar')
+
+    // 百度语音
+//    implementation files('libs/bdasr_V3_20180320_9066860.jar')
+//    implementation files('libs/com.baidu.tts_2.3.1.20170808_e39ea89.jar')
 //    implementation files('libs/zxing.jar')
     implementation 'com.google.zxing:core:3.4.1'
     implementation files('libs/pinyin4j-2.5.0.jar')
@@ -224,10 +235,17 @@ dependencies {
     implementation(name: 'material-calendarview-fancy-1.1', ext: 'aar')
     implementation project(path: ':o2_auth_sdk')
 
-    implementation(name: 'flutterpack-release', ext: 'aar')
-    implementation(name: 'shared_preferences-release', ext: 'aar')
-    implementation(name: 'image_picker-release', ext: 'aar')
-    implementation(name: 'path_provider-release', ext: 'aar')
+//    // flutter 相关的aar
+    // flutter模块开发调试用
+//    implementation project(':flutter')
+//    debugImplementation 'io.flutter.plugins.pathprovider:path_provider_android_debug:1.0'
+    implementation 'io.flutter.plugins.pathprovider:path_provider_android_release:1.0'
+//    debugImplementation 'io.flutter.plugins.sharedpreferences:shared_preferences_android_debug:1.0'
+    implementation 'io.flutter.plugins.sharedpreferences:shared_preferences_android_release:1.0'
+//    debugImplementation 'net.o2oa.app.flutter.o2_flutter:flutter_debug:1.0'
+    implementation 'net.o2oa.app.flutter.o2_flutter:flutter_release:1.0'
+
+
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
     implementation "org.jetbrains.anko:anko-common:$anko_version"

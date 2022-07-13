@@ -67,8 +67,30 @@ class O2BizPersonPickerMessage(
         var maxNumber: Int?,
         var pickedUsers: ArrayList<String>?
 )
-
+// 预览文件
 class O2BizPreviewDocMessage(
         var url: String?,
         var fileName: String?
+)
+
+// 流程上传附件
+class O2TaskUploadAttachmentMessage(
+        var site: String?,
+        var param: String?
+)
+
+// 流程附件替换
+class O2TaskReplaceAttachmentMessage(
+        var attachmentId: String?,
+        var site: String?,
+        var param: String?
+)
+
+// 流程附件下载
+class O2TaskDownloadAttachmentMessage(
+        var attachmentId: String?,
+)
+// 打开正文的url
+class O2TaskOpenDocumentMessage(
+        var url: String?,
 )

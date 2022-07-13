@@ -13,6 +13,7 @@ import androidx.core.content.FileProvider
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import java.io.*
 import java.nio.channels.FileChannel
+import java.util.*
 
 
 /**
@@ -75,7 +76,7 @@ object FileUtil {
                     do {
                         size = `is`.read(buffer, 0, 1024)
                         if (size>0) {
-                            fos?.write(buffer, 0, size)
+                            fos.write(buffer, 0, size)
                         }
                     }while (size>0)
                 }
@@ -84,9 +85,7 @@ object FileUtil {
                     try {
                         fos.close()
                     } finally {
-                        if (`is` != null) {
-                            `is`.close()
-                        }
+                        `is`?.close()
                     }
                 }
             }
@@ -158,7 +157,9 @@ object FileUtil {
 
                 val id = DocumentsContract.getDocumentId(uri)
                 val contentUri = ContentUris.withAppendedId(
-                        Uri.parse("content://downloads/public_downloads"), java.lang.Long.valueOf(id)!!)
+                        Uri.parse("content://downloads/public_downloads"),
+                    java.lang.Long.valueOf(id)
+                )
 
                 return getDataColumn(context, contentUri, null, null)
             } else if (isMediaDocument(uri)) {
@@ -238,7 +239,7 @@ object FileUtil {
             return type
         }
         /* 获取文件的后缀名*/
-        val end = fName.substring(dotIndex, fName.length).toLowerCase()
+        val end = fName.substring(dotIndex, fName.length).lowercase(Locale.getDefault())
         if (end === "") return type
         //在MIME和文件类型的匹配表中找到对应的MIME类型。
         for (i in MIMETypes.indices) {
