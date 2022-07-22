@@ -134,21 +134,6 @@ class LoginPresenter : BasePresenterImpl<LoginContract.View>(), LoginContract.Pr
         }
     }
 
-    override fun loginByPassword(userName: String, password: String) {
-        val params: HashMap<String, String> = HashMap()
-        params["credential"] = userName
-        params["password"] = password
-        getAssembleAuthenticationService(mView?.getContext())?.let { service ->
-            service.login(params)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(ResponseHandler { data -> mView?.loginSuccess(data) },
-                            ExceptionHandler(mView?.getContext()) { e ->
-                                XLog.error("", e)
-                                mView?.loginFail()
-                            })
-        }
-    }
 
 
 

@@ -26,6 +26,7 @@ interface OrgAssembleAuthenticationService{
      * *
      * @return
      */
+    @Deprecated(message = "已弃用，后台会删除这个接口")
     @Headers("Content-Type:application/json;charset=UTF-8")
     @POST("jaxrs/authentication")
     fun login(@Body json: Map<String, String>): Observable<ApiResponse<AuthenticationInfoJson>>

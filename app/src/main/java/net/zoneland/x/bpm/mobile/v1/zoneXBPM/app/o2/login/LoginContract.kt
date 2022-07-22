@@ -40,10 +40,6 @@ object LoginContract {
          */
         fun login(userName: String, code: String)
 
-        /**
-         * 用户名 密码 登录
-         */
-        fun loginByPassword(userName: String, password: String)
 
 
         fun ssoLogin(userId: String)
