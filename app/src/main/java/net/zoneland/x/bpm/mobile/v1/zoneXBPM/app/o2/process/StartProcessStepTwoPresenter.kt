@@ -1,7 +1,7 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process
 
 import android.text.TextUtils
-import net.muliba.accounting.app.ExceptionHandler
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ExceptionHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
@@ -24,7 +24,8 @@ class StartProcessStepTwoPresenter : BasePresenterImpl<StartProcessStepTwoContra
                         XLog.debug("identities: $list")
                         mView?.loadCurrentPersonIdentity(list)
                     },
-                            ExceptionHandler(mView?.getContext(), { e -> mView?.loadCurrentPersonIdentityFail() }))
+                            ExceptionHandler(mView?.getContext(), { e -> mView?.loadCurrentPersonIdentityFail() })
+                    )
         }
     }
 

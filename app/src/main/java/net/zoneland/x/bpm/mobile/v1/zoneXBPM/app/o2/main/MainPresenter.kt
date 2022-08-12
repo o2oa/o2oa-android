@@ -90,7 +90,7 @@ class MainPresenter : BasePresenterImpl<MainContract.View>(), MainContract.Prese
         val service = try {
             RetrofitClient.instance().organizationPermissionApi()
         } catch (e: Exception) {
-            XLog.error("", e)
+//            XLog.error("", e)
             null
         }
         if (service != null) {

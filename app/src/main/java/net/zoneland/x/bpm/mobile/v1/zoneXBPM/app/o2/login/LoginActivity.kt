@@ -365,8 +365,12 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
     }
 
     override fun loginFail() {
-        XToast.toastShort(this, getString(R.string.message_login_fail))
-        hideLoadingDialog()
+       // XToast.toastShort(this, getString(R.string.message_login_fail))
+        if (useCaptcha && ll_login_captcha.visibility == View.VISIBLE) { // 如果有验证码 刷新
+            mPresenter.getCaptcha()
+        } else {
+            hideLoadingDialog()
+        }
     }
 
     override fun getCodeError() {
