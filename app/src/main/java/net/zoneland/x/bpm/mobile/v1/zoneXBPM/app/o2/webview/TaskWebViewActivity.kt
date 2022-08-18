@@ -1273,7 +1273,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 
     private fun openFancyFilePicker(requestCode: Int, multiple: Boolean) {
         PicturePickUtil().withAction(this)
-            .setMode(PickTypeMode.File)
+            .setMode(PickTypeMode.FileWithMedia)
             .allowMultiple(multiple)
             .forResult { files ->
                 if (files !=null && files.isNotEmpty()) {

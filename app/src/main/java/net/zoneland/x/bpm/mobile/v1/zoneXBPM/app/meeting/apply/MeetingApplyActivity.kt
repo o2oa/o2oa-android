@@ -151,7 +151,7 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
             R.id.iv_meeting_file_add -> {
 
                 PicturePickUtil().withAction(this)
-                    .setMode(PickTypeMode.File)
+                    .setMode(PickTypeMode.FileWithMedia)
                     .forResult { files ->
                         if (files !=null && files.isNotEmpty()) {
                             XLog.debug("uri path:" + files[0])

@@ -137,7 +137,7 @@ class MeetingEditActivity : BaseMVPActivity<MeetingEditContract.View, MeetingEdi
         iv_meeting_file_add.setOnClickListener {
             _ ->
             PicturePickUtil().withAction(this)
-                .setMode(PickTypeMode.File)
+                .setMode(PickTypeMode.FileWithMedia)
                 .forResult { files ->
                     if (files !=null && files.isNotEmpty()) {
                         XLog.debug("uri path:" + files[0])
