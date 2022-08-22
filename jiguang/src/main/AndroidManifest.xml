@@ -16,8 +16,11 @@
     <uses-permission android:name="android.permission.WRITE_SETTINGS" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <!-- 华为角标 -->
-    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE" />
+    <!-- 华为系统角标 -->
+    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE "/>
+    <uses-permission android:name="com.hihonor.android.launcher.permission.CHANGE_BADGE" />
+<!--    vivo 角标-->
+    <uses-permission android:name="com.vivo.notification.permission.BADGE_ICON" />
     <!-- Optional for location -->
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
