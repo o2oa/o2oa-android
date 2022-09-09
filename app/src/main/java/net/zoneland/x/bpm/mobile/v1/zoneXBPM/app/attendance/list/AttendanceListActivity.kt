@@ -72,13 +72,17 @@ class AttendanceListActivity : BaseMVPActivity<AttendanceListContract.View, Atte
                         info.isLackOfTime -> status = AttendanceStatus.LACKOFTIME.label
                     }
                     if (!TextUtils.isEmpty(appealStatus)) {
-                        if (!TextUtils.isEmpty(info.appealProcessor)) {
-                            status = "$status ($appealStatus, 审核人：${info.appealProcessor})"
+                        status = if (!TextUtils.isEmpty(info.appealProcessor)) {
+                            val procesor = if (info.appealProcessor.contains("@")) {
+                                info.appealProcessor.split("@")[0]
+                            } else {
+                                info.appealProcessor
+                            }
+                            "$status ($appealStatus, 审核人：${procesor})"
                         }else {
-                            status = "$status ($appealStatus)"
+                            "$status ($appealStatus)"
                         }
                     }
-                    XLog.debug("审批人： ${info.appealProcessor}")
                     holder.setText(R.id.tv_attendance_detail_list_item_day, info.recordDateString)
                             .setText(R.id.tv_attendance_detail_list_item_on_off_duty_time, off_on_time)
                             .setText(R.id.tv_attendance_detail_list_item_desc, desc)

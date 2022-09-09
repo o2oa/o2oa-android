@@ -83,9 +83,9 @@ class AttendanceMainActivity : BaseMVPActivity<AttendanceMainContract.View, Atte
         if (isAttendanceAdmin) {
             menuInflater.inflate(R.menu.menu_attendance_main_admin, menu)
         }
-//        else {
-//            menuInflater.inflate(R.menu.menu_attendance_main_normal, menu)
-//        }
+        else {
+            menuInflater.inflate(R.menu.menu_attendance_main_normal, menu)
+        }
         return super.onPrepareOptionsMenu(menu)
     }
 
