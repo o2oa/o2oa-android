@@ -60,7 +60,7 @@ class SampleEditionManger {
             currentUnit!!.centerHost = "sample.o2oa.net"
             currentUnit!!.centerContext = "/x_program_center"
             currentUnit!!.httpProtocol = "https"
-            currentUnit!!.centerPort = 40030
+            currentUnit!!.centerPort = 443
         }
         val json = O2SDKManager.instance().gson.toJson(currentUnit)
         Log.i("SampleEditionManger", "当前连接环境。。。。。。unit: $json")
