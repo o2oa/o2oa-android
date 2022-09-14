@@ -3,6 +3,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api
 import android.annotation.SuppressLint
 import android.content.Context
 import android.text.TextUtils
+import android.util.Log
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
@@ -125,7 +126,9 @@ class RetrofitClient private constructor() {
      * 开启webSocket链接
      */
     fun openWebSocket(listener: WebSocketListener) {
-        val request = Request.Builder().url(APIAddressHelper.instance().webSocketUrl()).build()
+        val newUrl = O2SDKManager.instance().urlTransfer2Mapping(APIAddressHelper.instance().webSocketUrl())
+        Log.d("RetrofitClient", newUrl)
+        val request = Request.Builder().url(newUrl).build()
         o2WebSocketClient.newWebSocket(request, listener)
     }
 

@@ -127,7 +127,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         unit.pinyin = "yanshizhandian"
         unit.pinyinInitial = "yszd"
         unit.centerHost = "sample.o2oa.net"
-        unit.centerPort = 40030
+        unit.centerPort = 443
         unit.centerContext = "/x_program_center"
         unit.httpProtocol = "https"
         //绑定成功写入本地存储
