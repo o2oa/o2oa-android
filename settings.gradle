@@ -1,1 +1,8 @@
 include ':app', ':o2_auth_sdk', ':jiguang'
+
+// flutter 模块开发调试用
+//setBinding(new Binding([gradle: this]))                                // new
+//evaluate(new File(                                                     // new
+//        settingsDir.parentFile,                                              // new
+//        'o2android/o2_flutter/.android/include_flutter.groovy'                         // new
+//))

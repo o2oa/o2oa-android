@@ -35,8 +35,8 @@
     <uses-permission android:name="android.permission.BLUETOOTH" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" /> <!-- gps -->
     <uses-feature android:name="android.hardware.location.gps" /> <!-- android 8.0 安装未知来源apk的权限问题 -->
-    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" /> <!-- 华为系统角标 -->
-    <uses-permission android:name="com.huawei.android.launcher.permission.CHANGE_BADGE " />
+    <uses-permission android:name="android.permission.REQUEST_INSTALL_PACKAGES" />
+
 
     <application
         android:name=".O2App"
@@ -50,6 +50,7 @@
         android:theme="@style/XBPMTheme.NoActionBar"
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
+
         <activity
             android:name=".app.clouddrive.v3.folder.FolderFileListActivity"
             android:exported="false" />
@@ -94,6 +95,10 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
+            android:name=".app.im.fm.O2IMConversationPickerActivity"
+            android:configChanges="orientation"
+            android:exported="false" />
+        <activity
             android:name=".app.VideoPlayerActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
@@ -136,6 +141,7 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
         <activity
+            android:exported="true"
             android:name=".app.o2.launch.LaunchActivity"
             android:configChanges="orientation"
             android:label="@string/app_name"
@@ -186,6 +192,7 @@
             android:label="@string/title_activity_group"
             android:screenOrientation="portrait" />
         <activity
+            android:exported="true"
             android:name=".app.o2.person.PersonActivity"
             android:configChanges="orientation"
             android:label="@string/title_activity_person_info"
@@ -200,6 +207,7 @@
             android:label="@string/title_activity_contact"
             android:screenOrientation="portrait" />
         <activity
+            android:exported="true"
             android:name=".app.o2.my.MyInfoActivity"
             android:configChanges="orientation"
             android:label="@string/title_activity_my_info"
@@ -355,9 +363,10 @@
             android:label="@string/title_activity_attendance_location_setting" />
 
         <!-- ai -->
-        <activity
-            android:name=".app.o2.ai.O2AIActivity"
-            android:launchMode="singleTask" /> <!-- calendar -->
+        <!-- <activity -->
+        <!-- android:name=".app.o2.ai.O2AIActivity" -->
+        <!-- android:launchMode="singleTask" /> -->
+        <!-- calendar -->
         <activity
             android:name=".app.calendar.CalendarMainActivity"
             android:label="@string/calendar_name"
@@ -395,7 +404,9 @@
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="${BAIDU_MAP_APPKEY}" /> <!-- baidu yuyin -->
+            android:value="${BAIDU_MAP_APPKEY}" />
+        <!--
+ baidu yuyin
         <service
             android:name="com.baidu.speech.VoiceRecognitionService"
             android:exported="false" />
@@ -408,7 +419,9 @@
             android:value="${BAIDU_SPEECH_APPKEY}" />
         <meta-data
             android:name="com.baidu.speech.SECRET_KEY"
-            android:value="${BAIDU_SPEECH_SECRET}" /> <!-- 删除临时文件任务 -->
+            android:value="${BAIDU_SPEECH_SECRET}" />
+        -->
+        <!-- 删除临时文件任务 -->
         <service
             android:name=".core.service.ClearTempFileJobService"
             android:exported="true"

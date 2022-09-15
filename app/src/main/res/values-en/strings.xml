@@ -331,6 +331,7 @@
     <string name="im_report_desc">detail description</string>
     <string name="im_system_message">Notification message</string>
     <string name="im_manager_member">Managing members</string>
+    <string name="im_choose_conversation">Select a chat</string>
     <string name="im_message_confirm_delete_msgs">Are you sure you want to clear the chat records? After clearing, everyone in the current session will not see these chat records?</string>
     <string name="im_message_clear_msg_success">Empty chat record successfully!</string>
     <string name="im_message_clear_msg_no_conversationId">No session ID passed in, unable to empty the chat record!</string>
@@ -558,6 +559,8 @@
     <string name="attendance_message_no_location_info">Your location information has not been obtained. Please confirm whether to turn on the location function!</string>
     <string name="attendance_message_donot_need_check_in">You do not need to punch in today!</string>
     <string name="attendance_message_work_out">It is not in the punch in range at present. Are you sure you want to punch in the field?</string>
+    <string name="attendance_message_work_out_hint">Please enter field punching instructions</string>
+    <string name="attendance_message_update_check_in_record_confirm">Are you sure you want to update this punch record ?</string>
 
     <!-- bbs -->
     <string name="bbs">Forum</string>
@@ -822,6 +825,7 @@
     <string name="message_save_image_album">Successfully saved the picture to the album !</string>
     <string name="message_copy_success">Copy successfully !</string>
     <string name="message_im_audio_too_short">Recording time is too short !</string>
+    <string name="message_work_info_not_exist">The work object does not exist and cannot be shared!</string>
 
     <!--    dialog -->
     <string name="dialog_msg_bind_to_server_fail">Failed to bind the server. Please check whether the current server configuration is correct? You can also bind to the o2oa demo server to experience！</string>
@@ -836,6 +840,7 @@
     <string name="dialog_msg_need_rebind_phone_number">Are you sure you want to rebind the mobile phone number? This operation will clear the current login information and you need to login again？</string>
     <string name="dialog_msg_audio_need_permission">Voice messages need permission, go to settings</string>
     <string name="dialog_msg_camera_need_permission">Taking pictures requires permission, go to settings</string>
+    <string name="dialog_msg_confirm_open_im_chat">The sharing was successful. Does the chat window open?</string>
 
     <string name="choose">Choose</string>
     <string name="sign">Personal signature</string>

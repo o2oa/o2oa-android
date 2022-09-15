@@ -9,9 +9,11 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.flutter
 object FlutterO2Utils {
 
     const val nativeChannelName: String = "net.o2oa.flutter/native_get"
-    const val MethodNameO2Config: String = "o2Config"
+    const val MethodNameO2Config: String = "o2Config" // 读取本地连接配置参数
+    const val MethodNameO2PickImage: String = "o2PickImage" // 图片选择器
     const val parameterNameTheme : String = "o2Theme"
     const val parameterNameUser : String = "o2UserInfo"
     const val parameterNameUnit : String = "o2UnitInfo"
     const val parameterNameCenterServer : String = "o2CenterServerInfo"
+    const val parameterNamePickerImageFile : String = "file"
 }

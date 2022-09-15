@@ -552,7 +552,7 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
     private fun openFancyFilePicker(requestCode: Int) {
 
         PicturePickUtil().withAction(this)
-            .setMode(PickTypeMode.File)
+            .setMode(PickTypeMode.FileWithMedia)
             .forResult { files ->
                 if (files != null && files.isNotEmpty()) {
                      when(requestCode) {

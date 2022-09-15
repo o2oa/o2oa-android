@@ -2,14 +2,16 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.login
 
 
 import android.text.TextUtils
-import net.muliba.accounting.app.ExceptionHandler
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ExceptionHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.LoginWithCaptchaForm
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.RSAPublicKeyData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.Base64ImageUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.CryptRSA
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.ExceptionHandler2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import rx.android.schedulers.AndroidSchedulers
@@ -22,7 +24,8 @@ import rx.schedulers.Schedulers
 class LoginPresenter : BasePresenterImpl<LoginContract.View>(), LoginContract.Presenter {
 
     //rsa加密公钥
-    private var publicKey: String = ""
+//    private var publicKey: String = ""
+    private var rsaData: RSAPublicKeyData? = null
 
 
     override fun getLoginMode() {
@@ -66,7 +69,8 @@ class LoginPresenter : BasePresenterImpl<LoginContract.View>(), LoginContract.Pr
     override fun loginWithCaptcha(form: LoginWithCaptchaForm) {
         getAssembleAuthenticationService(mView?.getContext())?.let { service ->
             //加密
-            if (!TextUtils.isEmpty(publicKey)) {
+            if (rsaData != null && rsaData?.rsaEnable == true && !TextUtils.isEmpty(rsaData?.publicKey)) {
+                val publicKey = rsaData?.publicKey!!
                 XLog.debug("key：$publicKey")
                 val newPwd = CryptRSA.rsaEncryptByPublicKey(form.password, publicKey)
                 if (!TextUtils.isEmpty(newPwd)) {
@@ -79,7 +83,7 @@ class LoginPresenter : BasePresenterImpl<LoginContract.View>(), LoginContract.Pr
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ResponseHandler { data -> mView?.loginSuccess(data) },
-                            ExceptionHandler(mView?.getContext()) { e ->
+                        ExceptionHandler2(mView?.getContext(), true) { e ->
                                 XLog.error("", e)
                                 mView?.loginFail()
                             })
@@ -94,7 +98,7 @@ class LoginPresenter : BasePresenterImpl<LoginContract.View>(), LoginContract.Pr
                     .o2Subscribe {
                         onNext {
                             if (it.data!=null) {
-                                publicKey = it.data.publicKey
+                                rsaData = it.data
                                 XLog.debug("public key is ok.lllll ")
                             }
                         }
@@ -127,28 +131,13 @@ class LoginPresenter : BasePresenterImpl<LoginContract.View>(), LoginContract.Pr
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ResponseHandler { data -> mView?.loginSuccess(data) },
-                            ExceptionHandler(mView?.getContext()) { e ->
+                        ExceptionHandler2(mView?.getContext(), true) { e ->
                                 XLog.error("", e)
                                 mView?.loginFail()
                             })
         }
     }
 
-    override fun loginByPassword(userName: String, password: String) {
-        val params: HashMap<String, String> = HashMap()
-        params["credential"] = userName
-        params["password"] = password
-        getAssembleAuthenticationService(mView?.getContext())?.let { service ->
-            service.login(params)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(ResponseHandler { data -> mView?.loginSuccess(data) },
-                            ExceptionHandler(mView?.getContext()) { e ->
-                                XLog.error("", e)
-                                mView?.loginFail()
-                            })
-        }
-    }
 
 
 
@@ -165,21 +154,13 @@ class LoginPresenter : BasePresenterImpl<LoginContract.View>(), LoginContract.Pr
             ssoService.sso(jsonMap)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .o2Subscribe {
-                        onNext { res->
-                            if (res != null && res.data != null) {
-                                mView?.loginSuccess(res.data)
-                            }else {
-                                XLog.error("没有登录成功的信息。。。。。。。")
-                                mView?.loginFail()
-                            }
-                        }
-                        onError { e, isNetworkError ->
-                            XLog.error("没有识别到, $isNetworkError", e)
-                            mView?.loginFail()
-                        }
-
-                    }
+                    .subscribe(ResponseHandler { data ->
+                        mView?.loginSuccess(data)
+                    },
+                    ExceptionHandler2(mView?.getContext(), true) { e ->
+                        XLog.error("", e)
+                        mView?.loginFail()
+                    })
         }else {
             mView?.loginFail()
         }

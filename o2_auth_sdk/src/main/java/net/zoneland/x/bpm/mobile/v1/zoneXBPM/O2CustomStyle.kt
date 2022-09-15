@@ -51,6 +51,8 @@ object O2CustomStyle {
 
     const val IMAGE_KEY_SETUP_ABOUT_LOGO = "setup_about_logo" //设置页 关于按钮 logo    66px  22dp
 
+    const val IMAGE_KEY_APPLICATION_TOP = "application_top" //应用页面 顶部图片    730  390
+
 
     /**
      * 启动 logo图地址
@@ -124,6 +126,17 @@ object O2CustomStyle {
     fun setupAboutImagePath(context: Context?): String? {
         return if (context != null) {
             FileUtil.appExternalImageDir(context)?.absolutePath + File.separator + IMAGE_KEY_SETUP_ABOUT_LOGO + extension_png
+        } else {
+            null
+        }
+    }
+
+    /**
+     * 应用页面 顶部大图
+     */
+    fun applicationTopImagePath(context: Context?): String? {
+        return if (context != null) {
+            FileUtil.appExternalImageDir(context)?.absolutePath + File.separator + IMAGE_KEY_APPLICATION_TOP + extension_png
         } else {
             null
         }

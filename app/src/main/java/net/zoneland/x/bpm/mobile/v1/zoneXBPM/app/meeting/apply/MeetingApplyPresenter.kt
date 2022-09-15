@@ -1,7 +1,7 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.apply
 
 import android.widget.TextView
-import net.muliba.accounting.app.ExceptionHandler
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ExceptionHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
@@ -85,7 +85,7 @@ class MeetingApplyPresenter : BasePresenterImpl<MeetingApplyContract.View>(), Me
 
     override fun saveMeetingNoFile(info: MeetingInfoJson) {
             val json = O2SDKManager.instance().gson.toJson(info)
-            XLog.debug("meeting:" + json)
+            XLog.debug("meeting:$json")
             val body = RequestBody.create(MediaType.parse("text/json"), json)
             getMeetingAssembleControlService(mView?.getContext())?.let { service->
                 service.saveMeeting(body)

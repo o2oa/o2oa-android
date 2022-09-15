@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:paddingTop="@dimen/spacing_small"
@@ -16,25 +17,27 @@
         android:layout_alignParentLeft="true"
         android:textSize="@dimen/font_normal"
         android:textColor="@color/z_color_text_primary_dark"
+        tools:text="2022-09-04"
         />
     <ImageView
         android:id="@+id/image_attendance_detail_list_item_appeal_icon"
         android:layout_width="16dp"
         android:layout_height="16dp"
         android:src="@mipmap/icon_appeal"
-        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
         android:layout_centerVertical="true"
         android:layout_marginRight="@dimen/spacing_normal"
-        android:visibility="invisible"
+        android:visibility="visible"
         />
     <TextView
         android:id="@+id/tv_attendance_detail_list_item_on_off_duty_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/image_attendance_detail_list_item_appeal_icon"
-        android:layout_marginRight="@dimen/spacing_normal"
+        android:layout_alignParentEnd="true"
+        android:layout_marginEnd="@dimen/spacing_huge"
         android:textSize="@dimen/font_normal"
         android:textColor="@color/z_color_text_primary_dark"
+        tools:text="10:05:00"
         />
     <TextView
         android:id="@+id/tv_attendance_detail_list_item_desc"
@@ -46,16 +49,18 @@
         android:layout_marginLeft="@dimen/spacing_normal"
         android:textSize="@dimen/font_small"
         android:textColor="@color/z_color_title_font"
+        tools:text="工作日"
         />
     <TextView
         android:id="@+id/tv_attendance_detail_list_item_status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_toLeftOf="@id/image_attendance_detail_list_item_appeal_icon"
+        android:layout_alignParentEnd="true"
         android:layout_below="@id/tv_attendance_detail_list_item_day"
         android:layout_marginTop="@dimen/spacing_small"
-        android:layout_marginRight="@dimen/spacing_normal"
+        android:layout_marginEnd="@dimen/spacing_huge"
         android:textSize="@dimen/font_small"
         android:textColor="@color/z_color_title_font"
+        tools:text="迟到 (审核中, 审核人：京津冀)"
         />
 </RelativeLayout>

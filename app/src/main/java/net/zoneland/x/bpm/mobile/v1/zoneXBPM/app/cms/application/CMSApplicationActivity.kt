@@ -12,6 +12,7 @@ import android.text.style.ForegroundColorSpan
 import android.view.Menu
 import android.view.MenuItem
 import android.widget.TextView
+import com.xiaomi.push.id
 import kotlinx.android.synthetic.main.activity_cms_application.*
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
@@ -29,6 +30,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.addOnPageChangeListener
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goThenKill
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 
@@ -170,7 +172,9 @@ class CMSApplicationActivity : BaseMVPActivity<CMSApplicationContract.View, CMSA
         }else {
             XLog.info("有草稿，跳转到详细页面")
             val document = list[0]
-            go<CMSWebViewActivity>(CMSWebViewActivity.startBundleData(document.id, document.title))
+//            go<CMSWebViewActivity>(CMSWebViewActivity.startBundleData(document.id, document.title))
+            val options = "{\"readonly\": false}"
+            goThenKill<CMSWebViewActivity>(CMSWebViewActivity.startBundleDataWithOptions(document.id, document.title, options))
         }
     }
 

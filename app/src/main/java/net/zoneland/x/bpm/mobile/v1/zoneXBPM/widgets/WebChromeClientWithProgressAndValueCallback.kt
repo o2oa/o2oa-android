@@ -21,6 +21,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import org.jetbrains.anko.dip
@@ -126,6 +127,9 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
         if (activity != null) {
             BottomSheetMenu(activity)
                     .setTitle("上传照片")
+                    .setItem("选择文件", ContextCompat.getColor(activity, R.color.z_color_text_primary)) {
+                        pickFile()
+                    }
                     .setItem("从相册选择", ContextCompat.getColor(activity, R.color.z_color_text_primary)) {
                         takeFromPictures()
                     }
@@ -145,6 +149,24 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
 
     }
 
+    private fun pickFile() {
+        if (activity != null) {
+            PicturePickUtil().withAction(activity)
+                .allowMultiple(false)
+                .setMode(PickTypeMode.File)
+                .forResult {
+                    if (it!=null && it.isNotEmpty()) {
+                        XLog.debug("文件 path:${it[0]}")
+                        if (uploadMessageAboveL != null)   {
+                            val uri = FileUtil.getUriFromFile(activity, File(it[0]))
+                            val uriList = ArrayList<Uri>()
+                            uriList.add(uri)
+                            uploadMessageAboveL?.onReceiveValue(uriList.toTypedArray())
+                        }
+                    }
+                }
+        }
+    }
 
     private fun takeFromPictures() {
         if (activity != null) {

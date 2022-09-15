@@ -2,6 +2,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview
 
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseView
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMMessage
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ReadData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.TaskData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.WorkInfoRes
@@ -27,6 +28,8 @@ object TaskWebViewContract {
         fun deleteFail()
         fun upload2FileStorageFail(message: String)
         fun upload2FileStorageSuccess(id: String)
+        fun sendImMessageSuccess(convId: String)
+        fun sendImMessageFail(err: String)
     }
 
     interface Presenter : BasePresenter<View> {
@@ -41,7 +44,7 @@ object TaskWebViewContract {
         fun delete(workId: String)
         fun setReadComplete(read: ReadData?)
         fun retractWork(workId: String)
-
         fun upload2FileStorage(filePath: String, referenceType: String , reference: String , scale: Int = 2000)
+        fun sendImMessage(message: IMMessage)
     }
 }

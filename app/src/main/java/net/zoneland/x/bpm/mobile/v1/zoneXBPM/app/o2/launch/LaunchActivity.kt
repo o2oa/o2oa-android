@@ -271,6 +271,8 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
         intent.putExtra(DownloadAPKService.VERSIN_NAME_EXTRA_NAME, versionName)
         intent.putExtra(DownloadAPKService.DOWNLOAD_URL_EXTRA_NAME, downloadUrl)
         startService(intent)
+        // 没有安装可以继续走下去
+        isStarted = false
     }
 
     /////////////////////////////////////更新 end//////////////////////////////////////

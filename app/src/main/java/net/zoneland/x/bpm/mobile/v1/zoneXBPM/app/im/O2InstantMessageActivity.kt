@@ -10,8 +10,9 @@ import android.text.TextUtils
 import android.text.style.ForegroundColorSpan
 import android.text.style.UnderlineSpan
 import android.widget.TextView
+import io.flutter.embedding.android.FlutterActivity.createDefaultIntent
+import io.flutter.embedding.android.FlutterActivity.withNewEngine
 import kotlinx.android.synthetic.main.activity_o2_instant_message.*
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
@@ -147,7 +148,8 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
             }
         }else if (type.startsWith("mind_")) {
             setLinkStyle(textView) {
-                go<FlutterConnectActivity>(FlutterConnectActivity.startFlutterAppWithRoute(ApplicationEnum.MindMap.key))
+                go<FlutterConnectActivity>(FlutterConnectActivity.startFlutterAppWithRoute(
+                    ApplicationEnum.MindMap.key))
             }
         }else {
         }

@@ -1,12 +1,11 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.person
 
-import net.muliba.accounting.app.ExceptionHandler
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ExceptionHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.realm.RealmDataService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMConversationInfo
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.person.PersonJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import rx.android.schedulers.AndroidSchedulers

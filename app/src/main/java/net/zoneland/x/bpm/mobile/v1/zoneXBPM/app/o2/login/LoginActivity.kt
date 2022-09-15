@@ -393,6 +393,8 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
             loginType = 0
             tv_bioauth_btn.gone()
             changeLoginType()
+            // loginMode返回null 一般是服务器连接不上 alert提示
+            O2DialogSupport.openAlertDialog(this, "服务器连接失败，请确认app是否连接服务器的地址是否正确！")
         }
     }
 
@@ -421,8 +423,12 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
     }
 
     override fun loginFail() {
-        XToast.toastShort(this, getString(R.string.message_login_fail))
-        hideLoadingDialog()
+       // XToast.toastShort(this, getString(R.string.message_login_fail))
+        if (useCaptcha && ll_login_captcha.visibility == View.VISIBLE) { // 如果有验证码 刷新
+            mPresenter.getCaptcha()
+        } else {
+            hideLoadingDialog()
+        }
     }
 
     override fun getCodeError() {

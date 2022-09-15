@@ -3,7 +3,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.main
 import android.text.TextUtils
 import android.widget.TextView
 import com.google.gson.Gson
-import net.muliba.accounting.app.ExceptionHandler
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ExceptionHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler

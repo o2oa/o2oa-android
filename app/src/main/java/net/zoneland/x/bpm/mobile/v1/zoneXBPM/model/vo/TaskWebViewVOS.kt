@@ -16,5 +16,4 @@ data class O2UploadImageData(
         var referencetype: String = "",//上传文件服务器的业务类型名称
         var reference: String = "",//关联业务id
         var fileId: String = ""//上传返回的文件id
-
 )

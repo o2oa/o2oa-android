@@ -1,7 +1,7 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.bind
 
 import android.text.TextUtils
-import net.muliba.accounting.app.ExceptionHandler
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ExceptionHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
@@ -34,7 +34,8 @@ class FirstStepPresenter : BasePresenterImpl<FirstStepContract.View>(), FirstSte
                         .subscribe(ResponseHandler<CollectCodeData> {
                             XLog.info("发送短信验证码成功，$phoneNumber， 验证码：${it.value} , meta:${it.meta}")
                         },
-                                ExceptionHandler(it.getContext(), { e -> XLog.error("", e) }))
+                                ExceptionHandler(it.getContext(), { e -> XLog.error("", e) })
+                        )
             }
         }
     }

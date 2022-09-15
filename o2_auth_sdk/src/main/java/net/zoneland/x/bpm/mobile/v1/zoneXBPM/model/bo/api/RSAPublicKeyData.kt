@@ -7,5 +7,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api
 
 
 data class RSAPublicKeyData (
-        var publicKey: String = "" //公钥
+        var publicKey: String = "", //公钥
+var rsaEnable: Boolean = false //是否启用
 )

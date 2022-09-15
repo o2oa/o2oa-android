@@ -223,6 +223,10 @@ class BBSWebViewSubjectActivity : BaseMVPActivity<BBSWebViewSubjectContract.View
     @JavascriptInterface
     fun reply(parentId:String) {
         XLog.debug("回复 parent id:$parentId")
+        if (O2SDKManager.instance().isBBSMute()) {
+            XLog.error("当前用户已被禁言！")
+            return
+        }
         this.parentId = parentId
         runOnUiThread { showLoadingDialog() }
         mPresenter.getReplyParentInfo(parentId)

@@ -2,7 +2,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview
 
 import android.graphics.BitmapFactory
 import android.text.TextUtils
-import net.muliba.accounting.app.ExceptionHandler
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ExceptionHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
@@ -11,6 +11,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.APIDistributeTypeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ApiResponse
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.IdData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMMessage
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AttachmentInfo
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ReadData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.TaskData
@@ -488,5 +489,17 @@ class TaskWebViewPresenter : BasePresenterImpl<TaskWebViewContract.View>(), Task
     }
 
 
-
+    override fun sendImMessage(message: IMMessage) {
+        val service = getMessageCommunicateService(mView?.getContext())
+        service?.sendMessage(message)?.subscribeOn(Schedulers.io())?.observeOn(AndroidSchedulers.mainThread())
+            ?.o2Subscribe {
+                onNext {
+                    mView?.sendImMessageSuccess(message.conversationId)
+                }
+                onError { e, _ ->
+                    XLog.error("", e)
+                    mView?.sendImMessageFail(e?.localizedMessage ?: "发送消息异常！")
+                }
+            }
+    }
 }

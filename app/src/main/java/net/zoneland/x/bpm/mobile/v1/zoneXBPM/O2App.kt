@@ -55,9 +55,7 @@ class O2App : MultiDexApplication() {
         O2SDKManager.instance().init(this)
         //数据库
         Realm.init(this)
-
         //换肤插件
-
         FancySkinManager.instance().withoutActivity(this)
                 .addSupportAttr("icon", IconChangeColorIconSkinAttr())
                 .addSupportAttr("iconCompleted", IconCompletedChangeColorIconSkinAttr())
@@ -70,30 +68,25 @@ class O2App : MultiDexApplication() {
 
         //baidu
         try {
+            SDKInitializer.setAgreePrivacy(this, true)
             SDKInitializer.initialize(applicationContext)
             //bugly
             CrashReport.initCrashReport(applicationContext)
-
-
 //            initTBS()
             WordReadHelper.init(this);
-
             //极光推送
             initJMessageAndJPush()
-
             //播放器
             O2MediaPlayerManager.instance().init(this)
-        } catch (e: Exception) {
-        }
-
-
-
 //        Fresco.initialize(this)
-        //注册日志记录器
-        LogSingletonService.instance().registerApp(this)
+            //注册日志记录器
+            LogSingletonService.instance().registerApp(this)
+            //录音
+            RecordManager.getInstance().init(this, false)
 
-        //录音
-        RecordManager.getInstance().init(this, false)
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
 
         // 初始化 演示版本服务器信息
         SampleEditionManger.instance().initConfig(this)

@@ -19,7 +19,7 @@ class AttendanceMainPresenter : BasePresenterImpl<AttendanceMainContract.View>()
                         onNext { response ->
                             var flag = false
                             val list = response.data
-                            list?.filter { O2SDKManager.instance().distinguishedName.equals(it.adminName) }?.map { flag = true }
+                            list?.filter { O2SDKManager.instance().distinguishedName == it.adminName }?.map { flag = true }
                             mView?.isAttendanceAdmin(flag)
                         }
                         onError { e, _ ->

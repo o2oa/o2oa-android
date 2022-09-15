@@ -110,6 +110,9 @@ class CustomStyleFragmentPresenter : BasePresenterImpl<CustomStyleFragmentContra
                 O2CustomStyle.IMAGE_KEY_SETUP_ABOUT_LOGO -> {
                     O2CustomStyle.setupAboutImagePath(mView?.getContext())
                 }
+                O2CustomStyle.IMAGE_KEY_APPLICATION_TOP -> {
+                    O2CustomStyle.applicationTopImagePath(mView?.getContext())
+                }
                 else -> ""
             }
             if (!TextUtils.isEmpty(path)) {

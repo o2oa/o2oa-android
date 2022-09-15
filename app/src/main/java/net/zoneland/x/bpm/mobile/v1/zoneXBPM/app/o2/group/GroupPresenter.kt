@@ -2,7 +2,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.group
 
 import android.text.TextUtils
 import android.widget.TextView
-import net.muliba.accounting.app.ExceptionHandler
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ExceptionHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.PersonInfoData
@@ -20,7 +20,8 @@ class GroupPresenter : BasePresenterImpl<GroupContract.View>(), GroupContract.Pr
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ResponseHandler<PersonalGroupData>({group -> mView?.loadGroupMembers(group.personList)}),
-                            ExceptionHandler(mView?.getContext(), {}))
+                            ExceptionHandler(mView?.getContext(), {})
+                    )
         }
 
     }

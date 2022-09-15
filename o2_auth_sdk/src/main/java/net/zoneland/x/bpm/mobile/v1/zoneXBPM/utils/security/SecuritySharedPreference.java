@@ -159,11 +159,11 @@ public class SecuritySharedPreference implements SharedPreferences {
             newMap.put(encryptPreference(entry.getKey()), encryptPreference(entry.getValue().toString()));
         }
         Editor editor = mSharedPreferences.edit();
-        editor.clear().commit();
+        editor.clear().apply();
         for (Map.Entry<String, String> entry : newMap.entrySet()){
             editor.putString(entry.getKey(), entry.getValue());
         }
-        editor.commit();
+        editor.apply();
     }
 
 

@@ -12,10 +12,7 @@ import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
-import com.baidu.location.BDLocation
-import com.baidu.location.BDLocationListener
-import com.baidu.location.LocationClient
-import com.baidu.location.LocationClientOption
+import com.baidu.location.*
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.wugang.activityresult.library.ActivityResult
@@ -293,8 +290,16 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
                 activity.runOnUiThread {
                     val uri = Uri.parse(schema)   //   o2oa://" 相当于 http://www.baidu.com
                     val intent =  Intent(Intent.ACTION_VIEW, uri)
-                    intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                    activity.startActivity(intent)
+//                    if (intent.resolveActivity(activity.packageManager) != null) {
+                        try {
+                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                            activity.startActivity(intent)
+                        } catch (e: Exception) {
+                            XLog.error("没有安装第三方app，schema: $schema", e)
+                        }
+//                    } else {
+//                        XLog.error("没有安装第三方app，schema: $schema")
+//                    }
                 }
                 if (!TextUtils.isEmpty(callback)) {
                     callbackJs("$callback('{\"result\": true, \"message\": \"\"}')")
@@ -502,8 +507,9 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
     }
 
     private fun locationAndCallback(callback: String?) {
+        LocationClient.setAgreePrivacy(true)
         val mLocationClient: LocationClient by lazy { LocationClient(activity) }
-        mLocationClient.registerLocationListener(object : BDLocationListener{
+        mLocationClient.registerLocationListener(object : BDAbstractLocationListener() {
             override fun onReceiveLocation(location: BDLocation?) {
                 XLog.debug("onReceive locType:${location?.locType}, latitude:${location?.latitude}, longitude:${location?.longitude}")
                 if (location != null) {
@@ -520,11 +526,25 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
                 }
             }
 
-            override fun onConnectHotSpotMessage(p0: String?, p1: Int) {
-                XLog.debug("onConnectHotSpotMessage, p0:$p0, p1:$p1")
-            }
-
         })
+//        mLocationClient.registerLocationListener(object : BDLocationListener{
+//            override fun onReceiveLocation(location: BDLocation?) {
+//                XLog.debug("onReceive locType:${location?.locType}, latitude:${location?.latitude}, longitude:${location?.longitude}")
+//                if (location != null) {
+//                    val des = location.locationDescribe
+//                    val response = O2JsDeviceLocationResponse()
+//                    response.latitude = location.latitude
+//                    response.longitude = location.longitude
+//                    response.address = if (TextUtils.isEmpty(des)){location.addrStr}else{des}
+//                    if (!TextUtils.isEmpty(callback)) {
+//                        val json = gson.toJson(response)
+//                        callbackJs("$callback('$json')")
+//                    }
+//                    mLocationClient.stop()
+//                }
+//            }
+//
+//        })
         val option = LocationClientOption()
         option.locationMode = LocationClientOption.LocationMode.Hight_Accuracy//可选，默认高精度，设置定位模式，高精度，低功耗，仅设备
         option.setCoorType("bd09ll")//百度坐标系 可选，默认gcj02，设置返回的定位结果坐标系

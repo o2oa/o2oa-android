@@ -65,12 +65,12 @@ class AttendanceMainActivity : BaseMVPActivity<AttendanceMainContract.View, Atte
         selected(0)
 
         mPresenter.loadAttendanceAdmin()
-
+        checkPermission()
     }
 
     override fun onResume() {
         super.onResume()
-        checkPermission()
+
     }
 
 //    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -83,9 +83,9 @@ class AttendanceMainActivity : BaseMVPActivity<AttendanceMainContract.View, Atte
         if (isAttendanceAdmin) {
             menuInflater.inflate(R.menu.menu_attendance_main_admin, menu)
         }
-//        else {
-//            menuInflater.inflate(R.menu.menu_attendance_main_normal, menu)
-//        }
+        else {
+            menuInflater.inflate(R.menu.menu_attendance_main_normal, menu)
+        }
         return super.onPrepareOptionsMenu(menu)
     }
 
