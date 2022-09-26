@@ -148,7 +148,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         }
         // 上架测试账号 直接登录
         if (isDemoAccount && phone == "13912345678") {
-            mPresenter.login(phone, "345678") // 自动登录到演示服务器
+            mPresenter.loginWithPwd(phone, "345678") // 自动登录到演示服务器
         } else {
             activity?.goThenKill<LoginActivity>()
         }

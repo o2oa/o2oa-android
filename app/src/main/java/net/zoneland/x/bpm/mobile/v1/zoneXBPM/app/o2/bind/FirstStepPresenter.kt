@@ -8,9 +8,11 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.LoginWithCaptchaForm
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectCodeData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectDeviceData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectUnitData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.ExceptionHandler2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import rx.android.schedulers.AndroidSchedulers
@@ -116,6 +118,22 @@ class FirstStepPresenter : BasePresenterImpl<FirstStepContract.View>(), FirstSte
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ResponseHandler { data -> mView?.loginSuccess(data) },
                             ExceptionHandler(mView?.getContext()) { _ -> mView?.loginFail() })
+        }
+    }
+
+    override fun loginWithPwd(userName: String, pwd: String) {
+        val form = LoginWithCaptchaForm()
+        form.credential = userName
+        form.password = pwd
+        getAssembleAuthenticationService(mView?.getContext())?.let { service ->
+            service.loginWithCaptchaCode(form)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ResponseHandler { data -> mView?.loginSuccess(data) },
+                    ExceptionHandler2(mView?.getContext(), true) { e ->
+                        XLog.error("", e)
+                        mView?.loginFail()
+                    })
         }
     }
 }

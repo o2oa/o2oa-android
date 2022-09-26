@@ -31,6 +31,7 @@ object FirstStepContract {
          * 登录
          */
         fun login(userName: String, code: String)
+        fun loginWithPwd(userName: String, pwd: String)
         fun getDistribute(url: String, host: String)
     }
 }
