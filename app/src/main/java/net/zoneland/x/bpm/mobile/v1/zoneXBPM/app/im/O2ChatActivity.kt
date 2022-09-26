@@ -1144,6 +1144,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 
     inner class IMMessageReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            // 新消息
             val body = intent?.getStringExtra(O2IM.IM_Message_Receiver_name)
             if (body != null && body.isNotEmpty()) {
                 XLog.debug("接收到im消息, $body")
@@ -1155,7 +1156,18 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                 } catch (e: Exception) {
                     XLog.error("", e)
                 }
-
+            }
+            val revokeBody = intent?.getStringExtra(O2IM.IM_Message_Receiver_revoke_name)
+            if (revokeBody != null && revokeBody.isNotEmpty()) {
+                XLog.debug("接收到im撤回消息, $revokeBody")
+                try {
+                    val message = O2SDKManager.instance().gson.fromJson<IMMessage>(revokeBody, IMMessage::class.java)
+                    if (message.conversationId == conversationId) {
+                        adapter.removeMessage(message)
+                    }
+                } catch (e: Exception) {
+                    XLog.error("", e)
+                }
             }
         }
 
