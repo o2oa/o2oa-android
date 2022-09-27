@@ -26,6 +26,7 @@
     <string name="my_app">My Application</string>
     <string name="take_photo">Camera</string>
     <string name="upload_photo">Upload Photo</string>
+    <string name="record_voice">Record Audio</string>
     <string name="upload_attachment">Upload</string>
     <string name="choose_from_files">Choose from Files</string>
     <string name="take_from_album">Choose from album</string>

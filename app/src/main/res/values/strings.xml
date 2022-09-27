@@ -23,8 +23,9 @@
     <!--    <string name="app_edit_title">我的应用编辑</string>-->
     <string name="my_app">我的应用</string>
     <string name="take_photo">拍照</string>
+    <string name="record_voice">录音</string>
     <string name="upload_photo">上传照片</string>
-    <string name="upload_attachment">上传</string>
+    <string name="upload_attachment">上传附件</string>
     <string name="choose_from_files">从文件中选择</string>
     <string name="take_from_album">从手机相册选择</string>
     <string name="picker">选择器</string>

@@ -723,7 +723,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                     .o2Subscribe {
                         onNext { (granted, _, _) ->
                             if (!granted){
-                                O2DialogSupport.openAlertDialog(this@O2ChatActivity, getString(R.string.dialog_msg_audio_need_permission), { permissionSetting() })
+                                O2DialogSupport.openAlertDialog(this@O2ChatActivity, getString(R.string.dialog_msg_audio_need_permission), { AndroidUtils.gotoSettingApplication(this@O2ChatActivity) })
                             }
                         }
                         onError { e, _ ->
@@ -767,7 +767,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                     .o2Subscribe {
                         onNext {  (granted, _, _) ->
                             if (!granted){
-                                O2DialogSupport.openAlertDialog(this@O2ChatActivity, getString(R.string.dialog_msg_camera_need_permission), { permissionSetting() })
+                                O2DialogSupport.openAlertDialog(this@O2ChatActivity, getString(R.string.dialog_msg_camera_need_permission), { AndroidUtils.gotoSettingApplication(this@O2ChatActivity) })
                             } else {
                                 openCamera()
                             }
@@ -835,10 +835,6 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     }
 
 
-    private fun permissionSetting() {
-        val packageUri = Uri.parse("package:$packageName")
-        startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageUri))
-    }
 
     // 设置表情栏的高度
 //    private fun initEmojiView() {
