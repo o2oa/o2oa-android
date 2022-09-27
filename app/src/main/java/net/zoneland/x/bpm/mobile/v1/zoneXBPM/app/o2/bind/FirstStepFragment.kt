@@ -4,6 +4,7 @@ import android.graphics.Color
 import android.text.Spannable
 import android.text.SpannableStringBuilder
 import android.text.TextUtils
+import android.text.method.LinkMovementMethod
 import android.text.style.ClickableSpan
 import android.text.style.ForegroundColorSpan
 import android.view.View
@@ -76,9 +77,9 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         // 华为需要同意协议
         if (AndroidUtils.isHuaweiChannel(activity)) {
             ll_fluid_login_agree_bar.visible()
-
+            openPrivacyDialog()
         }
-        openPrivacyDialog()
+
     }
 
     override fun onDestroy() {
@@ -131,13 +132,14 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                 XLog.error("不同意隐私政策！！！！！")
             })
             val f = dialog.findViewById<TextView>(R.id.tv_dialog_user_privacy_second)
-            val style = SpannableStringBuilder();
+            val style = SpannableStringBuilder()
             //设置文字
             val text = getString(R.string.user_privacy_dialog_2)
             style.append(text)
             // 《用户协议》 点击
             val clickableSpan = object :ClickableSpan() {
                 override fun onClick(widget: View) {
+                    XLog.debug("点击了 用户协议")
                     openUserPrivacy()
                 }
             }
@@ -147,12 +149,14 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
             // 《隐私政策》
             val clickableSpan2 = object :ClickableSpan() {
                 override fun onClick(widget: View) {
+                    XLog.debug("点击了 隐私政策")
                     openSecret()
                 }
             }
             style.setSpan(clickableSpan2, 17, 23, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
             style.setSpan(foregroundColorSpan, 17, 23, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
             f.text = style
+            f.movementMethod = LinkMovementMethod.getInstance()
         }
 
     }
