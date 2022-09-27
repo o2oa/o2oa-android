@@ -1,9 +1,17 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.bind
 
-import android.content.pm.PackageManager
+import android.graphics.Color
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.text.TextUtils
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
 import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+import com.google.android.material.internal.ContextUtils
 import com.google.gson.reflect.TypeToken
+import com.xiaomi.push.it
 import kotlinx.android.synthetic.main.fragment_fluid_login_phone.*
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
@@ -11,16 +19,14 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.login.LoginActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main.MainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.O2WebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.APIDistributeData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AuthenticationInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectUnitData
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.CheckButtonDoubleClick
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.StringUtil
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goThenKill
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.hideSoftInput
@@ -57,8 +63,6 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                 view_bind_phone_step_one_number_bottom.setBackgroundColor(FancySkinManager.instance().getColor(activity!!, R.color.z_color_input_line_blur))
                 image_login_phone_icon.setImageDrawable(FancySkinManager.instance().getDrawable(activity!!, R.mipmap.icon_phone_normal))
             }
-
-
         }
         edit_login_code.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -70,10 +74,11 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
             }
         }
         // 华为需要同意协议
-        if (isHuaweiChannel()) {
+        if (AndroidUtils.isHuaweiChannel(activity)) {
             ll_fluid_login_agree_bar.visible()
 
         }
+        openPrivacyDialog()
     }
 
     override fun onDestroy() {
@@ -115,6 +120,41 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         O2DialogSupport.openConfirmDialog(activity, getString(R.string.dialog_msg_bind_to_server_fail), { _ ->
             bind2SampleServer()
         }, positiveText = getString(R.string.dialog_title_sample_server))
+    }
+
+
+    private fun openPrivacyDialog() {
+        activity?.let {
+            val dialog = O2DialogSupport.openCustomViewDialog(it, getString(R.string.user_privacy_dialog_title),getString(R.string.user_privacy_dialog_agree_btn), getString(R.string.user_privacy_dialog_disagree_btn), R.layout.dialog_user_privacy_secret, { _ ->
+                radio_fluid_login_agree.isChecked = true
+            }, { _ ->
+                XLog.error("不同意隐私政策！！！！！")
+            })
+            val f = dialog.findViewById<TextView>(R.id.tv_dialog_user_privacy_second)
+            val style = SpannableStringBuilder();
+            //设置文字
+            val text = getString(R.string.user_privacy_dialog_2)
+            style.append(text)
+            // 《用户协议》 点击
+            val clickableSpan = object :ClickableSpan() {
+                override fun onClick(widget: View) {
+                    openUserPrivacy()
+                }
+            }
+            style.setSpan(clickableSpan, 10, 16, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+            val foregroundColorSpan =  ForegroundColorSpan(FancySkinManager.instance().getColor(it, R.color.z_color_primary_blue))
+            style.setSpan(foregroundColorSpan, 10, 16, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+            // 《隐私政策》
+            val clickableSpan2 = object :ClickableSpan() {
+                override fun onClick(widget: View) {
+                    openSecret()
+                }
+            }
+            style.setSpan(clickableSpan2, 17, 23, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+            style.setSpan(foregroundColorSpan, 17, 23, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
+            f.text = style
+        }
+
     }
 
     /**
@@ -173,7 +213,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                 }
 
                 // 必须同意协议
-                if (isHuaweiChannel()) {
+                if (AndroidUtils.isHuaweiChannel(activity)) {
                     val isCheck = radio_fluid_login_agree.isChecked
                     if (!isCheck) {
                         XToast.toastShort(activity, getString(R.string.agree_login_privacy_alert_message))
@@ -233,19 +273,16 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                 edit_login_code.requestFocusFromTouch()
             }
             R.id.tv_secret_login -> {
-                activity?.let {
-                    O2WebViewActivity.openWebView(it, getString(R.string.secret), "https://www.o2oa.net/secret.html")
-                }
+                openSecret()
             }
             R.id.tv_user_service_login -> {
-                activity?.let {
-                    O2WebViewActivity.openWebView(it, getString(R.string.user_service), "https://www.o2oa.net/userService.html")
-                }
+               openUserPrivacy()
             }
             else -> XLog.error("no implements this view ,id:${v?.id}")
         }
 
     }
+
 
     override fun loginSuccess(data: AuthenticationInfoJson) {
         O2SDKManager.instance().setCurrentPersonData(data)
@@ -277,34 +314,22 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         }
     }
 
+    private fun openSecret() {
+        activity?.let {
+            O2WebViewActivity.openWebView(it, getString(R.string.secret), "https://www.o2oa.net/secret.html")
+        }
+    }
+    private fun openUserPrivacy() {
+        activity?.let {
+            O2WebViewActivity.openWebView(it, getString(R.string.user_service), "https://www.o2oa.net/userService.html")
+        }
+    }
     private fun gotoLogin() {
         mPresenter.login(phone, code)//@date 2018-03-20 绑定成功 直接登陆
     }
 
 
-    /**
-     * 读取当前渠道
-     * 是否华为
-     */
-    private fun isHuaweiChannel() : Boolean {
-        var value = ""
-        value = try {
-            if (TextUtils.isEmpty(activity?.packageName)) {
-                ""
-            } else {
-                val applicationInfo = activity?.packageManager?.getApplicationInfo(
-                    activity!!.packageName,
-                    PackageManager.GET_META_DATA
-                )
-                applicationInfo?.metaData?.getString("BUGLY_APP_CHANNEL") ?: ""
-            }
-        } catch(e: Exception) {
-            ""
-        }
-        XLog.info("渠道。。。。$value")
-        return (value == "huawei")
-//        return true
-    }
+
 
 
 }

@@ -9,9 +9,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import android.text.TextUtils
 import android.widget.TextView
+import androidx.core.app.ActivityCompat.startActivityForResult
+import com.xiaomi.mipush.sdk.MessageHandleService.startService
+import com.xiaomi.push.it
 import kotlinx.android.synthetic.main.content_about.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.DownloadAPKFragment
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.O2WebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.DownloadAPKService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2AppUpdateBean
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
@@ -58,6 +62,17 @@ class AboutActivity : AppCompatActivity() {
             }
         } else {
             relative_about_check_version.gone()
+        }
+        if (AndroidUtils.isHuaweiChannel(this)) {
+            ll_about_user_secret.visible()
+            relative_about_secret.setOnClickListener {
+                O2WebViewActivity.openWebView(this@AboutActivity, getString(R.string.secret), "https://www.o2oa.net/secret.html")
+            }
+            relative_about_user_service.setOnClickListener {
+                O2WebViewActivity.openWebView(this@AboutActivity, getString(R.string.user_service), "https://www.o2oa.net/userService.html")
+            }
+        } else {
+            ll_about_user_secret.gone()
         }
     }
 

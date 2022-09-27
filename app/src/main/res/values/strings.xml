@@ -24,6 +24,8 @@
     <string name="my_app">我的应用</string>
     <string name="take_photo">拍照</string>
     <string name="upload_photo">上传照片</string>
+    <string name="upload_attachment">上传</string>
+    <string name="choose_from_files">从文件中选择</string>
     <string name="take_from_album">从手机相册选择</string>
     <string name="picker">选择器</string>
     <string name="call">拨打电话</string>
@@ -838,6 +840,11 @@
     <string name="search_taskcompleted">搜索已办工作</string>
     <string name="secret">《隐私政策》</string>
     <string name="user_service">《用户协议》</string>
+    <string name="user_privacy_dialog_title">用户协议和隐私政策提示</string>
+    <string name="user_privacy_dialog_agree_btn">同意</string>
+    <string name="user_privacy_dialog_disagree_btn">不同意</string>
+    <string name="user_privacy_dialog_1">你需要同意用户协议和隐私政策才能使用O2OA。如你不同意，很遗憾我们不能为你提供服务。</string>
+    <string name="user_privacy_dialog_2">你可以阅读完整版本的《用户协议》和《隐私政策》，来了解详细信息。</string>
     <string name="and"> 和 </string>
     <string name="search_no_result">未搜到相关结果</string>
     <string name="search_hint">请输入搜索关键字</string>
