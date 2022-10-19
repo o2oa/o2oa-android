@@ -16,6 +16,7 @@ import com.xiaomi.push.it
 import kotlinx.android.synthetic.main.fragment_fluid_login_phone.*
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2App
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPFragment
@@ -77,7 +78,18 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         // 华为需要同意协议
         if (AndroidUtils.isHuaweiChannel(activity)) {
             ll_fluid_login_agree_bar.visible()
-            openPrivacyDialog()
+//            openPrivacyDialog()
+            val pd = PrivacyDialogFragment()
+            pd.setOnClickBtnListener(object : PrivacyDialogFragment.OnClickBtnListener {
+                override fun onclick(isAgree: Boolean) {
+                    if (isAgree) {
+                        radio_fluid_login_agree.isChecked = true
+                    } else {
+                        activity?.finish()
+                    }
+                }
+            })
+            pd.show(activity!!.supportFragmentManager, "privacy")
         }
 
     }
@@ -128,8 +140,10 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         activity?.let {
             val dialog = O2DialogSupport.openCustomViewDialog(it, getString(R.string.user_privacy_dialog_title),getString(R.string.user_privacy_dialog_agree_btn), getString(R.string.user_privacy_dialog_disagree_btn), R.layout.dialog_user_privacy_secret, { _ ->
                 radio_fluid_login_agree.isChecked = true
+                O2App.instance.agreePrivacyAndInitJpush(true)
             }, { _ ->
                 XLog.error("不同意隐私政策！！！！！")
+                O2App.instance.agreePrivacyAndInitJpush(false)
             })
             val f = dialog.findViewById<TextView>(R.id.tv_dialog_user_privacy_second)
             val style = SpannableStringBuilder()
@@ -175,8 +189,8 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         unit.centerContext = "/x_program_center"
         unit.httpProtocol = "https"
         //绑定成功写入本地存储
-        O2SDKManager.instance().bindUnit(unit, phone, (activity as BindPhoneActivity).loadDeviceId())
         APIAddressHelper.instance().setHttpProtocol(unit.httpProtocol)
+        O2SDKManager.instance().bindUnit(unit, phone, (activity as BindPhoneActivity).loadDeviceId())
         val url = APIAddressHelper.instance().getCenterUrl(unit.centerHost,
                 unit.centerContext, unit.centerPort)
         XLog.debug(url)

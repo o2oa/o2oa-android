@@ -39,7 +39,7 @@ object AndroidUtils {
      * 读取当前渠道
      * 是否华为
      */
-    fun isHuaweiChannel(activity: Activity?) : Boolean {
+    fun isHuaweiChannel(activity: Context?) : Boolean {
         var value = ""
         value = try {
             if (TextUtils.isEmpty(activity?.packageName)) {

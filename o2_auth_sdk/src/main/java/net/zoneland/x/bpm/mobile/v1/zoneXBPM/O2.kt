@@ -156,6 +156,8 @@ object O2 {
 
     val PRE_MEETING_CONFIG_KEY = "PRE_MEETING_CONFIG_KEY" // 会议配置数据的key
 
+    val PRE_APP_PRIVACY_AGREE_KEY = "PRE_APP_PRIVACY_AGREE_KEY" // 是否同意隐私政策
+
 
     val BUSINESS_TYPE_MESSAGE_CENTER = 0//信息中心
     val BUSINESS_TYPE_WORK_CENTER = 1//工作中心

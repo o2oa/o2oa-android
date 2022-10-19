@@ -5,9 +5,9 @@ import android.content.pm.PackageManager
 import android.util.Log
 import androidx.multidex.MultiDex
 import androidx.multidex.MultiDexApplication
+import cn.jiguang.api.utils.JCollectionAuth
 import cn.jpush.android.api.JPushInterface
 import com.baidu.mapapi.SDKInitializer
-import com.tencent.bugly.crashreport.CrashReport
 import com.tencent.smtt.export.external.TbsCoreSettings
 import com.tencent.smtt.sdk.QbSdk
 import com.tencent.smtt.sdk.TbsListener
@@ -15,9 +15,11 @@ import com.zlw.main.recorderlib.RecordManager
 import io.realm.Realm
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.skin.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.LogSingletonService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2MediaPlayerManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.tbs.WordReadHelper
 
 
@@ -68,10 +70,13 @@ class O2App : MultiDexApplication() {
 
         //baidu
         try {
+            //注册日志记录器
+            LogSingletonService.instance().registerApp(this)
+
             SDKInitializer.setAgreePrivacy(this, true)
             SDKInitializer.initialize(applicationContext)
             //bugly
-            CrashReport.initCrashReport(applicationContext)
+//            CrashReport.initCrashReport(applicationContext)
 //            initTBS()
             WordReadHelper.init(this);
             //极光推送
@@ -79,8 +84,6 @@ class O2App : MultiDexApplication() {
             //播放器
             O2MediaPlayerManager.instance().init(this)
 //        Fresco.initialize(this)
-            //注册日志记录器
-            LogSingletonService.instance().registerApp(this)
             //录音
             RecordManager.getInstance().init(this, false)
 
@@ -159,8 +162,28 @@ class O2App : MultiDexApplication() {
 
 
     private fun initJMessageAndJPush() {
-        JPushInterface.init(this)
+        if (BuildConfig.InnerServer) {
+            JCollectionAuth.setAuth(this, true)
+            JPushInterface.init(this)
+        } else {
+            val isAgree = O2SDKManager.instance().prefs().getBoolean(O2.PRE_APP_PRIVACY_AGREE_KEY, false)
+            XLog.debug("init jpush isagree: $isAgree")
+//            if (isAgree) {
+            if (!(AndroidUtils.isHuaweiChannel(this) && !isAgree )) {
+                JPushInterface.init(this)
+            }
+        }
+    }
 
+    fun agreePrivacyAndInitJpush(isAgree: Boolean) {
+        XLog.debug("setup jpush isagree: $isAgree")
+        JCollectionAuth.setAuth(this, isAgree)
+        if (isAgree) {
+            JPushInterface.init(this)
+        }
+        O2SDKManager.instance().prefs().edit {
+            putBoolean(O2.PRE_APP_PRIVACY_AGREE_KEY, isAgree)
+        }
     }
 
     fun addNotification(nId: Int) {
@@ -177,6 +200,8 @@ class O2App : MultiDexApplication() {
                     XLog.info("清除通知：$it")
                 }
             }
+            // 清除通知 清除角标 这句写了好像角标不会再出现了
+            JPushInterface.setBadgeNumber(this, 0)
         } catch (e: Exception) {
             XLog.error("", e)
         }
