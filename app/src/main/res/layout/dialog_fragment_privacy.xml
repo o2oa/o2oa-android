@@ -22,11 +22,11 @@
         app:cardCornerRadius="15dp">
     <LinearLayout
         android:id="@+id/rl_record_voice_box"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_width="275dp"
+        android:layout_height="255dp"
         android:orientation="vertical">
         <FrameLayout
-            android:layout_width="275dp"
+            android:layout_width="match_parent"
             android:layout_height="50dp">
             <ImageView
                 android:layout_width="275dp"
@@ -76,6 +76,12 @@
                     />
             </LinearLayout>
         </ScrollView>
+        <View
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:background="@color/z_color_split_line" />
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="44dp"
@@ -87,7 +93,7 @@
                 android:layout_width="110dp"
                 android:layout_height="44dp"
                 android:layout_marginStart="20dp"
-                android:background="@drawable/button_background_44dp"
+                android:background="@null"
                 android:text="@string/cancel"
                 android:textColor="@color/z_color_text_primary"
                 android:textSize="18sp" />
@@ -98,9 +104,9 @@
                 android:layout_height="44dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginEnd="20dp"
-                android:background="@drawable/button_background_44dp"
+                android:background="@null"
                 android:text="@string/positive"
-                android:textColor="@android:color/white"
+                android:textColor="@color/z_color_primary"
                 android:textSize="18sp" />
         </LinearLayout>
     </LinearLayout>

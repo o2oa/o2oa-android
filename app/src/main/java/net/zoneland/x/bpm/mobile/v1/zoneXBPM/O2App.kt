@@ -170,6 +170,7 @@ class O2App : MultiDexApplication() {
             XLog.debug("init jpush isagree: $isAgree")
 //            if (isAgree) {
             if (!(AndroidUtils.isHuaweiChannel(this) && !isAgree )) {
+                JCollectionAuth.setAuth(this, true)
                 JPushInterface.init(this)
             }
         }
