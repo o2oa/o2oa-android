@@ -78,18 +78,6 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         // 华为需要同意协议
         if (AndroidUtils.isHuaweiChannel(activity)) {
             ll_fluid_login_agree_bar.visible()
-//            openPrivacyDialog()
-            val pd = PrivacyDialogFragment()
-            pd.setOnClickBtnListener(object : PrivacyDialogFragment.OnClickBtnListener {
-                override fun onclick(isAgree: Boolean) {
-                    if (isAgree) {
-                        radio_fluid_login_agree.isChecked = true
-                    } else {
-                        activity?.finish()
-                    }
-                }
-            })
-            pd.show(activity!!.supportFragmentManager, "privacy")
         }
 
     }
@@ -135,45 +123,6 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         }, positiveText = getString(R.string.dialog_title_sample_server))
     }
 
-
-    private fun openPrivacyDialog() {
-        activity?.let {
-            val dialog = O2DialogSupport.openCustomViewDialog(it, getString(R.string.user_privacy_dialog_title),getString(R.string.user_privacy_dialog_agree_btn), getString(R.string.user_privacy_dialog_disagree_btn), R.layout.dialog_user_privacy_secret, { _ ->
-                radio_fluid_login_agree.isChecked = true
-                O2App.instance.agreePrivacyAndInitJpush(true)
-            }, { _ ->
-                XLog.error("不同意隐私政策！！！！！")
-                O2App.instance.agreePrivacyAndInitJpush(false)
-            })
-            val f = dialog.findViewById<TextView>(R.id.tv_dialog_user_privacy_second)
-            val style = SpannableStringBuilder()
-            //设置文字
-            val text = getString(R.string.user_privacy_dialog_2)
-            style.append(text)
-            // 《用户协议》 点击
-            val clickableSpan = object :ClickableSpan() {
-                override fun onClick(widget: View) {
-                    XLog.debug("点击了 用户协议")
-                    openUserPrivacy()
-                }
-            }
-            style.setSpan(clickableSpan, 10, 16, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-            val foregroundColorSpan =  ForegroundColorSpan(FancySkinManager.instance().getColor(it, R.color.z_color_primary_blue))
-            style.setSpan(foregroundColorSpan, 10, 16, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-            // 《隐私政策》
-            val clickableSpan2 = object :ClickableSpan() {
-                override fun onClick(widget: View) {
-                    XLog.debug("点击了 隐私政策")
-                    openSecret()
-                }
-            }
-            style.setSpan(clickableSpan2, 17, 23, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-            style.setSpan(foregroundColorSpan, 17, 23, Spannable.SPAN_INCLUSIVE_EXCLUSIVE)
-            f.text = style
-            f.movementMethod = LinkMovementMethod.getInstance()
-        }
-
-    }
 
     /**
      * 绑定到sample服务器

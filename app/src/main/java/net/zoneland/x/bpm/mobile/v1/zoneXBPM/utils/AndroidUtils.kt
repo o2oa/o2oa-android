@@ -40,6 +40,7 @@ object AndroidUtils {
      * 是否华为
      */
     fun isHuaweiChannel(activity: Context?) : Boolean {
+//        return true
         var value = ""
         value = try {
             if (TextUtils.isEmpty(activity?.packageName)) {

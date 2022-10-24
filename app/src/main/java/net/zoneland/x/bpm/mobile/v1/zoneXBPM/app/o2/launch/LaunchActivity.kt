@@ -22,10 +22,12 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import cn.jpush.android.api.JPushInterface
 import kotlinx.android.synthetic.main.activity_launch.*
+import kotlinx.android.synthetic.main.fragment_fluid_login_phone.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.DownloadAPKFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.bind.BindPhoneActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.bind.PrivacyDialogFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.login.LoginActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main.MainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.LaunchState
@@ -284,6 +286,34 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
 
 
     private fun launch() {
+        // 应用市场上架需要同意协议
+        if (AndroidUtils.isHuaweiChannel(this)) {
+            val isAgree = O2SDKManager.instance().prefs().getBoolean(O2.PRE_APP_PRIVACY_AGREE_KEY, false)
+            if (!isAgree) {
+                val pd = PrivacyDialogFragment()
+                pd.setOnClickBtnListener(object : PrivacyDialogFragment.OnClickBtnListener {
+                    override fun onclick(isAgree: Boolean) {
+                        if (isAgree) {
+                            O2App.instance.agreePrivacyAndInitThirdParty(true)
+                            trueLaunch()
+                        } else {
+                            finish()
+                        }
+                    }
+                })
+                pd.show(supportFragmentManager, "privacy")
+            } else {
+                trueLaunch()
+            }
+        } else {
+            O2SDKManager.instance().prefs().edit {
+                putBoolean(O2.PRE_APP_PRIVACY_AGREE_KEY, true)
+            }
+            trueLaunch()
+        }
+    }
+
+    private fun trueLaunch() {
         XLog.info("一切的开始。。。。。。。。。。。。。。。。。。。。。。。")
         if (BuildConfig.InnerServer) {
             val json = resources.assets.open("server.json")
@@ -296,13 +326,13 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
                 XLog.error("没有获取到server.json")
 //                XToast.toastShort(this, "缺少配置文件！")
                 O2AlertDialogBuilder(this)
-                        .icon(O2AlertIconEnum.ALERT)
-                        .content(getString(R.string.dialog_msg_need_server_json))
-                        .positive(getString(R.string.close))
-                        .onPositiveListener{ _ ->
-                            finish()
-                        }
-                        .show()
+                    .icon(O2AlertIconEnum.ALERT)
+                    .content(getString(R.string.dialog_msg_need_server_json))
+                    .positive(getString(R.string.close))
+                    .onPositiveListener{ _ ->
+                        finish()
+                    }
+                    .show()
             }
         }else {
             if (TextUtils.isEmpty(pushToken)) {

@@ -57,6 +57,8 @@ class O2App : MultiDexApplication() {
         O2SDKManager.instance().init(this)
         //数据库
         Realm.init(this)
+        //注册日志记录器
+        LogSingletonService.instance().registerApp(this)
         //换肤插件
         FancySkinManager.instance().withoutActivity(this)
                 .addSupportAttr("icon", IconChangeColorIconSkinAttr())
@@ -67,34 +69,65 @@ class O2App : MultiDexApplication() {
                 .addSupportAttr("backgroundTint", BackgroundTintFloatingActionButtonSkinAttr())
                 .addSupportAttr("o2ButtonColor", O2ProgressButtonColorSkinAttr())
 
+        //播放器
+        O2MediaPlayerManager.instance().init(this)
+        //录音
+        RecordManager.getInstance().init(this, false)
 
-        //baidu
-        try {
-            //注册日志记录器
-            LogSingletonService.instance().registerApp(this)
-
-            SDKInitializer.setAgreePrivacy(this, true)
-            SDKInitializer.initialize(applicationContext)
-            //bugly
-//            CrashReport.initCrashReport(applicationContext)
-//            initTBS()
-            WordReadHelper.init(this);
-            //极光推送
-            initJMessageAndJPush()
-            //播放器
-            O2MediaPlayerManager.instance().init(this)
-//        Fresco.initialize(this)
-            //录音
-            RecordManager.getInstance().init(this, false)
-
-        } catch (e: Exception) {
-            e.printStackTrace()
-        }
+        initThirdParty()
 
         Log.i("O2app", "O2app init.....................................................")
-        //stetho developer tool
-//        Stetho.initializeWithDefaults(this)
     }
+
+
+
+    private fun initThirdParty() {
+        val isAgree = O2SDKManager.instance().prefs().getBoolean(O2.PRE_APP_PRIVACY_AGREE_KEY, false)
+        XLog.debug("init privacy isagree: $isAgree")
+        if (!(AndroidUtils.isHuaweiChannel(this) && !isAgree )) {
+            try {
+
+                SDKInitializer.setAgreePrivacy(this, true)
+                SDKInitializer.initialize(applicationContext)
+                WordReadHelper.init(this);
+                //极光推送
+                JCollectionAuth.setAuth(this, true)
+                JPushInterface.init(this)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+    fun agreePrivacyAndInitThirdParty(isAgree: Boolean) {
+        XLog.debug("set privacy isagree: $isAgree")
+        O2SDKManager.instance().prefs().edit {
+            putBoolean(O2.PRE_APP_PRIVACY_AGREE_KEY, isAgree)
+        }
+        if (isAgree) {
+            try {
+                //注册日志记录器
+                LogSingletonService.instance().registerApp(this)
+
+                SDKInitializer.setAgreePrivacy(this, true)
+                SDKInitializer.initialize(applicationContext)
+                WordReadHelper.init(this);
+                //极光推送
+                JCollectionAuth.setAuth(this, true)
+                JPushInterface.init(this)
+                //播放器
+                O2MediaPlayerManager.instance().init(this)
+                //录音
+                RecordManager.getInstance().init(this, false)
+
+            } catch (e: Exception) {
+                e.printStackTrace()
+            }
+        }
+    }
+
+
 
     /**
      * 初始化腾讯TBS
@@ -173,17 +206,6 @@ class O2App : MultiDexApplication() {
                 JCollectionAuth.setAuth(this, true)
                 JPushInterface.init(this)
             }
-        }
-    }
-
-    fun agreePrivacyAndInitJpush(isAgree: Boolean) {
-        XLog.debug("setup jpush isagree: $isAgree")
-        JCollectionAuth.setAuth(this, isAgree)
-        if (isAgree) {
-            JPushInterface.init(this)
-        }
-        O2SDKManager.instance().prefs().edit {
-            putBoolean(O2.PRE_APP_PRIVACY_AGREE_KEY, isAgree)
         }
     }
 

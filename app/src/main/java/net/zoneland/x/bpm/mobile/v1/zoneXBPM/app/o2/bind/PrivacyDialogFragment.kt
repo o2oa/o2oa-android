@@ -84,12 +84,10 @@ class PrivacyDialogFragment: DialogFragment() {
         tv_dialog_user_privacy_second.movementMethod = LinkMovementMethod.getInstance()
 
         btn_o2_dialog_negative.setOnClickListener {
-            O2App.instance.agreePrivacyAndInitJpush(false)
             onClickBtnListener?.onclick(false)
             dismissAllowingStateLoss()
         }
         btn_o2_dialog_positive.setOnClickListener {
-            O2App.instance.agreePrivacyAndInitJpush(true)
             onClickBtnListener?.onclick(true)
             dismissAllowingStateLoss()
         }
