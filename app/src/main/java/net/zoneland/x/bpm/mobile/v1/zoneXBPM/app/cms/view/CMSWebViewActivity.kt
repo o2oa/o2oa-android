@@ -363,6 +363,7 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
     /**
      * 表单加载完成后回调
      */
+    @Deprecated("已经弃用")
     @JavascriptInterface
     fun cmsFormLoaded(control: String) {
         //{

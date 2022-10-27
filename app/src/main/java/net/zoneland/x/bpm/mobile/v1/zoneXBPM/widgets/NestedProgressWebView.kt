@@ -4,8 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.os.Build
 import android.util.AttributeSet
-import android.view.ActionMode
-import android.view.View
+import android.view.*
 import android.webkit.*
 import android.widget.ProgressBar
 import androidx.core.content.ContextCompat
@@ -17,17 +16,11 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 
 
 /**
- * 仿NestedScrollView webview内容滚动也能使Coordinatorlayout响应对应的事件
  * Created by fancy on 2017/5/31.
  */
-//NestedScrollingChild
 class NestedProgressWebView : WebView {
 
-//    private var mLastY: Int = 0
-//    private val mScrollOffset = IntArray(2)
-//    private val mScrollConsumed = IntArray(2)
-//    private var mNestedOffsetY: Int = 0
-//    private val mChildHelper: NestedScrollingChildHelper = NestedScrollingChildHelper(this)
+
     private lateinit var progressBar: ProgressBar
     private val mActionList = ArrayList<String>()
     private var mActionMode: ActionMode? = null
@@ -149,96 +142,63 @@ class NestedProgressWebView : WebView {
         }
     }
 
-//    override fun onScrollChanged(l: Int, t: Int, oldl: Int, oldt: Int) {
-//        val lp = progressBar.layoutParams as LayoutParams
-//        lp.x = l
-//        lp.y = t
-//        progressBar.layoutParams = lp
-//        super.onScrollChanged(l, t, oldl, oldt)
-//    }
+    ///////////////////////////// 关于webview内部滑动和外部比如viewPager的滑动冲突的问题
+    //最大递归深度
+    var MAX_PARENT_DEPTH: Int = 3
 
+    //在WebView的onTouchEvent事件为ACTION_DOWN时，查找父视图是否是可以滑动的视图(如ViewPager)，
+    // 如果是,则通过requestDisallowInterceptTouchEvent(true)调用，请求父视图不要拦截touchEvent
+    override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.action == MotionEvent.ACTION_DOWN) {
+            val viewParent = findViewParentIfNeeds(this, MAX_PARENT_DEPTH)
+            viewParent?.requestDisallowInterceptTouchEvent(true)
+        }
+        return super.onTouchEvent(event)
+    }
 
-//    override fun onTouchEvent(ev: MotionEvent): Boolean {
-//        var returnValue = false
-//
-//        val event = MotionEvent.obtain(ev)
-//        val action = MotionEventCompat.getActionMasked(event)
-//        if (action == MotionEvent.ACTION_DOWN) {
-//            mNestedOffsetY = 0
-//        }
-//        val eventY = event.y.toInt()
-//        event.offsetLocation(0f, mNestedOffsetY.toFloat())
-//        when (action) {
-//            MotionEvent.ACTION_MOVE -> {
-//                var deltaY = mLastY - eventY
-//                // NestedPreScroll
-//                if (dispatchNestedPreScroll(0, deltaY, mScrollConsumed, mScrollOffset)) {
-//                    deltaY -= mScrollConsumed[1]
-//                    mLastY = eventY - mScrollOffset[1]
-//                    event.offsetLocation(0f, -mScrollOffset[1].toFloat())
-//                    mNestedOffsetY += mScrollOffset[1]
-//                }
-//                returnValue = super.onTouchEvent(event)
-//
-//                // NestedScroll
-//                if (dispatchNestedScroll(0, mScrollOffset[1], 0, deltaY, mScrollOffset)) {
-//                    event.offsetLocation(0f, mScrollOffset[1].toFloat())
-//                    mNestedOffsetY += mScrollOffset[1]
-//                    mLastY -= mScrollOffset[1]
-//                }
-//            }
-//            MotionEvent.ACTION_DOWN -> {
-//                returnValue = super.onTouchEvent(event)
-//                mLastY = eventY
-//                // start NestedScroll
-//                startNestedScroll(ViewCompat.SCROLL_AXIS_VERTICAL)
-//            }
-//            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL -> {
-//                returnValue = super.onTouchEvent(event)
-//                // end NestedScroll
-//                stopNestedScroll()
-//            }
-//        }
-//        return returnValue
-//    }
+    /**
+     * 查找父布局是是否是可滑动的View
+     * @param tag
+     * @param depth 最大递归深度，防止出现死循环
+     * @return
+     */
+    private fun findViewParentIfNeeds(tag: View, depth: Int): ViewParent? {
+        if (depth < 0) {
+            return null
+        }
+        val parent = tag.parent ?: return null
+        return if (parent is ViewGroup) {
+            if (canScrollHorizontally(parent as View) || canScrollVertically(parent as View)) {
+                parent
+            } else {
+                findViewParentIfNeeds(parent as View, depth - 1)
+            }
+        } else null
+    }
 
-    // Nested Scroll implements
-//    override fun setNestedScrollingEnabled(enabled: Boolean) {
-//        mChildHelper.isNestedScrollingEnabled = enabled
-//    }
-//
-//    override fun isNestedScrollingEnabled(): Boolean {
-//        return mChildHelper.isNestedScrollingEnabled
-//    }
-//
-//    override fun startNestedScroll(axes: Int): Boolean {
-//        return mChildHelper.startNestedScroll(axes)
-//    }
-//
-//    override fun stopNestedScroll() {
-//        mChildHelper.stopNestedScroll()
-//    }
-//
-//    override fun hasNestedScrollingParent(): Boolean {
-//        return mChildHelper.hasNestedScrollingParent()
-//    }
-//
-//    override fun dispatchNestedScroll(dxConsumed: Int, dyConsumed: Int, dxUnconsumed: Int, dyUnconsumed: Int,
-//                                      offsetInWindow: IntArray?): Boolean {
-//        return mChildHelper.dispatchNestedScroll(dxConsumed, dyConsumed, dxUnconsumed, dyUnconsumed, offsetInWindow)
-//    }
-//
-//    override fun dispatchNestedPreScroll(dx: Int, dy: Int, consumed: IntArray?, offsetInWindow: IntArray?): Boolean {
-//        return mChildHelper.dispatchNestedPreScroll(dx, dy, consumed, offsetInWindow)
-//    }
-//
-//    override fun dispatchNestedFling(velocityX: Float, velocityY: Float, consumed: Boolean): Boolean {
-//        return mChildHelper.dispatchNestedFling(velocityX, velocityY, consumed)
-//    }
-//
-//    override fun dispatchNestedPreFling(velocityX: Float, velocityY: Float): Boolean {
-//        return mChildHelper.dispatchNestedPreFling(velocityX, velocityY)
-//    }
+    /**
+     * 是否可以横向滑动
+     */
+    private fun canScrollHorizontally(view: View): Boolean {
+        return view.canScrollHorizontally(100) || view.canScrollHorizontally(-100)
+    }
+
+    /**
+     * 是否可以纵向滑动
+     */
+    private fun canScrollVertically(view: View): Boolean {
+        return view.canScrollVertically(100) || view.canScrollVertically(-100)
+    }
+
+    override fun onOverScrolled(scrollX: Int, scrollY: Int, clampedX: Boolean, clampedY: Boolean) {
+        // 解决webview与viewpager等滑动手势冲突问题
+        if (clampedX || clampedY) {
+            val viewParent = findViewParentIfNeeds(this, MAX_PARENT_DEPTH)
+            viewParent?.requestDisallowInterceptTouchEvent(false)
+        }
+        super.onOverScrolled(scrollX, scrollY, clampedX, clampedY)
+    }
+    ///////////////////////////// 关于webview内部滑动和外部比如viewPager的滑动冲突的问题 end /////////////
 
     //webview 长按菜单处理
     private fun resolveActionMode(actionMode: ActionMode?): ActionMode? {
