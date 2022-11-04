@@ -268,14 +268,14 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
             R.id.icon_main_bottom_news -> selectTab(0)
             R.id.icon_main_bottom_contact -> selectTab(1)
             R.id.icon_main_bottom_index -> {
-                val indexFragment = if (simpleMode) {
-                    fragmentList[0]
-                }else {
-                    fragmentList[2]
-                }
-                if (indexFragment is IndexPortalFragment) {
-                    indexFragment.loadWebview()
-                }
+//                val indexFragment = if (simpleMode) {
+//                    fragmentList[0]
+//                }else {
+//                    fragmentList[2]
+//                }
+//                if (indexFragment is IndexPortalFragment) {
+//                    indexFragment.loadWebview()
+//                }
                 selectTab(2)
             }
             R.id.icon_main_bottom_app -> selectTab(3)

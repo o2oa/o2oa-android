@@ -21,7 +21,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 class NestedProgressWebView : WebView {
 
 
-    private lateinit var progressBar: ProgressBar
+//    private lateinit var progressBar: ProgressBar
     private val mActionList = ArrayList<String>()
     private var mActionMode: ActionMode? = null
     private var mLinkJsInterfaceName:String = "fancyActionJsInterface"
@@ -42,11 +42,11 @@ class NestedProgressWebView : WebView {
     }
 
     private fun initProgress() {
-        progressBar = ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal)
-        progressBar.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, 10, 0, 0)
-        val drawable = ContextCompat.getDrawable(context, R.drawable.web_view_progress_bar)
-        progressBar.progressDrawable = drawable
-        addView(progressBar)
+//        progressBar = ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal)
+//        progressBar.layoutParams = LayoutParams(LayoutParams.MATCH_PARENT, 10, 0, 0)
+//        val drawable = ContextCompat.getDrawable(context, R.drawable.web_view_progress_bar)
+//        progressBar.progressDrawable = drawable
+//        addView(progressBar)
         //滚动条样式
         scrollBarStyle = View.SCROLLBARS_OUTSIDE_OVERLAY
         initSettings()
@@ -267,11 +267,11 @@ class NestedProgressWebView : WebView {
     inner class ProgressWebChromeClient : WebChromeClient() {
         override fun onProgressChanged(view: WebView, newProgress: Int) {
             if (newProgress == 100) {
-                progressBar.visibility = View.GONE
+//                progressBar.visibility = View.GONE
             } else {
-                if (progressBar.visibility == View.GONE)
-                    progressBar.visibility = View.VISIBLE
-                progressBar.progress = newProgress
+//                if (progressBar.visibility == View.GONE)
+//                    progressBar.visibility = View.VISIBLE
+//                progressBar.progress = newProgress
             }
             super.onProgressChanged(view, newProgress)
         }

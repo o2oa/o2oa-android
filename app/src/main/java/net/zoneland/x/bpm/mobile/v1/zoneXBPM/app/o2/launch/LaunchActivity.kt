@@ -121,13 +121,13 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
         filter.addAction("android.net.conn.CONNECTIVITY_CHANGE")
         registerReceiver(networkReceiver, filter)
         //init introduction
-        if (showIntroductionView()) {
-            initIntroductionUI()
-        }else {
+//        if (showIntroductionView()) {
+//            initIntroductionUI()
+//        }else {
             frame_launch_introduction_content.gone()
             constraint_launch_main_content.visible()
             start()
-        }
+//        }
     }
 
     override fun onPause() {
@@ -287,7 +287,7 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
 
     private fun launch() {
         // 应用市场上架需要同意协议
-        if (AndroidUtils.isHuaweiChannel(this)) {
+//        if (AndroidUtils.isHuaweiChannel(this)) {
             val isAgree = O2SDKManager.instance().prefs().getBoolean(O2.PRE_APP_PRIVACY_AGREE_KEY, false)
             if (!isAgree) {
                 val pd = PrivacyDialogFragment()
@@ -305,12 +305,12 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
             } else {
                 trueLaunch()
             }
-        } else {
-            O2SDKManager.instance().prefs().edit {
-                putBoolean(O2.PRE_APP_PRIVACY_AGREE_KEY, true)
-            }
-            trueLaunch()
-        }
+//        } else {
+//            O2SDKManager.instance().prefs().edit {
+//                putBoolean(O2.PRE_APP_PRIVACY_AGREE_KEY, true)
+//            }
+//            trueLaunch()
+//        }
     }
 
     private fun trueLaunch() {

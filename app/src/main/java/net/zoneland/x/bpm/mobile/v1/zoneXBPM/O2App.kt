@@ -84,7 +84,7 @@ class O2App : MultiDexApplication() {
     private fun initThirdParty() {
         val isAgree = O2SDKManager.instance().prefs().getBoolean(O2.PRE_APP_PRIVACY_AGREE_KEY, false)
         XLog.debug("init privacy isagree: $isAgree")
-        if (!(AndroidUtils.isHuaweiChannel(this) && !isAgree )) {
+        if ( isAgree ) {
             try {
 
                 SDKInitializer.setAgreePrivacy(this, true)
@@ -97,6 +97,8 @@ class O2App : MultiDexApplication() {
             } catch (e: Exception) {
                 e.printStackTrace()
             }
+        }else {
+            JCollectionAuth.setAuth(this, false)
         }
     }
 
@@ -107,19 +109,12 @@ class O2App : MultiDexApplication() {
         }
         if (isAgree) {
             try {
-                //注册日志记录器
-                LogSingletonService.instance().registerApp(this)
-
                 SDKInitializer.setAgreePrivacy(this, true)
                 SDKInitializer.initialize(applicationContext)
                 WordReadHelper.init(this);
                 //极光推送
                 JCollectionAuth.setAuth(this, true)
                 JPushInterface.init(this)
-                //播放器
-                O2MediaPlayerManager.instance().init(this)
-                //录音
-                RecordManager.getInstance().init(this, false)
 
             } catch (e: Exception) {
                 e.printStackTrace()

@@ -63,7 +63,7 @@ class AboutActivity : AppCompatActivity() {
         } else {
             relative_about_check_version.gone()
         }
-        if (AndroidUtils.isHuaweiChannel(this)) {
+//        if (AndroidUtils.isHuaweiChannel(this)) {
             ll_about_user_secret.visible()
             relative_about_secret.setOnClickListener {
                 O2WebViewActivity.openWebView(this@AboutActivity, getString(R.string.secret), "https://www.o2oa.net/secret.html")
@@ -71,9 +71,9 @@ class AboutActivity : AppCompatActivity() {
             relative_about_user_service.setOnClickListener {
                 O2WebViewActivity.openWebView(this@AboutActivity, getString(R.string.user_service), "https://www.o2oa.net/userService.html")
             }
-        } else {
-            ll_about_user_secret.gone()
-        }
+//        } else {
+//            ll_about_user_secret.gone()
+//        }
     }
 
 
