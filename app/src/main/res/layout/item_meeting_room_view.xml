@@ -145,12 +145,12 @@
         android:id="@+id/tv_meeting_list_size"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textSize="@dimen/font_meeting_participants"
-        android:textColor="@color/z_color_text_primary"
-        tools:text="叶子"
         android:layout_alignTop="@+id/ll_meeting_room_device"
         android:layout_alignParentEnd="true"
-        android:layout_marginEnd="@dimen/spacing_twenty"/>
+        android:layout_marginEnd="@dimen/spacing_twenty"
+        android:textColor="@color/z_color_text_primary"
+        android:textSize="@dimen/font_meeting_participants"
+        tools:text="叶子" />
 
     <ImageView
         android:id="@+id/image_meeting_list_item_icon"

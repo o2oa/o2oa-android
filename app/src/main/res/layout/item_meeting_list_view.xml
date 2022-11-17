@@ -19,9 +19,9 @@
         android:id="@+id/iv_meeting_list_item_deal"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@mipmap/pic_deal"
         android:layout_alignParentTop="true"
-        android:layout_alignParentEnd="true"/>
+        android:layout_alignParentEnd="true"
+        android:src="@mipmap/pic_deal" />
 
     <TextView
         android:id="@+id/tv_meeting_list_item_title"
