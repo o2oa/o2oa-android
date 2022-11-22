@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">O2演示版</string>
-    <string name="app_about">About O2演示版</string>
-    <string name="app_name_about">O2演示版</string>
+    <string name="app_name">O2OA演示版</string>
+    <string name="app_about">About O2OA演示版</string>
+    <string name="app_name_about">O2OA演示版</string>
     <string name="activity_safe_warning">Has switched to the background run !</string>
     <string name="copy_right">&#169;</string>
     <string name="reserved">All right reserved.</string>

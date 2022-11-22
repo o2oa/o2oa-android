@@ -285,6 +285,7 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
     private fun launch() {
         XLog.info("一切的开始。。。。。。。。。。。。。。。。。。。。。。。")
         // 演示版本
+        O2App.instance.agreePrivacyAndInitThirdParty(true)
         val unit = SampleEditionManger.instance().getCurrent()
         O2SDKManager.instance().launchInner(O2SDKManager.instance().gson.toJson(unit), launchState)
     }

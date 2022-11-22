@@ -1,7 +1,7 @@
 <resources>
-    <string name="app_name">O2演示版</string>
-    <string name="app_about">关于O2演示版</string>
-    <string name="app_name_about">O2演示版</string>
+    <string name="app_name">O2OA演示版</string>
+    <string name="app_about">关于O2OA演示版</string>
+    <string name="app_name_about">O2OA演示版</string>
     <string name="activity_safe_warning">已切换至后台运行！</string>
     <string name="copy_right">&#169;</string>
     <string name="reserved">All right reserved.</string>
