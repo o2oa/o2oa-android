@@ -1,26 +1,34 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.bind
 
-import android.content.pm.PackageManager
+import android.graphics.Color
+import android.text.Spannable
+import android.text.SpannableStringBuilder
 import android.text.TextUtils
+import android.text.method.LinkMovementMethod
+import android.text.style.ClickableSpan
+import android.text.style.ForegroundColorSpan
 import android.view.View
+import android.widget.TextView
+import android.widget.Toast
+import com.google.android.material.internal.ContextUtils
 import com.google.gson.reflect.TypeToken
+import com.xiaomi.push.it
 import kotlinx.android.synthetic.main.fragment_fluid_login_phone.*
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2App
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.login.LoginActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main.MainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.O2WebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.APIDistributeData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AuthenticationInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectUnitData
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.CheckButtonDoubleClick
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.StringUtil
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goThenKill
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.hideSoftInput
@@ -57,8 +65,6 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                 view_bind_phone_step_one_number_bottom.setBackgroundColor(FancySkinManager.instance().getColor(activity!!, R.color.z_color_input_line_blur))
                 image_login_phone_icon.setImageDrawable(FancySkinManager.instance().getDrawable(activity!!, R.mipmap.icon_phone_normal))
             }
-
-
         }
         edit_login_code.setOnFocusChangeListener { _, hasFocus ->
             if (hasFocus) {
@@ -70,10 +76,10 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
             }
         }
         // 华为需要同意协议
-        if (isHuaweiChannel()) {
+        if (AndroidUtils.isHuaweiChannel(activity)) {
             ll_fluid_login_agree_bar.visible()
-
         }
+
     }
 
     override fun onDestroy() {
@@ -117,6 +123,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         }, positiveText = getString(R.string.dialog_title_sample_server))
     }
 
+
     /**
      * 绑定到sample服务器
      */
@@ -131,8 +138,8 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         unit.centerContext = "/x_program_center"
         unit.httpProtocol = "https"
         //绑定成功写入本地存储
-        O2SDKManager.instance().bindUnit(unit, phone, (activity as BindPhoneActivity).loadDeviceId())
         APIAddressHelper.instance().setHttpProtocol(unit.httpProtocol)
+        O2SDKManager.instance().bindUnit(unit, phone, (activity as BindPhoneActivity).loadDeviceId())
         val url = APIAddressHelper.instance().getCenterUrl(unit.centerHost,
                 unit.centerContext, unit.centerPort)
         XLog.debug(url)
@@ -148,7 +155,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         }
         // 上架测试账号 直接登录
         if (isDemoAccount && phone == "13912345678") {
-            mPresenter.login(phone, "345678") // 自动登录到演示服务器
+            mPresenter.loginWithPwd(phone, "345678") // 自动登录到演示服务器
         } else {
             activity?.goThenKill<LoginActivity>()
         }
@@ -173,7 +180,7 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                 }
 
                 // 必须同意协议
-                if (isHuaweiChannel()) {
+                if (AndroidUtils.isHuaweiChannel(activity)) {
                     val isCheck = radio_fluid_login_agree.isChecked
                     if (!isCheck) {
                         XToast.toastShort(activity, getString(R.string.agree_login_privacy_alert_message))
@@ -233,19 +240,16 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
                 edit_login_code.requestFocusFromTouch()
             }
             R.id.tv_secret_login -> {
-                activity?.let {
-                    O2WebViewActivity.openWebView(it, getString(R.string.secret), "https://www.o2oa.net/secret.html")
-                }
+                openSecret()
             }
             R.id.tv_user_service_login -> {
-                activity?.let {
-                    O2WebViewActivity.openWebView(it, getString(R.string.user_service), "https://www.o2oa.net/userService.html")
-                }
+               openUserPrivacy()
             }
             else -> XLog.error("no implements this view ,id:${v?.id}")
         }
 
     }
+
 
     override fun loginSuccess(data: AuthenticationInfoJson) {
         O2SDKManager.instance().setCurrentPersonData(data)
@@ -277,34 +281,22 @@ class FirstStepFragment : BaseMVPFragment<FirstStepContract.View, FirstStepContr
         }
     }
 
+    private fun openSecret() {
+        activity?.let {
+            O2WebViewActivity.openWebView(it, getString(R.string.secret), "https://www.o2oa.net/secret.html")
+        }
+    }
+    private fun openUserPrivacy() {
+        activity?.let {
+            O2WebViewActivity.openWebView(it, getString(R.string.user_service), "https://www.o2oa.net/userService.html")
+        }
+    }
     private fun gotoLogin() {
         mPresenter.login(phone, code)//@date 2018-03-20 绑定成功 直接登陆
     }
 
 
-    /**
-     * 读取当前渠道
-     * 是否华为
-     */
-    private fun isHuaweiChannel() : Boolean {
-        var value = ""
-        value = try {
-            if (TextUtils.isEmpty(activity?.packageName)) {
-                ""
-            } else {
-                val applicationInfo = activity?.packageManager?.getApplicationInfo(
-                    activity!!.packageName,
-                    PackageManager.GET_META_DATA
-                )
-                applicationInfo?.metaData?.getString("BUGLY_APP_CHANNEL") ?: ""
-            }
-        } catch(e: Exception) {
-            ""
-        }
-        XLog.info("渠道。。。。$value")
-        return (value == "huawei")
-//        return true
-    }
+
 
 
 }

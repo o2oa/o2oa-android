@@ -53,7 +53,7 @@ class MeetingDetailInfoActivity : BaseMVPActivity<MeetingDetailInfoContract.View
         edit_meeting_invited_name.text = meetingDetailInfo.subject
         edit_meeting_invited_start_day.text = meetingDetailInfo.startTime.substring(0,10)
         edit_meeting_time.text = meetingDetailInfo.startTime.substring(11,16)+"-"+meetingDetailInfo.completedTime.substring(11,16)
-        meeting_people_sum.text =  "${(meetingDetailInfo.inviteMemberList.size+1)}人"
+        meeting_people_sum.text =  "${meetingDetailInfo.inviteMemberList.size}人"
         edit_meeting_type.text = meetingDetailInfo.type
         val hostPerson = if (!TextUtils.isEmpty(meetingDetailInfo.hostPerson) && meetingDetailInfo.hostPerson.contains("@")) {
             meetingDetailInfo.hostPerson.split("@")[0]

@@ -8,6 +8,7 @@ import android.net.ConnectivityManager
 import android.net.Uri
 import android.os.Build
 import android.os.Bundle
+import android.os.Handler
 import android.provider.Settings
 import android.text.TextUtils
 import android.util.Log
@@ -78,6 +79,7 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
         getJpushToken()
     }
 
+
     /**
      * 极光推送设备号
      */
@@ -107,6 +109,8 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
             }
         }
     }
+
+
 
 
     override fun onResume() {
@@ -283,40 +287,6 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
         // 演示版本
         val unit = SampleEditionManger.instance().getCurrent()
         O2SDKManager.instance().launchInner(O2SDKManager.instance().gson.toJson(unit), launchState)
-
-//        if (BuildConfig.InnerServer) {
-//            val json = resources.assets.open("server.json")
-//            if (json!= null) {
-//                val len = json.available()
-//                val buffer = ByteArray(len)
-//                json.read(buffer)
-//                O2SDKManager.instance().launchInner(String(buffer, Charsets.UTF_8), launchState)
-//            }else {
-//                XLog.error("没有获取到server.json")
-////                XToast.toastShort(this, "缺少配置文件！")
-//                O2AlertDialogBuilder(this)
-//                        .icon(O2AlertIconEnum.ALERT)
-//                        .content(getString(R.string.dialog_msg_need_server_json))
-//                        .positive(getString(R.string.close))
-//                        .onPositiveListener{ _ ->
-//                            finish()
-//                        }
-//                        .show()
-//            }
-//        }else {
-//            if (TextUtils.isEmpty(pushToken)) {
-//                // 延迟3秒 再获取一次token
-//                Handler().postDelayed({
-//                    XLog.debug("delay 3 second check bind device")
-//                    val nowToken = JPushInterface.getRegistrationID(this)
-//                    XLog.debug("device : $nowToken")
-//                    O2SDKManager.instance().launch(nowToken, launchState)
-//                }, 3000)
-//            } else {
-//                O2SDKManager.instance().launch(pushToken, launchState)
-//            }
-//
-//        }
     }
 
     /**

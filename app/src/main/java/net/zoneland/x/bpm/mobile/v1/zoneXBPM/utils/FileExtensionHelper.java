@@ -209,6 +209,31 @@ public class FileExtensionHelper {
     }
 
     /**
+     *
+     * @param extension
+     * @return
+     */
+    public static boolean isFileTBSCanOpen(String extension) {
+        if(TextUtils.isEmpty(extension)){
+            return false;
+        }
+        extension = extension.toLowerCase();
+        switch (extension){
+            case "doc":
+            case "docx":
+            case "ppt":
+            case "pptx":
+            case "xlsx":
+            case "xls":
+            case "pdf":
+            case "txt":
+            case "json":
+                return true;
+        }
+        return false;
+    }
+
+    /**
      * 是否视频文件
      * @param extension 扩展名 mp4等
      * @return

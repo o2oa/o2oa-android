@@ -34,6 +34,31 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 
 object AndroidUtils {
 
+
+    /**
+     * 读取当前渠道
+     * 是否华为
+     */
+    fun isHuaweiChannel(activity: Context?) : Boolean {
+//        return true
+        var value = ""
+        value = try {
+            if (TextUtils.isEmpty(activity?.packageName)) {
+                ""
+            } else {
+                val applicationInfo = activity?.packageManager?.getApplicationInfo(
+                    activity.packageName,
+                    PackageManager.GET_META_DATA
+                )
+                applicationInfo?.metaData?.getString("BUGLY_APP_CHANNEL") ?: ""
+            }
+        } catch(e: Exception) {
+            ""
+        }
+        XLog.info("渠道。。。。$value")
+        return (value == "huawei")
+    }
+
     /**
      * 获取状态栏高度
      *

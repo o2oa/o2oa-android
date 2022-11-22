@@ -1,5 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main
 
+import android.Manifest
 import android.annotation.TargetApi
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
@@ -9,6 +10,7 @@ import android.os.Bundle
 import android.os.IBinder
 import android.text.TextUtils
 import android.util.DisplayMetrics
+import android.util.Log
 import android.view.KeyEvent
 import android.view.View
 import androidx.fragment.app.Fragment
@@ -29,10 +31,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.BitmapUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2DoubleClickExit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.addOnPageChangeListener
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.tbs.WordReadHelper
 import org.jetbrains.anko.doAsync
 
@@ -172,6 +172,16 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         // 检测网盘是否存在V3版本
         mPresenter.checkCloudFileV3()
 
+        // 权限
+        PermissionRequester(this)
+            .request(Manifest.permission.READ_EXTERNAL_STORAGE).o2Subscribe {
+                onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
+                    Log.d("LaunchActivity", "granted:$granted, show:$shouldShowRequestPermissionRationale, deniedList:$deniedPermissions")
+                }
+                onError { e, _ ->
+                    Log.e("LaunchActivity", "检查权限出错", e)
+                }
+            }
     }
 
 
@@ -201,8 +211,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
             }
         }
 
-        // 清除通知 清除角标 这句写了好像角标不会再出现了
-//        JPushInterface.setBadgeNumber(this, 0)
+
         XLog.info("onResume ... 清除通知！！")
         O2App.instance.clearAllNotification()
 
@@ -260,14 +269,14 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
             R.id.icon_main_bottom_news -> selectTab(0)
             R.id.icon_main_bottom_contact -> selectTab(1)
             R.id.icon_main_bottom_index -> {
-                val indexFragment = if (simpleMode) {
-                    fragmentList[0]
-                }else {
-                    fragmentList[2]
-                }
-                if (indexFragment is IndexPortalFragment) {
-                    indexFragment.loadWebview()
-                }
+//                val indexFragment = if (simpleMode) {
+//                    fragmentList[0]
+//                }else {
+//                    fragmentList[2]
+//                }
+//                if (indexFragment is IndexPortalFragment) {
+//                    indexFragment.loadWebview()
+//                }
                 selectTab(2)
             }
             R.id.icon_main_bottom_app -> selectTab(3)

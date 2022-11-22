@@ -115,6 +115,17 @@ class WebSocketService : Service() {
     }
 
     /**
+     * 撤回消息
+     */
+    fun sendIMMessageRevokeBroadcast(msg: String) {
+        XLog.debug("发送im 撤回  消息： $msg")
+        val intent = Intent()
+        intent.action = O2IM.IM_Message_Receiver_Action
+        intent.putExtra(O2IM.IM_Message_Receiver_revoke_name, msg)
+        sendBroadcast(intent)
+    }
+
+    /**
      * 发送消息
      */
     private fun realSendMessage() {
@@ -154,9 +165,12 @@ class WebSocketService : Service() {
                     try {
                         val type = json.getString("type")
                         //发送im消息
-                        if (type == "im_create") {
+                        if (type == O2IM.TYPE_IM_CREATE) {
                             val body = json.getJSONObject("body")
                             sendIMMessageBroadcast(body.toString())
+                        } else if (type == O2IM.TYPE_IM_REVOKE) {
+                            val body = json.getJSONObject("body")
+                            sendIMMessageRevokeBroadcast(body.toString())
                         }
                     } catch (e: Exception) {
                         XLog.error("", e)

@@ -15,17 +15,10 @@
         android:layout_width="0dp"
         android:layout_height="@dimen/split_line"
         android:background="@color/z_color_split_line_ddd"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"/>
 
-
-    <net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
-        android:id="@+id/meeting_card_view_icon_id"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/meeting_padding"
-        android:src="@mipmap/icon_process_app_default"
-        app:layout_constraintLeft_toLeftOf="@id/view_meeting_list_split"
-        app:layout_constraintTop_toBottomOf="@id/view_meeting_list_split"/>
 
     <TextView
         android:id="@+id/meeting_card_view_time"
@@ -34,8 +27,9 @@
         android:layout_marginStart="@dimen/meeting_padding"
         android:textColor="@color/z_color_text_hint"
         android:textSize="@dimen/font_meeting_time"
-        app:layout_constraintLeft_toRightOf="@id/meeting_card_view_icon_id"
-        app:layout_constraintTop_toTopOf="@id/meeting_card_view_icon_id"
+        android:layout_marginTop="@dimen/meeting_padding"
+        app:layout_constraintTop_toBottomOf="@id/view_meeting_list_split"
+        app:layout_constraintLeft_toLeftOf="@id/view_meeting_list_split"
         tools:text="这里是会议时间"/>
 
     <ImageView
@@ -45,7 +39,8 @@
         android:contentDescription="@null"
         android:src="@mipmap/icon_edit_meeting"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintTop_toTopOf="@id/meeting_card_view_icon_id"/>
+        android:layout_marginTop="@dimen/meeting_padding"
+        app:layout_constraintTop_toBottomOf="@id/view_meeting_list_split"/>
 
     <TextView
         android:id="@+id/meeting_card_view_title"

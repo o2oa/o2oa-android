@@ -8,9 +8,12 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.LoginWithCaptchaForm
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectCodeData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectDeviceData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectUnitData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.CryptRSA
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.ExceptionHandler2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import rx.android.schedulers.AndroidSchedulers
@@ -116,6 +119,36 @@ class FirstStepPresenter : BasePresenterImpl<FirstStepContract.View>(), FirstSte
                     .observeOn(AndroidSchedulers.mainThread())
                     .subscribe(ResponseHandler { data -> mView?.loginSuccess(data) },
                             ExceptionHandler(mView?.getContext()) { _ -> mView?.loginFail() })
+        }
+    }
+
+    override fun loginWithPwd(userName: String, pwd: String) {
+        val form = LoginWithCaptchaForm()
+        form.credential = userName
+        form.password = pwd
+        getAssembleAuthenticationService(mView?.getContext())?.let { service ->
+            service.getRSAPublicKey()
+                .subscribeOn(Schedulers.io())
+                .flatMap {
+                    val rsaData = it.data
+                    if (rsaData != null && rsaData.rsaEnable && !TextUtils.isEmpty(rsaData.publicKey)) {
+                        val publicKey = rsaData.publicKey
+                        XLog.debug("key：$publicKey")
+                        val newPwd = CryptRSA.rsaEncryptByPublicKey(form.password, publicKey)
+                        if (!TextUtils.isEmpty(newPwd)) {
+                            form.password = newPwd
+                            form.isEncrypted = "y"
+                            XLog.debug("加密成功。。。。。$newPwd")
+                        }
+                    }
+                    service.loginWithCaptchaCode(form)
+                }
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ResponseHandler { data -> mView?.loginSuccess(data) },
+                    ExceptionHandler2(mView?.getContext(), true) { e ->
+                        XLog.error("", e)
+                        mView?.loginFail()
+                    })
         }
     }
 }
