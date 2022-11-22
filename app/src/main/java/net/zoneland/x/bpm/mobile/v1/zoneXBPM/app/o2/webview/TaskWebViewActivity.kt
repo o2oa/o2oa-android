@@ -55,7 +55,10 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.O2WebviewDownloadListener
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.WebChromeClientWithProgressAndValueCallback
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialogfragment.DateTimePickerFragment
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialogfragment.RecordVoiceFragment
 import org.jetbrains.anko.dip
+import org.jetbrains.anko.runOnUiThread
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.io.File
@@ -229,54 +232,45 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                 return
             }
             when (requestCode) {
-//                WORK_WEB_VIEW_UPLOAD_REQUEST_CODE -> {
-//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-//                    if (!TextUtils.isEmpty(result)) {
-//                        XLog.debug("uri path:$result")
-//                        showLoadingDialog()
-//                        mPresenter.uploadAttachment(result!!, site, workId, "")
-//                    } else {
-//                        XLog.error("FilePicker 没有返回值！")
-//                    }
-//                }
-//                WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE -> {
-//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-//                    if (!TextUtils.isEmpty(result)) {
-//                        XLog.debug("uri path:$result")
-//                        showLoadingDialog()
-//                        mPresenter.uploadAttachment(result!!, site, workId, datagridParam)
-//                    } else {
-//                        XLog.error("FilePicker 没有返回值！")
-//                    }
-//                }
-//                WORK_WEB_VIEW_REPLACE_REQUEST_CODE -> {
-//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-//                    if (!TextUtils.isEmpty(result)) {
-//                        XLog.debug("uri path:$result")
-//                        showLoadingDialog()
-//                        mPresenter.replaceAttachment(result!!, site, attachmentId, workId, "")
-//                    } else {
-//                        XLog.error("FilePicker 没有返回值！")
-//                    }
-//                }
-//                WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE -> {
-//                    val result = data?.getStringExtra(FilePicker.FANCY_FILE_PICKER_SINGLE_RESULT_KEY)
-//                    if (!TextUtils.isEmpty(result)) {
-//                        XLog.debug("uri path:$result")
-//                        showLoadingDialog()
-//                        mPresenter.replaceAttachment(result!!, site, attachmentId, workId, datagridParam)
-//                    } else {
-//                        XLog.error("FilePicker 没有返回值！")
-//                    }
-//                }
+                //
                 TAKE_FROM_CAMERA_CODE -> {
                     //拍照
-                    XLog.debug("拍照//// ")
+                    XLog.debug("拍照//// 图片控件 ")
                     if (!TextUtils.isEmpty(cameraImagePath)){
-//                        uploadImage2FileStorageStart(FileExtensionHelper.getCameraCacheFilePath(this))
                         uploadImage2FileStorageStart(cameraImagePath!!)
                     }
-
+                }
+                WORK_WEB_VIEW_UPLOAD_REQUEST_CODE -> {
+                    XLog.debug("拍照//// 上传附件 ")
+                    if (!TextUtils.isEmpty(cameraImagePath)) {
+                        showLoadingDialog()
+                        mPresenter.uploadAttachmentList(arrayListOf(cameraImagePath!!), site, workId, "")
+                    }
+                }
+                WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE -> {
+                    XLog.debug("拍照//// 上传附件2 ")
+                    if (!TextUtils.isEmpty(cameraImagePath)) {
+                        showLoadingDialog()
+                        mPresenter.uploadAttachmentList(arrayListOf(cameraImagePath!!), site, workId, datagridParam)
+                    }
+                }
+                WORK_WEB_VIEW_REPLACE_REQUEST_CODE -> {
+                    XLog.debug("拍照//// 替换附件 ")
+                    if (!TextUtils.isEmpty(cameraImagePath)) {
+                        showLoadingDialog()
+                        mPresenter.replaceAttachment(cameraImagePath!!, site, attachmentId, workId, "")
+                    } else {
+                        XLog.error("FilePicker 没有返回值！")
+                    }
+                }
+                WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE -> {
+                    XLog.debug("拍照//// 替换附件2 ")
+                    if (!TextUtils.isEmpty(cameraImagePath)) {
+                        showLoadingDialog()
+                        mPresenter.replaceAttachment(cameraImagePath!!, site, attachmentId, workId, datagridParam)
+                    } else {
+                        XLog.error("FilePicker 没有返回值！")
+                    }
                 }
             }
         }
@@ -455,6 +449,37 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                                     }
                             }
                         }
+                        "recordVoice" -> {
+                            runOnUiThread {
+                                //先检查录音权限
+                                PermissionRequester(this)
+                                    .request(Manifest.permission.RECORD_AUDIO)
+                                    .o2Subscribe {
+                                        onNext { (granted, _, _) ->
+                                            if (!granted) {
+                                                O2DialogSupport.openAlertDialog(this@TaskWebViewActivity, getString(R.string.dialog_msg_audio_need_permission), {
+                                                    AndroidUtils.gotoSettingApplication(this@TaskWebViewActivity)
+                                                })
+                                            } else {
+                                                val dialog = RecordVoiceFragment()
+                                                dialog.setResultListener(object :
+                                                    RecordVoiceFragment.OnBackRecordResultListener {
+                                                    override fun onBack(
+                                                        voiceFilePath: String,
+                                                        voiceDuringTime: Long
+                                                    ) {
+                                                        XLog.debug("结果： $voiceFilePath $voiceDuringTime")
+                                                    }
+                                                })
+                                                dialog.show(supportFragmentManager, "recordVoice")
+                                            }
+                                        }
+                                        onError { e, _ ->
+                                            XLog.error("", e)
+                                        }
+                                    }
+                            }
+                        }
                     }
                 } else {
                     XLog.error("message 格式错误！！！")
@@ -555,7 +580,8 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
         }
         this.site = site
         runOnUiThread {
-            openFancyFilePicker(WORK_WEB_VIEW_UPLOAD_REQUEST_CODE, true)
+//            openFancyFilePicker(WORK_WEB_VIEW_UPLOAD_REQUEST_CODE, true)
+            showAttachmentUploadMenu(WORK_WEB_VIEW_UPLOAD_REQUEST_CODE, true)
         }
     }
 
@@ -575,7 +601,8 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
         runOnUiThread {
             this.site = site
             this.datagridParam = param
-            openFancyFilePicker(WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE, true)
+//            openFancyFilePicker(WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE, true)
+            showAttachmentUploadMenu(WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE, true)
         }
     }
 
@@ -595,7 +622,8 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
         runOnUiThread {
             this.site = site
             this.attachmentId = attachmentId
-            openFancyFilePicker(WORK_WEB_VIEW_REPLACE_REQUEST_CODE, false)
+//            openFancyFilePicker(WORK_WEB_VIEW_REPLACE_REQUEST_CODE, false)
+            showAttachmentUploadMenu(WORK_WEB_VIEW_REPLACE_REQUEST_CODE, false)
         }
     }
 
@@ -615,7 +643,8 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             this.site = site
             this.attachmentId = attachmentId
             this.datagridParam = param
-            openFancyFilePicker(WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE, false)
+//            openFancyFilePicker(WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE, false)
+            showAttachmentUploadMenu(WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE, false)
         }
     }
 
@@ -684,6 +713,8 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             }
         }
     }
+
+
 
     /**
      * 分享到聊天会话
@@ -806,10 +837,12 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             if (FileExtensionHelper.isImageFromFileExtension(file.extension)) {
 //                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
                 BigImageViewActivity.startLocalFile(this, file.absolutePath)
-            }else {
+            } else if (FileExtensionHelper.isFileTBSCanOpen(file.extension)) {
                 go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
-//                QbSdk.openFileReader(this, file.absolutePath, HashMap<String, String>()) { p0 -> XLog.info("打开文件返回。。。。。$p0") }
+            } else {
+                AndroidUtils.openFileWithDefaultApp(this, file)
             }
+
         }
     }
 
@@ -1197,7 +1230,9 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
     }
 
 
-
+    /**
+     * 图片控件
+     */
     private fun showPictureChooseMenu() {
         BottomSheetMenu(this)
                 .setTitle(getString(R.string.upload_photo))
@@ -1205,7 +1240,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                     takeFromPictures()
                 }
                 .setItem(getString(R.string.take_photo), ContextCompat.getColor(this, R.color.z_color_text_primary)) {
-                    takeFromCamera()
+                    takeFromCamera(TAKE_FROM_CAMERA_CODE)
                 }
                 .setCancelButton(getString(R.string.cancel), ContextCompat.getColor(this, R.color.z_color_text_hint)) {
                     XLog.debug("取消。。。。。")
@@ -1222,7 +1257,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             }
     }
 
-    private fun takeFromCamera() {
+    private fun takeFromCamera(requestCode: Int) {
         PermissionRequester(this).request(Manifest.permission.CAMERA)
                 .o2Subscribe {
                     onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
@@ -1230,14 +1265,14 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                         if (!granted) {
                             O2DialogSupport.openAlertDialog(this@TaskWebViewActivity, getString(R.string.message_my_no_camera_permission))
                         } else {
-                            openCamera()
+                            openCamera(requestCode)
                         }
                     }
                 }
     }
 
-
-    private fun openCamera() {
+    //
+    private fun openCamera(requestCode: Int) {
 //        val intent = Intent(MediaStore.ACTION_IMAGE_CAPTURE)
 //        //return-data false 不是直接返回拍照后的照片Bitmap 因为照片太大会传输失败
 //        intent.putExtra("return-data", false)
@@ -1263,12 +1298,65 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                     cameraImagePath = it.absolutePath
                     val photoURI = FileUtil.getUriFromFile(this, it)
                     takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI)
-                    startActivityForResult(takePictureIntent, TAKE_FROM_CAMERA_CODE)
+                    startActivityForResult(takePictureIntent, requestCode)
                 }
             }
         }
     }
 
+    /**
+     * 附件上传菜单
+     */
+    private fun showAttachmentUploadMenu(requestCode: Int, multiple: Boolean) {
+        BottomSheetMenu(this)
+            .setTitle(getString(R.string.upload_attachment))
+            .setItem(getString(R.string.choose_from_files), ContextCompat.getColor(this, R.color.z_color_text_primary)) {
+                openFancyFilePicker(requestCode, multiple)
+            }
+            .setItem(getString(R.string.take_photo), ContextCompat.getColor(this, R.color.z_color_text_primary)) {
+                takeFromCamera(requestCode)
+            }
+            .setItem(getString(R.string.record_voice), ContextCompat.getColor(this, R.color.z_color_text_primary)) {
+                recordVoiceForAttachment(requestCode)
+            }
+            .setCancelButton(getString(R.string.cancel), ContextCompat.getColor(this, R.color.z_color_text_hint)) {
+                XLog.debug("取消。。。。。")
+            }
+            .show()
+    }
+
+    private fun recordVoiceForAttachment(requestCode: Int) {
+        runOnUiThread {
+            //先检查录音权限
+            PermissionRequester(this)
+                .request(Manifest.permission.RECORD_AUDIO)
+                .o2Subscribe {
+                    onNext { (granted, _, _) ->
+                        if (!granted) {
+                            O2DialogSupport.openAlertDialog(this@TaskWebViewActivity, getString(R.string.dialog_msg_audio_need_permission), {
+                                AndroidUtils.gotoSettingApplication(this@TaskWebViewActivity)
+                            })
+                        } else {
+                            val dialog = RecordVoiceFragment()
+                            dialog.setResultListener(object :
+                                RecordVoiceFragment.OnBackRecordResultListener {
+                                override fun onBack(
+                                    voiceFilePath: String,
+                                    voiceDuringTime: Long
+                                ) {
+                                    XLog.debug("结果： $voiceFilePath $voiceDuringTime")
+                                    fileResultUploadForAttachment(requestCode, arrayListOf(voiceFilePath))
+                                }
+                            })
+                            dialog.show(supportFragmentManager, "recordVoice")
+                        }
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                    }
+                }
+        }
+    }
 
 
     private fun openFancyFilePicker(requestCode: Int, multiple: Boolean) {
@@ -1277,40 +1365,44 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             .allowMultiple(multiple)
             .forResult { files ->
                 if (files !=null && files.isNotEmpty()) {
-                     when(requestCode) {
-                         WORK_WEB_VIEW_UPLOAD_REQUEST_CODE -> {
-                             showLoadingDialog()
-                             mPresenter.uploadAttachmentList(files, site, workId, "")
-                         }
-                         WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE -> {
-                             showLoadingDialog()
-                             mPresenter.uploadAttachmentList(files, site, workId, datagridParam)
-                         }
-                         WORK_WEB_VIEW_REPLACE_REQUEST_CODE -> {
-                             val result = files[0]
-                             if (!TextUtils.isEmpty(result)) {
-                                 XLog.debug("uri path:$result")
-                                 showLoadingDialog()
-                                 mPresenter.replaceAttachment(result, site, attachmentId, workId, "")
-                             } else {
-                                 XLog.error("FilePicker 没有返回值！")
-                             }
-                         }
-                         WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE -> {
-                             val result = files[0]
-                             if (!TextUtils.isEmpty(result)) {
-                                 XLog.debug("uri path:$result")
-                                 showLoadingDialog()
-                                 mPresenter.replaceAttachment(result, site, attachmentId, workId, datagridParam)
-                             } else {
-                                 XLog.error("FilePicker 没有返回值！")
-                             }
-                         }
-                     }
+                    fileResultUploadForAttachment(requestCode, files)
                 } else {
                     XLog.error("FilePicker 没有返回值！")
                 }
             }
+    }
+
+    private fun fileResultUploadForAttachment(requestCode: Int, files: ArrayList<String>) {
+        when(requestCode) {
+            WORK_WEB_VIEW_UPLOAD_REQUEST_CODE -> {
+                showLoadingDialog()
+                mPresenter.uploadAttachmentList(files, site, workId, "")
+            }
+            WORK_WEB_VIEW_UPLOAD_DATAGRID_REQUEST_CODE -> {
+                showLoadingDialog()
+                mPresenter.uploadAttachmentList(files, site, workId, datagridParam)
+            }
+            WORK_WEB_VIEW_REPLACE_REQUEST_CODE -> {
+                val result = files[0]
+                if (!TextUtils.isEmpty(result)) {
+                    XLog.debug("uri path:$result")
+                    showLoadingDialog()
+                    mPresenter.replaceAttachment(result, site, attachmentId, workId, "")
+                } else {
+                    XLog.error("FilePicker 没有返回值！")
+                }
+            }
+            WORK_WEB_VIEW_REPLACE_DATAGRID_REQUEST_CODE -> {
+                val result = files[0]
+                if (!TextUtils.isEmpty(result)) {
+                    XLog.debug("uri path:$result")
+                    showLoadingDialog()
+                    mPresenter.replaceAttachment(result, site, attachmentId, workId, datagridParam)
+                } else {
+                    XLog.error("FilePicker 没有返回值！")
+                }
+            }
+        }
     }
 
 

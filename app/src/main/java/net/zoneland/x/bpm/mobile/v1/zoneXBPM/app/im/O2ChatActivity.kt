@@ -723,7 +723,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                     .o2Subscribe {
                         onNext { (granted, _, _) ->
                             if (!granted){
-                                O2DialogSupport.openAlertDialog(this@O2ChatActivity, getString(R.string.dialog_msg_audio_need_permission), { permissionSetting() })
+                                O2DialogSupport.openAlertDialog(this@O2ChatActivity, getString(R.string.dialog_msg_audio_need_permission), { AndroidUtils.gotoSettingApplication(this@O2ChatActivity) })
                             }
                         }
                         onError { e, _ ->
@@ -767,7 +767,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                     .o2Subscribe {
                         onNext {  (granted, _, _) ->
                             if (!granted){
-                                O2DialogSupport.openAlertDialog(this@O2ChatActivity, getString(R.string.dialog_msg_camera_need_permission), { permissionSetting() })
+                                O2DialogSupport.openAlertDialog(this@O2ChatActivity, getString(R.string.dialog_msg_camera_need_permission), { AndroidUtils.gotoSettingApplication(this@O2ChatActivity) })
                             } else {
                                 openCamera()
                             }
@@ -835,10 +835,6 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     }
 
 
-    private fun permissionSetting() {
-        val packageUri = Uri.parse("package:$packageName")
-        startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageUri))
-    }
 
     // 设置表情栏的高度
 //    private fun initEmojiView() {
@@ -1144,6 +1140,7 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 
     inner class IMMessageReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
+            // 新消息
             val body = intent?.getStringExtra(O2IM.IM_Message_Receiver_name)
             if (body != null && body.isNotEmpty()) {
                 XLog.debug("接收到im消息, $body")
@@ -1155,7 +1152,18 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
                 } catch (e: Exception) {
                     XLog.error("", e)
                 }
-
+            }
+            val revokeBody = intent?.getStringExtra(O2IM.IM_Message_Receiver_revoke_name)
+            if (revokeBody != null && revokeBody.isNotEmpty()) {
+                XLog.debug("接收到im撤回消息, $revokeBody")
+                try {
+                    val message = O2SDKManager.instance().gson.fromJson<IMMessage>(revokeBody, IMMessage::class.java)
+                    if (message.conversationId == conversationId) {
+                        adapter.removeMessage(message)
+                    }
+                } catch (e: Exception) {
+                    XLog.error("", e)
+                }
             }
         }
 

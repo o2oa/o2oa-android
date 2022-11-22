@@ -34,7 +34,7 @@
                 android:layout_marginStart="@dimen/spacing_normal"
                 android:layout_marginEnd="@dimen/spacing_normal"
                 android:background="@drawable/background_white_radius_10"
-                android:visibility="visible"
+                android:visibility="gone"
                 android:orientation="vertical">
 
                 <androidx.constraintlayout.widget.ConstraintLayout

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">O2演示版</string>
-    <string name="app_about">About O2演示版</string>
-    <string name="app_name_about">O2演示版</string>
+    <string name="app_name">O2OA演示版</string>
+    <string name="app_about">About O2OA演示版</string>
+    <string name="app_name_about">O2OA演示版</string>
     <string name="activity_safe_warning">Has switched to the background run !</string>
     <string name="copy_right">&#169;</string>
     <string name="reserved">All right reserved.</string>
@@ -26,6 +26,9 @@
     <string name="my_app">My Application</string>
     <string name="take_photo">Camera</string>
     <string name="upload_photo">Upload Photo</string>
+    <string name="record_voice">Record Audio</string>
+    <string name="upload_attachment">Upload</string>
+    <string name="choose_from_files">Choose from Files</string>
     <string name="take_from_album">Choose from album</string>
     <string name="picker">Picker</string>
     <string name="call">Call</string>
@@ -867,6 +870,11 @@
     <string name="secret">Privacy policy</string>
     <string name="and"> And </string>
     <string name="user_service">User agreement</string>
+    <string name="user_privacy_dialog_title">用户协议和隐私政策提示</string>
+    <string name="user_privacy_dialog_agree_btn">同意</string>
+    <string name="user_privacy_dialog_disagree_btn">不同意</string>
+    <string name="user_privacy_dialog_1">你需要同意用户协议和隐私政策才能使用O2OA。如你不同意，很遗憾我们不能为你提供服务。</string>
+    <string name="user_privacy_dialog_2">你可以阅读完整版本的《用户协议》和《隐私政策》，来了解详细信息。</string>
     <string name="search_no_result">No relevant results were found</string>
     <string name="search_hint">Please enter search keywords</string>
     <string name="search_delete_all_history">Delete all history</string>

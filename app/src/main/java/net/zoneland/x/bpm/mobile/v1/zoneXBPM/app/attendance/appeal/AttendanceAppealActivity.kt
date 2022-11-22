@@ -286,11 +286,9 @@ class AttendanceAppealActivity : BaseMVPActivity<AttendanceAppealContract.View, 
 
     private fun submitAppealForm(address: String, startTime: String, endTime: String, desc: String) {
         XLog.debug("address:$address, starttime:$startTime, endtime:$endTime, desc:$desc, identity:$chooseIdentity")
-        if (isChooseIdentity) {
-            if (TextUtils.isEmpty(chooseIdentity)) {
-                XToast.toastShort(this, "没有选择身份")
-                return
-            }
+        if (isChooseIdentity && TextUtils.isEmpty(chooseIdentity)) {
+            XToast.toastShort(this, "没有选择身份")
+            return
         }
         info?.let {
             it.appealReason = (APPEAL_REASON[selectReasonIndex])

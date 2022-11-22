@@ -76,15 +76,14 @@
 
         <TextView
             android:id="@+id/tv_org_file"
-            android:layout_toEndOf="@+id/image_org_file_id"
-            android:layout_alignTop="@+id/image_org_file_id"
-            android:layout_marginStart="@dimen/spacing_small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textSize="@dimen/font_large"
-            android:textColor="@color/z_color_text_primary_dark"
+            android:layout_alignTop="@+id/image_org_file_id"
+            android:layout_marginStart="@dimen/spacing_small"
+            android:layout_toEndOf="@+id/image_org_file_id"
             android:text="@string/cloud_file_org"
-            />
+            android:textColor="@color/z_color_text_primary_dark"
+            android:textSize="@dimen/font_large" />
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

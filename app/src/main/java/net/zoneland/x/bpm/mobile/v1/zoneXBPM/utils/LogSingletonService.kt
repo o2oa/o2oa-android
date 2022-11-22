@@ -1,7 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils
 
 import android.content.Context
-import android.util.Log
 
 /**
  * 日志记录器 单例
