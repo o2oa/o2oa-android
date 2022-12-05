@@ -21,8 +21,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.tbs.WordReadHelper
 import java.io.File
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.tbs.WordReadView
-
-
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
 
 class FileReaderActivity : BaseO2BindActivity() {
@@ -54,6 +53,9 @@ class FileReaderActivity : BaseO2BindActivity() {
         setupToolBar(getString(R.string.file_preview), true)
         if(WordReadHelper.initFinish()){
             wordReadView = WordReadView(this)
+            wordReadView?.setFileListener { filePath ->
+                cannotOpenFile(filePath)
+            }
 //        mTbsReaderView = TbsReaderView(this) { arg, arg1, arg2 ->
 //            XLog.info("arg:$arg, 1:$arg1, 2:$arg2")
 //        }
@@ -64,7 +66,10 @@ class FileReaderActivity : BaseO2BindActivity() {
                 openFileWithTBS(filePath)
             }
         } else {
-            XToast.toastShort(this, "文件预览器内核还在加载中，请稍后再试！")
+            O2DialogSupport.openAlertDialog(this, "文件预览器内核还在加载中，请稍后再试！", {
+              finish()
+            })
+//            XToast.toastShort(this, "文件预览器内核还在加载中，请稍后再试！")
         }
 
     }
@@ -122,6 +127,15 @@ class FileReaderActivity : BaseO2BindActivity() {
 //        }
 
     }
+
+    private fun cannotOpenFile(filePath: String) {
+        O2DialogSupport.openAlertDialog(this, getString(R.string.message_use_other_application_open_file), {
+            val f = File(filePath)
+            AndroidUtils.openFileWithDefaultApp(this@FileReaderActivity, f)
+            finish()
+        })
+    }
+
 
     private fun getFileType(path: String): String {
         var str = ""
