@@ -28,7 +28,6 @@ class FileReaderActivity : BaseO2BindActivity() {
 
 
     private val viewModel: FileReaderViewModel by lazy { ViewModelProviders.of(this).get(FileReaderViewModel::class.java) }
-//    private var mTbsReaderView: TbsReaderView?=null
 
     private var wordReadView: WordReadView? = null
 
@@ -51,25 +50,26 @@ class FileReaderActivity : BaseO2BindActivity() {
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         setupToolBar(getString(R.string.file_preview), true)
+        filePath = intent.extras?.getString(file_reader_file_path_key) ?: ""
+        XLog.info("打开文件 ：$filePath")
+        if (TextUtils.isEmpty(filePath)) {
+            XToast.toastShort(this, "文件路径为空！")
+            finish()
+            return
+        }
         if(WordReadHelper.initFinish()){
             wordReadView = WordReadView(this)
             wordReadView?.setFileListener { filePath ->
                 cannotOpenFile(filePath)
             }
-//        mTbsReaderView = TbsReaderView(this) { arg, arg1, arg2 ->
-//            XLog.info("arg:$arg, 1:$arg1, 2:$arg2")
-//        }
             fl_file_reader_container.addView(wordReadView, FrameLayout.LayoutParams(FrameLayout.LayoutParams.MATCH_PARENT, FrameLayout.LayoutParams.MATCH_PARENT))
-            filePath = intent.extras?.getString(file_reader_file_path_key) ?: ""
-            XLog.info("打开文件 ：$filePath")
-            if (!TextUtils.isEmpty(filePath)) {
-                openFileWithTBS(filePath)
-            }
+            openFileWithTBS(filePath)
         } else {
-            O2DialogSupport.openAlertDialog(this, "文件预览器内核还在加载中，请稍后再试！", {
-              finish()
+            O2DialogSupport.openConfirmDialog(this, "文件预览器内核未下载完成，使用其它应用打开文件？",  { _ ->
+                val f = File(filePath)
+                AndroidUtils.openFileWithDefaultApp(this@FileReaderActivity, f)
+                finish()
             })
-//            XToast.toastShort(this, "文件预览器内核还在加载中，请稍后再试！")
         }
 
     }
@@ -89,43 +89,17 @@ class FileReaderActivity : BaseO2BindActivity() {
 
     override fun onDestroy() {
         wordReadView?.destroy()
-//        mTbsReaderView?.onStop()
         super.onDestroy()
     }
 
     private fun share() {
         val file = File(filePath)
         AndroidUtils.shareFile(this, file)
-
     }
 
     private fun openFileWithTBS(file: String) {
         XLog.info("打开文件：$file")
         wordReadView?.loadFile(file)
-
-//        val type = getFileType(file)
-//        val b = mTbsReaderView?.preOpen(type, false)
-//        if (b == true) {
-//            val bund = Bundle()
-//            bund.putString(TbsReaderView.KEY_FILE_PATH, file)
-//            bund.putString(TbsReaderView.KEY_TEMP_PATH, FileExtensionHelper.getXBPMTempFolder(this))
-//            mTbsReaderView?.openFile(bund)
-//        }else {
-//            XLog.error("type is error , $type")
-//            XToast.toastShort(this, getString(R.string.message_file_type_cannot_be_previewed))
-//            fl_file_reader_container.removeAllViews()
-//            val btn = Button(this)
-//            btn.text = getString(R.string.message_use_other_application_open_file)
-//            val param = FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT)
-//            param.gravity = Gravity.CENTER
-//            fl_file_reader_container.addView(btn, param)
-//            btn.setOnClickListener {
-//                val f = File(file)
-//                AndroidUtils.openFileWithDefaultApp(this, f)
-//                finish()
-//            }
-//        }
-
     }
 
     private fun cannotOpenFile(filePath: String) {

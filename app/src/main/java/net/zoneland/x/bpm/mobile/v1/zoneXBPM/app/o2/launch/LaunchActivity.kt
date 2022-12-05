@@ -62,7 +62,13 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
         NetworkConnectStatusReceiver { isConnected ->
             Log.d("LaunchActivity", "网络连接情况变化，isConnected:$isConnected")
             if (isConnected && mCheckNetwork == false){
-                checkAppUpdate()
+                val isOpen = O2SDKManager.instance().prefs().getBoolean(O2.PRE_APP_AUTO_CHECK_UPDATE_KEY, true)
+                // 用户自行开关检查
+                if (isOpen) {
+                    checkAppUpdate()
+                } else {
+                    launch()
+                }
             }
         }
     }
@@ -187,7 +193,13 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
             // 是否检查更新
             if (BuildConfig.NEED_UPDATE) {
                 Log.d("LaunchActivity","检查应用内更新")
-                checkAppUpdate()
+                val isOpen = O2SDKManager.instance().prefs().getBoolean(O2.PRE_APP_AUTO_CHECK_UPDATE_KEY, true)
+                // 用户自行开关检查
+                if (isOpen) {
+                    checkAppUpdate()
+                } else {
+                    launch()
+                }
             } else {
                 Log.d("LaunchActivity","不需要应用内更新。。。。。。。")
                 launch()
@@ -286,9 +298,12 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
 
 
     private fun launch() {
-        // 应用市场上架需要同意协议
-//        if (AndroidUtils.isHuaweiChannel(this)) {
-            val isAgree = O2SDKManager.instance().prefs().getBoolean(O2.PRE_APP_PRIVACY_AGREE_KEY, false)
+        // 自主打包的 不显示
+        if (BuildConfig.InnerServer){
+            trueLaunch()
+        } else {
+            val isAgree =
+                O2SDKManager.instance().prefs().getBoolean(O2.PRE_APP_PRIVACY_AGREE_KEY, false)
             if (!isAgree) {
                 val pd = PrivacyDialogFragment()
                 pd.setOnClickBtnListener(object : PrivacyDialogFragment.OnClickBtnListener {
@@ -305,12 +320,8 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
             } else {
                 trueLaunch()
             }
-//        } else {
-//            O2SDKManager.instance().prefs().edit {
-//                putBoolean(O2.PRE_APP_PRIVACY_AGREE_KEY, true)
-//            }
-//            trueLaunch()
-//        }
+        }
+
     }
 
     private fun trueLaunch() {
