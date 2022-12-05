@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.text.TextUtils
+import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.KeyEvent
@@ -34,6 +35,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.tbs.WordReadHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.GrayFrameLayout
 import org.jetbrains.anko.doAsync
 
 
@@ -60,6 +62,32 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
 
     override fun layoutResId(): Int {
         return R.layout.activity_main
+    }
+
+    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
+        // 默哀灰色处理
+        try {
+           val silence = O2SDKManager.instance().prefs().getBoolean(O2CustomStyle.CUSTOM_STYLE_SILENCE_GRAY_PREF_KEY, false)
+            if (silence) {
+                if ("FrameLayout" == name) {
+                    val count = attrs.attributeCount
+                    for (i in 0..count) {
+                        val attributeName = attrs.getAttributeName(i)
+                        val attributeValue = attrs.getAttributeValue(i)
+                        if (attributeName == "id") {
+                            val id = attributeValue.substring(1).toInt()
+                            val idVal = resources.getResourceName(id)
+                            if ("android:id/content" == idVal) {
+                                return GrayFrameLayout(context, attrs)
+                            }
+                        }
+                    }
+                }
+            }
+        } catch ( e: Exception) {
+            e.printStackTrace()
+        }
+        return super.onCreateView(name, context, attrs)
     }
 
     override fun beforeSetContentView() {
