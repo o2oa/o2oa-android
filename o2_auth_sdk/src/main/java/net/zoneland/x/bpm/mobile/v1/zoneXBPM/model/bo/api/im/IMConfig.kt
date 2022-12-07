@@ -6,5 +6,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im
  */
 data class  IMConfig(
     var enableClearMsg: Boolean = false, // 是否开启清除聊天记录功能
-    var enableRevokeMsg: Boolean = false // 是否开启撤回消息功能
+    var enableRevokeMsg: Boolean = false, // 是否开启撤回消息功能
+    var versionNo: Int = 0, // 版本号
+    var changelog: String = "", // 更新说明
 )
