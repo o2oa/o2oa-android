@@ -6,6 +6,7 @@ import android.content.res.Configuration
 import android.content.res.Resources
 import android.os.Build
 import android.os.Bundle
+import android.webkit.WebView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -178,6 +179,23 @@ abstract class BaseMVPActivity<in V: BaseView, T: BasePresenter<V>>: AppCompatAc
                         callback(null)
                     }
                 }
+    }
+
+
+    /**
+     * webview 图片太大的问题处理
+     */
+    fun imgReset(webv: WebView) {
+        webv.loadUrl(
+            "javascript:(function(){" +
+                    "var objs = document.getElementsByTagName('img'); " +
+                    "for(var i=0;i<objs.length;i++) " +
+                    "{"
+                    + "var img = objs[i]; " +
+                    " img.style.maxWidth = '100%'; img.style.height = 'auto'; " +
+                    "}" +
+                    "})()"
+        )
     }
 
 }

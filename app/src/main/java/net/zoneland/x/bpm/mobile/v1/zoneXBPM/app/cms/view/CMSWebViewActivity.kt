@@ -155,14 +155,26 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
         web_view_cms_document_content.setDownloadListener(O2WebviewDownloadListener(this))
         web_view_cms_document_content.webChromeClient = webChromeClient
         web_view_cms_document_content.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                if (view != null) {
+                    imgReset(view) // 处理图片过大的问题
+                    XLog.debug("处理了大图了？？？？？？？？？？？？")
+                }
+            }
             override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
                 XLog.error("ssl error, $error")
                 handler?.proceed()
             }
             override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
                 XLog.info("shouldOverrideUrlLoading:$url")
-//                if (ZoneUtil.checkUrlIsInner(url)) {
+                if (StringUtil.isImgUrl(url)) {
+                    BigImageViewActivity.startInternetImageUrl(this@CMSWebViewActivity, url)
+                } else {
                     view?.loadUrl(url)
+                }
+//                if (ZoneUtil.checkUrlIsInner(url)) {
+//                    view?.loadUrl(url)
 //                } else {
 //                    AndroidUtils.runDefaultBrowser(this@CMSWebViewActivity, url)
 //                }

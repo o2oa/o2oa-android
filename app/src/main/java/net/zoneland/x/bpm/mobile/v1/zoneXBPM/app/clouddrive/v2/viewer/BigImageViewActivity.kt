@@ -17,6 +17,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.copyToAlbum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.LoadingDialog
 import java.io.File
@@ -30,6 +31,7 @@ class BigImageViewActivity : AppCompatActivity() {
         const val IMAGE_ID_KEY = "IMAGE_ID_KEY"
         const val IMAGE_EXTENSION_KEY = "IMAGE_EXTENSION_KEY"
         const val IMAGE_LOCAL_PATH_KEY = "IMAGE_LOCAL_PATH_KEY"
+        const val IMAGE_INTERNET_PATH_KEY = "IMAGE_INTERNET_PATH_KEY"
         fun start(activity: Activity, fileId: String, extension: String, title: String = "") {
             val bundle = Bundle()
             bundle.putString(IMAGE_ID_KEY, fileId)
@@ -49,6 +51,12 @@ class BigImageViewActivity : AppCompatActivity() {
         fun startLocalFile(activity: Activity, filePath: String) {
             val bundle = Bundle()
             bundle.putString(IMAGE_LOCAL_PATH_KEY, filePath)
+            activity.go<BigImageViewActivity>(bundle)
+        }
+
+        fun startInternetImageUrl(activity: Activity, url: String) {
+            val bundle = Bundle()
+            bundle.putString(IMAGE_INTERNET_PATH_KEY, url)
             activity.go<BigImageViewActivity>(bundle)
         }
     }
@@ -90,7 +98,19 @@ class BigImageViewActivity : AppCompatActivity() {
         btn_big_picture_share.setOnClickListener { share() }
 
         val localPath = intent.getStringExtra(IMAGE_LOCAL_PATH_KEY) ?: ""
-        if (TextUtils.isEmpty(localPath)) {
+        val internetImageUrl = intent.getStringExtra(IMAGE_INTERNET_PATH_KEY) ?: ""
+        if (!TextUtils.isEmpty(localPath)) {
+            val file = File(localPath)
+            currentImage = file
+            tv_big_picture_title.text = file.name
+            addClickSave()
+            O2ImageLoaderManager.instance().showImage(zoomImage_big_picture_view, file)
+        } else if (!TextUtils.isEmpty(internetImageUrl)) {
+            tv_big_picture_title.gone()
+            btn_big_picture_share.gone()
+            rl_big_picture_download_btn.gone()
+            O2ImageLoaderManager.instance().showImage(zoomImage_big_picture_view, internetImageUrl)
+        } else {
             val fileId = intent.getStringExtra(IMAGE_ID_KEY) ?: ""
             val extension = intent.getStringExtra(IMAGE_EXTENSION_KEY) ?: ""
             val title = intent.getStringExtra(IMAGE_TITLE_KEY) ?: ""
@@ -123,12 +143,6 @@ class BigImageViewActivity : AppCompatActivity() {
                     }
                 }
             }
-        }else {
-            val file = File(localPath)
-            currentImage = file
-            tv_big_picture_title.text = file.name
-            addClickSave()
-            O2ImageLoaderManager.instance().showImage(zoomImage_big_picture_view, file)
         }
 
     }
