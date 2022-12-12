@@ -21,19 +21,23 @@ import java.util.HashMap;
 public class WordReadHelper {
 
     public static final String TAG = "WordReadHelper";
-    private static boolean mOnlyWifi = false; // 不是wifi也下载
-    private static boolean mInit = false;
-    private static Context mContext;
-    private static NetworkCallbackImpl networkCallback;
+    private boolean mOnlyWifi = false; // 不是wifi也下载
+    private boolean mInit = false;
+    private Context mContext;
+    private NetworkCallbackImpl networkCallback;
 
     private WordReadHelper() {
+    }
+    private static final WordReadHelper INSTANCE = new WordReadHelper();
+    public static WordReadHelper getInstance() {
+        return INSTANCE;
     }
 
     public void setOnlyWifiDownload(boolean onlyWifi) {
         mOnlyWifi = onlyWifi;
     }
 
-    public static void init(Context context) {
+    public void init(Context context) {
         if (context == null) {
             throw new NullPointerException("init fail");
         }
@@ -107,7 +111,7 @@ public class WordReadHelper {
         });
     }
 
-    private static void resetSdk(Context context) {
+    private void resetSdk(Context context) {
         // 在调用TBS初始化、创建WebView之前进行如下配置
         HashMap map = new HashMap();
         map.put(TbsCoreSettings.TBS_SETTINGS_USE_SPEEDY_CLASSLOADER, true);
@@ -119,7 +123,7 @@ public class WordReadHelper {
         //QbSdk.forceSysWebView();
     }
 
-    public static boolean initFinish() {
+    public boolean initFinish() {
         boolean isInstalled =  O2SDKManager.Companion.instance().prefs().getBoolean(O2.TBS_INSTALL_STATUS, false);
         if (isInstalled) {
             Log.i(TAG, "X5内核已经下载安装过了！");
@@ -135,7 +139,7 @@ public class WordReadHelper {
         return mInit;
     }
 
-    private static boolean isWifi(Context mContext) {
+    private boolean isWifi(Context mContext) {
         ConnectivityManager connectivityManager = (ConnectivityManager) mContext
                 .getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo info = connectivityManager.getActiveNetworkInfo();
@@ -147,7 +151,7 @@ public class WordReadHelper {
     }
 
 
-    public static void initNetWorkCallBack() {
+    public  void initNetWorkCallBack() {
         if (networkCallback == null) {
             networkCallback = new NetworkCallbackImpl();
             NetworkRequest.Builder builder = new NetworkRequest.Builder();
@@ -165,7 +169,7 @@ public class WordReadHelper {
         @Override
         public void onAvailable(Network network) {
             super.onAvailable(network);
-            WordReadHelper.initFinish();
+            WordReadHelper.getInstance().initFinish();
             Log.d(TAG, "onAvailable: 网络已连接");
         }
 

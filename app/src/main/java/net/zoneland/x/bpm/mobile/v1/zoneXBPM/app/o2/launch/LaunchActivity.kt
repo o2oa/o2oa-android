@@ -300,6 +300,7 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
     private fun launch() {
         // 自主打包的 不显示
         if (BuildConfig.InnerServer){
+            O2App.instance.agreePrivacyAndInitThirdParty(true) //
             trueLaunch()
         } else {
             val isAgree =

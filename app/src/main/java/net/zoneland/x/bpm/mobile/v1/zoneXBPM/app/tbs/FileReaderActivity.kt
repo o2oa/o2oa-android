@@ -57,7 +57,7 @@ class FileReaderActivity : BaseO2BindActivity() {
             finish()
             return
         }
-        if(WordReadHelper.initFinish()){
+        if(WordReadHelper.getInstance().initFinish()){
             wordReadView = WordReadView(this)
             wordReadView?.setFileListener { filePath ->
                 cannotOpenFile(filePath)

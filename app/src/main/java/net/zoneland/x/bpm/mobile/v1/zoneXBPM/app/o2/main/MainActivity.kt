@@ -243,7 +243,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         O2App.instance.clearAllNotification()
 
         // 触发一次 tbs 内核下载
-        val isX5Init = WordReadHelper.initFinish()
+        val isX5Init = WordReadHelper.getInstance().initFinish()
         XLog.info("x5内核是否已经完成，$isX5Init")
     }
 
