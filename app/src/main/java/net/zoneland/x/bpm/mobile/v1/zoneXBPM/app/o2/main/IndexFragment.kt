@@ -331,7 +331,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
         hotPictureList.clear()
         if (list.isEmpty()){
             linear_todo_banner_container?.gone()
-            image_todo_banner_noData?.visible()
+            image_todo_banner_noData?.gone() // 不显示默认图片了 有滚动大图才显示具体数据
         }else {
             hotPictureList.addAll(list)
             cBannerView.notifyDataSetChanged()
@@ -346,7 +346,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
         hotPictureList.clear()
         isLoadHotPictureList = false
         linear_todo_banner_container?.gone()
-        image_todo_banner_noData?.visible()
+        image_todo_banner_noData?.gone()
     }
 
     private val adapter: CommonRecycleViewAdapter<ToDoFragmentListViewItemVO> by lazy {
