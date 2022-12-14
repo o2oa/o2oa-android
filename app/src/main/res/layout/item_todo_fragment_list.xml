@@ -52,7 +52,6 @@
         android:textColor="@color/z_color_text_hint"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        android:layout_marginBottom="@dimen/spacing_normal"
         android:layout_marginEnd="@dimen/spacing_normal"
         />
 </androidx.constraintlayout.widget.ConstraintLayout>

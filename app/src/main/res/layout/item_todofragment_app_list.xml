@@ -1,26 +1,58 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="?android:attr/selectableItemBackground"
-                android:paddingTop="@dimen/spacing_normal">
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?android:attr/selectableItemBackground"
+    android:paddingTop="@dimen/spacing_normal">
 
-    <ImageView
-        android:id="@+id/app_id"
-        android:layout_width="38dp"
-        android:layout_height="38dp"
-        android:layout_centerHorizontal="true"
-        android:src="@mipmap/ic_todo_more"/>
+    <FrameLayout
+        android:id="@+id/rl_circle_view"
+        android:layout_width="45dp"
+        android:layout_height="45dp"
+        android:layout_centerHorizontal="true">
+        <ImageView
+            android:id="@+id/app_id"
+            android:layout_width="38dp"
+            android:layout_height="38dp"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_todo_more"/>
+        <TextView
+            android:id="@+id/tv_app_list_item_num"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:visibility="gone"
+            android:gravity="center"
+            tools:text="100"
+            android:textSize="@dimen/font_small"
+            android:textColor="@color/white"
+            android:background="@drawable/red_circle"
+            android:layout_gravity="end|top"
+            android:maxLines="1"
+            />
+    </FrameLayout>
 
     <TextView
         android:id="@+id/app_name_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@id/app_id"
+        android:layout_below="@id/rl_circle_view"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="@dimen/spacing_tiny"
-        android:text="圆盘"
+        tools:text="圆盘"
         android:textSize="@dimen/font_normal"
         />
+<!--    <LinearLayout-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:layout_below="@id/rl_circle_view"-->
+<!--        android:layout_centerHorizontal="true"-->
+<!--        android:layout_marginTop="@dimen/spacing_tiny"-->
+<!--        android:gravity="center_vertical"-->
+<!--        android:orientation="horizontal">-->
+<!--        -->
+<!--        -->
+<!--    </LinearLayout>-->
+
 
 </RelativeLayout>

@@ -18,6 +18,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.ApplicationEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.persistence.MyAppListObject
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.BitmapUtil
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderOptions
 
@@ -26,7 +27,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderOpti
  * Copyright © 2017 O2. All rights reserved.
  */
 
-class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Presenter>(), MyAppContract.View{
+class AppFragment : BaseMVPViewPagerFragment<MyAppContract.View, MyAppContract.Presenter>(),
+    MyAppContract.View {
     override var mPresenter: MyAppContract.Presenter = MyAppPresenter()
     override fun layoutResId(): Int = R.layout.fragment_main_app
 
@@ -35,8 +37,6 @@ class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Pre
     private val myAppBeanList = ArrayList<MyAppListObject>()
     private val oldMyAppBeanList = ArrayList<MyAppListObject>()
     private var isEdit = false
-
-
 
 
     override fun initUI() {
@@ -58,7 +58,7 @@ class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Pre
     }
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
-        inflater.inflate(R.menu.menu_my_app,menu)
+        inflater.inflate(R.menu.menu_my_app, menu)
         super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -92,7 +92,7 @@ class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Pre
     }
 
 
-    private fun initNativeApp(){
+    private fun initNativeApp() {
         native_app_recycler_view.layoutManager = GridLayoutManager(activity, 5)
         native_app_recycler_view.adapter = nativeAppAdapter
         native_app_recycler_view.isNestedScrollingEnabled = false
@@ -105,7 +105,11 @@ class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Pre
                     myAppEditAdapter.notifyItemInserted(myAppBeanList.size)
                 }
             } else {
-                IndexFragment.go(nativeAppBeanList[position].appId!!, activity!!, nativeAppBeanList[position].appTitle?:"")
+                IndexFragment.go(
+                    nativeAppBeanList[position].appId!!,
+                    activity!!,
+                    nativeAppBeanList[position].appTitle ?: ""
+                )
             }
         }
     }
@@ -123,13 +127,17 @@ class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Pre
                     myAppEditAdapter.notifyItemInserted(myAppBeanList.size)
                 }
             } else {
-                IndexFragment.go(portalAppBeanList[position].appId!!, activity!!, portalAppBeanList[position].appTitle?:"")
+                IndexFragment.go(
+                    portalAppBeanList[position].appId!!,
+                    activity!!,
+                    portalAppBeanList[position].appTitle ?: ""
+                )
             }
         }
 
     }
 
-    private fun initMyApp(){
+    private fun initMyApp() {
         my_app_recycler_view.isNestedScrollingEnabled = false
         my_app_recycler_view.layoutManager = GridLayoutManager(activity, 5)
         my_app_recycler_view.adapter = myAppEditAdapter
@@ -149,9 +157,13 @@ class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Pre
                 }
                 myAppBeanList.removeAt(position)
                 myAppEditAdapter.notifyItemRemoved(position)
-                myAppEditAdapter.notifyItemRangeChanged(position,myAppBeanList.size)
+                myAppEditAdapter.notifyItemRangeChanged(position, myAppBeanList.size)
             } else {
-                IndexFragment.go(myAppBeanList[position].appId!!,activity!!, myAppBeanList[position].appTitle?:"")
+                IndexFragment.go(
+                    myAppBeanList[position].appId!!,
+                    activity!!,
+                    myAppBeanList[position].appTitle ?: ""
+                )
             }
         }
     }
@@ -178,7 +190,7 @@ class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Pre
         myAppBeanList.clear()
         myAppBeanList.addAll(myAppList)
         for (app: MyAppListObject in nativeAppBeanList) {
-            for (myApp: MyAppListObject in myAppList){
+            for (myApp: MyAppListObject in myAppList) {
                 if (app.appId == myApp.appId) {
                     app.isClick = true
                     break
@@ -186,7 +198,7 @@ class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Pre
             }
         }
         for (app: MyAppListObject in portalAppBeanList) {
-            for (myApp: MyAppListObject in myAppList){
+            for (myApp: MyAppListObject in myAppList) {
                 if (app.appId == myApp.appId) {
                     app.isClick = true
                     break
@@ -207,26 +219,47 @@ class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Pre
     }
 
     private val nativeAppAdapter: CommonRecycleViewAdapter<MyAppListObject> by lazy {
-        object : CommonRecycleViewAdapter<MyAppListObject>(activity, nativeAppBeanList, R.layout.item_all_app_list) {
+        object : CommonRecycleViewAdapter<MyAppListObject>(
+            activity,
+            nativeAppBeanList,
+            R.layout.item_all_app_list
+        ) {
             override fun convert(holder: CommonRecyclerViewHolder?, t: MyAppListObject?) {
+                // 待办 待阅 数量显示
+                val numberTv = holder?.getView<TextView>(R.id.tv_app_list_item_num)
+                numberTv?.gone()
                 val resId = ApplicationEnum.getApplicationByKey(t?.appId)?.iconResId
-                if (resId!=null) {
+                if (resId != null) {
                     holder?.setImageViewResource(R.id.app_id, resId)
-                }else {
-                    if (t?.appId != null){
+                    if (!isEdit && numberTv != null && t?.appId != null) {
+                        if (t.appId == ApplicationEnum.TASK.key) {
+                            numberTv.tag = t.appId!!
+                            mPresenter.getTaskNumber(activity, numberTv, t.appId!!)
+                        }
+                        if (t.appId == ApplicationEnum.READ.key) {
+                            numberTv.tag = t.appId!!
+                            mPresenter.getReadNumber(activity, numberTv, t.appId!!)
+                        }
+                    }
+                } else {
+                    if (t?.appId != null) {
                         val portalIconUrl = APIAddressHelper.instance().getPortalIconUrl(t.appId!!)
                         val icon = holder?.getView<ImageView>(R.id.app_id)
-                        if (icon !=null) {
-                            O2ImageLoaderManager.instance().showImage(icon, portalIconUrl, O2ImageLoaderOptions(placeHolder = R.mipmap.process_default))
+                        if (icon != null) {
+                            O2ImageLoaderManager.instance().showImage(
+                                icon,
+                                portalIconUrl,
+                                O2ImageLoaderOptions(placeHolder = R.mipmap.process_default)
+                            )
                         }
                     }
                 }
 
-                holder?.setText(R.id.app_name_id,t?.appTitle)
+                holder?.setText(R.id.app_name_id, t?.appTitle)
                 if (isEdit) {
                     val delete = holder?.getView<ImageView>(R.id.delete_app_iv)
                     delete?.visibility = View.VISIBLE
-                    if (t!!.isClick){
+                    if (t!!.isClick) {
                         delete?.setImageResource(R.mipmap.icon__app_chose)
                     } else {
                         delete?.setImageResource(R.mipmap.icon_app_add)
@@ -239,21 +272,42 @@ class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Pre
     }
 
     private val myAppEditAdapter: CommonRecycleViewAdapter<MyAppListObject> by lazy {
-        object : CommonRecycleViewAdapter<MyAppListObject>(activity, myAppBeanList, R.layout.item_all_app_list) {
+        object : CommonRecycleViewAdapter<MyAppListObject>(
+            activity,
+            myAppBeanList,
+            R.layout.item_all_app_list
+        ) {
             override fun convert(holder: CommonRecyclerViewHolder?, t: MyAppListObject?) {
+                // 待办 待阅 数量显示
+                val numberTv = holder?.getView<TextView>(R.id.tv_app_list_item_num)
+                numberTv?.gone()
                 val resId = ApplicationEnum.getApplicationByKey(t?.appId)?.iconResId
-                if (resId!=null) {
+                if (resId != null) {
                     holder?.setImageViewResource(R.id.app_id, resId)
-                }else {
-                    if (t?.appId != null){
+                    if (!isEdit && numberTv != null && t?.appId != null) {
+                        if (t.appId == ApplicationEnum.TASK.key) {
+                            numberTv.tag = t.appId!!
+                            mPresenter.getTaskNumber(activity, numberTv, t.appId!!)
+                        }
+                        if (t.appId == ApplicationEnum.READ.key) {
+                            numberTv.tag = t.appId!!
+                            mPresenter.getReadNumber(activity, numberTv, t.appId!!)
+                        }
+                    }
+                } else {
+                    if (t?.appId != null) {
                         val portalIconUrl = APIAddressHelper.instance().getPortalIconUrl(t.appId!!)
                         val icon = holder?.getView<ImageView>(R.id.app_id)
-                        if (icon !=null) {
-                            O2ImageLoaderManager.instance().showImage(icon, portalIconUrl, O2ImageLoaderOptions(placeHolder = R.mipmap.process_default))
+                        if (icon != null) {
+                            O2ImageLoaderManager.instance().showImage(
+                                icon,
+                                portalIconUrl,
+                                O2ImageLoaderOptions(placeHolder = R.mipmap.process_default)
+                            )
                         }
                     }
                 }
-                holder?.setText(R.id.app_name_id,t?.appTitle)
+                holder?.setText(R.id.app_name_id, t?.appTitle)
                 if (isEdit) {
                     val delete = holder?.getView<ImageView>(R.id.delete_app_iv)
                     delete?.visibility = View.VISIBLE
@@ -270,25 +324,33 @@ class AppFragment: BaseMVPViewPagerFragment<MyAppContract.View,MyAppContract.Pre
     }
 
     private val portalAppAdapter: CommonRecycleViewAdapter<MyAppListObject> by lazy {
-        object : CommonRecycleViewAdapter<MyAppListObject>(activity, portalAppBeanList, R.layout.item_all_app_list) {
+        object : CommonRecycleViewAdapter<MyAppListObject>(
+            activity,
+            portalAppBeanList,
+            R.layout.item_all_app_list
+        ) {
             override fun convert(holder: CommonRecyclerViewHolder?, t: MyAppListObject?) {
                 val resId = ApplicationEnum.getApplicationByKey(t?.appId)?.iconResId
-                if (resId!=null) {
+                if (resId != null) {
                     holder?.setImageViewResource(R.id.app_id, resId)
-                }else {
-                    if (t?.appId != null){
+                } else {
+                    if (t?.appId != null) {
                         val portalIconUrl = APIAddressHelper.instance().getPortalIconUrl(t.appId!!)
                         val icon = holder?.getView<ImageView>(R.id.app_id)
-                        if (icon !=null) {
-                            O2ImageLoaderManager.instance().showImage(icon, portalIconUrl, O2ImageLoaderOptions(placeHolder = R.mipmap.process_default))
+                        if (icon != null) {
+                            O2ImageLoaderManager.instance().showImage(
+                                icon,
+                                portalIconUrl,
+                                O2ImageLoaderOptions(placeHolder = R.mipmap.process_default)
+                            )
                         }
                     }
                 }
-                holder?.setText(R.id.app_name_id,t?.appTitle)
+                holder?.setText(R.id.app_name_id, t?.appTitle)
                 if (isEdit) {
                     val delete = holder?.getView<ImageView>(R.id.delete_app_iv)
                     delete?.visibility = View.VISIBLE
-                    if (t!!.isClick){
+                    if (t!!.isClick) {
                         delete?.setImageResource(R.mipmap.icon__app_chose)
                     } else {
                         delete?.setImageResource(R.mipmap.icon_app_add)
