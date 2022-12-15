@@ -13,7 +13,8 @@ import androidx.cardview.widget.CardView
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import com.bigkoo.pickerview.OptionsPickerView
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder
+import com.bigkoo.pickerview.view.OptionsPickerView
 import com.wugang.activityresult.library.ActivityResult
 import kotlinx.android.synthetic.main.activity_create_calendar.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
@@ -98,18 +99,19 @@ class CreateCalendarActivity : AppCompatActivity() {
      */
     fun chooseType(view: View) {
         if (TextUtils.isEmpty(viewModel.calendarId.value)) {
-            val picker = OptionsPickerView.Builder(this, OptionsPickerView.OnOptionsSelectListener { option1, _, _, _ ->
-                viewModel.setCalendarType(typeList[option1])
-            }).setTitleText(getString(R.string.calendar_type_choose))
-                    .isDialog(true)
-                    .build()
+            val picker: OptionsPickerView<CalendarPickerOption> = OptionsPickerBuilder(this) { o1, o2, o3, v ->
+                viewModel.setCalendarType(typeList[o1])
+            }
+                .setTitleText(getString(R.string.calendar_type_choose))
+                .setLabels(null, null, null)
+                .build()
             picker.setPicker(typeList)
             var selectIndex = typeList.indexOfFirst { it.name == viewModel.calendarType.value }
             if (selectIndex < 0) {
                 selectIndex = 0
             }
             picker.setSelectOptions(selectIndex)
-            picker.showDialog()
+            picker.show()
         }
     }
 

@@ -284,7 +284,8 @@ dependencies {
     implementation project(':jiguang')
 
 
-    implementation 'com.contrarywind:Android-PickerView:3.2.4'
+//    implementation 'com.contrarywind:Android-PickerView:3.2.4'
+    implementation 'com.contrarywind:Android-PickerView:4.1.9'
 
     //滚动选择器
     implementation 'com.jzxiang.pickerview:TimePickerDialog:1.0.1'
