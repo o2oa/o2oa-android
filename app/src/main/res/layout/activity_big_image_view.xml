@@ -7,16 +7,24 @@
     android:background="@color/z_color_text_primary_dark"
     tools:context=".app.clouddrive.v2.viewer.BigImageViewActivity">
 
-    <net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.ZoomImageView
-        android:id="@+id/zoomImage_big_picture_view"
+<!--    <net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.ZoomImageView-->
+<!--        android:id="@+id/zoomImage_big_picture_view"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="0dp"-->
+<!--        app:layout_constraintTop_toTopOf="parent"-->
+<!--        app:layout_constraintBottom_toBottomOf="parent"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:scaleType="fitCenter"-->
+<!--        />-->
+    <com.davemorrissey.labs.subscaleview.SubsamplingScaleImageView
+        android:id="@+id/ssiv_big_picture_view"
         android:layout_width="0dp"
         android:layout_height="0dp"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:scaleType="fitCenter"
-        />
+        app:layout_constraintEnd_toEndOf="parent"/>
 
     <LinearLayout
         android:id="@+id/ll_big_picture_bar"

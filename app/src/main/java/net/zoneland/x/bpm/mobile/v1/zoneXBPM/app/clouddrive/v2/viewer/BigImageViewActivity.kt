@@ -1,14 +1,13 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer
 
 import android.app.Activity
-import android.content.Context
-import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.davemorrissey.labs.subscaleview.ImageSource
 import kotlinx.android.synthetic.main.activity_big_image_view.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskFileDownloadHelper
@@ -18,7 +17,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.copyToAlbum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.LoadingDialog
 import java.io.File
 
@@ -104,12 +102,14 @@ class BigImageViewActivity : AppCompatActivity() {
             currentImage = file
             tv_big_picture_title.text = file.name
             addClickSave()
-            O2ImageLoaderManager.instance().showImage(zoomImage_big_picture_view, file)
+//            O2ImageLoaderManager.instance().showImage(zoomImage_big_picture_view, file)
+            ssiv_big_picture_view.setImage(ImageSource.uri(localPath))
         } else if (!TextUtils.isEmpty(internetImageUrl)) {
             tv_big_picture_title.gone()
             btn_big_picture_share.gone()
             rl_big_picture_download_btn.gone()
-            O2ImageLoaderManager.instance().showImage(zoomImage_big_picture_view, internetImageUrl)
+//            O2ImageLoaderManager.instance().showImage(zoomImage_big_picture_view, internetImageUrl)
+            ssiv_big_picture_view.setImage(ImageSource.uri(internetImageUrl))
         } else {
             val fileId = intent.getStringExtra(IMAGE_ID_KEY) ?: ""
             val extension = intent.getStringExtra(IMAGE_EXTENSION_KEY) ?: ""
@@ -136,7 +136,8 @@ class BigImageViewActivity : AppCompatActivity() {
                     if (file != null) {
                         currentImage = file
                         addClickSave()
-                        O2ImageLoaderManager.instance().showImage(zoomImage_big_picture_view, file)
+//                        O2ImageLoaderManager.instance().showImage(zoomImage_big_picture_view, file)
+                        ssiv_big_picture_view.setImage(ImageSource.uri(file.absolutePath))
 
                     }else {
                         XToast.toastShort(this, "下载大图失败！")

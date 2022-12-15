@@ -321,6 +321,9 @@ dependencies {
     //gif 播放
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
 
+    // 图片放大缩小
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
+
 
 
     testImplementation 'junit:junit:4.12'
