@@ -135,6 +135,14 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
         web_view_portal_content.loadUrl(portalUrl)
     }
 
+    fun windowReload() {
+        if (web_view_portal_content != null) {
+            web_view_portal_content.evaluateJavascript("window.location.reload()") { value ->
+                XLog.info("执行windowReload ， result: $value")
+            }
+        }
+    }
+
     /**
      * 是否能返回
      */
@@ -149,9 +157,7 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
 
     override fun lazyLoad() {
         //页面显示的时候调用一个js方法 这个方法可以用来刷新数据之类的
-        web_view_portal_content.evaluateJavascript("window.o2Reload()") { value ->
-            XLog.info("执行o2Reload ， result: $value")
-        }
+        windowReload()
     }
 
 //    override fun loadCmsCategoryListByAppId(categoryList: List<CMSCategoryInfoJson>) {

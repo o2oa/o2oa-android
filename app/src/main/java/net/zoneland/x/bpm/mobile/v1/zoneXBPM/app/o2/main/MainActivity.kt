@@ -237,14 +237,14 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
                 webSocketService?.webSocketOpen()
             }
         }
-
-
+        // 清除通知
         XLog.info("onResume ... 清除通知！！")
         O2App.instance.clearAllNotification()
 
         // 触发一次 tbs 内核下载
         val isX5Init = WordReadHelper.getInstance().initFinish()
         XLog.info("x5内核是否已经完成，$isX5Init")
+
     }
 
 
@@ -296,14 +296,18 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
             R.id.icon_main_bottom_news -> selectTab(0)
             R.id.icon_main_bottom_contact -> selectTab(1)
             R.id.icon_main_bottom_index -> {
-//                val indexFragment = if (simpleMode) {
-//                    fragmentList[0]
-//                }else {
-//                    fragmentList[2]
-//                }
-//                if (indexFragment is IndexPortalFragment) {
-//                    indexFragment.loadWebview()
-//                }
+                val indexFragment = if (simpleMode) {
+                    fragmentList[0]
+                }else {
+                    fragmentList[2]
+                }
+                if (indexFragment is IndexPortalFragment) {
+                    // 点击返回上一页
+                    if (!indexFragment.previousPage()) {
+                        // 否则 刷新
+                        indexFragment.windowReload()
+                    }
+                }
                 selectTab(2)
             }
             R.id.icon_main_bottom_app -> selectTab(3)
