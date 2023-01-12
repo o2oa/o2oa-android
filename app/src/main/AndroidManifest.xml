@@ -131,11 +131,7 @@
             android:name=".app.cms.application.CMSPublishDocumentActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".app.o2.webview.LocalImageViewActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:theme="@style/XBPMTheme.fullscreen" />
+
         <activity
             android:name=".app.o2.security.DeviceManagerActivity"
             android:configChanges="orientation"

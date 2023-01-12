@@ -24,6 +24,22 @@ public class StringUtil {
     private static final String domainStr = "[\\w-]+\\.(com.cn|net.cn|gov.cn|org\\.nz|org.cn|com|net|org|gov|cc|biz|info|cn|co|io|tech|me|nl|eu|xyz|mobi|website|world|tv|la|love|technology|club|online|store|studio)\\b()*";
     private static final Pattern domainPattern = Pattern.compile(domainStr, Pattern.CASE_INSENSITIVE);
 
+    // 图片
+    private final static Pattern IMG_URL = Pattern.compile(".*?(gif|jpeg|png|jpg|bmp)");
+
+
+
+    /**
+     * 判断一个url是否为图片url
+     *
+     * @param url
+     * @return
+     */
+    public static boolean isImgUrl(String url) {
+        if (url == null || url.trim().length() == 0)
+            return false;
+        return IMG_URL.matcher(url).matches();
+    }
 
     /**
      * 是否url

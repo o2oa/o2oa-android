@@ -96,7 +96,7 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
         btn_begin_talk.setOnClickListener(this)
 
         showLoadingDialog()
-        mPresenter.loadPersonInfo(personId)
+        mPresenter.loadPersonInfo(personId, false)
         mPresenter.isUsuallyPerson(O2SDKManager.instance().distinguishedName, personId)
     }
     // 随机背景图
@@ -230,106 +230,114 @@ class PersonActivity : BaseMVPActivity<PersonContract.View, PersonContract.Prese
         }
     }
 
-    override fun loadPersonInfo(personInfo: PersonJson) {
-        hideLoadingDialog()
-        loadedPersonId = personInfo.id
-        loadedPersonDN = personInfo.distinguishedName
-        attributeList.clear()
-        attributeList.addAll( personInfo.woPersonAttributeList )
-        if (OrganizationPermissionManager.instance().isHiddenMobile(loadedPersonDN)) {
-            tv_person_mobile.text = "***********"
+    override fun loadPersonInfo(personInfo: PersonJson, iSuperior: Boolean) {
+        if (iSuperior) {
+            tv_person_superior.text = personInfo.name
         } else {
-            tv_person_mobile.text = personInfo.mobile
-        }
-
-        tv_person_email.text = personInfo.mail
-        if (GenderTypeEnums.FEMALE.key == personInfo.genderType) {
-            linear_person_gender_women_button.visible()
-            linear_person_gender_men_button.gone()
-        } else {
-            linear_person_gender_women_button.gone()
-            linear_person_gender_men_button.visible()
-        }
-        genderName = GenderTypeEnums.getNameByKey(personInfo.genderType)
-        if (!TextUtils.isEmpty(personInfo.signature)) {
-            tv_person_sign.text = getString(R.string.person_sign).plus(personInfo.signature)
-        }
-        tv_person_name.text = personInfo.name
-        tv_person_name_2.text = personInfo.name
-        if (personInfo.woIdentityList.isNotEmpty()) {
-            var department = ""
-            personInfo.woIdentityList.mapIndexed { index, woIdentityListItem ->
-                if (index != personInfo.woIdentityList.size - 1) {
-                    department += woIdentityListItem.unitName + ","
-                } else {
-                    department += woIdentityListItem.unitName
-                }
+            hideLoadingDialog()
+            loadedPersonId = personInfo.id
+            loadedPersonDN = personInfo.distinguishedName
+            attributeList.clear()
+            attributeList.addAll(personInfo.woPersonAttributeList)
+            if (OrganizationPermissionManager.instance().isHiddenMobile(loadedPersonDN)) {
+                tv_person_mobile.text = "***********"
+            } else {
+                tv_person_mobile.text = personInfo.mobile
             }
-            tv_person_department.text = department
-        }
-        tv_person_employee.text = personInfo.employee
-        tv_person_distinguishedName.text = personInfo.distinguishedName
-        tv_person_superior.text = personInfo.superior
-        tv_person_phone.text = personInfo.officePhone
-        tv_person_board_date.text = personInfo.boardDate
-        tv_person_describe.text = personInfo.description
 
+            tv_person_email.text = personInfo.mail
+            if (GenderTypeEnums.FEMALE.key == personInfo.genderType) {
+                linear_person_gender_women_button.visible()
+                linear_person_gender_men_button.gone()
+            } else {
+                linear_person_gender_women_button.gone()
+                linear_person_gender_men_button.visible()
+            }
+            genderName = GenderTypeEnums.getNameByKey(personInfo.genderType)
+            if (!TextUtils.isEmpty(personInfo.signature)) {
+                tv_person_sign.text = getString(R.string.person_sign).plus(personInfo.signature)
+            }
+            tv_person_name.text = personInfo.name
+            tv_person_name_2.text = personInfo.name
+            if (personInfo.woIdentityList.isNotEmpty()) {
+                var department = ""
+                personInfo.woIdentityList.mapIndexed { index, woIdentityListItem ->
+                    if (index != personInfo.woIdentityList.size - 1) {
+                        department += woIdentityListItem.unitName + ","
+                    } else {
+                        department += woIdentityListItem.unitName
+                    }
+                }
+                tv_person_department.text = department
+            }
+            tv_person_employee.text = personInfo.employee
+            tv_person_distinguishedName.text = personInfo.distinguishedName
+            tv_person_phone.text = personInfo.officePhone
+            tv_person_board_date.text = personInfo.boardDate
+            tv_person_describe.text = personInfo.description
+            if (!TextUtils.isEmpty(personInfo.superior)) {
+                mPresenter.loadPersonInfo(personInfo.superior, true)
+            }
+            val url = APIAddressHelper.instance().getPersonAvatarUrlWithId(personInfo.id)
+            O2ImageLoaderManager.instance().showImage(
+                image_person_avatar,
+                url,
+                O2ImageLoaderOptions(placeHolder = R.mipmap.icon_avatar_men)
+            )
 
-        val url = APIAddressHelper.instance().getPersonAvatarUrlWithId(personInfo.id)
-        O2ImageLoaderManager.instance().showImage(image_person_avatar, url, O2ImageLoaderOptions(placeHolder = R.mipmap.icon_avatar_men))
-
-        // 属性列表 添加到个人信息中
-        if (attributeList.isNotEmpty()) {
-            attributeList.forEach { attr ->
-                if (attr.name != "appBindDeviceList") {
-                    val divider = View(this@PersonActivity)
-                    divider.layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        this@PersonActivity.dip(0.5f)
-                    )
-                    divider.setBackgroundColor(
-                        ContextCompat.getColor(
-                            this@PersonActivity,
-                            R.color.z_color_split_line_ddd
+            // 属性列表 添加到个人信息中
+            if (attributeList.isNotEmpty()) {
+                attributeList.forEach { attr ->
+                    if (attr.name != "appBindDeviceList") {
+                        val divider = View(this@PersonActivity)
+                        divider.layoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            this@PersonActivity.dip(0.5f)
                         )
-                    )
-                    ll_person_form_box.addView(divider)
-                    val ll = LinearLayout(this@PersonActivity)
-                    ll.layoutParams = LinearLayout.LayoutParams(
-                        LinearLayout.LayoutParams.MATCH_PARENT,
-                        this@PersonActivity.dip(44f)
-                    )
-                    ll.gravity = Gravity.CENTER_VERTICAL
-                    ll.orientation = LinearLayout.HORIZONTAL
-                    ll_person_form_box.addView(ll)
-                    val label = TextView(this@PersonActivity)
-                    val layout =
-                        LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
-                    layout.weight = 1f
-                    label.layoutParams = layout
-                    label.setTextColor(
-                        ContextCompat.getColor(
-                            this@PersonActivity,
-                            R.color.z_color_text_primary
+                        divider.setBackgroundColor(
+                            ContextCompat.getColor(
+                                this@PersonActivity,
+                                R.color.z_color_split_line_ddd
+                            )
                         )
-                    )
-                    label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
-                    label.text = attr.name // 属性名称
-                    ll.addView(label)
-                    val tvValue = TextView(this@PersonActivity)
-                    val layout2 =
-                        LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
-                    layout2.weight = 2f
-                    tvValue.layoutParams = layout2
-                    tvValue.setTextColor(
-                        ContextCompat.getColor(
-                            this@PersonActivity,
-                            R.color.z_color_text_primary_dark
+                        ll_person_form_box.addView(divider)
+                        val ll = LinearLayout(this@PersonActivity)
+                        ll.layoutParams = LinearLayout.LayoutParams(
+                            LinearLayout.LayoutParams.MATCH_PARENT,
+                            this@PersonActivity.dip(44f)
                         )
-                    )
-                    tvValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
-                    tvValue.text = attr.attributeList.joinToString()
-                    ll.addView(tvValue)
+                        ll.gravity = Gravity.CENTER_VERTICAL
+                        ll.orientation = LinearLayout.HORIZONTAL
+                        ll_person_form_box.addView(ll)
+                        val label = TextView(this@PersonActivity)
+                        val layout =
+                            LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
+                        layout.weight = 1f
+                        label.layoutParams = layout
+                        label.setTextColor(
+                            ContextCompat.getColor(
+                                this@PersonActivity,
+                                R.color.z_color_text_primary
+                            )
+                        )
+                        label.setTextSize(TypedValue.COMPLEX_UNIT_SP, 15f)
+                        label.text = attr.name // 属性名称
+                        ll.addView(label)
+                        val tvValue = TextView(this@PersonActivity)
+                        val layout2 =
+                            LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT)
+                        layout2.weight = 2f
+                        tvValue.layoutParams = layout2
+                        tvValue.setTextColor(
+                            ContextCompat.getColor(
+                                this@PersonActivity,
+                                R.color.z_color_text_primary_dark
+                            )
+                        )
+                        tvValue.setTextSize(TypedValue.COMPLEX_UNIT_SP, 14f)
+                        tvValue.text = attr.attributeList.joinToString()
+                        ll.addView(tvValue)
+                    }
                 }
             }
         }

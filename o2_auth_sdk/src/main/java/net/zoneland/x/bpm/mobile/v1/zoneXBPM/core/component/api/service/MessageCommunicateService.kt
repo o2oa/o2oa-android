@@ -106,4 +106,19 @@ interface MessageCommunicateService {
     @GET("jaxrs/im/msg/revoke/{id}")
     fun revokeChatMsg(@Path("id") id: String):  Observable<ApiResponse<IdData>>
 
+
+    /**
+     * 删除群聊
+     * 删除所有群聊相关的内容，包括聊天记录
+     */
+    @DELETE("jaxrs/im/conversation/{id}/group")
+    fun deleteGroupConversation(@Path("id") id: String): Observable<ApiResponse<ValueData>>
+
+    /**
+     * 删除单聊会话
+     * 当前个人的会话删除，会话列表不展现
+     */
+    @DELETE("jaxrs/im/conversation/{id}/single")
+    fun deleteSingleConversation(@Path("id") id: String): Observable<ApiResponse<ValueData>>
+
 }

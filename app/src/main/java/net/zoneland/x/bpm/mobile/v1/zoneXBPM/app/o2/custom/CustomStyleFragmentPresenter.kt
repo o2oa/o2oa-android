@@ -128,6 +128,7 @@ class CustomStyleFragmentPresenter : BasePresenterImpl<CustomStyleFragmentContra
                     ?: O2CustomStyle.INDEX_TYPE_DEFAULT)
             putString(O2CustomStyle.INDEX_ID_PREF_KEY, data?.indexPortal ?: "")
             putBoolean(O2CustomStyle.CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY, data?.simpleMode ?: false)
+            putBoolean(O2CustomStyle.CUSTOM_STYLE_SILENCE_GRAY_PREF_KEY, data?.needGray ?: false)
         }
     }
 }

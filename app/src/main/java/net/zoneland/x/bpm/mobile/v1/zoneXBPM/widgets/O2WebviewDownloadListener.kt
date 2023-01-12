@@ -103,7 +103,7 @@ class O2WebviewDownloadListener(val activity: Activity) : DownloadListener {
                     contentDisposition.substringAfterLast("=")
                 }
                 else -> {
-                    contentDisposition
+                    ""
                 }
             }
         }
@@ -117,6 +117,9 @@ class O2WebviewDownloadListener(val activity: Activity) : DownloadListener {
         if (TextUtils.isEmpty(fileName)) {
             val now = Date().time
             fileName = "$now"
+        }
+        if (!TextUtils.isEmpty(fileName) && fileName.contains("\"")) {
+            fileName = fileName.replace("\"", "")
         }
         return fileName
     }

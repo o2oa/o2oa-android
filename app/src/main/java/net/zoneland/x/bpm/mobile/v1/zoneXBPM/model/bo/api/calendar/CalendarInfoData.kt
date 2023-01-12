@@ -1,6 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.calendar
 
-import com.bigkoo.pickerview.model.IPickerViewData
+import com.contrarywind.interfaces.IPickerViewData
 import java.io.Serializable
 
 /**

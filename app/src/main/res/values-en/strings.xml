@@ -327,6 +327,8 @@
     <string name="menu_im_tribe_name_update">Modify group name</string>
     <string name="menu_im_tribe_member_update">Modify members</string>
     <string name="menu_im_tribe_clear_msg">Clear chat</string>
+    <string name="menu_im_tribe_delete">Delete Chat</string>
+    <string name="menu_im_single_delete">Delete Chat</string>
     <string name="menu_im_report">report</string>
     <string name="im_hint_input_tribe_name">Please enter the group name！</string>
     <string name="im_tribe_name_cannot_empty">Group name cannot be empty！</string>
@@ -336,6 +338,8 @@
     <string name="im_manager_member">Managing members</string>
     <string name="im_choose_conversation">Select a chat</string>
     <string name="im_message_confirm_delete_msgs">Are you sure you want to clear the chat records? After clearing, everyone in the current session will not see these chat records?</string>
+    <string name="im_message_confirm_delete_group_chat">Are you sure you want to delete the current group chat? After deletion, the current group will be dissolved and all chat records will be cleared?</string>
+    <string name="im_message_confirm_delete_single_chat">Are you sure you want to delete the current session? All chat records will be cleared after deletion?</string>
     <string name="im_message_clear_msg_success">Empty chat record successfully!</string>
     <string name="im_message_clear_msg_no_conversationId">No session ID passed in, unable to empty the chat record!</string>
     <string name="im_message_revoke_fail">Failed to recall message！</string>

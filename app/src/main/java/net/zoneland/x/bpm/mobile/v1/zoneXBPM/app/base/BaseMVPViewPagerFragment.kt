@@ -7,6 +7,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.webkit.WebView
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.LoadingDialog
 
@@ -107,5 +108,21 @@ abstract class BaseMVPViewPagerFragment<in V : BaseView, T : BasePresenter<V>> :
 
     fun hideLoadingDialog() {
         loadingDialog.dismiss()
+    }
+
+    /**
+     * webview 图片太大的问题处理
+     */
+    fun imgReset(webv: WebView) {
+        webv.loadUrl(
+            "javascript:(function(){" +
+                    "var objs = document.getElementsByTagName('img'); " +
+                    "for(var i=0;i<objs.length;i++) " +
+                    "{"
+                    + "var img = objs[i]; " +
+                    " img.style.maxWidth = '100%'; img.style.height = 'auto'; " +
+                    "}" +
+                    "})()"
+        )
     }
 }

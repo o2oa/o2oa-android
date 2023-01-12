@@ -39,9 +39,19 @@ public class WordReadView extends FrameLayout implements TbsReaderView.ReaderCal
         //init();
     }
 
+    private CannotOpenFileListener fileListener;
+
     private void init() {
         mTbsView = new TbsReaderView(getContext(), this);
         this.addView(mTbsView);
+    }
+
+    public CannotOpenFileListener getFileListener() {
+        return fileListener;
+    }
+
+    public void setFileListener(CannotOpenFileListener fileListener) {
+        this.fileListener = fileListener;
     }
 
     @Override
@@ -108,6 +118,9 @@ public class WordReadView extends FrameLayout implements TbsReaderView.ReaderCal
             mTbsView.openFile(bundle);
         } else {
             Log.e(TAG, "Type is not support");
+            if (fileListener != null) {
+                fileListener.cannotOpen(filePath);
+            }
         }
 
     }
@@ -126,5 +139,8 @@ public class WordReadView extends FrameLayout implements TbsReaderView.ReaderCal
         }
     }
 
+    public interface CannotOpenFileListener {
+        public void cannotOpen(String filePath);
+    }
 
 }

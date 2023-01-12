@@ -19,6 +19,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.O2WebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.DownloadAPKService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2AppUpdateBean
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2AlertIconEnum
@@ -56,14 +57,22 @@ class AboutActivity : AppCompatActivity() {
             BitmapUtil.setImageFromFile(path!!, image_about_logo)
         }
         if (BuildConfig.NEED_UPDATE) {
+            ll_about_check_version.visible()
             relative_about_check_version.visible()
             relative_about_check_version.setOnClickListener {
                 checkAppUpdate()
             }
+            val isOpen = O2SDKManager.instance().prefs().getBoolean(O2.PRE_APP_AUTO_CHECK_UPDATE_KEY, true)
+            switch_about_check_version.isChecked = isOpen
+            switch_about_check_version.setOnCheckedChangeListener { _, isChecked ->
+                O2SDKManager.instance().prefs().edit {
+                    putBoolean(O2.PRE_APP_AUTO_CHECK_UPDATE_KEY, isChecked);
+                }
+            }
         } else {
-            relative_about_check_version.gone()
+            ll_about_check_version.gone()
         }
-//        if (AndroidUtils.isHuaweiChannel(this)) {
+        if (!BuildConfig.InnerServer) {
             ll_about_user_secret.visible()
             relative_about_secret.setOnClickListener {
                 O2WebViewActivity.openWebView(this@AboutActivity, getString(R.string.secret), "https://www.o2oa.net/secret.html")
@@ -71,9 +80,7 @@ class AboutActivity : AppCompatActivity() {
             relative_about_user_service.setOnClickListener {
                 O2WebViewActivity.openWebView(this@AboutActivity, getString(R.string.user_service), "https://www.o2oa.net/userService.html")
             }
-//        } else {
-//            ll_about_user_secret.gone()
-//        }
+        }
     }
 
 

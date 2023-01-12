@@ -1,19 +1,20 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.viewer
 
-import android.graphics.Bitmap
-import android.graphics.BitmapFactory
 import android.text.TextUtils
 import android.view.ViewGroup
 import android.widget.ImageView
+import com.davemorrissey.labs.subscaleview.ImageSource
 import kotlinx.android.synthetic.main.fragment_picture_viewer.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPViewPagerFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.APIDistributeTypeEnum
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2FileDownloadHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
-import rx.Observable
 import rx.Observer
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
@@ -41,7 +42,7 @@ class CloudDrivePictureViewerFragment : BaseMVPViewPagerFragment<CloudDrivePictu
             XToast.toastShort(activity, "没有传入必要的参数，无法展现图片！")
         }else {
             circle_progress_fragment_picture_view.visible()
-            zoomImage_fragment_picture_view.visible()
+            ssiv_fragment_picture_view.visible()
 
             val path = FileExtensionHelper.getXBPMTempFolder(activity) + File.separator + fileId + File.separator + fileName
             XLog.debug("file path $path")
@@ -49,31 +50,33 @@ class CloudDrivePictureViewerFragment : BaseMVPViewPagerFragment<CloudDrivePictu
                     .getCommonDownloadUrl(APIDistributeTypeEnum.x_file_assemble_control, "jaxrs/attachment/$fileId/download/stream")
             O2FileDownloadHelper.download(downloadUrl, path)
                     .subscribeOn(Schedulers.io())
-                    .flatMap {
-                        var bitmap:Bitmap? = null
-                        //压缩
-                        val options = BitmapFactory.Options()
-                        options.inJustDecodeBounds = true
-                        val imageSize = getImageViewWidthAndHeight(zoomImage_fragment_picture_view)
-                        val  newW = imageSize.width
-                        val   newH = imageSize.height
-                        XLog.debug("zoomBitmap, newW:$newW,newH:$newH")
-                        options.inSampleSize = BitmapUtil.getFitInSampleSize(newW, newH, options)
-                        options.inJustDecodeBounds = false
-                        bitmap = BitmapFactory.decodeFile(path, options)
-                        Observable.just(bitmap)
-                    }
+//                    .flatMap {
+//                        var bitmap:Bitmap? = null
+//                        //压缩
+//                        val options = BitmapFactory.Options()
+//                        options.inJustDecodeBounds = true
+//                        val imageSize = getImageViewWidthAndHeight(zoomImage_fragment_picture_view)
+//                        val  newW = imageSize.width
+//                        val   newH = imageSize.height
+//                        XLog.debug("zoomBitmap, newW:$newW,newH:$newH")
+//                        options.inSampleSize = BitmapUtil.getFitInSampleSize(newW, newH, options)
+//                        options.inJustDecodeBounds = false
+//                        bitmap = BitmapFactory.decodeFile(path, options)
+//                        Observable.just(bitmap)
+//                    }
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(object : Observer<Bitmap> {
+                    .subscribe(object : Observer<Boolean> {
                         override fun onError(e: Throwable?) {
                             XLog.error("的丁大丁大", e)
+                            XToast.toastShort(activity, "下载图片失败！")
                             circle_progress_fragment_picture_view?.gone()
                         }
 
-                        override fun onNext(bitmap: Bitmap?) {
-                            if (bitmap!=null) {
-                                zoomImage_fragment_picture_view?.setImageBitmap(bitmap)
-                            }
+                        override fun onNext(bitmap: Boolean) {
+//                            if (bitmap!=null) {
+//                                zoomImage_fragment_picture_view?.setImageBitmap(bitmap)
+//                            }
+                            ssiv_fragment_picture_view.setImage(ImageSource.uri(path))
                             circle_progress_fragment_picture_view?.gone()
                         }
 

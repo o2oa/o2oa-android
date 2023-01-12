@@ -1,6 +1,7 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im
 
 import android.text.TextUtils
+import com.xiaomi.push.id
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
@@ -268,6 +269,48 @@ class O2ChatPresenter : BasePresenterImpl<O2ChatContract.View>(), O2ChatContract
                     onError { e, _ ->
                         XLog.error("", e)
                         mView?.revokeMsgFail(e?.message ?: "unknown")
+                    }
+                }
+        }
+    }
+
+    override fun deleteGroupConversation(conversationId: String) {
+        if (TextUtils.isEmpty(conversationId)) {
+            mView?.deleteGroupConversationFail(mView?.getContext()?.getString(R.string.im_message_clear_msg_no_conversationId) ?: "unknown")
+            return
+        } else {
+            getMessageCommunicateService(mView?.getContext())
+                ?.deleteGroupConversation(conversationId)
+                ?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.o2Subscribe {
+                    onNext {
+                        mView?.deleteGroupConversationSuccess()
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.deleteGroupConversationFail(e?.message ?: "unknown")
+                    }
+                }
+        }
+    }
+
+    override fun deleteSingleConversation(conversationId: String) {
+        if (TextUtils.isEmpty(conversationId)) {
+            mView?.deleteGroupConversationFail(mView?.getContext()?.getString(R.string.im_message_clear_msg_no_conversationId) ?: "unknown")
+            return
+        } else {
+            getMessageCommunicateService(mView?.getContext())
+                ?.deleteSingleConversation(conversationId)
+                ?.subscribeOn(Schedulers.io())
+                ?.observeOn(AndroidSchedulers.mainThread())
+                ?.o2Subscribe {
+                    onNext {
+                        mView?.deleteSingleConversationSuccess()
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        mView?.deleteSingleConversationFail(e?.message ?: "unknown")
                     }
                 }
         }

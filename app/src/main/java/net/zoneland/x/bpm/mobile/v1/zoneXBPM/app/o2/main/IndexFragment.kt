@@ -7,6 +7,7 @@ import android.text.TextUtils
 import android.view.View
 import android.widget.ImageView
 import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.widget.NestedScrollView
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -331,7 +332,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
         hotPictureList.clear()
         if (list.isEmpty()){
             linear_todo_banner_container?.gone()
-            image_todo_banner_noData?.visible()
+            image_todo_banner_noData?.gone() // 不显示默认图片了 有滚动大图才显示具体数据
         }else {
             hotPictureList.addAll(list)
             cBannerView.notifyDataSetChanged()
@@ -346,7 +347,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
         hotPictureList.clear()
         isLoadHotPictureList = false
         linear_todo_banner_container?.gone()
-        image_todo_banner_noData?.visible()
+        image_todo_banner_noData?.gone()
     }
 
     private val adapter: CommonRecycleViewAdapter<ToDoFragmentListViewItemVO> by lazy {
@@ -418,28 +419,33 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
         object : CommonRecycleViewAdapter<MyAppListObject>(activity, appList, R.layout.item_todofragment_app_list) {
             override fun convert(holder: CommonRecyclerViewHolder?, t: MyAppListObject?) {
                 when {
-                    ApplicationEnum.isNativeApplication(t?.appId) -> holder?.setImageViewResource(R.id.app_id, ApplicationEnum.getApplicationByKey(t?.appId).iconResId)
+                    ApplicationEnum.isNativeApplication(t?.appId) -> {
+                        holder?.setImageViewResource(
+                            R.id.app_id,
+                            ApplicationEnum.getApplicationByKey(t?.appId).iconResId
+                        )
+                        // 待办 待阅 数量显示
+                        val numberTv = holder?.getView<TextView>(R.id.tv_app_list_item_num)
+                        numberTv?.gone()
+                        if (numberTv != null && t?.appId != null) {
+                            if (t.appId == ApplicationEnum.TASK.key) {
+                                numberTv.tag = t.appId!!
+                                mPresenter.getTaskNumber(activity, numberTv, t.appId!!)
+                            }
+                            if (t.appId == ApplicationEnum.READ.key) {
+                                numberTv.tag = t.appId!!
+                                mPresenter.getReadNumber(activity, numberTv, t.appId!!)
+                            }
+                        }
+                    }
                     t?.appId == ALL_APP_ID -> holder?.setImageViewResource(R.id.app_id, R.mipmap.ic_todo_more)
                     else -> {
-
                         val portalIconUrl = APIAddressHelper.instance().getPortalIconUrl(t?.appId!!)
                         val icon = holder?.getView<ImageView>(R.id.app_id)
                         if (icon !=null) {
                             O2ImageLoaderManager.instance().showImage(icon, portalIconUrl, O2ImageLoaderOptions(placeHolder = R.mipmap.process_default))
                         }
-//                        val bitmap = BitmapFactory.decodeFile(O2CustomStyle.processDefaultImagePath(activity))
-//                        if (bitmap != null) {
-//                            holder?.setImageViewBitmap(R.id.app_id, bitmap)
-//                        } else {
-//                            //holder?.setImageViewResource(R.id.app_id, R.mipmap.process_default)
-//                            if (t?.appId != null){
-//                                val portalIconUrl = APIAddressHelper.instance().getPortalIconUrl(t.appId!!)
-//                                val icon = holder?.getView<ImageView>(R.id.app_id)
-//                                if (icon !=null) {
-//                                    O2ImageLoaderManager.instance().showImage(icon, portalIconUrl, O2ImageLoaderOptions(placeHolder = R.mipmap.process_default))
-//                                }
-//                            }
-//                        }
+
                     }
                 }
                 holder?.setText(R.id.app_name_id, t?.appTitle)

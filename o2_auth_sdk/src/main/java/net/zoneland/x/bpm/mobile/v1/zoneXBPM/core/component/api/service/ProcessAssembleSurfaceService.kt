@@ -426,4 +426,10 @@ interface ProcessAssembleSurfaceService {
      */
     @GET("jaxrs/attachment/{attachId}/available")
     fun checkAttachmentAvailable(@Path("attachId") attachId: String): Observable<ApiResponse<ValueData>>
+
+    /**
+     * 查询个人待办等数量
+     */
+    @GET("jaxrs/work/count/{credential}")
+    fun countWithPerson(@Path("credential") credential: String) : Observable<ApiResponse<CountProcessNumberData>>
 }
