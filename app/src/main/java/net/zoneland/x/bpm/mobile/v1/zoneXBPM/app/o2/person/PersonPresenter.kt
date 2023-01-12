@@ -13,12 +13,12 @@ import rx.schedulers.Schedulers
 
 class PersonPresenter : BasePresenterImpl<PersonContract.View>(), PersonContract.Presenter {
 
-    override fun loadPersonInfo(name: String) {
+    override fun loadPersonInfo(name: String, iSuperior: Boolean) {
         getOrganizationAssembleControlApi(mView?.getContext())?.let { service ->
             service.person(name)
                     .subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(ResponseHandler { person -> mView?.loadPersonInfo(person) },
+                    .subscribe(ResponseHandler { person -> mView?.loadPersonInfo(person, iSuperior) },
                             ExceptionHandler(mView?.getContext()) { _ -> mView?.loadPersonInfoFail() })
         }
     }

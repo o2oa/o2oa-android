@@ -25,6 +25,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main.MainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.CaptchaImgData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.LoginModeData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.LoginWithCaptchaForm
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.WwwGetSampleAccounts
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AuthenticationInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.biometric.BioConstants
@@ -147,7 +148,7 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
             login_edit_password_id.inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
             button_login_phone_code.gone()
             tv_rebind_btn.gone()
-            tv_bioauth_btn.visible()
+            tv_bioauth_btn.gone() // 20230112 关闭切换 演示环境只需要账号密码登录
             ll_login_captcha.visible()
         }else {
             tv_bioauth_btn.visible()
@@ -170,7 +171,8 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
         mPresenter.getLoginMode()
 
         tv_login_sample_tips.setOnClickListener {
-            popupSampleTipsDialog()
+//            popupSampleTipsDialog()
+            getSampleAccountsFromWWW()
         }
         checkPopupPrompt()
     }
@@ -311,7 +313,15 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
         }
     }
 
-    //弹出提示框
+
+    // 从官方获取演示环境的账号密码
+    private fun getSampleAccountsFromWWW() {
+        showLoadingDialog()
+        val unit = SampleEditionManger.instance().getCurrent()
+        mPresenter.getSampleServerAccounts(unit.id)
+    }
+
+    //公众号获取演示环境的账号密码
     private fun popupSampleTipsDialog() {
         if (tipsFragment == null) {
             XLog.debug("new SampleTipsFragment .........1.")
@@ -380,15 +390,16 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
             }else {
                 ll_login_captcha.gone()
             }
-            // 短信验证码登录
-            if (mode.codeLogin) {
-                loginType = 1
-                changeLoginType()
-            } else { // 用户密码登录
-                loginType = 0
-                tv_bioauth_btn.gone()
-                changeLoginType()
-            }
+            // 20230112 只有密码登录 演示环境 不需要短信
+//            // 短信验证码登录
+//            if (mode.codeLogin) {
+//                loginType = 1
+//                changeLoginType()
+//            } else { // 用户密码登录
+//                loginType = 0
+//                tv_bioauth_btn.gone()
+//                changeLoginType()
+//            }
         } else { // 用户密码登录
             loginType = 0
             tv_bioauth_btn.gone()
@@ -433,6 +444,47 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
 
     override fun getCodeError() {
         XToast.toastShort(this, getString(R.string.message_login_validate_code_fail))
+    }
+
+    override fun sampleServerAccounts(accounts: WwwGetSampleAccounts?) {
+        hideLoadingDialog()
+        if (accounts == null) {
+            XLog.error("无法获取到账号密码！")
+            popupSampleTipsDialog()
+        } else {
+            if (accounts.accountList == null || accounts.accountList?.isEmpty() == true) {
+                popupSampleTipsDialog()
+            } else {
+                sAccountList = accounts
+                val accountList = accounts.accountList ?: ArrayList()
+                val listItems = ArrayList<String>()
+                for (wwwGetSampleAccount in accountList) {
+                    listItems.add("${wwwGetSampleAccount.name}: ${wwwGetSampleAccount.account}")
+                }
+                BottomSheetMenu(this)
+                    .setTitle("选择账号")
+                    .setItems(
+                        listItems,
+                        ContextCompat.getColor(this, R.color.z_color_text_primary)
+                    ) { index ->
+                        chooseAccount(index)
+                    }
+                    .show()
+            }
+        }
+    }
+    var sAccountList: WwwGetSampleAccounts? = null
+    private fun chooseAccount(index: Int) {
+        if (sAccountList != null) {
+            try {
+                val accountList = sAccountList?.accountList ?: ArrayList()
+                val account = accountList[index]
+                login_edit_password_id.setText(sAccountList?.password)
+                login_edit_username_id.setText(account.account)
+            }catch (e: Exception) {
+                XLog.error("", e)
+            }
+        }
     }
 
     private fun submitLogin() {

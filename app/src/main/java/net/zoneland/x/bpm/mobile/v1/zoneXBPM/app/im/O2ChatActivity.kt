@@ -290,13 +290,23 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.clear()
         if (canUpdate) {
-            if (imConfig.enableClearMsg) {
-                menuInflater.inflate(R.menu.menu_chat_with_clear, menu)
+            // 200 新版本增加了删除群聊功能
+            if (imConfig.versionNo >= 200) {
+                menuInflater.inflate(R.menu.menu_chat_with_delete, menu)
             } else {
-                menuInflater.inflate(R.menu.menu_chat, menu)
+                if (imConfig.enableClearMsg) {
+                    menuInflater.inflate(R.menu.menu_chat_with_clear, menu)
+                } else {
+                    menuInflater.inflate(R.menu.menu_chat, menu)
+                }
             }
         } else {
-            menuInflater.inflate(R.menu.menu_chat_no_update, menu)
+            // 200 新版本增加了删除群聊功能
+            if (imConfig.versionNo >= 200) {
+                menuInflater.inflate(R.menu.menu_chat_no_update_with_delete, menu)
+            } else {
+                menuInflater.inflate(R.menu.menu_chat_no_update, menu)
+            }
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -317,6 +327,14 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             }
             R.id.menu_chat_clear_msg -> {
                 clearAllMsg()
+                return true
+            }
+            R.id.menu_chat_delete_group -> {
+                deleteGroupChat()
+                return true
+            }
+            R.id.menu_chat_delete_single -> {
+                deleteSingleChat()
                 return true
             }
         }
@@ -351,6 +369,19 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
         O2DialogSupport.openConfirmDialog(this, getString(R.string.im_message_confirm_delete_msgs), {
             _ ->
             mPresenter.deleteAllChatMsg(conversationId)
+        })
+    }
+
+    private fun deleteGroupChat() {
+        O2DialogSupport.openConfirmDialog(this, getString(R.string.im_message_confirm_delete_group_chat), {
+                _ ->
+            mPresenter.deleteGroupConversation(conversationId)
+        })
+    }
+    private fun deleteSingleChat() {
+        O2DialogSupport.openConfirmDialog(this, getString(R.string.im_message_confirm_delete_single_chat), {
+                _ ->
+            mPresenter.deleteSingleConversation(conversationId)
         })
     }
 
@@ -606,6 +637,24 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
 
     override fun revokeMsgFail(msg: String) {
         XToast.toastShort(this, getString(R.string.im_message_revoke_fail) + msg)
+    }
+
+    override fun deleteGroupConversationSuccess() {
+        XLog.info("删除群聊成功！")
+        finish()
+    }
+
+    override fun deleteGroupConversationFail(msg: String) {
+        XToast.toastShort(this,  msg)
+    }
+
+    override fun deleteSingleConversationSuccess() {
+        XLog.info("删除单聊会话成功！")
+        finish()
+    }
+
+    override fun deleteSingleConversationFail(msg: String) {
+        XToast.toastShort(this,  msg)
     }
 
     /**

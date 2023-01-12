@@ -5,6 +5,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseView
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.CaptchaImgData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.LoginModeData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.LoginWithCaptchaForm
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.WwwGetSampleAccounts
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.AuthenticationInfoJson
 
 /**
@@ -19,6 +20,7 @@ object LoginContract {
         fun showCaptcha(data: CaptchaImgData)
         fun getCaptchaError(err: String)
         fun loginMode(mode: LoginModeData?)
+        fun sampleServerAccounts(accounts: WwwGetSampleAccounts?)
     }
 
     interface Presenter: BasePresenter<View> {
@@ -59,6 +61,9 @@ object LoginContract {
          *
          */
         fun getRSAPublicKey()
+
+
+        fun getSampleServerAccounts(serverId: String)
 
     }
 }

@@ -30,6 +30,8 @@ object O2CustomStyle {
     const val INDEX_ID_PREF_KEY = "customStyleIndexIdKey"
     // 移动端简易模式 key
     const val CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY = "customStyleSimpleModeKey"
+    // 默哀
+    const val CUSTOM_STYLE_SILENCE_GRAY_PREF_KEY = "customStyleSilenceGrayKey"
 
     // 通讯录权限查询视图key
     const val CUSTOM_STYLE_CONTACT_PERMISSION_PREF_KEY = "customStyleContactPermissionViewKey"

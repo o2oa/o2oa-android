@@ -9,6 +9,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.LoginWithCaptchaForm
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.RSAPublicKeyData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.WwwGetSampleAccountPost
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.Base64ImageUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.CryptRSA
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.ExceptionHandler2
@@ -166,5 +167,24 @@ class LoginPresenter : BasePresenterImpl<LoginContract.View>(), LoginContract.Pr
         }
     }
 
-
+    override fun getSampleServerAccounts(serverId: String) {
+        val wwwService = getO2oaWwwService(mView?.getContext())
+        if (wwwService != null) {
+            val post = WwwGetSampleAccountPost(serverId)
+            wwwService.executeSampleAccountsShell(post)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext {
+                        mView?.sampleServerAccounts(it.data.value)
+                    }
+                    onError { e, isNetworkError ->
+                        XLog.error("", e)
+                        mView?.sampleServerAccounts(null)
+                    }
+                }
+        } else {
+            mView?.sampleServerAccounts(null)
+        }
+    }
 }

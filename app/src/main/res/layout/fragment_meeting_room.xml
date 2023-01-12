@@ -79,9 +79,9 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_alignParentBottom="true"
-                android:textSize="@dimen/font_meeting_time"
+                android:text="选择时间"
                 android:textColor="@color/z_color_text_primary_dark"
-                android:text="选择时间"/>
+                android:textSize="@dimen/font_meeting_time" />
 
             <LinearLayout
                 android:id="@+id/ll_meeting_room_time"

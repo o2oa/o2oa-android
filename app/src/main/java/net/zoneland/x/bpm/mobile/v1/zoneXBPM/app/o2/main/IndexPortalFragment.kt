@@ -19,6 +19,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPViewPagerFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.calendar.CalendarMainActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.application.CMSApplicationActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.application.CMSPublishDocumentActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.view.CMSWebViewActivity
@@ -35,6 +36,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.cms.CMSCategoryInfoJso
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.cms.CMSDocumentInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.O2JsPostMessage
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.O2UtilDatePickerMessage
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.StringUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
@@ -99,6 +101,13 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
             web_view_portal_content.setDownloadListener(O2WebviewDownloadListener(activity!!))
             web_view_portal_content.webChromeClient = webChromeClient
             web_view_portal_content.webViewClient = object : WebViewClient() {
+                override fun onPageFinished(view: WebView?, url: String?) {
+                    super.onPageFinished(view, url)
+                    if (view != null) {
+                        imgReset(view) // 处理图片过大的问题
+                        XLog.debug("处理了大图了？？？？？？？？？？？？")
+                    }
+                }
                 override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
                     XLog.error("ssl error, $error")
                     handler?.proceed()
@@ -107,7 +116,11 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
                 override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
                     XLog.debug("跳转 url : $url" )
                     if (!TextUtils.isEmpty(url)) {
-                        view?.loadUrl(url!!)
+                        if (StringUtil.isImgUrl(url)) {
+                            BigImageViewActivity.startInternetImageUrl(activity!!, url!!)
+                        } else {
+                            view?.loadUrl(url!!)
+                        }
                     }
                     return true
                 }
@@ -120,6 +133,14 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
 
     fun loadWebview() {
         web_view_portal_content.loadUrl(portalUrl)
+    }
+
+    fun windowReload() {
+        if (web_view_portal_content != null) {
+            web_view_portal_content.evaluateJavascript("window.location.reload()") { value ->
+                XLog.info("执行windowReload ， result: $value")
+            }
+        }
     }
 
     /**
@@ -136,9 +157,7 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
 
     override fun lazyLoad() {
         //页面显示的时候调用一个js方法 这个方法可以用来刷新数据之类的
-        web_view_portal_content.evaluateJavascript("window.o2Reload()") { value ->
-            XLog.info("执行o2Reload ， result: $value")
-        }
+        windowReload()
     }
 
 //    override fun loadCmsCategoryListByAppId(categoryList: List<CMSCategoryInfoJson>) {

@@ -12,7 +12,7 @@
     "name" : "政务信息化协同平台",
     "centerHost" : "case1.o2oa.net",
     "centerContext" : "/x_program_center",
-    "centerPort" : 20030,
+    "centerPort" : 443,
     "httpProtocol" : "https"
   },
   {
@@ -36,7 +36,7 @@
     "name" : "城市投资集团办公平台",
     "centerHost" : "caseinvest.o2oa.net",
     "centerContext" : "/x_program_center",
-    "centerPort" : 80,
+    "centerPort" : 20030,
     "httpProtocol" : "http"
   }
 ]

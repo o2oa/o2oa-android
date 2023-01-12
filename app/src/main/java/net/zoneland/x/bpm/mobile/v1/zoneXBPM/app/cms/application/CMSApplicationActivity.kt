@@ -126,10 +126,10 @@ class CMSApplicationActivity : BaseMVPActivity<CMSApplicationContract.View, CMSA
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.clear()
-        //todo 暂时先隐藏 表单操作按钮转到h5内部去
-//        if (canPublishCategories.size>0) {
-//            menuInflater.inflate(R.menu.menu_cms_create, menu)
-//        }
+        //todo
+        if (canPublishCategories.size>0) {
+            menuInflater.inflate(R.menu.menu_cms_create, menu)
+        }
         return super.onPrepareOptionsMenu(menu)
     }
 

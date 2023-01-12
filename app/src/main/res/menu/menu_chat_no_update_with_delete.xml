@@ -1,0 +1,13 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".app.im.O2ChatActivity">
+
+    <item android:id="@+id/menu_chat_report"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="90"
+        android:title="@string/menu_im_report"/>
+    <item android:id="@+id/menu_chat_delete_single"
+        android:orderInCategory="90"
+        android:title="@string/menu_im_single_delete"/>
+</menu>

@@ -286,6 +286,11 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
         XLog.info("一切的开始。。。。。。。。。。。。。。。。。。。。。。。")
         // 演示版本
         O2App.instance.agreePrivacyAndInitThirdParty(true)
+        // 这里先去官网查询服务器列表
+        mPresenter.getSampleServerList()
+    }
+
+    override fun sampleServerListFinish() {
         val unit = SampleEditionManger.instance().getCurrent()
         O2SDKManager.instance().launchInner(O2SDKManager.instance().gson.toJson(unit), launchState)
     }

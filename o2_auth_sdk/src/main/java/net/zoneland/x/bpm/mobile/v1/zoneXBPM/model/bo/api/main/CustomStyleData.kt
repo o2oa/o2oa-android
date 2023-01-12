@@ -11,6 +11,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.AppItemOnlineVo
 
 
 data class CustomStyleData(
+    var needGray: Boolean = false, // 是否启用灰色 默哀
     var indexType: String = "default", // 首页是默认default 还是门户
 //        var indexId: String = "",
     var indexPortal: String = "", // 首页门户ID

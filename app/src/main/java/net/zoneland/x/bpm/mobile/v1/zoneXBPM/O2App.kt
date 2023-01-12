@@ -92,7 +92,7 @@ class O2App : MultiDexApplication() {
 
                 SDKInitializer.setAgreePrivacy(this, true)
                 SDKInitializer.initialize(applicationContext)
-                WordReadHelper.init(this);
+                WordReadHelper.getInstance().init(this);
                 //极光推送
                 JCollectionAuth.setAuth(this, true)
                 JPushInterface.init(this)
@@ -114,7 +114,7 @@ class O2App : MultiDexApplication() {
             try {
                 SDKInitializer.setAgreePrivacy(this, true)
                 SDKInitializer.initialize(applicationContext)
-                WordReadHelper.init(this);
+                WordReadHelper.getInstance().init(this);
                 //极光推送
                 JCollectionAuth.setAuth(this, true)
                 JPushInterface.init(this)

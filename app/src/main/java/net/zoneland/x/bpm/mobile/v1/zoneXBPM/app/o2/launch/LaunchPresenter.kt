@@ -3,6 +3,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.launch
 import android.text.TextUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2CustomStyle
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.SampleEditionManger
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.realm.RealmDataService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.CustomStyleData
@@ -13,6 +14,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import rx.Observable
+import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 
 /**
@@ -24,6 +26,31 @@ class LaunchPresenter : BasePresenterImpl<LaunchContract.View>(), LaunchContract
 
 
     val service: RealmDataService by lazy { RealmDataService() }
+
+
+    override fun getSampleServerList() {
+        val www = getO2oaWwwService(mView?.getContext())
+        if (www != null) {
+            www.executeSampleServerListShell()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext {
+                        val result = it.data.value
+                        if (result != null && result.isNotEmpty()) {
+                            SampleEditionManger.instance().setUnits(result)
+                        }
+                        mView?.sampleServerListFinish()
+                    }
+                    onError { e, isNetworkError ->
+                        XLog.error("", e)
+                        mView?.sampleServerListFinish()
+                    }
+                }
+        } else {
+            mView?.sampleServerListFinish()
+        }
+    }
 
     override fun downloadConfig() {
         Observable.create<Boolean> { sub->
@@ -116,6 +143,7 @@ class LaunchPresenter : BasePresenterImpl<LaunchContract.View>(), LaunchContract
                     ?: O2CustomStyle.INDEX_TYPE_DEFAULT)
             putString(O2CustomStyle.INDEX_ID_PREF_KEY, data?.indexPortal ?: "")
             putBoolean(O2CustomStyle.CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY, data?.simpleMode ?: false)
+            putBoolean(O2CustomStyle.CUSTOM_STYLE_SILENCE_GRAY_PREF_KEY, data?.needGray ?: false)
             putString(O2CustomStyle.CUSTOM_STYLE_CONTACT_PERMISSION_PREF_KEY, data?.contactPermissionView ?: O2CustomStyle.CUSTOM_STYLE_CONTACT_PERMISSION_DEFAULT)
         }
     }

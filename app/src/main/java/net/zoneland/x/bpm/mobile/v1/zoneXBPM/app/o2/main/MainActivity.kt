@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
 import android.text.TextUtils
+import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.KeyEvent
@@ -34,6 +35,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.tbs.WordReadHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.GrayFrameLayout
 import org.jetbrains.anko.doAsync
 
 
@@ -60,6 +62,32 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
 
     override fun layoutResId(): Int {
         return R.layout.activity_main
+    }
+
+    override fun onCreateView(name: String, context: Context, attrs: AttributeSet): View? {
+        // 默哀灰色处理
+        try {
+           val silence = O2SDKManager.instance().prefs().getBoolean(O2CustomStyle.CUSTOM_STYLE_SILENCE_GRAY_PREF_KEY, false)
+            if (silence) {
+                if ("FrameLayout" == name) {
+                    val count = attrs.attributeCount
+                    for (i in 0..count) {
+                        val attributeName = attrs.getAttributeName(i)
+                        val attributeValue = attrs.getAttributeValue(i)
+                        if (attributeName == "id") {
+                            val id = attributeValue.substring(1).toInt()
+                            val idVal = resources.getResourceName(id)
+                            if ("android:id/content" == idVal) {
+                                return GrayFrameLayout(context, attrs)
+                            }
+                        }
+                    }
+                }
+            }
+        } catch ( e: Exception) {
+            e.printStackTrace()
+        }
+        return super.onCreateView(name, context, attrs)
     }
 
     override fun beforeSetContentView() {
@@ -210,14 +238,14 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
                 webSocketService?.webSocketOpen()
             }
         }
-
-
+        // 清除通知
         XLog.info("onResume ... 清除通知！！")
         O2App.instance.clearAllNotification()
 
         // 触发一次 tbs 内核下载
-        val isX5Init = WordReadHelper.initFinish()
+        val isX5Init = WordReadHelper.getInstance().initFinish()
         XLog.info("x5内核是否已经完成，$isX5Init")
+
     }
 
 
@@ -269,14 +297,18 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
             R.id.icon_main_bottom_news -> selectTab(0)
             R.id.icon_main_bottom_contact -> selectTab(1)
             R.id.icon_main_bottom_index -> {
-//                val indexFragment = if (simpleMode) {
-//                    fragmentList[0]
-//                }else {
-//                    fragmentList[2]
-//                }
-//                if (indexFragment is IndexPortalFragment) {
-//                    indexFragment.loadWebview()
-//                }
+                val indexFragment = if (simpleMode) {
+                    fragmentList[0]
+                }else {
+                    fragmentList[2]
+                }
+                if (indexFragment is IndexPortalFragment) {
+                    // 点击返回上一页
+                    if (!indexFragment.previousPage()) {
+                        // 否则 刷新
+                        indexFragment.windowReload()
+                    }
+                }
                 selectTab(2)
             }
             R.id.icon_main_bottom_app -> selectTab(3)

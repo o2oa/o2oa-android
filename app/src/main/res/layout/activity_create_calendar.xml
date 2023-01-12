@@ -89,19 +89,25 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/cb_create_calendar_is_open" />
 
-        <LinearLayout
-            android:id="@+id/ll_create_calendar_color_layout"
+        <HorizontalScrollView
+            android:id="@+id/sv_create_calendar_color_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/spacing_normal"
             android:layout_marginEnd="@dimen/spacing_normal"
-            android:gravity="center_vertical"
-            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/view_create_calendar_is_open_divider">
+            <LinearLayout
+                android:id="@+id/ll_create_calendar_color_layout"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:orientation="horizontal">
 
-        </LinearLayout>
+            </LinearLayout>
+        </HorizontalScrollView>
+
 
         <View
             android:id="@+id/view_create_calendar_color_divider"
@@ -110,7 +116,7 @@
             android:background="@color/send_file_divider_color"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/ll_create_calendar_color_layout" />
+            app:layout_constraintTop_toBottomOf="@+id/sv_create_calendar_color_layout" />
 
 
         <TextView

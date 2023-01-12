@@ -176,17 +176,17 @@
                 android:paddingEnd="@dimen/spacing_normal"
                 android:background="@drawable/background_white_a9_radius_10"
                 android:orientation="vertical">
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/spacing_small"
-                    android:layout_marginBottom="@dimen/spacing_small"
-                    android:gravity="center"
-                    android:text="@string/person_enterprise_info"
-                    android:textColor="@color/z_color_text_primary_dark"
-                    android:textSize="18sp"
-                    android:textStyle="bold"
-                    />
+<!--                <TextView-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:layout_marginTop="@dimen/spacing_small"-->
+<!--                    android:layout_marginBottom="@dimen/spacing_small"-->
+<!--                    android:gravity="center"-->
+<!--                    android:text="@string/person_enterprise_info"-->
+<!--                    android:textColor="@color/z_color_text_primary_dark"-->
+<!--                    android:textSize="18sp"-->
+<!--                    android:textStyle="bold"-->
+<!--                    />-->
 
                 <LinearLayout
                     android:layout_width="match_parent"

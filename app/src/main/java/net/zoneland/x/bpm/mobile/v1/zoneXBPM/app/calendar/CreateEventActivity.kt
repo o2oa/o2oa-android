@@ -1,18 +1,19 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.calendar
 
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
-import androidx.databinding.DataBindingUtil
 import android.graphics.Color
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import androidx.cardview.widget.CardView
 import android.text.TextUtils
 import android.util.TypedValue.COMPLEX_UNIT_SP
 import android.view.Gravity
 import android.view.View
 import android.widget.*
-import com.bigkoo.pickerview.OptionsPickerView
+import androidx.appcompat.app.AppCompatActivity
+import androidx.cardview.widget.CardView
+import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
+import com.bigkoo.pickerview.builder.OptionsPickerBuilder
+import com.bigkoo.pickerview.view.OptionsPickerView
 import com.jzxiang.pickerview.TimePickerDialog
 import com.jzxiang.pickerview.data.Type
 import com.jzxiang.pickerview.listener.OnDateSetListener
@@ -22,7 +23,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.calendar.vm.CreateEventViewModel
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.databinding.ActivityCreateEventBinding
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.calendar.CalendarEventInfoData
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.calendar.CalendarInfoData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.calendar.CalendarInfoPickViewData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.CalendarPickerOption
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
@@ -236,39 +236,40 @@ class CreateEventActivity : AppCompatActivity(), OnDateSetListener {
      * 选择日历
      */
     fun chooseCalendar(view: View) {
-        val picker = OptionsPickerView.Builder(this, OptionsPickerView.OnOptionsSelectListener { option1, _, _, _ ->
-            XLog.info("select calendar: $option1")
-            viewModel.setCalendar(calendars[option1])
-        }).setTitleText(getString(R.string.calendar_menu_calendar_choose))
-                .isDialog(true)
-                .build()
+        val picker: OptionsPickerView<CalendarInfoPickViewData> = OptionsPickerBuilder(this) { o1, o2, o3, v ->
+            viewModel.setCalendar(calendars[o1])
+        }
+            .setTitleText(getString(R.string.calendar_menu_calendar_choose))
+            .setLabels(null, null, null)
+            .build()
+
         picker.setPicker(calendars)
         var selectIndex = calendars.indexOfFirst { it.id == viewModel.calendarId.value }
         if (selectIndex < 0) {
             selectIndex = 0
         }
         picker.setSelectOptions(selectIndex)
-        picker.showDialog()
+        picker.show()
     }
+
 
     /**
      * click事件
      * 选择提醒时间
      */
     fun chooseRemind(view: View) {
-        val picker = OptionsPickerView.Builder(this, OptionsPickerView.OnOptionsSelectListener { option1, _, _, _ ->
-            XLog.info("select remind: $option1")
-            viewModel.setSelectedRemind(remindList[option1])
-        }).setTitleText(getString(R.string.calendar_remind_choose))
-                .isDialog(true)
-                .build()
+        val picker: OptionsPickerView<CalendarPickerOption> = OptionsPickerBuilder(this
+        ) { options1, options2, options3, v -> viewModel.setSelectedRemind(remindList[options1]) }
+            .setTitleText(getString(R.string.calendar_remind_choose))
+            .setLabels(null, null, null)
+            .build()
         var selectIndex = remindList.indexOfFirst { it.value == viewModel.remindValue.value }
         if (selectIndex < 0) {
             selectIndex = 0
         }
         picker.setPicker(remindList)
         picker.setSelectOptions(selectIndex)
-        picker.showDialog()
+        picker.show()
     }
 
     /**
@@ -276,19 +277,20 @@ class CreateEventActivity : AppCompatActivity(), OnDateSetListener {
      * 选择重复方式
      */
     fun chooseRepeat(view: View) {
-        val picker = OptionsPickerView.Builder(this, OptionsPickerView.OnOptionsSelectListener { option1, _, _, _ ->
-            XLog.info("select repeat: $option1")
-            viewModel.setSelectedRepeat(repeatList[option1])
-        }).setTitleText(getString(R.string.calendar_repeat_choose))
-                .isDialog(true)
-                .build()
+        val picker: OptionsPickerView<CalendarPickerOption> = OptionsPickerBuilder(this) { o1, o2, o3, v ->
+            viewModel.setSelectedRepeat(repeatList[o1])
+        }
+            .setTitleText(getString(R.string.calendar_repeat_choose))
+            .setLabels(null, null, null)
+            .build()
+
         picker.setPicker(repeatList)
         var selectIndex = repeatList.indexOfFirst { it.value == viewModel.repeatValue.value }
         if (selectIndex < 0) {
             selectIndex = 0
         }
         picker.setSelectOptions(selectIndex)
-        picker.showDialog()
+        picker.show()
     }
 
     /**

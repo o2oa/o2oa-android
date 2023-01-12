@@ -286,7 +286,8 @@ dependencies {
     implementation project(':jiguang')
 
 
-    implementation 'com.contrarywind:Android-PickerView:3.2.4'
+//    implementation 'com.contrarywind:Android-PickerView:3.2.4'
+    implementation 'com.contrarywind:Android-PickerView:4.1.9'
 
     //滚动选择器
     implementation 'com.jzxiang.pickerview:TimePickerDialog:1.0.1'
@@ -322,6 +323,9 @@ dependencies {
 
     //gif 播放
     implementation 'pl.droidsonroids.gif:android-gif-drawable:1.2.24'
+
+    // 图片放大缩小
+    implementation 'com.davemorrissey.labs:subsampling-scale-image-view-androidx:3.10.0'
 
 
 

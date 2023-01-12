@@ -29,19 +29,17 @@
         app:layout_constraintTop_toTopOf="parent"
         android:maxLines="1"
         android:ellipsize="end"
-        tools:text="这里是applicationNamedddddddddddddd" />
+        tools:text="【流程名称】" />
 
     <TextView
         android:id="@+id/todo_card_view_title_id"
-        android:layout_width="230dp"
+        android:layout_width="180dp"
         android:layout_height="wrap_content"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:textColor="@color/z_color_text_primary"
         android:textSize="14sp"
-        android:maxLines="1"
-        android:ellipsize="end"
         app:layout_constraintBottom_toTopOf="@+id/view_todo_list_split"
         app:layout_constraintLeft_toRightOf="@+id/todo_card_view_icon_id"
         app:layout_constraintTop_toBottomOf="@+id/todo_card_view_content_id"
@@ -51,7 +49,7 @@
         android:id="@+id/todo_card_view_time_id"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        tools:text="2015-11-22 16:11:00"
+        tools:text="2015-11-22"
         android:textColor="@color/z_color_text_hint"
         android:textSize="12sp"
         app:layout_constraintRight_toRightOf="parent"
@@ -72,7 +70,7 @@
         app:layout_constraintBottom_toTopOf="@+id/view_todo_list_split"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/todo_card_view_time_id"
-        tools:text="申请顶顶蚩的的"
+        tools:text="申请顶顶蚩的"
         />
 
 

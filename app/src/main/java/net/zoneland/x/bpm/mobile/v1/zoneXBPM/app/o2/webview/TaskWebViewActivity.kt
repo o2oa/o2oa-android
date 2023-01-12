@@ -29,7 +29,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.O2ChatActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.fm.O2IMConversationPickerActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.ContactPickerActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.WorkNewActionItem
@@ -55,17 +54,14 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.O2WebviewDownloadListener
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.WebChromeClientWithProgressAndValueCallback
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialogfragment.DateTimePickerFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialogfragment.RecordVoiceFragment
 import org.jetbrains.anko.dip
-import org.jetbrains.anko.runOnUiThread
 import org.json.JSONObject
 import org.json.JSONTokener
 import java.io.File
 import java.io.IOException
 import java.net.URLEncoder
 import java.util.*
-import kotlin.collections.ArrayList
 
 
 class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebViewContract.Presenter>(), TaskWebViewContract.View {
@@ -188,14 +184,26 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
         web_view.setDownloadListener(O2WebviewDownloadListener(this))
         web_view.webChromeClient = webChromeClient
         web_view.webViewClient = object : WebViewClient() {
+            override fun onPageFinished(view: WebView?, url: String?) {
+                super.onPageFinished(view, url)
+                if (view != null) {
+                    imgReset(view) // 处理图片过大的问题
+                    XLog.debug("处理了大图了？？？？？？？？？？？？")
+                }
+            }
             override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
                 XLog.error("ssl error, $error")
                 handler?.proceed()
             }
             override fun shouldOverrideUrlLoading(view: WebView?, url: String): Boolean {
                 XLog.debug("shouldOverrideUrlLoading:$url")
-//                if (ZoneUtil.checkUrlIsInner(url)) {
+                if (StringUtil.isImgUrl(url)) {
+                    BigImageViewActivity.startInternetImageUrl(this@TaskWebViewActivity, url)
+                } else {
                     view?.loadUrl(url)
+                }
+//                if (ZoneUtil.checkUrlIsInner(url)) {
+//                    view?.loadUrl(url)
 //                } else {
 //                    AndroidUtils.runDefaultBrowser(this@TaskWebViewActivity, url)
 //                }
@@ -213,6 +221,8 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             updateToolbarTitle(title)
         }
     }
+
+
 
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
