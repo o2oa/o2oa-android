@@ -519,6 +519,20 @@ open class BasePresenterImpl<V : BaseView> : BasePresenter<V> {
     }
 
     /**
+     * 官网 服务
+     */
+    fun getO2oaWwwService(context: Context?): O2OAWWWService? {
+        return try {
+            RetrofitClient.instance().o2oaWwwService()
+        } catch (e: Exception) {
+            XLog.error("", e)
+            if (context != null) {
+                XToast.toastLong(context, "A官网模块异常，请联系管理员！")
+            }
+            null
+        }
+    }
+    /**
      * 图灵 v1 服务
      */
     fun getTuling123Service(context: Context?): Tuling123Service? {

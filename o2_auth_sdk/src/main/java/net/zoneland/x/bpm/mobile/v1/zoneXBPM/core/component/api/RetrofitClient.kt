@@ -560,5 +560,18 @@ class RetrofitClient private constructor() {
         return retrofitClient.create(MessageCommunicateService::class.java)
     }
 
+    /**
+     * 官网服务
+     */
+    fun o2oaWwwService() : O2OAWWWService {
+        val url = "https://www.o2oa.net/oa/"
+        val retrofitClient = Retrofit.Builder()
+            .baseUrl(url)
+            .client(o2HttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+            .build()
+        return retrofitClient.create(O2OAWWWService::class.java)
+    }
 
 }
