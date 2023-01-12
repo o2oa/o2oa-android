@@ -11,11 +11,13 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.CollectUnitData
 
 object LaunchContract {
     interface View : BaseView {
-
+        fun sampleServerListFinish()
     }
 
     interface Presenter: BasePresenter<View> {
 
         fun downloadConfig()
+
+        fun getSampleServerList()
     }
 }

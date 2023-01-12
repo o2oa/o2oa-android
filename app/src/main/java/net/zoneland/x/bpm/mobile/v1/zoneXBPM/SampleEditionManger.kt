@@ -48,6 +48,12 @@ class SampleEditionManger {
     fun getUnits(): ArrayList<CollectUnitData> {
         return unitList
     }
+    fun setUnits(units: List<CollectUnitData>) {
+        if (units.isNotEmpty()) {
+            unitList.clear()
+            unitList.addAll(units)
+        }
+    }
 
     /**
      * 获取当前环境信息
