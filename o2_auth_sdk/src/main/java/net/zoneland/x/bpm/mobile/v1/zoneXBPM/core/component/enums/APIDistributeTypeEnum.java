@@ -45,7 +45,9 @@ public enum APIDistributeTypeEnum {
 
     x_query_assemble_surface, //查询模块包含 视图、统计、自定义表等
 
-    x_pan_assemble_control, // 新版网盘
+    x_pan_assemble_control, // 新版网盘 需要安装应用
+
+    x_app_packaging_client_assemble_control, // 自助打包 需要安装应用
 
     x_organizationPermission //custom模块 通讯录 需要到应用市场下载安装
 

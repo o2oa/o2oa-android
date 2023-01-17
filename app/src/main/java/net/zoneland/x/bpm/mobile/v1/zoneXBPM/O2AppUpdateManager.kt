@@ -2,6 +2,10 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM
 
 import android.app.Activity
 import android.text.TextUtils
+import com.xiaomi.push.id
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.service.PackingClientAssembleSurfaceService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2AppUpdateBean
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2AppUpdateBeanData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
@@ -35,7 +39,9 @@ class O2AppUpdateManager private constructor() {
     private val client = OkHttpClient()
 
 
-
+    /**
+     * 官方app更新
+     */
     fun checkUpdate(activity: Activity, call: O2AppUpdateCallback) {
         val ranStr = getRandomStringOfLength(6)
         Observable.just("$o2AppVersionJsonUrl?$ranStr").subscribeOn(Schedulers.io())
@@ -81,6 +87,99 @@ class O2AppUpdateManager private constructor() {
                     }
                 }
     }
+
+
+    /**
+     * 自助打包的应用更新
+     */
+    fun checkUpdateInner(activity: Activity, call: O2AppUpdateCallback) {
+        try {
+            val service = RetrofitClient.instance().packingClientService()
+            service.echo()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext {
+                        checkUpdateVipInner(activity, call, service)
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        checkUpdateCenterInner(activity, call)
+                    }
+                }
+        } catch (e: Exception) {
+            XLog.error("", e)
+            checkUpdateCenterInner(activity, call)
+        }
+    }
+
+
+    private fun checkUpdateCenterInner(activity: Activity, call: O2AppUpdateCallback) {
+        try {
+            val url = O2SDKManager.instance().prefs().getString(O2.PRE_CENTER_URL_KEY, "") ?: ""
+            RetrofitClient.instance().api(url).androidPackLastAPk()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext {
+                        val vcode = AndroidUtils.getAppVersionCode(activity)
+                        try {
+                            if (it != null && it.data != null && it.data.appVersionNo.isNotBlank() && it.data.appVersionNo.toInt() > vcode) {
+                                XLog.debug("vcode: $vcode , build:${it.data.appVersionNo}")
+                                val needBean = O2AppUpdateBean()
+                                needBean.content = ""
+                                needBean.versionName = it.data.appVersionName
+                                needBean.buildNo = it.data.appVersionNo
+                                needBean.downloadUrl = "${url}jaxrs/apppackanony/pack/info/file/download/${it.data.id}"
+                                call.onUpdate(needBean)
+                            }else {
+                                call.onNoneUpdate("没有新版本！")
+                            }
+                        } catch (e: Exception) {
+                            call.onNoneUpdate(e.message ?: "")
+                        }
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        call.onNoneUpdate(e?.message ?: "")
+                    }
+                }
+        } catch (e: Exception) {
+            XLog.error("", e)
+            call.onNoneUpdate(e.message ?: "")
+        }
+    }
+
+    private fun checkUpdateVipInner(activity: Activity, call: O2AppUpdateCallback, service: PackingClientAssembleSurfaceService) {
+        service.androidPackLastAPk()
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .o2Subscribe {
+                onNext {
+                    val vcode = AndroidUtils.getAppVersionCode(activity)
+                    try {
+                        if (it != null && it.data != null && it.data.appVersionNo.isNotBlank() && it.data.appVersionNo.toInt() > vcode) {
+                            XLog.debug("vcode: $vcode , build:${it.data.appVersionNo}")
+                            val needBean = O2AppUpdateBean()
+                            needBean.content = ""
+                            needBean.versionName = it.data.appVersionName
+                            needBean.buildNo = it.data.appVersionNo
+                            needBean.downloadUrl = APIAddressHelper.instance().getPackingClientAppInnerDownloadUrl(it.data.id)
+                            call.onUpdate(needBean)
+                        }else {
+                            call.onNoneUpdate("没有新版本！")
+                        }
+                    } catch (e: Exception) {
+                        call.onNoneUpdate(e.message ?: "")
+                    }
+                }
+                onError { e, _ ->
+                    XLog.error("", e)
+                    call.onNoneUpdate(e?.message ?: "")
+                }
+            }
+    }
+
 
 
     private val characters = "1234567890abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ".toCharArray()

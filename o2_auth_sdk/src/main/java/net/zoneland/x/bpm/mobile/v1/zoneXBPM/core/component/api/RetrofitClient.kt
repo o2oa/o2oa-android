@@ -561,4 +561,20 @@ class RetrofitClient private constructor() {
     }
 
 
+    /**
+     * 自助打包服务
+     *
+     */
+    fun packingClientService(): PackingClientAssembleSurfaceService {
+        val url = helper.getAPIDistribute(APIDistributeTypeEnum.x_app_packaging_client_assemble_control)
+        val retrofitClient = Retrofit.Builder()
+                .baseUrl(url)
+                .client(o2HttpClient)
+                .addConverterFactory(GsonConverterFactory.create(gson))
+                .addCallAdapterFactory(RxJavaCallAdapterFactory.create())
+                .build()
+        return retrofitClient.create(PackingClientAssembleSurfaceService::class.java)
+    }
+
+
 }

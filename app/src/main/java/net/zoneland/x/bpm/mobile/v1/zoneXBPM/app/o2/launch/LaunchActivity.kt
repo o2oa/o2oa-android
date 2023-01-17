@@ -62,10 +62,15 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
         NetworkConnectStatusReceiver { isConnected ->
             Log.d("LaunchActivity", "网络连接情况变化，isConnected:$isConnected")
             if (isConnected && mCheckNetwork == false){
-                val isOpen = O2SDKManager.instance().prefs().getBoolean(O2.PRE_APP_AUTO_CHECK_UPDATE_KEY, true)
-                // 用户自行开关检查
-                if (isOpen) {
-                    checkAppUpdate()
+                if (!BuildConfig.InnerServer) {
+                    val isOpen = O2SDKManager.instance().prefs()
+                        .getBoolean(O2.PRE_APP_AUTO_CHECK_UPDATE_KEY, true)
+                    // 用户自行开关检查
+                    if (isOpen) {
+                        checkAppUpdate()
+                    } else {
+                        launch()
+                    }
                 } else {
                     launch()
                 }
@@ -191,7 +196,7 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
         }else{
             mCheckNetwork = true
             // 是否检查更新
-            if (BuildConfig.NEED_UPDATE) {
+            if (!BuildConfig.InnerServer) {
                 Log.d("LaunchActivity","检查应用内更新")
                 val isOpen = O2SDKManager.instance().prefs().getBoolean(O2.PRE_APP_AUTO_CHECK_UPDATE_KEY, true)
                 // 用户自行开关检查
@@ -201,7 +206,7 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
                     launch()
                 }
             } else {
-                Log.d("LaunchActivity","不需要应用内更新。。。。。。。")
+                Log.d("LaunchActivity","内部应用 在主页检查更新。。。。。。。")
                 launch()
             }
         }

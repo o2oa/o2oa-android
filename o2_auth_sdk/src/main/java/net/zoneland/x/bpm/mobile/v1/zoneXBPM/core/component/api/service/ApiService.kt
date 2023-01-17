@@ -1,5 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.service
 
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.O2OAInnerUpdateBean
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.APIDistributeData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ApiResponse
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.CustomStyleData
@@ -35,4 +36,13 @@ interface ApiService {
      */
     @GET("jaxrs/appstyle/current/update")
     fun getCustomStyleUpdateDate():  Observable<ApiResponse<CustomStyleUpdateData>>
+
+
+    /**
+     * 最新的打包信息
+     */
+    @GET("jaxrs/apppackanony/pack/info/file/last")
+    fun androidPackLastAPk(): Observable<ApiResponse<O2OAInnerUpdateBean>>
+
+
 }

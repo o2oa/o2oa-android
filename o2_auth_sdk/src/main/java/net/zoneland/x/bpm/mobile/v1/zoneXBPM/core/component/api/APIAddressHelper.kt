@@ -251,6 +251,13 @@ class APIAddressHelper private constructor() {
         return url
     }
 
+    /**
+     * 自助打包 下载apk文件的url
+     */
+    fun getPackingClientAppInnerDownloadUrl(id: String): String {
+        return getAPIDistribute(APIDistributeTypeEnum.x_app_packaging_client_assemble_control) + "jaxrs/apppackanony/file/download/$id"
+    }
+
     fun getWebViewHost(): String {
         return webServerData?.let { webServerData?.host } ?: ""
     }
@@ -386,6 +393,9 @@ class APIAddressHelper private constructor() {
         }
         if (data.x_pan_assemble_control != null) {
             apiDistribute[APIDistributeTypeEnum.x_pan_assemble_control] = data.x_pan_assemble_control
+        }
+        if (data.x_app_packaging_client_assemble_control != null) {
+            apiDistribute[APIDistributeTypeEnum.x_app_packaging_client_assemble_control] = data.x_app_packaging_client_assemble_control
         }
 
     }

@@ -8,12 +8,14 @@ import android.content.*
 import android.os.Build
 import android.os.Bundle
 import android.os.IBinder
+import android.provider.Settings
 import android.text.TextUtils
 import android.util.AttributeSet
 import android.util.DisplayMetrics
 import android.util.Log
 import android.view.KeyEvent
 import android.view.View
+import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main_bottom_bar_image.*
@@ -22,11 +24,10 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.O2IM
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.fm.O2IMConversationFragment
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.DownloadAPKFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.MainActivityFragmentAdapter
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.ClearTempFileJobService
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.PictureLoaderService
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.RestartSelfService
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.WebSocketService
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2AppUpdateBean
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMMessage
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.BitmapUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
@@ -36,6 +37,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.tbs.WordReadHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.GrayFrameLayout
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2AlertIconEnum
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import org.jetbrains.anko.doAsync
 
 
@@ -245,6 +248,10 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         val isX5Init = WordReadHelper.getInstance().initFinish()
         XLog.info("x5内核是否已经完成，$isX5Init")
 
+        // 检查更新
+        if (BuildConfig.InnerServer) {
+            checkAppUpdateInner()
+        }
     }
 
 
@@ -434,6 +441,94 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         XLog.info("jobScheduler result:$result")
     }
 
+
+
+    /*************检查应用是否需要更新*********/
+
+
+    private var downloadFragment: DownloadAPKFragment? = null
+    private var versionName = ""
+    private var downloadUrl = ""
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+        if (resultCode == RESULT_OK && requestCode == 10086) { //  下载安装更新
+            if (downloadFragment == null) {
+                downloadFragment = DownloadAPKFragment()
+            }
+            downloadFragment?.isCancelable = false
+            if (downloadFragment?.isAdded == true) {
+            }else {
+                downloadFragment?.show(supportFragmentManager, DownloadAPKFragment.DOWNLOAD_FRAGMENT_TAG)
+                downloadServiceStart()
+            }
+
+        }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.O)
+    private fun startInstallPermissionSettingActivity() {
+        //注意这个是8.0新API
+        val intent = Intent(Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES)
+        startActivityForResult(intent, 10086)
+    }
+
+    private fun checkAppUpdateInner() {
+        val isOpen = O2SDKManager.instance().prefs()
+            .getBoolean(O2.PRE_APP_AUTO_CHECK_UPDATE_KEY, true)
+        // 用户自行开关检查
+        if (isOpen) {
+            checkAppUpdate(callbackContinue = { result ->
+                if (result) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !packageManager.canRequestPackageInstalls()) {// 8.0需要判断安装未知来源的权限
+                        startInstallPermissionSettingActivity()
+                    }else { // 下载安装更新
+                        if (downloadFragment == null) {
+                            downloadFragment = DownloadAPKFragment()
+                        }
+                        downloadFragment?.isCancelable = false
+                        if (downloadFragment?.isAdded == true) {
+                        }else {
+                            downloadFragment?.show(supportFragmentManager, DownloadAPKFragment.DOWNLOAD_FRAGMENT_TAG)
+                            downloadServiceStart()
+                        }
+
+                    }
+                }
+            })
+        }
+    }
+
+    private fun downloadServiceStart() {
+        val intent = Intent(this, DownloadAPKService::class.java)
+        intent.action = packageName + DownloadAPKService.DOWNLOAD_SERVICE_ACTION
+        intent.putExtra(DownloadAPKService.VERSIN_NAME_EXTRA_NAME, versionName)
+        intent.putExtra(DownloadAPKService.DOWNLOAD_URL_EXTRA_NAME, downloadUrl)
+        startService(intent)
+    }
+
+    private fun checkAppUpdate(callbackContinue:((flag: Boolean)->Unit)? = null) {
+        O2AppUpdateManager.instance().checkUpdateInner(this, object : O2AppUpdateCallback {
+            override fun onUpdate(version: O2AppUpdateBean) {
+                XLog.debug("onUpdateAvailable $version")
+                versionName = version.versionName
+                downloadUrl = version.downloadUrl
+                XLog.info("versionName:$versionName, downloadUrl:$downloadUrl")
+                val tips = getString(R.string.message_update_tips, versionName)
+                O2DialogSupport.openConfirmDialog(this@MainActivity,tips + version.content, listener = { _ ->
+                    XLog.info("notification is true..........")
+                    callbackContinue?.invoke(true)
+                }, icon = O2AlertIconEnum.UPDATE, negativeListener = { _->
+                    callbackContinue?.invoke(false)
+                })
+            }
+
+            override fun onNoneUpdate(error: String) {
+                XLog.info(error)
+                callbackContinue?.invoke(false)
+            }
+        })
+    }
 
     /**
      * 存储下手机分辨率

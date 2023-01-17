@@ -760,7 +760,7 @@
     <string name="message_code_can_not_empty">SMS verification code cannot be empty！</string>
     <string name="message_can_not_get_unit_info">No company information！</string>
     <string name="message_group_name_is_empty">No group name, unable to get group information！</string>
-    <string name="message_update_tips">Version %1$s update：</string>
+    <string name="message_update_tips">Version %1$s update </string>
     <string name="message_update_already">It is the latest version！</string>
     <string name="message_login_fail">Login failed. Please check whether your user name or password is correct！</string>
     <string name="message_login_validate_code_fail">Failed to get mobile phone verification code. Please check whether the user name you entered is correct！</string>

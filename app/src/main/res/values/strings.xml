@@ -735,7 +735,7 @@
     <string name="message_code_can_not_empty">短信验证码不能为空！</string>
     <string name="message_can_not_get_unit_info">没有获得单位信息！</string>
     <string name="message_group_name_is_empty">没有群组名称，无法获取群组信息！</string>
-    <string name="message_update_tips">版本 %1$s 更新：</string>
+    <string name="message_update_tips">版本 %1$s 更新 </string>
     <string name="message_update_already">已经是最新版本了！</string>
     <string name="message_login_fail">登录失败, 请检查您的输入的用户名或密码是否正确！</string>
     <string name="message_login_validate_code_fail">获取手机验证码失败，请检查您输入的用户名是否正确！</string>

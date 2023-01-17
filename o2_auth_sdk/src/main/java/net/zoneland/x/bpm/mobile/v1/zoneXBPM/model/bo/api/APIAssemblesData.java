@@ -41,6 +41,7 @@ public class APIAssemblesData {
     private APIDataBean x_message_assemble_communicate; //通信模块 消息收发 还有websocket
     private APIDataBean x_organizationPermission; //  custom模块 通讯录 需要到应用市场下载安装
     private APIDataBean x_pan_assemble_control; //  V3 云盘
+    private APIDataBean x_app_packaging_client_assemble_control; //  自助打包
 
 
     public APIDataBean getX_pan_assemble_control() {
@@ -344,5 +345,13 @@ public class APIAssemblesData {
 
     public void setX_portal_assemble_surface(APIDataBean x_portal_assemble_surface) {
         this.x_portal_assemble_surface = x_portal_assemble_surface;
+    }
+
+    public APIDataBean getX_app_packaging_client_assemble_control() {
+        return x_app_packaging_client_assemble_control;
+    }
+
+    public void setX_app_packaging_client_assemble_control(APIDataBean x_app_packaging_client_assemble_control) {
+        this.x_app_packaging_client_assemble_control = x_app_packaging_client_assemble_control;
     }
 }

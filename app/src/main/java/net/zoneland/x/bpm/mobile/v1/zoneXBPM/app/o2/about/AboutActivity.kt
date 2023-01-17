@@ -56,21 +56,17 @@ class AboutActivity : AppCompatActivity() {
         if (!TextUtils.isEmpty(path)) {
             BitmapUtil.setImageFromFile(path!!, image_about_logo)
         }
-        if (BuildConfig.NEED_UPDATE) {
-            ll_about_check_version.visible()
-            relative_about_check_version.visible()
-            relative_about_check_version.setOnClickListener {
-                checkAppUpdate()
+        ll_about_check_version.visible()
+        relative_about_check_version.visible()
+        relative_about_check_version.setOnClickListener {
+            checkAppUpdate()
+        }
+        val isOpen = O2SDKManager.instance().prefs().getBoolean(O2.PRE_APP_AUTO_CHECK_UPDATE_KEY, true)
+        switch_about_check_version.isChecked = isOpen
+        switch_about_check_version.setOnCheckedChangeListener { _, isChecked ->
+            O2SDKManager.instance().prefs().edit {
+                putBoolean(O2.PRE_APP_AUTO_CHECK_UPDATE_KEY, isChecked);
             }
-            val isOpen = O2SDKManager.instance().prefs().getBoolean(O2.PRE_APP_AUTO_CHECK_UPDATE_KEY, true)
-            switch_about_check_version.isChecked = isOpen
-            switch_about_check_version.setOnCheckedChangeListener { _, isChecked ->
-                O2SDKManager.instance().prefs().edit {
-                    putBoolean(O2.PRE_APP_AUTO_CHECK_UPDATE_KEY, isChecked);
-                }
-            }
-        } else {
-            ll_about_check_version.gone()
         }
         if (!BuildConfig.InnerServer) {
             ll_about_user_secret.visible()
@@ -89,20 +85,40 @@ class AboutActivity : AppCompatActivity() {
      */
 
     private fun checkAppUpdate() {
-        checkAppUpdate(callbackContinue = { result ->
-            if (result) {
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !packageManager.canRequestPackageInstalls()) {// 8.0需要判断安装未知来源的权限
-                    startInstallPermissionSettingActivity()
-                }else { // 下载安装更新
-                    if (downloadFragment == null) {
-                        downloadFragment = DownloadAPKFragment()
+        if (BuildConfig.InnerServer) {
+            checkAppUpdateInner(callbackContinue = { result ->
+                if (result) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !packageManager.canRequestPackageInstalls()) {// 8.0需要判断安装未知来源的权限
+                        startInstallPermissionSettingActivity()
+                    }else { // 下载安装更新
+                        if (downloadFragment == null) {
+                            downloadFragment = DownloadAPKFragment()
+                        }
+                        downloadFragment?.isCancelable = false
+                        downloadFragment?.show(supportFragmentManager, DownloadAPKFragment.DOWNLOAD_FRAGMENT_TAG)
+                        downloadServiceStart()
                     }
-                    downloadFragment?.isCancelable = false
-                    downloadFragment?.show(supportFragmentManager, DownloadAPKFragment.DOWNLOAD_FRAGMENT_TAG)
-                    downloadServiceStart()
                 }
-            }
-        })
+            })
+        } else {
+            checkAppUpdate(callbackContinue = { result ->
+                if (result) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O && !packageManager.canRequestPackageInstalls()) {// 8.0需要判断安装未知来源的权限
+                        startInstallPermissionSettingActivity()
+                    } else { // 下载安装更新
+                        if (downloadFragment == null) {
+                            downloadFragment = DownloadAPKFragment()
+                        }
+                        downloadFragment?.isCancelable = false
+                        downloadFragment?.show(
+                            supportFragmentManager,
+                            DownloadAPKFragment.DOWNLOAD_FRAGMENT_TAG
+                        )
+                        downloadServiceStart()
+                    }
+                }
+            })
+        }
     }
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
@@ -123,6 +139,30 @@ class AboutActivity : AppCompatActivity() {
     }
     private fun checkAppUpdate(callbackContinue:((flag: Boolean)->Unit)? = null) {
         O2AppUpdateManager.instance().checkUpdate(this, object : O2AppUpdateCallback {
+            override fun onUpdate(version: O2AppUpdateBean) {
+                XLog.debug("onUpdateAvailable $version")
+                versionName = version.versionName
+                downloadUrl = version.downloadUrl
+                XLog.info("versionName:$versionName, downloadUrl:$downloadUrl")
+                val tips = getString(R.string.message_update_tips, versionName)
+                O2DialogSupport.openConfirmDialog(this@AboutActivity,tips + version.content, listener = { _ ->
+                    XLog.info("notification is true..........")
+                    callbackContinue?.invoke(true)
+                }, icon = O2AlertIconEnum.UPDATE, negativeListener = {_->
+                    callbackContinue?.invoke(false)
+                })
+            }
+
+            override fun onNoneUpdate(error: String) {
+                XLog.info(error)
+                XToast.toastShort(this@AboutActivity, getString(R.string.message_update_already))
+                callbackContinue?.invoke(false)
+            }
+
+        })
+    }
+    private fun checkAppUpdateInner(callbackContinue:((flag: Boolean)->Unit)? = null) {
+        O2AppUpdateManager.instance().checkUpdateInner(this, object : O2AppUpdateCallback {
             override fun onUpdate(version: O2AppUpdateBean) {
                 XLog.debug("onUpdateAvailable $version")
                 versionName = version.versionName
