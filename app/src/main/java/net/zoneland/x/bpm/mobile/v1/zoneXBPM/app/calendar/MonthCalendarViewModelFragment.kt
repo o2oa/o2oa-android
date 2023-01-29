@@ -215,7 +215,14 @@ class MonthCalendarViewModelFragment : CalendarBaseFragment(), OnDateSelectedLis
 
 
     override fun jump2Today() {
-        mcv_fragment_calendar_month.setCurrentDate(Calendar.getInstance())
+        val today = Calendar.getInstance()
+        mcv_fragment_calendar_month.setCurrentDate(today)
+        // 下面是选中今天
+        selectDay = today
+        mcv_fragment_calendar_month.setSelectedDate(today)
+        showDayEvents()
+        selectorDecorator.setDate(today.time)
+        mcv_fragment_calendar_month.invalidateDecorators()
     }
 
     override fun updateTitle(cal: Calendar?) {
