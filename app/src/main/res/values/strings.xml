@@ -856,6 +856,7 @@
     <string name="search_delete_all_history">删除全部历史记录</string>
     <string name="search_cms_category">栏目: </string>
     <string name="search_process">流程: </string>
+    <string name="search_process_job_error">查询不到对应的工作！</string>
     <string name="search_service_error">查询接口异常，服务器不存在！</string>
     <string name="search_error">错误！%1$s</string>
     <string name="agree_login_privacy">我已阅读并同意</string>

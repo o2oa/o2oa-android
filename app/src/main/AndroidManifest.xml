@@ -70,6 +70,11 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateVisible|adjustPan" />
         <activity
+            android:name=".app.o2.main.SearchV2Activity"
+            android:configChanges="orientation"
+            android:screenOrientation="portrait"
+            android:windowSoftInputMode="stateVisible|adjustPan" />
+        <activity
             android:name=".app.o2.webview.O2WebViewActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" />

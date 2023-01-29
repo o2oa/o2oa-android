@@ -1,8 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.service
 
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2SearchEntry
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2SearchEntryForm
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2SearchIdsEntry
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ApiResponse
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.TestObject
 import retrofit2.http.*
@@ -31,4 +29,12 @@ interface QueryAssembleSurfaceService {
      */
     @POST("jaxrs/segment/list/entry")
     fun segmentListEntry(@Body map: O2SearchEntryForm) : Observable<ApiResponse<List<O2SearchEntry>>>
+
+
+    /**
+     * 搜索v2版本 从7.3版本开始
+     */
+    @POST("jaxrs/search")
+    fun searchV2(@Body body: O2SearchV2Form): Observable<ApiResponse<O2SearchV2PageModel>>
+
 }

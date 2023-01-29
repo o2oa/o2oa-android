@@ -69,8 +69,8 @@ class SearchPresenter : BasePresenterImpl<SearchContract.View>(), SearchContract
         val ids = if (idsList.isNotEmpty()) {
             val start = (page - 1) * O2.DEFAULT_PAGE_NUMBER
             var end = start + O2.DEFAULT_PAGE_NUMBER
-            if (end > (idsList.size - 1)) {
-                end = (idsList.size - 1)
+            if (end > (idsList.size)) {
+                end = (idsList.size)
             }
             idsList.subList(start, end)
         } else {

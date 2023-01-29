@@ -149,6 +149,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
     var isRefreshTaskList = false ////是否正在刷新任务
     var isRefreshNewsList = false //是否正在刷新新闻列表
     var isLoadMoreList = false //是否正在加载
+    var isSearchV2 = true // 搜索新版本 v2
 
 
     override fun initUI() {
@@ -201,6 +202,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
 
     override fun lazyLoad() {
         XLog.info("lazyload......................................")
+        mPresenter.checkIsSearchV2()
         mPresenter.loadHotPictureList()
         mPresenter.getMyAppList()
         if (isLoadMoreList) {
@@ -246,7 +248,11 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
                 refreshRecyclerView()
             }
             R.id.ll_todo_fragment_search -> {
-                activity?.go<SearchActivity>()
+                if (isSearchV2) {
+                    activity?.go<SearchV2Activity>()
+                } else {
+                    activity?.go<SearchActivity>()
+                }
             }
         }
     }
@@ -266,6 +272,10 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
                 }
     }
 
+
+    override fun searchVersion(isV2: Boolean) {
+        isSearchV2 = isV2
+    }
 
     override fun loadTaskList(list: List<TaskData>) {
         if (isRefreshTaskList) {

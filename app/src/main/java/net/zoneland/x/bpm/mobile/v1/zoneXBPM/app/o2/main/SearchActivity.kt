@@ -165,6 +165,7 @@ class SearchActivity : BaseMVPActivity<SearchContract.View, SearchContract.Prese
                 if (key.isNotBlank()) {
                     searchKey = key
                     addhistory(searchKey)
+                    isRefesh = true
                     search()
                 } else {
                     cleanInput()
@@ -232,12 +233,10 @@ class SearchActivity : BaseMVPActivity<SearchContract.View, SearchContract.Prese
     }
 
     private fun search() {
-        if (!isRefesh && !isLoadMore) {
             et_search_input.clearFocus()
             ZoneUtil.toggleSoftInput(et_search_input, false)
             showLoadingDialog()
             mPresenter.search(searchKey)
-        }
     }
 
     private fun cleanInput() {
@@ -266,6 +265,7 @@ class SearchActivity : BaseMVPActivity<SearchContract.View, SearchContract.Prese
                 XLog.debug("点击了 $s")
                 searchKey = s
                 et_search_input.setText(s)
+                isRefesh = true
                 search()
             }
             if (xDistance == -1) {

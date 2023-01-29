@@ -880,6 +880,7 @@
     <string name="search_delete_all_history">Delete all history</string>
     <string name="search_cms_category">Category: </string>
     <string name="search_process">Process: </string>
+    <string name="search_process_job_error">查询不到对应的工作！</string>
     <string name="search_service_error">Query interface exception, server does not exist！</string>
     <string name="search_error">Error！%1$s</string>
     <string name="agree_login_privacy">I have read and agree</string>

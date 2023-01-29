@@ -1,9 +1,41 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo
 
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
+
 /**
  * Created by fancyLou on 2021-05-28.
  * Copyright © 2021 O2. All rights reserved.
  */
+
+
+/***********v2版本***********/
+class O2SearchV2Form(
+    var page: Int = 1,
+    var query: String = "",
+    var size: Int = O2.DEFAULT_PAGE_NUMBER
+)
+
+class O2SearchV2PageModel(
+    var documentList:List<O2SearchV2Entry> = arrayListOf(),
+    var count: Int = 0,
+)
+class O2SearchV2Entry(
+    var id: String = "", // 业务id
+    var category: String = "", // cms processPlatform
+    var title: String = "",
+    var highlighting: String = "", // html
+    var summary: String = "", // 文字
+    var creatorPerson: String = "",
+    var creatorUnit: String = "",
+    var indexTime: String = "",
+    var createTime: String = "",
+    var updateTime: String = "",
+)
+
+
+
+
+
 class O2SearchIdsEntry (
     var count: Int = 0,
     var valueList: List<String> = arrayListOf()
@@ -39,3 +71,5 @@ class O2SearchPageModel(
     var page: Int = 1,
     var totalPage: Int = 1
 )
+
+

@@ -7,6 +7,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.ApplicationEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.realm.RealmDataService
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2SearchV2Form
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.cms.CMSDocumentFilter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.HotPictureOutData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.persistence.MyAppListObject
@@ -23,6 +24,26 @@ import rx.schedulers.Schedulers
  */
 
 class IndexPresenter : BasePresenterImpl<IndexContract.View>(), IndexContract.Presenter {
+
+    override fun checkIsSearchV2() {
+        val service = getQueryAssembleSurfaceServiceAPI(mView?.getContext())
+        if (service != null) {
+            service.searchV2(O2SearchV2Form())
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext {
+                        mView?.searchVersion(true)
+                    }
+                    onError { e, isNetworkError ->
+                        XLog.error("", e)
+                        mView?.searchVersion(false)
+                    }
+                }
+        } else {
+            mView?.searchVersion(false)
+        }
+    }
 
     override fun loadTaskList(lastId: String) {
         getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service ->

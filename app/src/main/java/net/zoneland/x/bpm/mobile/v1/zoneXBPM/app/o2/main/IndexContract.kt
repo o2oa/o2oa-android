@@ -20,6 +20,7 @@ object IndexContract {
         fun loadHotPictureList(list: List<HotPictureOutData>)
         fun loadHotPictureListFail()
         fun setMyAppList(myAppList: ArrayList<MyAppListObject>)
+        fun searchVersion(isV2: Boolean)
 
     }
     interface Presenter: BasePresenter<View> {
@@ -28,6 +29,7 @@ object IndexContract {
         fun loadNewsList(lastId: String)
         fun loadHotPictureList()
         fun getMyAppList()
+        fun checkIsSearchV2()
 
     }
 }
