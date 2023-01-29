@@ -57,11 +57,13 @@ class IndexPresenter : BasePresenterImpl<IndexContract.View>(), IndexContract.Pr
     }
 
     override fun loadNewsList(lastId: String) {
+        XLog.debug("获取新闻列表 $lastId")
         val status = ArrayList<String>()
         status.add("published")
         val filter = CMSDocumentFilter()
         filter.statusList = status
         val json = O2SDKManager.instance().gson.toJson(filter)
+        XLog.debug(json)
         val body = RequestBody.create(MediaType.parse("text/json"), json)
         getCMSAssembleControlService(mView?.getContext())?.let { service ->
             service.filterDocumentList(body, lastId, O2.DEFAULT_PAGE_NUMBER)
