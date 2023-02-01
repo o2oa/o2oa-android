@@ -24,6 +24,8 @@
                 android:id="@+id/edit_task_completed_search_key"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:imeOptions="actionSearch"
+                android:inputType="text"
                 android:hint="@string/activity_task_completed_search_hint"/>
         </androidx.appcompat.widget.Toolbar>
     </com.google.android.material.appbar.AppBarLayout>

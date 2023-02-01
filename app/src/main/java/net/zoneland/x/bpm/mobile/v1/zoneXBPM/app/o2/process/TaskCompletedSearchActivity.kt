@@ -9,6 +9,7 @@ import android.text.Editable
 import android.text.TextUtils
 import android.text.TextWatcher
 import android.view.View
+import android.view.inputmethod.EditorInfo
 import kotlinx.android.synthetic.main.activity_task_complete_search.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
@@ -76,13 +77,25 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
         setSupportActionBar(toolBar)
         toolBar?.setNavigationIcon(R.mipmap.ic_back_mtrl_white_alpha)
         toolBar?.setNavigationOnClickListener { finish() }
+        edit_task_completed_search_key.setOnEditorActionListener { _, actionId, _ ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH ) {
+                searchKey = edit_task_completed_search_key.text.toString()
+                if (searchKey.isEmpty()) {
+                    cleanResultList()
+                } else {
+                    searchTaskCompletedOnLine(searchKey)
+                }
+                return@setOnEditorActionListener true
+            }
+            return@setOnEditorActionListener false
+        }
         edit_task_completed_search_key.addTextChangedListener(object : TextWatcher{
             override fun afterTextChanged(s: Editable?) {
                 if (s?.length == 0) {
                     searchKey = ""
                     cleanResultList()
                 } else {
-                    searchTaskCompletedOnLine(s)
+                    searchTaskCompletedOnLine(s?.toString() ?: "")
                 }
             }
 
@@ -100,13 +113,9 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
             }
         }
         refresh_task_completed_layout.setOnLoadMoreListener{
-            if (!isLoading && !isRefresh) {
+            if (!isLoading && !isRefresh && !TextUtils.isEmpty(lastId)) {
                 isLoading = true
-                if (TextUtils.isEmpty(lastId)) {
-                    searchTaskCompleted(true)
-                } else {
-                    searchTaskCompleted(false)
-                }
+                searchTaskCompleted(false)
             }
         }
 
@@ -163,6 +172,7 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
     }
 
     private fun searchTaskCompleted(flag: Boolean) {
+        XLog.debug("查询开始 flag：$flag searchKey: $searchKey")
         if (flag) {
             mPresenter.search(O2.FIRST_PAGE_TAG, searchKey, searchType)
         }else {
@@ -174,8 +184,7 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
      * 查询已办
      * @param s
      */
-    private fun searchTaskCompletedOnLine(s: Editable?) {
-        val key = s.toString()
+    private fun searchTaskCompletedOnLine(key: String) {
         if (TextUtils.isEmpty(key)) {
             searchKey = ""
             cleanResultList()
@@ -183,6 +192,7 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
         } else {
             XLog.debug("查询已办 key：$key")
             searchKey = key
+            isRefresh = true
             searchTaskCompleted(true)
         }
     }
