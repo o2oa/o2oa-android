@@ -94,3 +94,13 @@ class O2TaskDownloadAttachmentMessage(
 class O2TaskOpenDocumentMessage(
         var url: String?,
 )
+// 打开cms文档
+class O2OpenCmsDocMessage(
+        var docId: String?,
+        var title: String?,
+        var options: Map<String, Any>?
+)
+
+class O2OpenTaskCenterMessage(
+        var type: String
+)

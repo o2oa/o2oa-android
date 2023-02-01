@@ -324,7 +324,6 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
     fun openO2CmsApplication(appId: String, title: String) {
         XLog.debug("openO2CmsApplication : $appId  title: $title")
         showLoadingDialog()
-//        mPresenter.loadCmsCategoryListByAppId(appId)
         cmsStatus = "0"
         mPresenter.loadCmsApplication(appId)
     }
