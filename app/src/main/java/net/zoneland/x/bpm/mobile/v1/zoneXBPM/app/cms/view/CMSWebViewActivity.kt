@@ -23,8 +23,14 @@ import kotlinx.android.synthetic.main.activity_cms_web_view_document.fl_bottom_o
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.calendar.CalendarMainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.fm.O2IMConversationPickerActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.main.MeetingMainActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.ReadCompletedListActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.ReadListActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.TaskCompletedListActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.TaskListActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
@@ -49,6 +55,9 @@ import org.json.JSONTokener
 import java.io.File
 import java.io.IOException
 import java.net.URLEncoder
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 
 class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewContract.Presenter>(), CMSWebViewContract.View {
@@ -390,6 +399,28 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
                     when (json.getString("type")) {
                         // 关闭当前页面
                         "closeDocumentWindow" -> runOnUiThread { finish() }
+                        "openO2CmsDocument" -> {
+                            val type = object : TypeToken<O2JsPostMessage<O2OpenCmsDocMessage>>() {}.type
+                            val value: O2JsPostMessage<O2OpenCmsDocMessage> = gson.fromJson(message, type)
+                            if (value.data != null && !TextUtils.isEmpty(value.data?.docId)) {
+                                var options = ""
+                                if (value.data!!.options != null) {
+                                    options = gson.toJson(value.data!!.options!!)
+                                }
+                                openO2CmsDocumentV2(value.data!!.docId!!, value.data!!.title ?: "", options)
+                            } else {
+                                XLog.error("openO2CmsDocumentV2 参数不正确，缺少docId，无法打开")
+                            }
+                        }
+                        "openO2WorkSpace" -> {
+                            val type = object : TypeToken<O2JsPostMessage<O2OpenTaskCenterMessage>>() {}.type
+                            val value: O2JsPostMessage<O2OpenTaskCenterMessage> = gson.fromJson(message, type)
+                            if (value.data != null && !TextUtils.isEmpty(value.data!!.type)) {
+                                openO2WorkSpace(value.data!!.type)
+                            }else {
+                                XLog.error("openO2WorkSpace 参数不正确，缺少type，无法打开")
+                            }
+                        }
                         // 附件控件的上传
                         "uploadAttachment" -> {
                             val type = object : TypeToken<O2JsPostMessage<O2TaskUploadAttachmentMessage>>() {}.type
@@ -556,6 +587,39 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
             }
         }
 
+    }
+
+
+    /**
+     * 新版 打开内容管理 添加第三个参数 options
+     */
+    @JavascriptInterface
+    fun openO2CmsDocumentV2(docId: String, docTitle: String, options: String?) {
+        XLog.debug("openO2CmsDocument new : $docId, $docTitle $options")
+        go<CMSWebViewActivity>(CMSWebViewActivity.startBundleDataWithOptions(docId, docTitle, options))
+    }
+    @JavascriptInterface
+    fun openO2Meeting(result: String) {
+        XLog.debug("openO2Meeting rrrrrrrrrrr")
+        go<MeetingMainActivity>()
+    }
+
+    @JavascriptInterface
+    fun openO2Calendar(result: String) {
+        XLog.debug("openO2Calendarvvvvvvvvvvvvvvv")
+        go<CalendarMainActivity>()
+    }
+
+    @JavascriptInterface
+    fun openO2WorkSpace(type: String) {
+        XLog.info("open work space $type")
+        when (type.lowercase(Locale.getDefault())) {
+            "task" -> go<TaskListActivity>()
+            "taskcompleted" -> go<TaskCompletedListActivity>()
+            "read" -> go<ReadListActivity>()
+            "readcompleted" -> go<ReadCompletedListActivity>()
+            else -> go<TaskListActivity>()
+        }
     }
 
     /**
