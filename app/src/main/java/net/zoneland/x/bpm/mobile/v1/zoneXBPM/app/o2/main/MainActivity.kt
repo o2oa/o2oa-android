@@ -57,6 +57,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
     private val mCurrentSelectIndexKey = "mCurrentSelectIndexKey"
     private var mCurrentSelectIndex = 2
     private var simpleMode = false
+    private var appExitAlert = ""
 
 
     var pictureLoaderService: PictureLoaderService? = null
@@ -106,6 +107,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         val indexType = O2SDKManager.instance().prefs().getString(O2CustomStyle.INDEX_TYPE_PREF_KEY, O2CustomStyle.INDEX_TYPE_DEFAULT)
         val indexId = O2SDKManager.instance().prefs().getString(O2CustomStyle.INDEX_ID_PREF_KEY, "") ?: ""
         simpleMode = O2SDKManager.instance().prefs().getBoolean(O2CustomStyle.CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY, false)
+        appExitAlert = O2SDKManager.instance().prefs().getString(O2CustomStyle.CUSTOM_STYLE_APP_EXIT_ALERT_KEY, "") ?: ""
         XLog.info("main activity isIndex $indexType..............simpleMode: $simpleMode")
         // 简易模式 只有首页和设置页面
         if (simpleMode) {
@@ -289,13 +291,28 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
                 if (indexFragment.previousPage()) {
                     true
                 } else {
-                    doubleClickExitHelper.onKeyDown(keyCode, event)
+                    onBackPressExitApp(keyCode, event)
                 }
+            } else {
+                onBackPressExitApp(keyCode, event)
+            }
+        }
+        return super.onKeyDown(keyCode, event)
+    }
+
+    private fun onBackPressExitApp(keyCode: Int, event: KeyEvent?): Boolean {
+        return if (keyCode != KeyEvent.KEYCODE_BACK) {
+            false
+        } else {
+            if (!TextUtils.isEmpty(appExitAlert)) {
+                O2DialogSupport.openConfirmDialog(this, appExitAlert, { d ->
+                    finish()
+                })
+                true
             } else {
                 doubleClickExitHelper.onKeyDown(keyCode, event)
             }
         }
-        return super.onKeyDown(keyCode, event)
     }
 
     override fun onClick(v: View?) {

@@ -19,7 +19,7 @@ class O2DoubleClickExit(val activity: Activity) {
 
     var mHandler:Handler = Handler(Looper.getMainLooper())
 
-    val mBackToast = XToast.getXToast(activity)!!
+    val mBackToast = XToast.getXToast(activity)
 
     val onBackTimeRunnable: Runnable = Runnable{
         isOnKeyBacking = false

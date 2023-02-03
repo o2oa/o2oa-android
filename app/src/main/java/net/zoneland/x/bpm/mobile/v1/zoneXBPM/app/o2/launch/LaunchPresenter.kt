@@ -117,6 +117,8 @@ class LaunchPresenter : BasePresenterImpl<LaunchContract.View>(), LaunchContract
             putString(O2CustomStyle.INDEX_ID_PREF_KEY, data?.indexPortal ?: "")
             putBoolean(O2CustomStyle.CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY, data?.simpleMode ?: false)
             putBoolean(O2CustomStyle.CUSTOM_STYLE_SILENCE_GRAY_PREF_KEY, data?.needGray ?: false)
+            putBoolean(O2CustomStyle.CUSTOM_STYLE_SYSTEM_MESSAGE_CAN_CLICK_KEY, data?.systemMessageCanClick ?: true)
+            putString(O2CustomStyle.CUSTOM_STYLE_APP_EXIT_ALERT_KEY, data?.appExitAlert ?: "")
             putString(O2CustomStyle.CUSTOM_STYLE_CONTACT_PERMISSION_PREF_KEY, data?.contactPermissionView ?: O2CustomStyle.CUSTOM_STYLE_CONTACT_PERMISSION_DEFAULT)
         }
     }

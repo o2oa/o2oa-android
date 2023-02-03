@@ -13,6 +13,7 @@ import android.widget.TextView
 import io.flutter.embedding.android.FlutterActivity.createDefaultIntent
 import io.flutter.embedding.android.FlutterActivity.withNewEngine
 import kotlinx.android.synthetic.main.activity_o2_instant_message.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2CustomStyle
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
@@ -63,7 +64,9 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
                     val titleText = holder.getView<TextView>(R.id.tv_o2_chat_message_body)
                     titleText.text = t.title
                     titleText.visible()
-                    messageTypeEvent(titleText, t)
+                    if (systemMessageCanClick) {
+                        messageTypeEvent(titleText, t)
+                    }
                     val time = DateHelper.imChatMessageTime(t.createTime)
                     holder.setText(R.id.tv_o2_chat_message_time, time)
                 }
@@ -72,6 +75,7 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
 
         }
     }
+    private var systemMessageCanClick = true
 
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
@@ -81,7 +85,7 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
             instantList.clear()
             instantList.addAll(inList)
         }
-
+        systemMessageCanClick = O2SDKManager.instance().prefs().getBoolean(O2CustomStyle.CUSTOM_STYLE_SYSTEM_MESSAGE_CAN_CLICK_KEY, true)
         rv_o2_instant_messages.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_o2_instant_messages.adapter = adapter
         if (instantList.isNotEmpty()) {

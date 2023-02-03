@@ -17,6 +17,8 @@ data class CustomStyleData(
     var indexPortal: String = "", // 首页门户ID
     var simpleMode: Boolean = false, // 简易模式
     var systemMessageSwitch: Boolean = true, // 消息列表中 是否显示系统通知
+    var systemMessageCanClick: Boolean = true, // 系统消息是否可点击打开
+    var appExitAlert: String = "", // app退出提示，有提示信息就弹出窗
     var contactPermissionView: String = O2CustomStyle.CUSTOM_STYLE_CONTACT_PERMISSION_DEFAULT, // 通讯录权限使用的视图
     var portalList: List<PortalData> = ArrayList(), // 门户应用列表
     var nativeAppList: List<AppItemOnlineVo> = ArrayList(), // 原生应用列表

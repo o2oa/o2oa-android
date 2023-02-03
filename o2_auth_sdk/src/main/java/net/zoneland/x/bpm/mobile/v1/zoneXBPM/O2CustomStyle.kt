@@ -32,6 +32,10 @@ object O2CustomStyle {
     const val CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY = "customStyleSimpleModeKey"
     // 默哀
     const val CUSTOM_STYLE_SILENCE_GRAY_PREF_KEY = "customStyleSilenceGrayKey"
+    // 系统消息是否可点击
+    const val CUSTOM_STYLE_SYSTEM_MESSAGE_CAN_CLICK_KEY = "customStyleSystemMessageCanClickKey"
+    // app退出提示
+    const val CUSTOM_STYLE_APP_EXIT_ALERT_KEY = "customStyleAppExitAlertKey"
 
     // 通讯录权限查询视图key
     const val CUSTOM_STYLE_CONTACT_PERMISSION_PREF_KEY = "customStyleContactPermissionViewKey"
