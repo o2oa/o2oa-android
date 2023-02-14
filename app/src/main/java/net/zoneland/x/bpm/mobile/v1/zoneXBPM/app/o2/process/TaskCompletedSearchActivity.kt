@@ -20,10 +20,12 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.WorkTypeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.PictureLoaderService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.SearchWorkData
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.TaskCompleteData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.ZoneUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2oaColorScheme
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
 
 
@@ -85,6 +87,8 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
                 } else {
                     searchTaskCompletedOnLine(searchKey)
                 }
+                edit_task_completed_search_key.clearFocus()
+                ZoneUtil.toggleSoftInput(edit_task_completed_search_key, false)
                 return@setOnEditorActionListener true
             }
             return@setOnEditorActionListener false
@@ -94,9 +98,10 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
                 if (s?.length == 0) {
                     searchKey = ""
                     cleanResultList()
-                } else {
-                    searchTaskCompletedOnLine(s?.toString() ?: "")
                 }
+//                else {
+//                    searchTaskCompletedOnLine(s?.toString() ?: "")
+//                }
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
@@ -145,6 +150,13 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
         if (isRefresh) {
             resultList.clear()
             resultList.addAll(list)
+            if (list.isEmpty()) {
+                refresh_task_completed_layout.gone()
+                ll_search_no_results.visible()
+            } else {
+                refresh_task_completed_layout.visible()
+                ll_search_no_results.gone()
+            }
         }else {
             resultList.addAll(list)
         }
@@ -173,6 +185,7 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
 
     private fun searchTaskCompleted(flag: Boolean) {
         XLog.debug("查询开始 flag：$flag searchKey: $searchKey")
+        showLoadingDialog()
         if (flag) {
             mPresenter.search(O2.FIRST_PAGE_TAG, searchKey, searchType)
         }else {
@@ -206,6 +219,7 @@ class TaskCompletedSearchActivity : BaseMVPActivity<TaskCompletedSearchContract.
     }
 
     private fun finishAnimation() {
+        hideLoadingDialog()
         if (isRefresh) {
             refresh_task_completed_layout.isRefreshing = false
             isRefresh = false

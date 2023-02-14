@@ -42,9 +42,11 @@ class CMSIndexActivity : BaseMVPActivity<CMSIndexContract.View, CMSIndexContract
                     val sectionIcon = holder?.getView<CircleImageView>(R.id.tv_bbs_main_content_section_item_icon)
                     sectionIcon?.setImageResource(R.mipmap.icon_cms_application_default)
                     sectionIcon?.tag = t.id
-                    sectionIcon?.setImageBase64(t.appIcon, t.id)
+                    if (!TextUtils.isEmpty(t.appIcon)) {
+                        sectionIcon?.setImageBase64(t.appIcon, t.id)
+                    }
                     holder?.setText(R.id.tv_bbs_main_content_section_date, t.description)
-                    val num = t.categoryList.size
+                    val num = t.wrapOutCategoryList.size
                     holder?.setText(R.id.tv_bbs_main_content_section_number, "分类：$num")
                 }
                 holder?.setText(R.id.tv_bbs_main_content_section_item_body, t?.appName?:"")

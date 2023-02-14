@@ -57,7 +57,7 @@ interface CMSAssembleControlService {
      * 内容管理应用列表
      * @return
      */
-    @GET("jaxrs/appinfo/list/user/view")
+    @GET("jaxrs/appinfo/list/user/view/all")
     fun applicationList(): Observable<ApiResponse<List<CMSApplicationInfoJson>>>
 
     /**
