@@ -35,18 +35,19 @@ class O2WebViewActivity : AppCompatActivity() {
         setContentView(R.layout.activity_o2_web_view)
         val title = intent?.extras?.getString(TitleKey) ?: "网页"
         val url = intent?.extras?.getString(UrlKey) ?: "https://www.o2oa.net"
-
         // actionbar
         val toolbar: Toolbar? = findViewById(R.id.toolbar_snippet_top_bar)
         toolbar?.title = ""
         setSupportActionBar(toolbar)
-        val toolbarTitle: TextView? = findViewById(R.id.tv_snippet_top_title)
-        toolbarTitle?.text = title
+        updateToolbarTitle(title)
         toolbar?.setNavigationIcon(R.mipmap.ic_back_mtrl_white_alpha)
         toolbar?.setNavigationOnClickListener { finish() }
 
         //webivew
         web_view.webChromeClient = webChromeClient
+        webChromeClient.onO2ReceivedTitle = { t ->
+            updateToolbarTitle(t)
+        }
         web_view.webViewClient = object : WebViewClient() {
             override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
                 XLog.error("ssl error, $error")
@@ -61,5 +62,10 @@ class O2WebViewActivity : AppCompatActivity() {
         web_view.webViewSetCookie(this, url)
         web_view.loadUrl(url)
 
+    }
+
+    fun updateToolbarTitle(title: String) {
+        val toolbarTitle: TextView? = findViewById(R.id.tv_snippet_top_title)
+        toolbarTitle?.text = title
     }
 }

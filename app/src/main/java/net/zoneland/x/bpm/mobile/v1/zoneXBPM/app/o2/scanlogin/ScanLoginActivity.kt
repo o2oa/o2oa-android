@@ -1,23 +1,25 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.scanlogin
 
 
+import android.net.Uri
 import android.os.Bundle
 import android.text.TextUtils
+import com.google.gson.reflect.TypeToken
 import kotlinx.android.synthetic.main.activity_scan_login.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.view.CMSWebViewActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.O2WebViewActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.TaskWebViewActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.StringUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goThenKill
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
-import okhttp3.Call
-import okhttp3.Callback
-import okhttp3.Request
-import okhttp3.Response
-import java.io.IOException
 import java.util.regex.Matcher
 import java.util.regex.Pattern
 
@@ -45,7 +47,7 @@ class ScanLoginActivity : BaseMVPActivity<ScanLoginContract.View, ScanLoginContr
         XLog.debug("scan result: $result")
         parseResult()
 
-        setupToolBar(title)
+        setupToolBar(title, true)
         button_scan_login_confirm.setOnClickListener{ mPresenter.confirmWebLogin(meta) }
         tv_scan_login_cancel.setOnClickListener { finish() }
     }
@@ -143,8 +145,83 @@ class ScanLoginActivity : BaseMVPActivity<ScanLoginContract.View, ScanLoginContr
     }
 
     private fun gotoDefaultBrowser() {
-        AndroidUtils.runDefaultBrowser(this, result)
-        finish()
+        val host = APIAddressHelper.instance().webServerData?.host ?: ""
+        if (!TextUtils.isEmpty(host) && result.contains(host)) { // 内部页面
+            XLog.info("内部页面：$result")
+            // cms页面
+            if (result.contains("x_desktop/cmspreview.html")
+                || result.contains("x_desktop/cmsdoc.html")
+                || result.contains("x_desktop/cmsdocMobile.html")
+                || result.contains("x_desktop/cmsdocmobilewithaction.html")) {
+                val uri: Uri = Uri.parse(result)
+                var documentId = uri.getQueryParameter("documentId")
+                val readonly = uri.getQueryParameter("readonly") ?: false
+                if (TextUtils.isEmpty(documentId)) {
+                    documentId = uri.getQueryParameter("id")
+                }
+                if (!TextUtils.isEmpty(documentId)) {
+                    goThenKill<CMSWebViewActivity>(CMSWebViewActivity.startBundleDataWithOptions(documentId!!, "", "{ \"readonly\": $readonly }"))
+                    return
+                }
+            } else if (result.contains("x_desktop/work.html")
+                || result.contains("x_desktop/workmobile.html")
+                || result.contains("x_desktop/workmobilewithaction.html")) {
+                val uri: Uri = Uri.parse(result)
+                var workId = uri.getQueryParameter("workId")
+                if (TextUtils.isEmpty(workId)) {
+                    workId = uri.getQueryParameter("workid")
+                }
+                if (TextUtils.isEmpty(workId)) {
+                    workId = uri.getQueryParameter("work")
+                }
+                if (TextUtils.isEmpty(workId)) {
+                    workId = uri.getQueryParameter("workcompletedid")
+                }
+                if (TextUtils.isEmpty(workId)) {
+                    workId = uri.getQueryParameter("workcompletedId")
+                }
+                if (TextUtils.isEmpty(workId)) {
+                    workId = uri.getQueryParameter("id")
+                }
+                if (!TextUtils.isEmpty(workId)) {
+                    goThenKill<TaskWebViewActivity>(TaskWebViewActivity.start(workId, "", ""))
+                    return
+                }
+            } else if (result.contains("x_desktop/app.html")
+                || result.contains("x_desktop/appMobile.html")) {
+                val uri: Uri = Uri.parse(result)
+                val app = uri.getQueryParameter("app")
+                val status = uri.getQueryParameter("status")
+                if (!TextUtils.isEmpty(app) && !TextUtils.isEmpty(status)) {
+                    XLog.info("app: $app status: $status")
+                    val type = object : TypeToken<HashMap<String, String>>() {}.type
+                    val statusMap: HashMap<String, String> = O2SDKManager.instance().gson.fromJson(status, type)
+                    if (app == "process.Work") {
+                        var work = statusMap["workId"]
+                        if (TextUtils.isEmpty(work)) {
+                            work = statusMap["workCompletedId"]
+                        }
+                        if (!TextUtils.isEmpty(work)) {
+                            goThenKill<TaskWebViewActivity>(TaskWebViewActivity.start(work, "", ""))
+                            return
+                        }
+                    } else if (app == "cms.Document") {
+                        val documentId = statusMap["documentId"]
+                        val readonly = statusMap["readonly"] ?: false
+                        if (!TextUtils.isEmpty(documentId)) {
+                            goThenKill<CMSWebViewActivity>(CMSWebViewActivity.startBundleDataWithOptions(documentId!!, "", "{ \"readonly\": $readonly }"))
+                            return
+                        }
+                    }
+                }
+            }
+            XLog.info("没有处理完成，默认webview中打开")
+            O2WebViewActivity.openWebView(this, "", result)
+        } else {
+            XLog.info("外部页面：$result")
+            AndroidUtils.runDefaultBrowser(this, result)
+            finish()
+        }
     }
 
     private fun parseMeta() {

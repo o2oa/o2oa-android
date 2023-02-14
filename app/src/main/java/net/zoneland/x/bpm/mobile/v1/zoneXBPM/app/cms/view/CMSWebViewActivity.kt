@@ -535,57 +535,45 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
     /**
      * 表单加载完成后回调
      */
-    @Deprecated("已经弃用")
     @JavascriptInterface
     fun cmsFormLoaded(control: String) {
-        //{
-        //                        "allowRead": true,
-        //                        "allowPublishDocument": isControl && this.document.docStatus === "draft",
-        //                        "allowSave": isControl && this.document.docStatus === "published",
-        //                        "allowPopularDocument": false,
-        //                        "allowEditDocument":  isControl && !this.document.wf_workId,
-        //                        "allowDeleteDocument":  isControl && !this.document.wf_workId,
-        //                        "allowArchiveDocument" : false,
-        //                        "allowRedraftDocument" : false,
-        //                        "currentMode": "read" //edit 编辑表单还是阅读表单
-        //                    };
         XLog.debug("表单加载完成回调：$control")
-        if (!TextUtils.isEmpty(control)) {
-            try {
-                val cmsWorkControl = O2SDKManager.instance().gson.fromJson(control, CMSWorkControl::class.java)
-                runOnUiThread {
-                    var i = 0
-                    if (cmsWorkControl.allowDeleteDocument) {
-                        tv_cms_form_delete_btn.visible()
-                        i++
-                    }
-                    if (cmsWorkControl.allowPublishDocument) {
-                        tv_cms_form_publish_btn.visible()
-                        i++
-                    }else {
-                        if (cmsWorkControl.allowEditDocument && cmsWorkControl.allowSave) {
-                            if (cmsWorkControl.currentMode == "read") {
-                                tv_cms_form_edit_btn.visible()
-                                tv_cms_form_save_btn.gone()
-                            }else if (cmsWorkControl.currentMode == "edit") {
-                                tv_cms_form_edit_btn.gone()
-                                tv_cms_form_save_btn.visible()
-                            }
-                            i++
-                        }else {
-                            tv_cms_form_edit_btn.gone()
-                            tv_cms_form_save_btn.gone()
-                        }
-                    }
-                    if (i>0) {
-                        fl_bottom_operation_bar.visible()
-                        bottom_operate_button_layout.visible()
-                    }
-                }
-            } catch (e: Exception) {
-                XLog.error("json parse error", e)
-            }
-        }
+//        if (!TextUtils.isEmpty(control)) {
+//            try {
+//                val cmsWorkControl = O2SDKManager.instance().gson.fromJson(control, CMSWorkControl::class.java)
+//                runOnUiThread {
+//                    var i = 0
+//                    if (cmsWorkControl.allowDeleteDocument) {
+//                        tv_cms_form_delete_btn.visible()
+//                        i++
+//                    }
+//                    if (cmsWorkControl.allowPublishDocument) {
+//                        tv_cms_form_publish_btn.visible()
+//                        i++
+//                    }else {
+//                        if (cmsWorkControl.allowEditDocument && cmsWorkControl.allowSave) {
+//                            if (cmsWorkControl.currentMode == "read") {
+//                                tv_cms_form_edit_btn.visible()
+//                                tv_cms_form_save_btn.gone()
+//                            }else if (cmsWorkControl.currentMode == "edit") {
+//                                tv_cms_form_edit_btn.gone()
+//                                tv_cms_form_save_btn.visible()
+//                            }
+//                            i++
+//                        }else {
+//                            tv_cms_form_edit_btn.gone()
+//                            tv_cms_form_save_btn.gone()
+//                        }
+//                    }
+//                    if (i>0) {
+//                        fl_bottom_operation_bar.visible()
+//                        bottom_operate_button_layout.visible()
+//                    }
+//                }
+//            } catch (e: Exception) {
+//                XLog.error("json parse error", e)
+//            }
+//        }
 
     }
 
