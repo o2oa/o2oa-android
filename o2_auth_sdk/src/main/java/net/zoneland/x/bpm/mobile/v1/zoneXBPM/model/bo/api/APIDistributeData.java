@@ -9,6 +9,8 @@ public class APIDistributeData {
     private APIAssemblesData assembles;
     private String tokenName; // tokenName是可修改的 x-token是默认值
 
+    private Boolean standalone; // 是否统一端口服务器
+
     // 还有一个mock参数 没有处理
     //"mockConfig": {
     //      "mock": {
@@ -88,5 +90,13 @@ public class APIDistributeData {
 
     public void setAssembles(APIAssemblesData assembles) {
         this.assembles = assembles;
+    }
+
+    public Boolean getStandalone() {
+        return standalone;
+    }
+
+    public void setStandalone(Boolean standalone) {
+        this.standalone = standalone;
     }
 }

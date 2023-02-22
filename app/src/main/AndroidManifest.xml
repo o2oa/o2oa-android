@@ -20,8 +20,7 @@
         android:maxSdkVersion="28" /> <!-- 允许程序录制音频 -->
     <uses-permission android:name="android.permission.RECORD_AUDIO" /> <!-- 拨打电话 -->
     <uses-permission android:name="android.permission.CALL_PHONE" /> <!-- 拍照 -->
-    <uses-permission android:name="android.permission.CAMERA" /> <!-- 允许监听启动完成事件 -->
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.CAMERA" />
     <uses-permission android:name="android.permission.BROADCAST_STICKY" />
     <uses-permission android:name="android.permission.RECEIVE_USER_PRESENT" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />

@@ -1,5 +1,10 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api;
 
+import android.util.Log;
+
+import java.lang.reflect.Field;
+import java.lang.reflect.Method;
+
 /**
  * Created by FancyLou on 2015/12/15.
  */
@@ -42,6 +47,34 @@ public class APIAssemblesData {
     private APIDataBean x_organizationPermission; //  custom模块 通讯录 需要到应用市场下载安装
     private APIDataBean x_pan_assemble_control; //  V3 云盘
     private APIDataBean x_app_packaging_client_assemble_control; //  自助打包
+
+
+    /**
+     * 更新所有服务的端口
+     * @param newPort
+     */
+    public void updatePort(int newPort) {
+        Field[] fields = APIAssemblesData.class.getDeclaredFields();
+        if (fields.length > 0) {
+            for (Field field : fields) {
+                String attributeName = field.getName();
+                String methodName = attributeName.substring(0, 1).toUpperCase() + attributeName.substring(1);
+                try {
+                    APIDataBean result;
+                    Method getMethod = APIAssemblesData.class.getMethod("get" + methodName);
+                    result = (APIDataBean) getMethod.invoke(this);
+                    if (result != null) {
+                        result.setPort(newPort);
+                        result.setProxyPort(newPort);
+                        Method setMethod = APIAssemblesData.class.getMethod("set" + methodName, APIDataBean.class);
+                        setMethod.invoke(this, result);
+                    }
+                } catch (Exception e) {
+                    Log.e("APIASSEMBLES", attributeName + " 执行错误，" + e.getLocalizedMessage());
+                }
+            }
+        }
+    }
 
 
     public APIDataBean getX_pan_assemble_control() {

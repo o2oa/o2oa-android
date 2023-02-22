@@ -280,8 +280,17 @@ class APIAddressHelper private constructor() {
     }
 
     fun setDistributeData(distributeData: APIDistributeData) {
+        val standalone = distributeData.standalone ?: false // 是否单端口服务器
         val data = distributeData.assembles
         val webData = distributeData.webServer
+        if (standalone) {
+            Log.i("APIAddress", " 单端口服务器，开始设置统一的端口.")
+            val centerPort = O2SDKManager.instance().prefs().getInt(O2.PRE_CENTER_PORT_KEY, 80)
+            webData.port = centerPort
+            webData.proxyPort = centerPort
+            data.updatePort(centerPort)
+            Log.i("APIAddress", " 统一的端口设置完成：$centerPort .")
+        }
         val tokenName = if (TextUtils.isEmpty(distributeData.tokenName)) {"x-token"} else {distributeData.tokenName}
         if (data == null || webData == null) {
             throw RuntimeException("Assembles or webServer is null")
@@ -295,6 +304,8 @@ class APIAddressHelper private constructor() {
         if (TextUtils.isEmpty(dataJson) || TextUtils.isEmpty(webDataJson)) {
             throw RuntimeException("Assembles or webServer parse json error")
         }
+        Log.d("APIAddress", webDataJson)
+        Log.d("APIAddress", dataJson)
         val oldDataJson = O2SDKManager.instance().prefs().getString(O2.PRE_ASSEMBLESJSON_KEY, "")
         val oldWebDataJson = O2SDKManager.instance().prefs().getString(O2.PRE_WEBSERVERJSON_KEY, "")
         if (dataJson != oldDataJson || webDataJson != oldWebDataJson) {
@@ -303,6 +314,7 @@ class APIAddressHelper private constructor() {
                 putString(O2.PRE_WEBSERVERJSON_KEY, webDataJson)
             }
         }
+
         setData(data, webData)
     }
 
