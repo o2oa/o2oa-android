@@ -20,6 +20,8 @@ class O2UtilDatePickerMessage(var value: String?,
 
 class O2UtilNavigationMessage(var title: String?)
 
+data class O2ScanResultData(var text: String)
+
 /**
  * 第三方 app 打开的的schema
  */

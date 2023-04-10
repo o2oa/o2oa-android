@@ -410,7 +410,8 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
                                                 val result = data?.getStringExtra(CaptureActivity.SCAN_RESULT_KEY)
                                                         ?: ""
                                                 if (!TextUtils.isEmpty(callback)) {
-                                                    callbackJs("$callback('{\"text\":\"$result\"}')")
+                                                    val resultData =  gson.toJson(O2ScanResultData(result))
+                                                    callbackJs("$callback('${resultData}')")
                                                 }
                                             }
                                 }
