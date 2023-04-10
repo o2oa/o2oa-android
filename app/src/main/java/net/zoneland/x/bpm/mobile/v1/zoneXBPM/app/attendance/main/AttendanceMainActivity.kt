@@ -33,17 +33,18 @@ class AttendanceMainActivity : BaseMVPActivity<AttendanceMainContract.View, Atte
 
     var locationEnable: Boolean = false
     private var isAttendanceAdmin: Boolean = false
+    private var attendanceVersion: String = "1"
 
     private lateinit var fragmentList: ArrayList<Fragment>
     private val titleList: ArrayList<String> by lazy { arrayListOf<String>(getString(R.string.attendance_check_in_title), getString(R.string.title_activity_attendance_chart)) }
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         setupToolBar(getString(R.string.attendance_check_in_title), setupBackButton = true, isCloseBackIcon = true)
 
-        val attendanceVersion = O2SDKManager.instance().prefs().getString(O2.PRE_ATTENDANCE_VERSION_KEY, "0")
+        attendanceVersion = O2SDKManager.instance().prefs().getString(O2.PRE_ATTENDANCE_VERSION_KEY, "1") ?: "1"
         fragmentList = if (attendanceVersion == "1") {
             arrayListOf<Fragment>(AttendanceCheckInNewFragment(), AttendanceStatisticFragment())
         }else {
-            arrayListOf<Fragment>(AttendanceCheckInFragment(), AttendanceStatisticFragment())
+            arrayListOf<Fragment>(AttendanceCheckInV2NewFragment(), AttendanceStatisticV2Fragment())
         }
         view_pager_attendance_main_content.adapter = CommonFragmentPagerAdapter(supportFragmentManager, fragmentList, titleList)
         view_pager_attendance_main_content.addOnPageChangeListener {
@@ -80,11 +81,12 @@ class AttendanceMainActivity : BaseMVPActivity<AttendanceMainContract.View, Atte
 
     override fun onPrepareOptionsMenu(menu: Menu?): Boolean {
         menu?.clear()
-        if (isAttendanceAdmin) {
-            menuInflater.inflate(R.menu.menu_attendance_main_admin, menu)
-        }
-        else {
-            menuInflater.inflate(R.menu.menu_attendance_main_normal, menu)
+        if (attendanceVersion == "1") {
+            if (isAttendanceAdmin) {
+                menuInflater.inflate(R.menu.menu_attendance_main_admin, menu)
+            } else {
+                menuInflater.inflate(R.menu.menu_attendance_main_normal, menu)
+            }
         }
         return super.onPrepareOptionsMenu(menu)
     }

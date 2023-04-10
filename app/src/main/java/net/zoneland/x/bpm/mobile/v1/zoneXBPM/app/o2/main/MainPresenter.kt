@@ -1,5 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main
 
+import android.text.TextUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2CustomStyle
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
@@ -61,25 +62,25 @@ class MainPresenter : BasePresenterImpl<MainContract.View>(), MainContract.Prese
     override fun checkAttendanceFeature() {
         getAttendanceAssembleControlService(mView?.getContext())?.let {
             service ->
-            service.listMyRecords().subscribeOn(Schedulers.io())
+            service.attendanceV2Check().subscribeOn(Schedulers.io())
                     .observeOn(AndroidSchedulers.mainThread())
                     .o2Subscribe {
                         onNext {
                             val data = it.data
-                            if (data?.scheduleInfos != null && data.scheduleInfos.isNotEmpty()) {
+                            if (it.data?.version != null) {
+                                O2SDKManager.instance().prefs().edit {
+                                    putString(O2.PRE_ATTENDANCE_VERSION_KEY, "2");
+                                }
+                            } else {
                                 O2SDKManager.instance().prefs().edit {
                                     putString(O2.PRE_ATTENDANCE_VERSION_KEY, "1");
-                                }
-                            }else {
-                                O2SDKManager.instance().prefs().edit {
-                                    putString(O2.PRE_ATTENDANCE_VERSION_KEY, "0");
                                 }
                             }
                         }
                         onError { e, _ ->
                             XLog.error("", e)
                             O2SDKManager.instance().prefs().edit {
-                                putString(O2.PRE_ATTENDANCE_VERSION_KEY, "0");
+                                putString(O2.PRE_ATTENDANCE_VERSION_KEY, "1");
                             }
                         }
                     }

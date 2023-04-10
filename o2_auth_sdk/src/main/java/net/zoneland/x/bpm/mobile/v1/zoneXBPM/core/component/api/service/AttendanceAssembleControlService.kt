@@ -14,6 +14,31 @@ import rx.Observable
 interface AttendanceAssembleControlService {
 
 
+
+    ////////////////v2/////////////////
+
+    /**
+     * v2版本检查
+     */
+    @GET("jaxrs/v2/my/version")
+    fun attendanceV2Check():Observable<ApiResponse<AttendanceV2CheckData>>
+
+    /**
+     * 预打卡接口
+     * 打卡之前调用
+     */
+    @GET("jaxrs/v2/mobile/check/pre")
+    fun attendanceV2PreCheck():Observable<ApiResponse<AttendanceV2PreCheckData>>
+
+    /**
+     * 打卡
+     */
+    @POST("jaxrs/v2/mobile/check")
+    fun attendanceV2CheckIn(@Body body: AttendanceV2CheckInBody):Observable<ApiResponse<AttendanceV2CheckResponse>>
+
+
+    //////////////////////v1/////////////
+
     /**
      * 获取当前用户的考勤周期
      */

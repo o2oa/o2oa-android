@@ -442,19 +442,16 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
     }
 
 
-    @TargetApi(Build.VERSION_CODES.LOLLIPOP)
     private fun registerSchedulerJob() {
         val componentName = ComponentName(this, ClearTempFileJobService::class.java)
         val jobInfo = JobInfo.Builder(O2.O2_CLEAR_TEMP_FILE_JOB_ID, componentName)
-                .setPersisted(true)//手机重启之后是否继续
+//                .setPersisted(true)//手机重启之后是否继续
                 .setRequiresCharging(true)//充电的时候才执行
                 .setPeriodic(24 * 60 * 60 * 1000)
                 .build()
 
         val jobScheduler = applicationContext.getSystemService(Context.JOB_SCHEDULER_SERVICE) as JobScheduler
         val result = jobScheduler.schedule(jobInfo)
-//        val result2 = jobScheduler.schedule(jobCollectLog)
-//        XLog.info("jobScheduler result:$result, result2:$result2")
         XLog.info("jobScheduler result:$result")
     }
 

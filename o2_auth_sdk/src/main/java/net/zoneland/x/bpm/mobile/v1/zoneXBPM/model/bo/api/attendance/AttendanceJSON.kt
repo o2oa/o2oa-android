@@ -8,6 +8,79 @@ import java.io.Serializable
  * Created by fancy on 2017/3/28.
  */
 
+
+
+/**
+ * 新版考勤 检查对象
+ */
+data class AttendanceV2CheckData(
+        var version: String = "",
+)
+data class AttendanceV2CheckItemData(
+        var id: String = "",
+        var userId: String = "",
+        var recordDateString: String = "",
+        var recordDate: String = "",
+        var preDutyTime: String = "",
+        var preDutyTimeBeforeLimit: String = "",
+        var preDutyTimeAfterLimit: String = "",
+        var sourceType: String = "",
+        var checkInResult: String = "",
+        var checkInType: String = "",
+        var sourceDevice: String = "",
+        var description: String = "",
+        var groupId: String = "",
+        var groupName: String = "",
+        var shiftId: String = "",
+        var shiftName: String = "",
+        var createTime: String = "",
+        var updateTime: String = "",
+        var sequence: String = "",
+
+        // 是否最后一条已经打卡过的数据
+        var isLastRecord: Boolean = false,
+        var isRecord: Boolean = false,
+        var recordTime: String = "", // 已打卡的显示内容
+        var checkInTypeString: String = "", // 打卡类型
+)
+data class AttendanceV2WorkPlace(
+        var id: String = "",
+        var placeName: String = "",
+        var placeAlias: String = "",
+        var creator: String = "",
+        var longitude: String = "",
+        var latitude: String = "",
+        var errorRange: Int = 200,
+        var description: String = "",
+)
+data class AttendanceV2PreCheckData(
+        var allowFieldWork: Boolean = false,
+        var requiredFieldWorkRemarks: Boolean = false,
+        var canCheckIn: Boolean = false,
+        var checkItemList: ArrayList<AttendanceV2CheckItemData>? = ArrayList(),
+        var workPlaceList: ArrayList<AttendanceV2WorkPlace>? = ArrayList(),
+)
+data class AttendanceV2CheckResponse(
+        var checkInRecordId: String = "",
+        var  checkInResult: String = "",
+        var  recordDate: String = "",
+)
+
+data class AttendanceV2CheckInBody(
+        var recordId: String = "",
+        var checkInType: String = "",
+        var workPlaceId: String = "",
+        var fieldWork: Boolean = false, // 是否外勤打卡
+        var signDescription: String = "", //打卡说明:上班打卡，下班打卡, 可以为空.
+        var sourceDevice: String = "", //操作设备类别：Mac|Windows|IOS|Android|其他, 可以为空.
+        var description: String = "",
+        var recordAddress: String = "", //打卡地点描述, 可以为空.
+        var longitude: String = "", //经度
+        var latitude: String = "", //纬度
+)
+
+/////////////////////////////////////
+
 /**
  * 管理员
  */
