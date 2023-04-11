@@ -20,9 +20,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.attendance.setting.AttendanceLo
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonFragmentPagerAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.addOnPageChangeListener
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
@@ -87,6 +85,8 @@ class AttendanceMainActivity : BaseMVPActivity<AttendanceMainContract.View, Atte
             } else {
                 menuInflater.inflate(R.menu.menu_attendance_main_normal, menu)
             }
+        } else {
+            menuInflater.inflate(R.menu.menu_attendance_main_old, menu)
         }
         return super.onPrepareOptionsMenu(menu)
     }
@@ -108,6 +108,13 @@ class AttendanceMainActivity : BaseMVPActivity<AttendanceMainContract.View, Atte
             R.id.menu_attendance_location_setting -> {
                 XLog.debug("click menu attendance location setting")
                 go<AttendanceLocationSettingActivity>()
+                true
+            }
+            R.id.menu_attendance_to_old -> {
+                O2SDKManager.instance().prefs().edit {
+                    putString(O2.PRE_ATTENDANCE_VERSION_KEY, "1")
+                }
+                goThenKill<AttendanceMainActivity>()
                 true
             }
             else -> super.onOptionsItemSelected(item)

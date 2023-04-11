@@ -36,6 +36,12 @@ interface AttendanceAssembleControlService {
     @POST("jaxrs/v2/mobile/check")
     fun attendanceV2CheckIn(@Body body: AttendanceV2CheckInBody):Observable<ApiResponse<AttendanceV2CheckResponse>>
 
+    /**
+     * 我的统计
+     */
+    @POST("jaxrs/v2/my/statistic")
+    fun attendanceV2MyStatistic(@Body body: AttendanceV2StatisticBody):Observable<ApiResponse<AttendanceV2StatisticResponse>>
+
 
     //////////////////////v1/////////////
 

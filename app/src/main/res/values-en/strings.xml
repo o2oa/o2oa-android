@@ -520,6 +520,7 @@
     <string name="title_activity_attendance_appeal_approval">Appeal approval</string>
     <string name="title_activity_attendance_location_setting">Workplace settings</string>
     <string name="menu_activity_attendance">detailed</string>
+    <string name="menu_activity_attendance_to_old">To Old</string>
     <string name="menu_activity_attendance_appeal_approval">Approval</string>
     <string name="menu_activity_attendance_location_setting">set up</string>
     <string name="tab_check_in">Check in</string>
@@ -564,6 +565,16 @@
     <string name="attendance_message_work_out">It is not in the punch in range at present. Are you sure you want to punch in the field?</string>
     <string name="attendance_message_work_out_hint">Please enter field punching instructions</string>
     <string name="attendance_message_update_check_in_record_confirm">Are you sure you want to update this punch record ?</string>
+
+    <string name="attendance_v2_stat_averageWorkTimeDuration">平均工时</string>
+    <string name="attendance_v2_stat_attendance">出勤天数</string>
+    <string name="attendance_v2_stat_rest">休息天数</string>
+    <string name="attendance_v2_stat_leaveDays">请假天数</string>
+    <string name="attendance_v2_stat_absenteeismDays">旷工天数</string>
+    <string name="attendance_v2_stat_lateTimes">迟到次数</string>
+    <string name="attendance_v2_stat_leaveEarlierTimes">早退次数</string>
+    <string name="attendance_v2_stat_absenceTimes">缺卡次数</string>
+    <string name="attendance_v2_stat_fieldWorkTimes">外勤次数</string>
 
     <!-- bbs -->
     <string name="bbs">Forum</string>
