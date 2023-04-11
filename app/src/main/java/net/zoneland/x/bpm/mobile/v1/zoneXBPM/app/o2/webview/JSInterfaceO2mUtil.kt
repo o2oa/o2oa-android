@@ -407,11 +407,16 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
                                             .params(CaptureActivity.BACK_SCAN_RESULT_KEY, true)
                                             .greenChannel()
                                             .forResult { _, data ->
-                                                val result = data?.getStringExtra(CaptureActivity.SCAN_RESULT_KEY)
+                                                var result = data?.getStringExtra(CaptureActivity.SCAN_RESULT_KEY)
                                                         ?: ""
                                                 if (!TextUtils.isEmpty(callback)) {
-                                                    val resultData =  gson.toJson(O2ScanResultData(result))
-                                                    callbackJs("$callback('${resultData}')")
+//                                                    val resultData =  gson.toJson(O2ScanResultData(result))
+                                                    result = result.replace("'", "\\u0027") // 单引号
+                                                    result = result.replace("\\n".toRegex(), "") // 回车
+//                                                    result = result.replace("\\t".toRegex(), "\u0009") //  水平制表符
+//                                                    result = result.replace("\\s".toRegex(), "\u0008") // 空格
+                                                    result = result.replace("\\r".toRegex(), "") // 换行
+                                                    callbackJs("$callback('${result}');")
                                                 }
                                             }
                                 }
