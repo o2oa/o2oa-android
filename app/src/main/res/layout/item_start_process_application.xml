@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/linear_item_start_process_application_content"
     android:orientation="horizontal"
     android:layout_width="match_parent"
@@ -10,13 +11,16 @@
         android:id="@+id/image_item_start_process_application_icon"
         android:layout_width="36dp"
         android:layout_height="36dp"
-        android:layout_marginLeft="@dimen/spacing_normal"
+        android:layout_marginStart="@dimen/spacing_normal"
         android:layout_gravity="center_vertical"
+        android:layout_centerVertical="true"
         android:src="@mipmap/process_default"/>
     <TextView
         android:id="@+id/tv_item_start_process_application_name"
-        android:layout_marginLeft="@dimen/spacing_tiny"
-        android:layout_marginRight="@dimen/spacing_normal"
+        android:layout_marginStart="@dimen/spacing_tiny"
+        android:layout_toEndOf="@+id/image_item_start_process_application_icon"
+        android:layout_alignParentEnd="true"
+        android:layout_centerVertical="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center_vertical"
@@ -24,5 +28,16 @@
         android:maxLines="2"
         android:ellipsize="end"
         android:textSize="15sp"
-        android:text="应用名称"/>
-</LinearLayout>
+        tools:text="应用名称"/>
+    <TextView
+        android:id="@+id/tv_item_start_app_category_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_normal"
+        android:layout_gravity="center_vertical"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:textColor="@color/z_color_text_hint"
+        android:textSize="16sp"
+        tools:text="分类名称"/>
+</RelativeLayout>
