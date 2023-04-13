@@ -42,7 +42,19 @@ data class AttendanceV2CheckItemData(
     var isRecord: Boolean = false,
     var recordTime: String = "", // 已打卡的显示内容
     var checkInTypeString: String = "", // 打卡类型
-)
+) {
+    fun resultText(): String {
+        return when (checkInResult) {
+            AttendanceV2RecordResult.Early.value -> AttendanceV2RecordResult.Early.label
+            AttendanceV2RecordResult.Late.value -> AttendanceV2RecordResult.Late.label
+            AttendanceV2RecordResult.SeriousLate.value -> AttendanceV2RecordResult.SeriousLate.label
+            AttendanceV2RecordResult.Absenteeism.value -> AttendanceV2RecordResult.Absenteeism.label
+            AttendanceV2RecordResult.NotSigned.value -> AttendanceV2RecordResult.NotSigned.label
+            AttendanceV2RecordResult.PreCheckIn.value -> AttendanceV2RecordResult.PreCheckIn.label
+            else -> AttendanceV2RecordResult.Normal.label
+        }
+    }
+}
 
 data class AttendanceV2WorkPlace(
     var id: String = "",

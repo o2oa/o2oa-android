@@ -13,6 +13,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.job.OpenJobDialogFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.start.StartProcessDialogFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
@@ -127,7 +128,6 @@ class AttendanceV2AppealActivity : BaseMVPActivity<AttendanceV2AppealContract.Vi
     }
 
     override fun appealList(list: List<AttendanceV2AppealInfo>) {
-        XLog.debug("appealList.........$page")
         srl_att_v2_appeal_list.isRefreshing = false
         if (page == 1) {
             appealList.clear()
@@ -178,7 +178,6 @@ class AttendanceV2AppealActivity : BaseMVPActivity<AttendanceV2AppealContract.Vi
     }
 
     private fun loadAppealList() {
-        XLog.debug("loadAppealList.........$page")
         mPresenter.myAppealListByPage(page)
     }
 
@@ -195,7 +194,11 @@ class AttendanceV2AppealActivity : BaseMVPActivity<AttendanceV2AppealContract.Vi
     }
 
     private fun openJob(jobId: String) {
-
+        val dialog = OpenJobDialogFragment.openJobDialog(jobId) {
+            XLog.debug("open job dialog 关闭了")
+        }
+        dialog.isCancelable = false
+        dialog.show(supportFragmentManager, OpenJobDialogFragment.TAG)
     }
 
 }

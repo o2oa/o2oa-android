@@ -48,7 +48,7 @@
         <View
             android:id="@+id/view_att_stat_v2_divider"
             android:layout_width="0dp"
-            android:layout_height="1px"
+            android:layout_height="1dp"
             android:layout_marginStart="@dimen/spacing_normal"
             android:layout_marginTop="@dimen/spacing_small"
             android:layout_marginEnd="@dimen/spacing_normal"
@@ -338,6 +338,7 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             android:textColor="@color/z_color_primary"
+            android:textSize="@dimen/font_large"
             android:text="@string/attendance_v2_stat_to_appeal_label"
             android:layout_marginBottom="@dimen/spacing_normal"
             />

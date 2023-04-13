@@ -26,6 +26,15 @@ public class Work extends WorkVO {
     private String form;
     private boolean forceRoute;
 
+    private boolean completed; // 是否已结束
+
+    public boolean isCompleted() {
+        return completed;
+    }
+
+    public void setCompleted(boolean completed) {
+        this.completed = completed;
+    }
 
     public String getSerial() {
         return serial;

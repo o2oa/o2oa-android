@@ -65,7 +65,7 @@ class AttendanceCheckInV2NewFragment : BaseMVPViewPagerFragment<AttendanceCheckI
                     val status = if(t.isRecord) {
                         t.recordTime
                     } else {
-                        "未打卡"
+                        getString(R.string.attendance_v2_need_check_in)
                     }
                     holder.setText(R.id.tv_item_attendance_check_in_schedule_list_type, t.checkInTypeString)
                         .setText(R.id.tv_item_attendance_check_in_schedule_list_time, t.preDutyTime)
@@ -191,34 +191,38 @@ class AttendanceCheckInV2NewFragment : BaseMVPViewPagerFragment<AttendanceCheckI
             // 打卡记录
             val checkItemList = data.checkItemList ?: ArrayList()
             // 是否最后一条已经打卡过的数据
-            lastRecord = checkItemList.firstOrNull { element -> element.checkInResult == "PreCheckIn" }
+            lastRecord = checkItemList.firstOrNull { element -> element.checkInResult == AttendanceV2RecordResult.PreCheckIn.value }
             needCheckIn = lastRecord != null
             for ((index, item) in checkItemList.withIndex()) {
                 var isRecord = false
                 var recordTime = ""
-                if (item.checkInResult != "PreCheckIn") {
+                if (item.checkInResult != AttendanceV2RecordResult.PreCheckIn.value) {
                     isRecord = true
                     var signTime = item.recordDate
                     if (signTime.length > 16) {
                         signTime = signTime.substring(11, 16);
                     }
-                    recordTime = "已打卡 $signTime" // lpFormat(lp, 'mobile.checkInWithTime', {time: signTime});
+                    var status = getString(R.string.attendance_v2_check_in_completed)
+                    if (item.checkInResult != AttendanceV2RecordResult.Normal.value) {
+                        status = item.resultText()
+                    }
+                    recordTime = "$status $signTime"
                 }
                 item.recordTime = recordTime
                 item.isRecord = isRecord // 是否已经打卡
-                item.checkInTypeString =  if(item.checkInType == "OnDuty") { "上班打卡" }else{ "下班打卡"}
+                item.checkInTypeString =  if(item.checkInType == AttendanceV2RecordCheckInType.OnDuty.value) { AttendanceV2RecordCheckInType.OnDuty.label }else{ AttendanceV2RecordCheckInType.OffDuty.label }
                 var preDutyTime = item.preDutyTime
                 if (TextUtils.isEmpty(item.shiftId)) {
                     preDutyTime = "" // 如果没有班次信息 表示 自由工时 或者 休息日 不显示 打卡时间
                 }
                 item.preDutyTime = preDutyTime
                 // 处理是否是最后一个已经打卡的记录
-                if (item.checkInResult != "PreCheckIn") {
+                if (item.checkInResult != AttendanceV2RecordResult.PreCheckIn.value) {
                     if (index == checkItemList.size - 1) { // 最后一条
                         item.isLastRecord = true // 最后一条已经打卡的记录
                     } else {
                         val nextItem = checkItemList[index+1]
-                        if (nextItem.checkInResult == "PreCheckIn") {
+                        if (nextItem.checkInResult == AttendanceV2RecordResult.PreCheckIn.value) {
                             item.isLastRecord = true
                         }
                     }
@@ -237,9 +241,9 @@ class AttendanceCheckInV2NewFragment : BaseMVPViewPagerFragment<AttendanceCheckI
         tv_attendance_check_in_new_check_in?.setText(R.string.attendance_check_in_knock)
         tv_attendance_check_in_new_now_time?.visible()
         if (result) {
-            XToast.toastShort(activity, "打卡成功！")
+            XToast.toastShort(R.string.attendance_v2_check_in_success)
         } else {
-            XToast.toastShort(activity, "打卡失败！")
+            XToast.toastShort(R.string.attendance_v2_check_in_fail)
         }
         mPresenter.preCheckDataLoad()
     }

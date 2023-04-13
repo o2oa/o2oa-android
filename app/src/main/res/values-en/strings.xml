@@ -439,6 +439,10 @@
     <string name="start_process_id_empty">流程Id不能为空！</string>
     <string name="start_process_get_error">流程获取失败！</string>
 
+    <string name="start_open_job_title">打开工作</string>
+    <string name="start_job_id_empty">工作ID不能为空！</string>
+    <string name="process_work_completed">已完成</string>
+
 
     <string name="hint">Tips</string>
     <string name="confirm">Confirmation</string>
@@ -584,6 +588,10 @@
     <string name="attendance_v2_stat_to_appeal_label">异常打卡数据</string>
     <string name="attendance_v2_can_not_appeal">无法处理，没有开启申请流程</string>
     <string name="attendance_v2_fieldWork">外勤打卡</string>
+    <string name="attendance_v2_check_in_completed">已打卡</string>
+    <string name="attendance_v2_check_in_success">打卡成功！</string>
+    <string name="attendance_v2_check_in_fail">打卡失败！</string>
+    <string name="attendance_v2_need_check_in">待打卡</string>
 
     <string name="right_arrow">&gt;</string>
 
