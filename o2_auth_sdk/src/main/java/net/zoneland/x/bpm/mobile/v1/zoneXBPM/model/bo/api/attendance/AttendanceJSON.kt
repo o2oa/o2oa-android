@@ -88,6 +88,7 @@ data class AttendanceV2StatisticBody(
     var startDate: String = "",
     var endDate: String = "",
 )
+
 data class AttendanceV2CheckInBody(
     var recordId: String = "",
     var checkInType: String = "",
@@ -99,6 +100,165 @@ data class AttendanceV2CheckInBody(
     var recordAddress: String = "", //打卡地点描述, 可以为空.
     var longitude: String = "", //经度
     var latitude: String = "", //纬度
+)
+
+enum class AttendanceV2RecordCheckInType(val value: String, val label: String) {
+    OnDuty("OnDuty", "上班打卡"),
+    OffDuty("OffDuty", "下班打卡"),
+}
+
+// 打卡记录对象
+data class AttendanceV2RecordInfo(
+    var id: String = "",
+    var userId: String = "",
+    var recordDateString: String = "",
+    var recordDate: String = "",
+    var preDutyTime: String = "",
+    var preDutyTimeBeforeLimit: String = "",
+    var preDutyTimeAfterLimit: String = "",
+    var sourceType: String = "",
+    var checkInResult: String = "",
+    var checkInType: String = "",
+
+    var sourceDevice: String = "",
+
+    var description: String = "",
+
+    var recordAddress: String = "",
+
+    var longitude: String = "",
+
+    var latitude: String = "",
+
+
+    var signDescription: String = "",
+
+    var fieldWork: Boolean = false,
+
+
+    var groupId: String = "",
+
+    var groupName: String = "",
+
+
+    var groupCheckType: String = "",
+
+    var shiftId: String = "",
+
+    var shiftName: String = "",
+
+    var workPlaceId: String = "",
+
+    var placeName: String = "",
+
+
+    var appealId: String = "",
+
+
+    var leaveDataId: String = "",
+) {
+
+    fun resultText(): String {
+        return when (checkInResult) {
+            AttendanceV2RecordResult.Early.value -> AttendanceV2RecordResult.Early.label
+            AttendanceV2RecordResult.Late.value -> AttendanceV2RecordResult.Late.label
+            AttendanceV2RecordResult.SeriousLate.value -> AttendanceV2RecordResult.SeriousLate.label
+            AttendanceV2RecordResult.Absenteeism.value -> AttendanceV2RecordResult.Absenteeism.label
+            AttendanceV2RecordResult.NotSigned.value -> AttendanceV2RecordResult.NotSigned.label
+            AttendanceV2RecordResult.PreCheckIn.value -> AttendanceV2RecordResult.PreCheckIn.label
+            else -> AttendanceV2RecordResult.Normal.label
+        }
+    }
+
+    fun checkInTypeText(): String {
+        return if (checkInType == AttendanceV2RecordCheckInType.OnDuty.value) {
+            AttendanceV2RecordCheckInType.OnDuty.label
+        } else {
+            AttendanceV2RecordCheckInType.OffDuty.label
+        }
+    }
+}
+
+enum class AttendanceV2RecordResult(val value: String, val label: String) {
+    Normal("Normal", "正常"),
+    Early("Early", "早退"),
+    Late("Late", "迟到"),
+    SeriousLate("SeriousLate", "严重迟到"),
+    Absenteeism("Absenteeism", "旷工迟到"),
+    NotSigned("NotSigned", "未打卡"),
+    PreCheckIn("PreCheckIn", ""),
+}
+
+enum class AttendanceV2AppealStatus(val value: Int, val label: String) {
+    StatusInit(0, "待处理"),
+    StatusProcessing(1, "审批中"),
+    StatusProcessAgree(2, "审批通过"),
+    StatusProcessDisagree(3, "审批不通过")
+}
+
+data class AttendanceV2AppealInfoToProcessData(
+    var appealId: String?,
+    var record: AttendanceV2RecordInfo?
+)
+
+// 打卡异常信息对象
+data class AttendanceV2AppealInfo(
+
+    var id: String = "",
+    var recordId: String = "",
+
+    var userId: String = "",
+
+    var recordDateString: String = "",
+
+    var recordDate: String = "",
+
+    var startTime: String = "",
+
+    var endTime: String = "",
+
+    var reason: String = "",
+
+//public static final Integer status_TYPE_INIT = 0; // 待处理
+//public static final Integer status_TYPE_PROCESSING = 1; // 审批中
+//public static final Integer status_TYPE_PROCESS_AGREE = 2; // 审批通过
+//public static final Integer status_TYPE_PROCESS_DISAGREE = 3; // 审批不通过
+    var status: Int = 0,
+
+    var jobId: String = "",
+
+    var record: AttendanceV2RecordInfo?
+) {
+
+    fun statsText(): String {
+        return when (status) {
+            AttendanceV2AppealStatus.StatusProcessing.value -> AttendanceV2AppealStatus.StatusProcessing.label
+            AttendanceV2AppealStatus.StatusProcessAgree.value -> AttendanceV2AppealStatus.StatusProcessAgree.label
+            AttendanceV2AppealStatus.StatusProcessDisagree.value -> AttendanceV2AppealStatus.StatusProcessDisagree.label
+            else -> AttendanceV2AppealStatus.StatusInit.label
+        }
+    }
+
+}
+
+data class AttendanceV2AppealPageListFilter(
+    var recordDate: String = ""
+)
+
+/**
+ * 配置文件
+ */
+data class AttendanceV2Config(
+    var holidayList: ArrayList<String> = ArrayList(),
+    var workDayList: ArrayList<String> = ArrayList(),
+    var appealEnable: Boolean = false,
+    var appealMaxTimes: Int = 0,
+    var processId: String = "",
+    var processName: String = "",
+    var onDutyFastCheckInEnable: Boolean = false,
+    var offDutyFastCheckInEnable: Boolean = false,
+    var checkInAlertEnable: Boolean = false,
+    var exceptionAlertEnable: Boolean = false,
 )
 
 /////////////////////////////////////

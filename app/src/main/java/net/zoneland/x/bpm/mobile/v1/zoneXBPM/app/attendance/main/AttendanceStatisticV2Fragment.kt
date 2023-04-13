@@ -1,12 +1,17 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.attendance.main
 
+import android.text.SpannableString
+import android.text.style.UnderlineSpan
 import android.view.View
+import com.xiaomi.push.go
 import kotlinx.android.synthetic.main.fragment_attendance_statistic_v2.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.attendance.appeal.AttendanceV2AppealActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPViewPagerFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.AttendanceV2StatisticResponse
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import java.util.*
 
 /**
@@ -28,6 +33,12 @@ class AttendanceStatisticV2Fragment : BaseMVPViewPagerFragment<AttendanceStatist
         val cal = Calendar.getInstance()
         tv_att_v2_stat_year.text = "${cal.get(Calendar.YEAR)}"
         tv_att_v2_stat_month.text = "${cal.get(Calendar.MONTH) + 1}月"
+        val content = SpannableString(getString(R.string.attendance_v2_stat_to_appeal_label))
+        content.setSpan(UnderlineSpan(), 0, content.length, 0)
+        tv_att_v2_stat_to_appeal.text = content
+        tv_att_v2_stat_to_appeal.setOnClickListener {
+            activity?.go<AttendanceV2AppealActivity>()
+        }
     }
 
     override fun lazyLoad() {
@@ -39,7 +50,6 @@ class AttendanceStatisticV2Fragment : BaseMVPViewPagerFragment<AttendanceStatist
     }
 
     override fun myStatistic(my: AttendanceV2StatisticResponse) {
-        XLog.debug("返回结果")
         if (my.workTimeDuration > 0) {
             ll_att_v2_stat_averageWorkTimeDuration.alpha = 1.0f
         } else {
@@ -72,4 +82,5 @@ class AttendanceStatisticV2Fragment : BaseMVPViewPagerFragment<AttendanceStatist
             view.alpha = 0.5f
         }
     }
+
 }

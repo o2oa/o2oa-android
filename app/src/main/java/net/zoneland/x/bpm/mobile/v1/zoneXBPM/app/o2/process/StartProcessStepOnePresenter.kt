@@ -112,7 +112,7 @@ class StartProcessStepOnePresenter : BasePresenterImpl<StartProcessStepOneContra
             mView?.startProcessFail(emptyMsg ?: "传入参数为空，无法启动流程, identity:$identity,processId:$processId")
             return
         }
-        val body = ProcessStartBo()
+        val body = ProcessStartWithDataBo()
         body.title = ""
         body.identity = identity
         getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service->
@@ -141,7 +141,7 @@ class StartProcessStepOnePresenter : BasePresenterImpl<StartProcessStepOneContra
             mView?.startProcessFail(emptyMsg ?: "传入参数为空，无法启动流程, identity:$identity,processId:$processId")
             return
         }
-        val body = ProcessStartBo()
+        val body = ProcessStartWithDataBo()
         body.title = ""
         body.identity = identity
         getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service->

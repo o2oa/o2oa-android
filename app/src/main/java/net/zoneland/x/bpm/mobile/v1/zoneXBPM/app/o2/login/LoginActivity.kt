@@ -216,8 +216,9 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
             // 判断程序是否当前显示
             if (!safe && !isHome && !isReflectScreen) {
                 Looper.prepare()
-                Toast.makeText(applicationContext, R.string.activity_safe_warning,
-                        Toast.LENGTH_LONG).show()
+                XToast.toastLong(R.string.activity_safe_warning)
+//                Toast.makeText(applicationContext, R.string.activity_safe_warning,
+//                        Toast.LENGTH_LONG).show()
                 Looper.loop()
             }
         }).start()

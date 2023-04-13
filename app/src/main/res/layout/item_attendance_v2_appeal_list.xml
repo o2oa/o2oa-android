@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto" >
+    <TextView
+        android:id="@+id/tv_item_att_v2_appeal_result"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginBottom="@dimen/spacing_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="早退"
+        android:textSize="@dimen/font_large"
+        android:textColor="@color/z_color_text_primary_dark"
+        />
+    <TextView
+        android:id="@+id/tv_item_att_v2_appeal_recordDateString"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginBottom="@dimen/spacing_small"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_item_att_v2_appeal_result"
+        app:layout_constraintBottom_toBottomOf="parent"
+        tools:text="2023-04-01 09:00:02 (上班打卡)"
+        android:textSize="@dimen/font_small"
+        android:textColor="@color/z_color_text_primary"
+        />
+
+    <TextView
+        android:id="@+id/tv_item_att_v2_appeal_status"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:layout_marginTop="@dimen/spacing_small"
+        android:layout_marginBottom="@dimen/spacing_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="审批不通过"
+        android:textSize="@dimen/font_normal"
+        android:textColor="@color/z_color_text_primary"
+        />
+
+    <LinearLayout
+        android:id="@+id/ll_item_att_v2_appeal_process"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginEnd="@dimen/spacing_small"
+        android:layout_marginBottom="@dimen/spacing_small"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        >
+        <TextView
+            android:id="@+id/tv_item_att_v2_appeal_process"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/attendance_v2_appeal_process"
+            android:textSize="@dimen/font_normal"
+            android:textColor="@color/z_color_primary"
+            />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/right_arrow"
+            android:layout_marginStart="@dimen/spacing_tiny"
+            android:textSize="@dimen/font_small"
+            android:textColor="@color/z_color_text_hint"
+            />
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -7,6 +7,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.identity.ProcessWOIdentityJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ProcessStartBo
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ProcessStartWithDataBo
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ProcessWorkData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
@@ -35,7 +36,7 @@ class StartProcessStepTwoPresenter : BasePresenterImpl<StartProcessStepTwoContra
                 mView?.startProcessFail(emptyMsg ?: "传入参数为空，无法启动流程 identity:$identity,processId:$processId")
                 return
             }
-            val body = ProcessStartBo()
+            val body = ProcessStartWithDataBo()
             body.title = ""
             body.identity = identity
             getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service->
@@ -64,7 +65,7 @@ class StartProcessStepTwoPresenter : BasePresenterImpl<StartProcessStepTwoContra
             mView?.startProcessFail(emptyMsg ?: "传入参数为空，无法启动流程, identity:$identity,processId:$processId")
             return
         }
-        val body = ProcessStartBo()
+        val body = ProcessStartWithDataBo()
         body.title = ""
         body.identity = identity
         getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service->

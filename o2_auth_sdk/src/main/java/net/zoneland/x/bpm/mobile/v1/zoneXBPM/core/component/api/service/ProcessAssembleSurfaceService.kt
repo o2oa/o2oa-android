@@ -37,6 +37,12 @@ interface ProcessAssembleSurfaceService {
     fun getApplicationProcess(@Path("appId") appId: String): Observable<ApiResponse<List<ProcessInfoData>>>
 
     /**
+     * 获取流程对象
+     */
+    @GET("jaxrs/process/{flag}")
+    fun getProcess(@Path("flag") flag: String): Observable<ApiResponse<ProcessInfoData>>
+
+    /**
      * 获取应用下的流程
      * @param filter 可启动流程终端类型,可选值 client,mobile,all
      */
@@ -313,7 +319,7 @@ interface ProcessAssembleSurfaceService {
      */
     @Headers("Content-Type:application/json;charset=UTF-8")
     @POST("jaxrs/draft/process/{processId}")
-    fun startDraft(@Path("processId") processId: String, @Body body: ProcessStartBo): Observable<ApiResponse<ProcessDraftData>>
+    fun startDraft(@Path("processId") processId: String, @Body body: ProcessStartWithDataBo): Observable<ApiResponse<ProcessDraftData>>
 
     /**
      * 启动流程
@@ -325,7 +331,7 @@ interface ProcessAssembleSurfaceService {
      */
     @Headers("Content-Type:application/json;charset=UTF-8")
     @POST("jaxrs/work/process/{processId}")
-    fun startProcess(@Path("processId") processId: String, @Body body: ProcessStartBo): Observable<ApiResponse<List<ProcessWorkData>>>
+    fun startProcess(@Path("processId") processId: String, @Body body: ProcessStartWithDataBo): Observable<ApiResponse<List<ProcessWorkData>>>
 
 
     /**

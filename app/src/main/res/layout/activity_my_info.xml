@@ -461,16 +461,15 @@
         android:layout_width="match_parent"
         android:layout_height="64dp"
         android:layout_alignParentTop="true"
-        android:background="@color/transparent"
-        android:paddingTop="@dimen/toolbar_padding_top">
+        android:background="@color/transparent">
 
         <ImageView
             android:id="@+id/image_myInfo_back"
-            android:layout_width="24dp"
-            android:layout_height="24dp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_centerVertical="true"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="@dimen/spacing_small"
             android:src="@mipmap/ic_back_mtrl_white_alpha" />
 
         <TextView
@@ -480,7 +479,7 @@
             android:layout_centerInParent="true"
             android:text="@string/title_activity_my_info"
             android:textColor="@android:color/white"
-            android:textSize="15sp" />
+            android:textSize="@dimen/font_large" />
 
         <TextView
             android:id="@+id/tv_myInfo_edit_save_btn"
@@ -488,8 +487,9 @@
             android:layout_height="wrap_content"
             android:layout_alignParentEnd="true"
             android:layout_centerVertical="true"
-            android:layout_marginEnd="8dp"
+            android:layout_marginEnd="@dimen/spacing_small"
             android:text="@string/menu_edit"
+            android:textSize="@dimen/font_normal"
             android:textColor="@android:color/white" />
     </RelativeLayout>
 

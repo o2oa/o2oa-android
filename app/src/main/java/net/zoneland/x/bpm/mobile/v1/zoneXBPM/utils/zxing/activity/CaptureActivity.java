@@ -40,6 +40,7 @@ import com.google.zxing.qrcode.QRCodeReader;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.scanlogin.ScanLoginActivity;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog;
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.zxing.camera.CameraManager;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.zxing.decoding.CaptureActivityHandler;
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.zxing.decoding.InactivityTimer;
@@ -163,8 +164,9 @@ public class CaptureActivity extends Activity implements Callback {
         String resultString = result.getText();
         XLog.debug("resultString: "+ resultString);
         if (TextUtils.isEmpty(resultString)) {
-            Toast.makeText(CaptureActivity.this, "没有扫描到任何东西!", Toast.LENGTH_SHORT)
-                    .show();
+            XToast.INSTANCE.toastShort("没有扫描到任何东西!");
+//            Toast.makeText(CaptureActivity.this, "没有扫描到任何东西!", Toast.LENGTH_SHORT)
+//                    .show();
         } else {
             String meta = parseMeta(resultString);
             XLog.debug("meta: "+meta);
@@ -253,14 +255,15 @@ public class CaptureActivity extends Activity implements Callback {
 
                     Result resultString = scanningImage1(picturePath);
                     if (resultString == null) {
-                        Toast.makeText(getApplicationContext(), "解析错误，请选择正确的二维码图片", Toast.LENGTH_LONG).show();
+                        XToast.INSTANCE.toastShort("解析错误，请选择正确的二维码图片");
+//                        Toast.makeText(getApplicationContext(), "解析错误，请选择正确的二维码图片", Toast.LENGTH_LONG).show();
                     } else {
 
                         String resultImage = resultString.getText();
                         if (resultImage.equals("")) {
-
-                            Toast.makeText(CaptureActivity.this, "扫描失败",
-                                    Toast.LENGTH_SHORT).show();
+                            XToast.INSTANCE.toastShort("扫描失败");
+//                            Toast.makeText(CaptureActivity.this, "扫描失败",
+//                                    Toast.LENGTH_SHORT).show();
                         } else {
 
                             Intent resultIntent = new Intent();
@@ -309,16 +312,19 @@ public class CaptureActivity extends Activity implements Callback {
             result = reader.decode(bitmap1, (Hashtable<DecodeHintType, String>) hints1);
             return result;
         } catch (NotFoundException e) {
-            Toast.makeText(CaptureActivity.this, "解析错误，请选择正确的二维码图片",
-                    Toast.LENGTH_LONG).show();
+            XToast.INSTANCE.toastLong("解析错误，请选择正确的二维码图片");
+//            Toast.makeText(CaptureActivity.this, "解析错误，请选择正确的二维码图片",
+//                    Toast.LENGTH_LONG).show();
             e.printStackTrace();
         } catch (ChecksumException e) {
-            Toast.makeText(CaptureActivity.this, "解析错误，请选择正确的二维码图片",
-                    Toast.LENGTH_LONG).show();
+            XToast.INSTANCE.toastLong("解析错误，请选择正确的二维码图片");
+//            Toast.makeText(CaptureActivity.this, "解析错误，请选择正确的二维码图片",
+//                    Toast.LENGTH_LONG).show();
             e.printStackTrace();
         } catch (FormatException e) {
-            Toast.makeText(CaptureActivity.this, "解析错误，请选择正确的二维码图片",
-                    Toast.LENGTH_LONG).show();
+            XToast.INSTANCE.toastLong("解析错误，请选择正确的二维码图片");
+//            Toast.makeText(CaptureActivity.this, "解析错误，请选择正确的二维码图片",
+//                    Toast.LENGTH_LONG).show();
             e.printStackTrace();
         }
         return null;

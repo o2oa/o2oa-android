@@ -13,6 +13,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.person.PersonList
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.process.ProcessDataJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.MeetingInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ProcessStartBo
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ProcessStartWithDataBo
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.ProcessWorkData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
@@ -294,7 +295,7 @@ class MeetingMainFragmentPresenter : BasePresenterImpl<MeetingMainFragmentContra
             mView?.startProcessFail("传入参数为空，无法启动流程，identity:$identifyId,processId:$processId")
             return
         }
-        val body = ProcessStartBo()
+        val body = ProcessStartWithDataBo()
         body.title = title
         body.identity = identifyId
         getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service ->

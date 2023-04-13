@@ -2,6 +2,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.service
 
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ApiResponse
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.IdData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ValueData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.*
 import okhttp3.RequestBody
 import retrofit2.http.*
@@ -41,6 +42,31 @@ interface AttendanceAssembleControlService {
      */
     @POST("jaxrs/v2/my/statistic")
     fun attendanceV2MyStatistic(@Body body: AttendanceV2StatisticBody):Observable<ApiResponse<AttendanceV2StatisticResponse>>
+
+    /**
+     * 分页查询我的异常打卡数据
+     */
+    @POST("jaxrs/v2/appeal/list/{page}/size/{size}")
+    fun attendanceV2MyAppealListByPage(@Path("page") page: Int, @Path("size") size: Int, @Body body: AttendanceV2AppealPageListFilter):Observable<ApiResponse<List<AttendanceV2AppealInfo>>>
+
+    /**
+     * 配置文件
+     */
+    @GET("jaxrs/v2/config")
+    fun attendanceV2Config():Observable<ApiResponse<AttendanceV2Config>>
+
+    /**
+     * 当前是否能够申诉
+     * @param id 异常数据id
+     */
+    @GET("jaxrs/v2/appeal/{id}/start/check")
+    fun attendanceV2CheckCanAppeal(@Path("id") id: String):Observable<ApiResponse<ValueData>>
+
+    /**
+     * 启动流程后 更新申诉数据
+     */
+    @GET("jaxrs/v2/appeal/{id}/start/process")
+    fun attendanceV2AppealStartProcess(@Path("id") id: String):Observable<ApiResponse<ValueData>>
 
 
     //////////////////////v1/////////////

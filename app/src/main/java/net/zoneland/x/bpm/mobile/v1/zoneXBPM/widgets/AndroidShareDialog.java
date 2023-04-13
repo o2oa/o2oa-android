@@ -205,7 +205,8 @@ public class AndroidShareDialog extends Dialog implements AdapterView.OnItemClic
     private void shareMsg(Context context, String msgTitle, String msgText,
                           String imgPath, ShareItem share) {
         if (!share.packageName.isEmpty() && !isAvailable(getContext(), share.packageName)) {
-            Toast.makeText(getContext(), context.getString(R.string.share_uninstall_app) + share.title, Toast.LENGTH_SHORT).show();
+            XToast.INSTANCE.toastShort(context.getString(R.string.share_uninstall_app) + share.title);
+//            Toast.makeText(getContext(), context.getString(R.string.share_uninstall_app) + share.title, Toast.LENGTH_SHORT).show();
             return;
         }
 

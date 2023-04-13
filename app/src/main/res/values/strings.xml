@@ -433,6 +433,10 @@
     <string name="start_process_step_two_identity">身份:</string>
     <string name="start_process_step_two_department">启动部门:</string>
 
+    <string name="start_process_dialog_title">启动流程</string>
+    <string name="start_process_id_empty">流程Id不能为空！</string>
+    <string name="start_process_get_error">流程获取失败！</string>
+
 
     <string name="hint">提    示</string>
     <string name="confirm">确    认</string>
@@ -573,6 +577,13 @@
     <string name="attendance_v2_stat_leaveEarlierTimes">早退次数</string>
     <string name="attendance_v2_stat_absenceTimes">缺卡次数</string>
     <string name="attendance_v2_stat_fieldWorkTimes">外勤次数</string>
+    <string name="attendance_v2_appeal_process">处理</string>
+    <string name="attendance_v2_appeal_process_view">查看流程</string>
+    <string name="attendance_v2_stat_to_appeal_label">异常打卡数据</string>
+    <string name="attendance_v2_can_not_appeal">无法处理，没有开启申请流程</string>
+    <string name="attendance_v2_fieldWork">外勤打卡</string>
+
+    <string name="right_arrow">&gt;</string>
 
     <!-- bbs -->
     <string name="bbs">论坛</string>

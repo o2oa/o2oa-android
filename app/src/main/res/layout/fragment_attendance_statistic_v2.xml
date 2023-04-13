@@ -330,5 +330,16 @@
             </LinearLayout>
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/tv_att_v2_stat_to_appeal"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:textColor="@color/z_color_primary"
+            android:text="@string/attendance_v2_stat_to_appeal_label"
+            android:layout_marginBottom="@dimen/spacing_normal"
+            />
     </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
