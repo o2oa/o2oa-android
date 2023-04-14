@@ -174,5 +174,8 @@ object O2 {
 
     val O2_CLIENT = "oa"
 
+    // 极速打卡的广播action
+    const val FAST_CHECK_IN_RECEIVER_ACTION = "net.o2oa.android.fast.check.in"
+    const val FAST_CHECK_IN_RECORD_TIME_KEY = "recordTimeKey"
 
 }

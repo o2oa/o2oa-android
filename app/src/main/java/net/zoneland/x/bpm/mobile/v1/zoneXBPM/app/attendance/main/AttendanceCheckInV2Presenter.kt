@@ -37,18 +37,18 @@ class AttendanceCheckInV2Presenter : BasePresenterImpl<AttendanceCheckInV2Contra
                 .o2Subscribe {
                     onNext {
                         if (it != null && it.data != null ) {
-                            mView?.checkInPostResponse(true)
+                            mView?.checkInPostResponse(true, null)
                         } else {
-                            mView?.checkInPostResponse(false)
+                            mView?.checkInPostResponse(false, null)
                         }
                     }
                     onError { e, _ ->
                         XLog.error("", e)
-                        mView?.checkInPostResponse(false)
+                        mView?.checkInPostResponse(false, e?.message)
                     }
                 }
         } else {
-            mView?.checkInPostResponse(false)
+            mView?.checkInPostResponse(false, null)
         }
     }
 }

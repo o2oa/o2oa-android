@@ -139,7 +139,7 @@ public class DateHelper {
      */
     public static Date addMinute(Date date, int min) {
         long time = date.getTime();
-        long milliseconds = (time + (min * 60 * 1000));
+        long milliseconds = (time + ((long) min * 60 * 1000));
         Calendar d = Calendar.getInstance();
         d.setTimeInMillis(milliseconds);
         return d.getTime();

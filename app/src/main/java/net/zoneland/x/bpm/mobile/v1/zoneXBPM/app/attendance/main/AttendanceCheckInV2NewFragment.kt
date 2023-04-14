@@ -53,7 +53,7 @@ class AttendanceCheckInV2NewFragment : BaseMVPViewPagerFragment<AttendanceCheckI
 
     private val workplaceList = ArrayList<AttendanceV2WorkPlace>()
     private val recordList = ArrayList<AttendanceV2CheckItemData>()
-    private var lastRecord: AttendanceV2CheckItemData? = null
+    private var nextCheckInRecord: AttendanceV2CheckItemData? = null
     private var needCheckIn = false //是否可打卡
     private var allowFieldWork = false // 是否允许外勤
     private var requiredFieldWorkRemarks = false // 外勤是否必须打卡
@@ -191,8 +191,8 @@ class AttendanceCheckInV2NewFragment : BaseMVPViewPagerFragment<AttendanceCheckI
             // 打卡记录
             val checkItemList = data.checkItemList ?: ArrayList()
             // 是否最后一条已经打卡过的数据
-            lastRecord = checkItemList.firstOrNull { element -> element.checkInResult == AttendanceV2RecordResult.PreCheckIn.value }
-            needCheckIn = lastRecord != null
+            nextCheckInRecord = checkItemList.firstOrNull { element -> element.checkInResult == AttendanceV2RecordResult.PreCheckIn.value }
+            needCheckIn = nextCheckInRecord != null
             for ((index, item) in checkItemList.withIndex()) {
                 var isRecord = false
                 var recordTime = ""
@@ -237,13 +237,13 @@ class AttendanceCheckInV2NewFragment : BaseMVPViewPagerFragment<AttendanceCheckI
         recordAdapter.notifyDataSetChanged()
     }
 
-    override fun checkInPostResponse(result: Boolean) {
+    override fun checkInPostResponse(result: Boolean, message: String?) {
         tv_attendance_check_in_new_check_in?.setText(R.string.attendance_check_in_knock)
         tv_attendance_check_in_new_now_time?.visible()
         if (result) {
             XToast.toastShort(R.string.attendance_v2_check_in_success)
-        } else {
-            XToast.toastShort(R.string.attendance_v2_check_in_fail)
+        } else if (!TextUtils.isEmpty(message)) {
+            XToast.toastShort(message!!)
         }
         mPresenter.preCheckDataLoad()
     }
@@ -280,18 +280,48 @@ class AttendanceCheckInV2NewFragment : BaseMVPViewPagerFragment<AttendanceCheckI
             XToast.toastShort(activity!!, R.string.attendance_message_no_location_info)
             return
         }
-        if (needCheckIn && lastRecord != null) {
+        if (needCheckIn && nextCheckInRecord != null) {
+            // 是否在打卡限制时间内
+            val preBeforeTime = nextCheckInRecord?.preDutyTimeBeforeLimit ?: ""
+            val preAfterTime = nextCheckInRecord?.preDutyTimeAfterLimit ?: ""
+            if (!checkLimitTime(preBeforeTime, preAfterTime)) {
+                return
+            }
             tv_attendance_check_in_new_check_in.text = getString(R.string.attendance_check_in_knock_loading)
             tv_attendance_check_in_new_now_time.gone()
             if (isInCheckInPositionRange && checkInPosition != null) { // 正常打卡
-                postCheckIn(lastRecord!!, checkInPosition!!.id, false, null)
+                postCheckIn(nextCheckInRecord!!, checkInPosition!!.id, false, null)
             } else {
                 // 外勤
-                outSide(lastRecord!!)
+                outSide(nextCheckInRecord!!)
             }
         } else {
-            XLog.info("不允许打卡或lastRecord is null")
+            XLog.info("不允许打卡或nextCheckInRecord is null")
         }
+    }
+
+
+    // 是否有打卡时间限制
+    private fun checkLimitTime(preDutyTimeBeforeLimit: String, preDutyTimeAfterLimit: String): Boolean {
+        if (!TextUtils.isEmpty(preDutyTimeBeforeLimit)) {
+            val now = Date()
+            val today = DateHelper.nowByFormate("yyyy-MM-dd")
+            val beforeTime = DateHelper.convertStringToDate("$today $preDutyTimeBeforeLimit:00")
+            if (beforeTime != null && now.time <  beforeTime.time) {
+                XToast.toastShort(getString(R.string.attendance_v2_not_in_check_in_time, preDutyTimeBeforeLimit, preDutyTimeAfterLimit))
+                return false
+            }
+        }
+        if (!TextUtils.isEmpty(preDutyTimeAfterLimit)) {
+            val now = Date()
+            val today = DateHelper.nowByFormate("yyyy-MM-dd")
+            var afterTime = DateHelper.convertStringToDate("$today $preDutyTimeAfterLimit:00");
+            if (afterTime != null && now.time > afterTime.time) {
+                XToast.toastShort(getString(R.string.attendance_v2_not_in_check_in_time, preDutyTimeBeforeLimit, preDutyTimeAfterLimit))
+                return false
+            }
+        }
+        return true
     }
 
     /**

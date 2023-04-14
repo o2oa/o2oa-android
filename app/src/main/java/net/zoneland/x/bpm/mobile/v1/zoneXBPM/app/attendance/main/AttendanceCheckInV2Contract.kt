@@ -8,7 +8,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.*
 object AttendanceCheckInV2Contract {
     interface View : BaseView {
         fun preCheckData(data: AttendanceV2PreCheckData?)
-        fun checkInPostResponse(result: Boolean)
+        fun checkInPostResponse(result: Boolean, message: String?)
     }
 
     interface Presenter : BasePresenter<View> {

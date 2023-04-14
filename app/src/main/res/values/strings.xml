@@ -591,6 +591,8 @@
     <string name="attendance_v2_check_in_fail">打卡失败！</string>
     <string name="attendance_v2_need_check_in">待打卡</string>
 
+    <string name="attendance_v2_not_in_check_in_time">当前时间不在可打卡范围内[ %1$s - %2$s ]</string>
+
     <string name="right_arrow">&gt;</string>
 
     <!-- bbs -->

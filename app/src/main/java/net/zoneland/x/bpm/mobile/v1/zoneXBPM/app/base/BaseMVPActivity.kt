@@ -1,15 +1,22 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
+import android.content.Intent
 import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.content.res.Resources
+import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Bundle
 import android.webkit.WebView
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.NotificationCompat
+import com.google.android.exoplayer2.util.NotificationUtil
 import com.wugang.activityresult.library.ActivityResult
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
@@ -196,6 +203,48 @@ abstract class BaseMVPActivity<in V: BaseView, T: BasePresenter<V>>: AppCompatAc
                     "}" +
                     "})()"
         )
+    }
+
+    private val mNotificationManager: NotificationManager by lazy { getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager }
+    private val mNormalDefaultChannelId = "o2oa_base_notify_default_channel"
+    private val mNormalDefaultChannelName = "普通"
+    private val mNormalHighChannelId = "o2oa_base_notify_High_channel"
+    private val mNormalHighChannelName = "重要"
+    private val mNormalNotificationId = 1024 // 应用内通知id
+    /**
+     * app通知
+     * @param importance  NotificationManager.IMPORTANCE_LOW NotificationManager.IMPORTANCE_HIGH
+     */
+    fun baseNotify(title: String, content:String, importance: Int = 0 ) {
+        XLog.debug("发送通知，$title , $content , $importance")
+        var channelId = mNormalDefaultChannelId
+        // 适配8.0及以上 创建渠道
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            var imp = importance
+            if (imp == 0) {
+                imp = NotificationManager.IMPORTANCE_DEFAULT
+            }
+            if (imp == NotificationManager.IMPORTANCE_HIGH) {
+                channelId = mNormalHighChannelId
+            }
+            val channelName = if (imp == NotificationManager.IMPORTANCE_HIGH) {
+                mNormalHighChannelName
+            } else {
+                mNormalDefaultChannelName
+            }
+            val channel = NotificationChannel(channelId, channelName, imp)
+            mNotificationManager.createNotificationChannel(channel)
+        }
+        // 构建配置
+        val mBuilder = NotificationCompat.Builder(this, channelId)
+            .setContentTitle(title) // 标题
+            .setContentText(content) // 文本
+            .setSmallIcon(R.mipmap.logo) // 小图标
+            .setPriority(NotificationCompat.PRIORITY_DEFAULT) // 7.0 设置优先级
+            .setAutoCancel(true) // 是否自动消失（点击）or mManager.cancel(mNormalNotificationId)、cancelAll、setTimeoutAfter()
+        // 发起通知
+        mNotificationManager.notify(mNormalNotificationId, mBuilder.build())
+
     }
 
 }

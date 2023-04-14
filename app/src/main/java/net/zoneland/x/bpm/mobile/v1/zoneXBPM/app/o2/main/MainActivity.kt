@@ -2,6 +2,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main
 
 import android.Manifest
 import android.annotation.TargetApi
+import android.app.NotificationManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
 import android.content.*
@@ -19,8 +20,10 @@ import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main_bottom_bar_image.*
+import kotlinx.coroutines.*
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.attendance.FastCheckInManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.O2IM
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.fm.O2IMConversationFragment
@@ -58,7 +61,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
     private var mCurrentSelectIndex = 2
     private var simpleMode = false
     private var appExitAlert = ""
-
+    private var fastCheckInManager: FastCheckInManager? = null
 
     var pictureLoaderService: PictureLoaderService? = null
     private val doubleClickExitHelper: O2DoubleClickExit by lazy { O2DoubleClickExit(this) }
@@ -254,7 +257,13 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         if (BuildConfig.InnerServer) {
             checkAppUpdateInner()
         }
+        // 极速打卡
+        if (fastCheckInManager == null) {
+            fastCheckInManager = FastCheckInManager()
+        }
+        fastCheckInManager?.start()
     }
+
 
 
     override fun onPause() {
@@ -277,6 +286,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         if (mReceiver != null) {
             unregisterReceiver(mReceiver)
         }
+        fastCheckInManager?.stopAll()
         super.onDestroy()
     }
 
@@ -634,6 +644,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
     private fun registerBroadcast() {
         mReceiver = IMMessageReceiver()
         val filter = IntentFilter(O2IM.IM_Message_Receiver_Action)
+        filter.addAction(O2.FAST_CHECK_IN_RECEIVER_ACTION) // 添加一个广播 接收极速打卡成功的消息
         registerReceiver(mReceiver, filter)
     }
 
@@ -645,18 +656,48 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         addUnreadMsg()
     }
 
+    private fun testNotify() {
+        XLog.debug("测试block 前。。。。。")
+        runBlocking {
+            launch {
+                XLog.debug("开始测试通知。。。。。")
+                delay(3000L)
+                XLog.debug("延迟3秒后。。。。")
+            }
+        }
+        //
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            baseNotify("考勤通知", "09:10 极速打卡 成功", NotificationManager.IMPORTANCE_HIGH)
+        } else {
+            baseNotify("考勤通知", "09:10 极速打卡 成功 普通")
+        }
+        XLog.debug("测试block 后。。。。。")
+    }
+
     inner class IMMessageReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            val body = intent?.getStringExtra(O2IM.IM_Message_Receiver_name)
-            if (body != null && body.isNotEmpty()) {
-                XLog.debug("接收到im消息, $body")
-                try {
-                    val message = O2SDKManager.instance().gson.fromJson<IMMessage>(body, IMMessage::class.java)
-                    receiveIMMessage(message)
-                } catch (e: Exception) {
-                    XLog.error("", e)
+            if (intent?.action == O2.FAST_CHECK_IN_RECEIVER_ACTION) { //
+                val time = intent.getStringExtra(O2.FAST_CHECK_IN_RECORD_TIME_KEY) ?: ""
+                XLog.info("发送通知，time $time")
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                    baseNotify("考勤通知", "$time 极速打卡 成功", NotificationManager.IMPORTANCE_HIGH)
+                } else {
+                    baseNotify("考勤通知", "$time 极速打卡 成功")
                 }
-
+            } else if (intent?.action == O2IM.IM_Message_Receiver_Action) {
+                val body = intent.getStringExtra(O2IM.IM_Message_Receiver_name)
+                if (body != null && body.isNotEmpty()) {
+                    XLog.debug("接收到im消息, $body")
+                    try {
+                        val message = O2SDKManager.instance().gson.fromJson<IMMessage>(
+                            body,
+                            IMMessage::class.java
+                        )
+                        receiveIMMessage(message)
+                    } catch (e: Exception) {
+                        XLog.error("", e)
+                    }
+                }
             }
         }
 

@@ -112,6 +112,7 @@ data class AttendanceV2CheckInBody(
     var recordAddress: String = "", //打卡地点描述, 可以为空.
     var longitude: String = "", //经度
     var latitude: String = "", //纬度
+    var sourceType: String = "USER_CHECK", // FAST_CHECK
 )
 
 enum class AttendanceV2RecordCheckInType(val value: String, val label: String) {
