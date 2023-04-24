@@ -3,6 +3,6 @@
   "name" : "develop",
   "centerHost" : "qywx.o2oa.net",
   "centerContext" : "/x_program_center",
-  "centerPort" : 20030,
+  "centerPort" : 80,
   "httpProtocol" : "http"
 }

@@ -1,7 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main
 
 import android.Manifest
-import android.annotation.TargetApi
 import android.app.NotificationManager
 import android.app.job.JobInfo
 import android.app.job.JobScheduler
@@ -18,9 +17,12 @@ import android.view.KeyEvent
 import android.view.View
 import androidx.annotation.RequiresApi
 import androidx.fragment.app.Fragment
+import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main_bottom_bar_image.*
-import kotlinx.coroutines.*
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.attendance.FastCheckInManager
@@ -261,7 +263,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         if (fastCheckInManager == null) {
             fastCheckInManager = FastCheckInManager()
         }
-        fastCheckInManager?.start()
+        fastCheckInManager?.start(this)
     }
 
 
@@ -284,7 +286,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
     override fun onDestroy() {
         unbindService(serviceConnect)
         if (mReceiver != null) {
-            unregisterReceiver(mReceiver)
+            LocalBroadcastManager.getInstance(O2App.instance.applicationContext).unregisterReceiver(mReceiver!!)
         }
         fastCheckInManager?.stopAll()
         super.onDestroy()
@@ -645,7 +647,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         mReceiver = IMMessageReceiver()
         val filter = IntentFilter(O2IM.IM_Message_Receiver_Action)
         filter.addAction(O2.FAST_CHECK_IN_RECEIVER_ACTION) // 添加一个广播 接收极速打卡成功的消息
-        registerReceiver(mReceiver, filter)
+        LocalBroadcastManager.getInstance(O2App.instance.applicationContext).registerReceiver(mReceiver!!, filter)
     }
 
     private fun receiveIMMessage(message: IMMessage) {

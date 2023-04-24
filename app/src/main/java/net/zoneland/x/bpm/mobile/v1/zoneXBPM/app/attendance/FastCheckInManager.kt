@@ -1,7 +1,11 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.attendance
 
+import android.Manifest
+import android.app.Activity
 import android.content.Intent
+import android.net.Uri
 import android.os.CountDownTimer
+import android.provider.Settings
 import android.text.TextUtils
 import androidx.localbroadcastmanager.content.LocalBroadcastManager
 import com.baidu.location.BDAbstractLocationListener
@@ -12,13 +16,14 @@ import com.baidu.mapapi.model.LatLng
 import com.baidu.mapapi.utils.DistanceUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2App
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.service.AttendanceAssembleControlService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
 import java.util.*
@@ -36,7 +41,7 @@ class FastCheckInManager() {
     private var isInCheckInPositionRange = false
 
     private val workplaceList = ArrayList<AttendanceV2WorkPlace>()
-    private val recordList = ArrayList<AttendanceV2CheckItemData>()
+//    private val recordList = ArrayList<AttendanceV2CheckItemData>()
     private var nextCheckInRecord: AttendanceV2CheckItemData? = null // 需要打卡的数据
     private var needCheckIn = false //是否可打卡
     private var allowFieldWork = false // 是否允许外勤
@@ -60,7 +65,7 @@ class FastCheckInManager() {
     /**
      * 启动
      */
-    fun start() {
+    fun start(activity: Activity) {
         if (isChecking) {
             XLog.info("还没有结束 不执行！！！！")
             return
@@ -77,10 +82,24 @@ class FastCheckInManager() {
                         if (config != null && (config.onDutyFastCheckInEnable || config.offDutyFastCheckInEnable)) {
                             onDutyFastCheckInEnable= config.onDutyFastCheckInEnable
                             offDutyFastCheckInEnable = config.offDutyFastCheckInEnable
-                            // 开始计算逻辑 进行定位和打卡
-                            startLocation()
-                            startTimer()
-                            preCheckDataLoad()
+                            PermissionRequester(activity).request(Manifest.permission.ACCESS_FINE_LOCATION)
+                                .o2Subscribe {
+                                    onNext {  (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
+                                        if (!granted){
+                                            O2DialogSupport.openAlertDialog(activity, "需要定位权限, 去设置", {
+                                                isChecking = false
+                                                val packageUri = Uri.parse("package:${activity.packageName}")
+                                                activity.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageUri))
+                                            })
+                                        }else{
+                                            startAfterPermission()
+                                        }
+                                    }
+                                    onError { e, _ ->
+                                        XLog.error( "检查权限出错", e)
+                                    }
+                                }
+
                         }
                     }
                     onError { e, _ ->
@@ -102,6 +121,13 @@ class FastCheckInManager() {
         isChecking = false
     }
 
+    private fun startAfterPermission() {
+        // 开始计算逻辑 进行定位和打卡
+        startLocation()
+        startTimer()
+        preCheckDataLoad()
+    }
+
     /**
      * 开始倒计时 5分钟后没有结果直接停止
      */
@@ -110,8 +136,8 @@ class FastCheckInManager() {
         // 因此，设置间隔的时候，默认减去了10ms，从而减去误差。
         // 经过以上的微调，最后一秒的显示时间会由于10ms延迟的积累，导致显示时间比1s长max*10ms的时间，其他时间的显示正常,总时间正常
         if (countDownTimer == null) {
-            // 5分钟倒计时
-            countDownTimer = object : CountDownTimer((60 * 5) * 1000,   1000 - 10) {
+            // 2分钟倒计时
+            countDownTimer = object : CountDownTimer((60 * 2) * 1000,   1000 - 10) {
                 override fun onTick(time: Long) {
                     XLog.debug( "极速打卡倒计时, time = $time text = ${(time + 15) / 1000}"  )
                 }
@@ -304,48 +330,48 @@ class FastCheckInManager() {
             // 是否最后一条已经打卡过的数据
             nextCheckInRecord = checkItemList.firstOrNull { element -> element.checkInResult == AttendanceV2RecordResult.PreCheckIn.value }
             needCheckIn = nextCheckInRecord != null
-            for ((index, item) in checkItemList.withIndex()) {
-                var isRecord = false
-                var recordTime = ""
-                if (item.checkInResult != AttendanceV2RecordResult.PreCheckIn.value) {
-                    isRecord = true
-                    var signTime = item.recordDate
-                    if (signTime.length > 16) {
-                        signTime = signTime.substring(11, 16);
-                    }
-                    var status = O2App.instance.getString(R.string.attendance_v2_check_in_completed)
-                    if (item.checkInResult != AttendanceV2RecordResult.Normal.value) {
-                        status = item.resultText()
-                    }
-                    recordTime = "$status $signTime"
-                }
-                item.recordTime = recordTime
-                item.isRecord = isRecord // 是否已经打卡
-                item.checkInTypeString =  if(item.checkInType == AttendanceV2RecordCheckInType.OnDuty.value) { AttendanceV2RecordCheckInType.OnDuty.label }else{ AttendanceV2RecordCheckInType.OffDuty.label }
-                var preDutyTime = item.preDutyTime
-                if (TextUtils.isEmpty(item.shiftId)) {
-                    preDutyTime = "" // 如果没有班次信息 表示 自由工时 或者 休息日 不显示 打卡时间
-                }
-                item.preDutyTime = preDutyTime
-                // 处理是否是最后一个已经打卡的记录
-                if (item.checkInResult != AttendanceV2RecordResult.PreCheckIn.value) {
-                    if (index == checkItemList.size - 1) { // 最后一条
-                        item.isLastRecord = true // 最后一条已经打卡的记录
-                    } else {
-                        val nextItem = checkItemList[index+1]
-                        if (nextItem.checkInResult == AttendanceV2RecordResult.PreCheckIn.value) {
-                            item.isLastRecord = true
-                        }
-                    }
-                }
-                checkItemList[index] = item
-            }
-            recordList.clear()
-            recordList.addAll(checkItemList)
+//            for ((index, item) in checkItemList.withIndex()) {
+//                var isRecord = false
+//                var recordTime = ""
+//                if (item.checkInResult != AttendanceV2RecordResult.PreCheckIn.value) {
+//                    isRecord = true
+//                    var signTime = item.recordDate
+//                    if (signTime.length > 16) {
+//                        signTime = signTime.substring(11, 16);
+//                    }
+//                    var status = O2App.instance.getString(R.string.attendance_v2_check_in_completed)
+//                    if (item.checkInResult != AttendanceV2RecordResult.Normal.value) {
+//                        status = item.resultText()
+//                    }
+//                    recordTime = "$status $signTime"
+//                }
+//                item.recordTime = recordTime
+//                item.isRecord = isRecord // 是否已经打卡
+//                item.checkInTypeString =  if(item.checkInType == AttendanceV2RecordCheckInType.OnDuty.value) { AttendanceV2RecordCheckInType.OnDuty.label }else{ AttendanceV2RecordCheckInType.OffDuty.label }
+//                var preDutyTime = item.preDutyTime
+//                if (TextUtils.isEmpty(item.shiftId)) {
+//                    preDutyTime = "" // 如果没有班次信息 表示 自由工时 或者 休息日 不显示 打卡时间
+//                }
+//                item.preDutyTime = preDutyTime
+//                // 处理是否是最后一个已经打卡的记录
+//                if (item.checkInResult != AttendanceV2RecordResult.PreCheckIn.value) {
+//                    if (index == checkItemList.size - 1) { // 最后一条
+//                        item.isLastRecord = true // 最后一条已经打卡的记录
+//                    } else {
+//                        val nextItem = checkItemList[index+1]
+//                        if (nextItem.checkInResult == AttendanceV2RecordResult.PreCheckIn.value) {
+//                            item.isLastRecord = true
+//                        }
+//                    }
+//                }
+//                checkItemList[index] = item
+//            }
+//            recordList.clear()
+//            recordList.addAll(checkItemList)
         }
 
-        // 如果不能打卡了 就结束
-        if (!needCheckIn) {
+        // 如果不能打卡了 就结束 固定班制 才有打卡时间 才能进行极速打卡
+        if (!needCheckIn && nextCheckInRecord?.groupCheckType != "1") {
             XLog.info("今天无需打卡， 全部停止。")
             stopAll()
         } else {

@@ -66,8 +66,7 @@ class MainPresenter : BasePresenterImpl<MainContract.View>(), MainContract.Prese
                     .observeOn(AndroidSchedulers.mainThread())
                     .o2Subscribe {
                         onNext {
-                            val data = it.data
-                            if (it.data?.version != null) {
+                            if (it.data?.version == "2") {
                                 O2SDKManager.instance().prefs().edit {
                                     putString(O2.PRE_ATTENDANCE_VERSION_KEY, "2")
                                 }

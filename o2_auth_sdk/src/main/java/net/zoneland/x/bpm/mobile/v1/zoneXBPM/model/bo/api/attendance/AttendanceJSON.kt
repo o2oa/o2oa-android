@@ -31,6 +31,7 @@ data class AttendanceV2CheckItemData(
     var description: String = "",
     var groupId: String = "",
     var groupName: String = "",
+    var groupCheckType: String = "", // 考勤组的类型，1：固定班制
     var shiftId: String = "",
     var shiftName: String = "",
     var createTime: String = "",
