@@ -260,10 +260,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
             checkAppUpdateInner()
         }
         // 极速打卡
-        if (fastCheckInManager == null) {
-            fastCheckInManager = FastCheckInManager()
-        }
-        fastCheckInManager?.start(this)
+        startFastCheckIn()
     }
 
 
@@ -288,7 +285,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         if (mReceiver != null) {
             LocalBroadcastManager.getInstance(O2App.instance.applicationContext).unregisterReceiver(mReceiver!!)
         }
-        fastCheckInManager?.stopAll()
+        stopFastCheckIn()
         super.onDestroy()
     }
 
@@ -349,6 +346,24 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
             R.id.icon_main_bottom_app -> selectTab(3)
             R.id.icon_main_bottom_setting -> selectTab(4)
         }
+    }
+
+    /**
+     * 极速打卡启动
+     */
+    private fun startFastCheckIn() {
+        if (fastCheckInManager == null) {
+            fastCheckInManager = FastCheckInManager()
+        }
+        fastCheckInManager?.start(this)
+    }
+
+    /**
+     * 极速打卡关闭
+     * 退出登录需要用到
+     */
+    fun stopFastCheckIn() {
+        fastCheckInManager?.stopAll()
     }
 
     //刷新ActionBar的菜单按钮 应用页面使用

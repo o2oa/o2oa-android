@@ -121,6 +121,7 @@ class SettingsFragment : BaseMVPViewPagerFragment<SettingsContract.View, Setting
             mPresenter.jPushUnBindDevice()
             if (activity is MainActivity) {
                 (activity as MainActivity).webSocketClose()
+                (activity as MainActivity).stopFastCheckIn()
             }
             mPresenter.logout()
         })
