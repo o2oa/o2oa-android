@@ -4,24 +4,19 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import android.text.TextUtils
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.wugang.activityresult.library.ActivityResult
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.ContactPickerActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.*
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2FileDownloadHelper
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.cache.MD5Util
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.O2WebviewDownloadListener.DownloadFileForm
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.LoadingDialog
@@ -158,7 +153,8 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
                 if (FileExtensionHelper.isImageFromFileExtension(file.extension)) {
                     BigImageViewActivity.startLocalFile(activity, file.absolutePath)
                 } else {
-                    activity.go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
+//                    activity.go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
+                    AndroidUtils.openFileWithDefaultApp(activity, file)
                 }
             }
         }

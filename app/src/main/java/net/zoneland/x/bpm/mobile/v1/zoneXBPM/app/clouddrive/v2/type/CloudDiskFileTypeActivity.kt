@@ -12,8 +12,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.VideoPlayerActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskFileDownloadHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.yunpan.FileJson
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.MiscUtilK
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
@@ -165,7 +165,8 @@ class CloudDiskFileTypeActivity : BaseMVPActivity<CloudDiskFileTypeContract.View
                 if (item.type == FileTypeEnum.movie.key) {
                     VideoPlayerActivity.startPlay(this@CloudDiskFileTypeActivity, file.absolutePath, item.name)
                 }else {
-                    go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
+//                    go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
+                    AndroidUtils.openFileWithDefaultApp(this, file)
                 }
             }else {
                 XToast.toastShort(this, "打开文件异常！")

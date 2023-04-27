@@ -5,11 +5,9 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_logs.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.DividerItemDecoration
 import java.io.File
 
@@ -33,7 +31,8 @@ class LogsActivity : BaseMVPActivity<LogsContract.View, LogsContract.Presenter>(
         rv_logs_list.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST))
         rv_logs_list.adapter = adapter
         adapter.setOnItemClickListener { _, position ->
-            go<FileReaderActivity>(FileReaderActivity.startBundle(this.list[position].absolutePath))
+//            go<FileReaderActivity>(FileReaderActivity.startBundle(this.list[position].absolutePath))
+            AndroidUtils.openFileWithDefaultApp(this, this.list[position])
         }
         mPresenter.loadLogFileList()
     }

@@ -1,11 +1,11 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2
 
 import android.os.Bundle
+import android.view.KeyEvent
+import android.view.View
 import androidx.constraintlayout.widget.ConstraintSet
 import androidx.transition.AutoTransition
 import androidx.transition.TransitionManager
-import android.view.KeyEvent
-import android.view.View
 import kotlinx.android.synthetic.main.activity_cloud_disk.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.VideoPlayerActivity
@@ -14,8 +14,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.f.FileFolderListF
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.share.CloudShareActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.type.CloudDiskFileTypeActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.type.FileTypeEnum
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.CloudDiskItem
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.addFragmentSafely
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
@@ -97,7 +97,8 @@ class CloudDiskActivity : BaseMVPActivity<CloudDiskContract.View, CloudDiskContr
                 if (item.type == FileTypeEnum.movie.key) {
                     VideoPlayerActivity.startPlay(this, file.absolutePath, item.name)
                 }else {
-                    go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
+//                    go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
+                    AndroidUtils.openFileWithDefaultApp(this, file)
                 }
             }else {
                 XToast.toastShort(this, R.string.message_cloud_open_file_fail)

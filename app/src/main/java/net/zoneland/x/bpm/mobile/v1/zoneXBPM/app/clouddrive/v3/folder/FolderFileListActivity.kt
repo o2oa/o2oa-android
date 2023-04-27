@@ -23,12 +23,9 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskFileDown
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.picker.CloudDiskFolderPickerActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.type.FileTypeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.FileBreadcrumbBean
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.yunpan.CloudFileV3Data
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.yunpan.FileJson
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.yunpan.FolderJson
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.CloudDiskItem
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.MiscUtilK
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
@@ -39,7 +36,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
-import java.util.HashMap
 
 class FolderFileListActivity : BaseMVPActivity<FolderFileListContract.View, FolderFileListContract.Presenter>(), FolderFileListContract.View {
     override var mPresenter: FolderFileListContract.Presenter = FolderFileListPresenter()
@@ -524,7 +520,8 @@ class FolderFileListActivity : BaseMVPActivity<FolderFileListContract.View, Fold
                 if (file.type == FileTypeEnum.movie.key) {
                     VideoPlayerActivity.startPlay(this, f.absolutePath, file.name)
                 }else {
-                    go<FileReaderActivity>(FileReaderActivity.startBundle(f.absolutePath))
+//                    go<FileReaderActivity>(FileReaderActivity.startBundle(f.absolutePath))
+                    AndroidUtils.openFileWithDefaultApp(this, f)
                 }
             }else {
                 XToast.toastShort(this, R.string.message_cloud_open_file_fail)

@@ -16,32 +16,26 @@ import android.webkit.WebViewClient
 import androidx.core.content.ContextCompat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
-import com.wugang.activityresult.library.ActivityResult
 import kotlinx.android.synthetic.main.activity_cms_web_view_document.*
-import kotlinx.android.synthetic.main.activity_cms_web_view_document.bottom_operate_button_layout
-import kotlinx.android.synthetic.main.activity_cms_web_view_document.fl_bottom_operation_bar
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.calendar.CalendarMainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.fm.O2IMConversationPickerActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.main.MeetingMainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.ReadCompletedListActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.ReadListActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.TaskCompletedListActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.TaskListActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.*
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.DownloadDocument
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.JSInterfaceO2mBiz
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.JSInterfaceO2mNotification
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.JSInterfaceO2mUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.CMSWorkControl
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMConversationInfo
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
@@ -56,8 +50,6 @@ import java.io.File
 import java.io.IOException
 import java.net.URLEncoder
 import java.util.*
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
 
 
 class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewContract.Presenter>(), CMSWebViewContract.View {
@@ -310,7 +302,8 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
 //                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
                 BigImageViewActivity.startLocalFile(this, file.absolutePath)
             }else {
-                go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
+//                go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
+                AndroidUtils.openFileWithDefaultApp(this, file)
             }
         }
     }

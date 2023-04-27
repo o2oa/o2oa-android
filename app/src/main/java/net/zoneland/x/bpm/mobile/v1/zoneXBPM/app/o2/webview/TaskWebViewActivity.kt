@@ -17,7 +17,8 @@ import android.webkit.JavascriptInterface
 import android.webkit.SslErrorHandler
 import android.webkit.WebView
 import android.webkit.WebViewClient
-import android.widget.*
+import android.widget.LinearLayout
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
@@ -36,7 +37,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.ReadCompletedListAct
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.ReadListActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.TaskCompletedListActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.TaskListActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.WorkNewActionItem
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.WorkControl
@@ -909,8 +909,8 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             if (FileExtensionHelper.isImageFromFileExtension(file.extension)) {
 //                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
                 BigImageViewActivity.startLocalFile(this, file.absolutePath)
-            } else if (FileExtensionHelper.isFileTBSCanOpen(file.extension)) {
-                go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
+//            } else if (FileExtensionHelper.isFileTBSCanOpen(file.extension)) {
+//                go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
             } else {
                 AndroidUtils.openFileWithDefaultApp(this, file)
             }

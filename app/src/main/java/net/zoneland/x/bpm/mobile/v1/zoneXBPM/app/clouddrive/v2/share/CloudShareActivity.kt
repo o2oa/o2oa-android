@@ -10,24 +10,17 @@ import android.widget.TextView
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_cloud_share.*
-import kotlinx.android.synthetic.main.fragment_file_folder_list.*
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.VideoPlayerActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskFileDownloadHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskShareFileDownloadHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.f.CloudDiskItemAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.f.FileFolderListFragment
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.type.FileTypeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.FileBreadcrumbBean
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.CloudDiskItem
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.MiscUtilK
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
@@ -333,7 +326,8 @@ class CloudShareActivity : BaseMVPActivity<CloudShareContract.View, CloudShareCo
                         BigImageViewActivity.startLocalFile(this, file.absolutePath)
                     }
                     else -> {
-                        go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
+//                        go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
+                        AndroidUtils.openFileWithDefaultApp(this, file)
                     }
                 }
             }else {
