@@ -17,7 +17,6 @@ ext {
     baiduSpeechAppKey = ""
     baiduMapAppKey = ""
     jpushIMPassword = ""
-    buglyAppId = ""
     xiaomiAppId=""
     xiaomiAppKey=""
     oppoAppKey=""
@@ -43,7 +42,6 @@ def loadProperties() {
     project.baiduSpeechSecret = project.property("BAIDU_SPEECH_SECRET").toString()
     project.baiduSpeechAppKey = project.property("BAIDU_SPEECH_APPKEY").toString()
     project.baiduMapAppKey = project.property("BAIDU_MAP_APPKEY").toString()
-    project.buglyAppId = project.property("BUGLY_APPID").toString()
     project.xiaomiAppId=project.property("XIAOMI_APPID").toString()
     project.xiaomiAppKey=project.property("XIAOMI_APPKEY").toString()
 //    project.oppoAppKey=project.property("OPPO_APPKEY").toString()
@@ -135,8 +133,7 @@ android {
                                     BAIDU_SPEECH_APPID : project.baiduSpeechAppId,
                                     BAIDU_SPEECH_SECRET: project.baiduSpeechSecret,
                                     BAIDU_SPEECH_APPKEY: project.baiduSpeechAppKey,
-                                    BAIDU_MAP_APPKEY   : project.baiduMapAppKey,
-                                    BUGLY_APPID        : project.buglyAppId]
+                                    BAIDU_MAP_APPKEY   : project.baiduMapAppKey]
             zipAlignEnabled true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
@@ -154,8 +151,7 @@ android {
                                     BAIDU_SPEECH_APPID : project.baiduSpeechAppId,
                                     BAIDU_SPEECH_SECRET: project.baiduSpeechSecret,
                                     BAIDU_SPEECH_APPKEY: project.baiduSpeechAppKey,
-                                    BAIDU_MAP_APPKEY   : project.baiduMapAppKey,
-                                    BUGLY_APPID        : project.buglyAppId]
+                                    BAIDU_MAP_APPKEY   : project.baiduMapAppKey]
             zipAlignEnabled true
             minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'

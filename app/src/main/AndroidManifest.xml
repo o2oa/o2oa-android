@@ -465,7 +465,7 @@
 
                 <category android:name="${applicationId}" />
             </intent-filter>
-        </receiver> <!-- bugly -->
+        </receiver>
         <!-- 配置APP ID -->
         <meta-data
             android:name="BUGLY_APPID"
