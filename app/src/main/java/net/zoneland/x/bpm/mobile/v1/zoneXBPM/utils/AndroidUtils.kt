@@ -50,7 +50,7 @@ object AndroidUtils {
                     activity.packageName,
                     PackageManager.GET_META_DATA
                 )
-                applicationInfo?.metaData?.getString("BUGLY_APP_CHANNEL") ?: ""
+                applicationInfo?.metaData?.getString("JPUSH_CHANNEL") ?: ""
             }
         } catch(e: Exception) {
             ""

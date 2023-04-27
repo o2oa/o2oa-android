@@ -466,13 +466,7 @@
                 <category android:name="${applicationId}" />
             </intent-filter>
         </receiver>
-        <!-- 配置APP ID -->
-        <meta-data
-            android:name="BUGLY_APPID"
-            android:value="${BUGLY_APPID}" /> <!-- 配置APP渠道号 -->
-        <meta-data
-            android:name="BUGLY_APP_CHANNEL"
-            android:value="${JPUSH_CHANNEL}" />
+
 
         <provider
             android:name="androidx.core.content.FileProvider"
