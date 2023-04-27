@@ -31,7 +31,6 @@ class LogsActivity : BaseMVPActivity<LogsContract.View, LogsContract.Presenter>(
         rv_logs_list.addItemDecoration(DividerItemDecoration(this, DividerItemDecoration.VERTICAL_LIST))
         rv_logs_list.adapter = adapter
         adapter.setOnItemClickListener { _, position ->
-//            go<FileReaderActivity>(FileReaderActivity.startBundle(this.list[position].absolutePath))
             AndroidUtils.openFileWithDefaultApp(this, this.list[position])
         }
         mPresenter.loadLogFileList()

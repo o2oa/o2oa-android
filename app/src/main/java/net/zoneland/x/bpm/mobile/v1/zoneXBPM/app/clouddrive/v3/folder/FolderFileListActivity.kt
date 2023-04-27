@@ -520,7 +520,6 @@ class FolderFileListActivity : BaseMVPActivity<FolderFileListContract.View, Fold
                 if (file.type == FileTypeEnum.movie.key) {
                     VideoPlayerActivity.startPlay(this, f.absolutePath, file.name)
                 }else {
-//                    go<FileReaderActivity>(FileReaderActivity.startBundle(f.absolutePath))
                     AndroidUtils.openFileWithDefaultApp(this, f)
                 }
             }else {

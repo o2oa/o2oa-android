@@ -386,10 +386,6 @@
         <activity android:name=".app.bluetooth.BlueToothBLEClientActivity" />
         <activity android:name=".app.bluetooth.BlueToothBLEServerActivity" />
         <activity
-            android:name=".app.tbs.FileReaderActivity"
-            android:configChanges="orientation"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".flutter.FlutterConnectActivity"
             android:configChanges="orientation"
             android:screenOrientation="portrait" /> <!-- ```````````````````service```````````````````` -->
@@ -497,20 +493,6 @@
             android:name="org.apache.http.legacy"
             android:required="false" />
 
-        <service
-            android:name="com.tencent.smtt.export.external.DexClassLoaderProviderService"
-            android:label="dexopt"
-            android:process=":dexopt" />
-
-        <provider
-            android:name="com.tencent.smtt.utils.FileProvider"
-            android:authorities="${applicationId}.provider"
-            android:exported="false"
-            android:grantUriPermissions="true">
-            <meta-data
-                android:name="android.support.FILE_PROVIDER_PATHS"
-                android:resource="@xml/x5webview_file_paths" />
-        </provider>
     </application>
 
 </manifest>

@@ -904,13 +904,9 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
 
     override fun downloadAttachmentSuccess(file: File) {
         hideLoadingDialog()
-//        if (file.exists()) AndroidUtils.openFileWithDefaultApp(this, file)
         if (file.exists()){
             if (FileExtensionHelper.isImageFromFileExtension(file.extension)) {
-//                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
                 BigImageViewActivity.startLocalFile(this, file.absolutePath)
-//            } else if (FileExtensionHelper.isFileTBSCanOpen(file.extension)) {
-//                go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
             } else {
                 AndroidUtils.openFileWithDefaultApp(this, file)
             }

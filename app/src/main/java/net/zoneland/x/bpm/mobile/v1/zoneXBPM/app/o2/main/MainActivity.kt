@@ -40,7 +40,6 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2DoubleClickExit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.tbs.WordReadHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.GrayFrameLayout
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2AlertIconEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
@@ -250,10 +249,6 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         // 清除通知
         XLog.info("onResume ... 清除通知！！")
         O2App.instance.clearAllNotification()
-
-        // 触发一次 tbs 内核下载
-        val isX5Init = WordReadHelper.getInstance().initFinish()
-        XLog.info("x5内核是否已经完成，$isX5Init")
 
         // 检查更新
         if (BuildConfig.InnerServer) {

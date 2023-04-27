@@ -299,10 +299,8 @@ class CMSWebViewActivity : BaseMVPActivity<CMSWebViewContract.View, CMSWebViewCo
         hideLoadingDialog()
         if (file.exists()){
             if (FileExtensionHelper.isImageFromFileExtension(file.extension)) {
-//                go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
                 BigImageViewActivity.startLocalFile(this, file.absolutePath)
             }else {
-//                go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
                 AndroidUtils.openFileWithDefaultApp(this, file)
             }
         }

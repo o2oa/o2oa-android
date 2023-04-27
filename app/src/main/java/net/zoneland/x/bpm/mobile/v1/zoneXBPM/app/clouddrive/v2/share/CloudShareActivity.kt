@@ -326,7 +326,6 @@ class CloudShareActivity : BaseMVPActivity<CloudShareContract.View, CloudShareCo
                         BigImageViewActivity.startLocalFile(this, file.absolutePath)
                     }
                     else -> {
-//                        go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
                         AndroidUtils.openFileWithDefaultApp(this, file)
                     }
                 }

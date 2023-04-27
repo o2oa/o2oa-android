@@ -78,10 +78,8 @@ class O2WebviewDownloadListener(val activity: Activity) : DownloadListener {
         ac?.runOnUiThread {
             if (file.exists()) {
                 if (FileExtensionHelper.isImageFromFileExtension(file.extension)) {
-//                    ac.go<LocalImageViewActivity>(LocalImageViewActivity.startBundle(file.absolutePath))
                     BigImageViewActivity.startLocalFile(ac, file.absolutePath)
                 } else {
-//                    ac.go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
                     AndroidUtils.openFileWithDefaultApp(ac, file)
                 }
             }

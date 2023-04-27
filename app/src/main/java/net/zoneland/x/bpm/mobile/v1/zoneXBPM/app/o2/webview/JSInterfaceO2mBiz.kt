@@ -153,7 +153,6 @@ class JSInterfaceO2mBiz  private constructor(val activity: FragmentActivity?) {
                 if (FileExtensionHelper.isImageFromFileExtension(file.extension)) {
                     BigImageViewActivity.startLocalFile(activity, file.absolutePath)
                 } else {
-//                    activity.go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
                     AndroidUtils.openFileWithDefaultApp(activity, file)
                 }
             }

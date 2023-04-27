@@ -97,7 +97,6 @@ class CloudDiskActivity : BaseMVPActivity<CloudDiskContract.View, CloudDiskContr
                 if (item.type == FileTypeEnum.movie.key) {
                     VideoPlayerActivity.startPlay(this, file.absolutePath, item.name)
                 }else {
-//                    go<FileReaderActivity>(FileReaderActivity.startBundle(file.absolutePath))
                     AndroidUtils.openFileWithDefaultApp(this, file)
                 }
             }else {

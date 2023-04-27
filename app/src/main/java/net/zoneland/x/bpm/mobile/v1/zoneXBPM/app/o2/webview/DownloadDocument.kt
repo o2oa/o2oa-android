@@ -1,24 +1,18 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview
 
 import android.app.Activity
-import android.os.Looper
 import android.text.TextUtils
-import com.tencent.smtt.sdk.QbSdk
-import com.tencent.smtt.sdk.ValueCallback
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.tbs.FileReaderActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.RetrofitClient
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.download.DownloadProgressHandler
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import rx.Observable
 import rx.android.schedulers.AndroidSchedulers
 import rx.schedulers.Schedulers
-import java.io.DataInputStream
-import java.io.DataOutputStream
 import java.io.File
 import java.io.FileOutputStream
 import java.net.HttpURLConnection
@@ -160,8 +154,7 @@ class DownloadDocument(val context: Activity) {
 
     //......没有集成
     private fun openFileWithTBS(path: String?, fileName: String) = if (!TextUtils.isEmpty(path)) {
-        context.go<FileReaderActivity>(FileReaderActivity.startBundle(path!!))
-//        AndroidUtils.openFileWithDefaultApp(context, File(path))
+        AndroidUtils.openFileWithDefaultApp(context, File(path!!))
     } else {
         XLog.error("文档本地地址没有。。。。。。。。。。。")
     }
