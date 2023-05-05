@@ -1,14 +1,23 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer
 
 import android.app.Activity
+import android.graphics.Bitmap
+import android.graphics.drawable.Drawable
 import android.os.Build
 import android.os.Bundle
 import android.text.TextUtils
+import android.view.View
 import android.view.WindowManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.model.GlideUrl
+import com.bumptech.glide.load.model.LazyHeaders
+import com.bumptech.glide.request.target.CustomViewTarget
+import com.bumptech.glide.request.transition.Transition
 import com.davemorrissey.labs.subscaleview.ImageSource
 import kotlinx.android.synthetic.main.activity_big_image_view.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskFileDownloadHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
@@ -108,8 +117,25 @@ class BigImageViewActivity : AppCompatActivity() {
             tv_big_picture_title.gone()
             btn_big_picture_share.gone()
             rl_big_picture_download_btn.gone()
-//            O2ImageLoaderManager.instance().showImage(zoomImage_big_picture_view, internetImageUrl)
-            ssiv_big_picture_view.setImage(ImageSource.uri(internetImageUrl))
+            //ssiv_big_picture_view.setImage(ImageSource.uri(internetImageUrl))
+            showLoadingDialog()
+            val glideUrl =  GlideUrl(internetImageUrl, LazyHeaders.Builder().addHeader(O2SDKManager.instance().tokenName()) { O2SDKManager.instance().zToken }.build())
+            Glide.with(this).asBitmap().load(glideUrl).into(object : CustomViewTarget<View, Bitmap>(ssiv_big_picture_view) {
+                override fun onLoadFailed(errorDrawable: Drawable?) {
+                    hideLoadingDialog()
+                    ssiv_big_picture_view.setImage(ImageSource.resource(R.mipmap.default_image))
+                }
+
+                override fun onResourceReady(resource: Bitmap, transition: Transition<in Bitmap>?) {
+                    hideLoadingDialog()
+                    ssiv_big_picture_view.setImage(ImageSource.bitmap(resource))
+                }
+
+                override fun onResourceCleared(placeholder: Drawable?) {
+                   //ssiv_big_picture_view.setImage(ImageSource.resource(R.mipmap.default_image))
+                }
+
+            })
         } else {
             val fileId = intent.getStringExtra(IMAGE_ID_KEY) ?: ""
             val extension = intent.getStringExtra(IMAGE_EXTENSION_KEY) ?: ""

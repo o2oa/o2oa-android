@@ -9,7 +9,7 @@ import android.webkit.WebViewClient
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
-import kotlinx.android.synthetic.main.activity_work_web_view.*
+import kotlinx.android.synthetic.main.activity_o2_web_view.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
@@ -39,9 +39,19 @@ class O2WebViewActivity : AppCompatActivity() {
         val toolbar: Toolbar? = findViewById(R.id.toolbar_snippet_top_bar)
         toolbar?.title = ""
         setSupportActionBar(toolbar)
+        // 初始化toolbar上的菜单
+        menuInflater.inflate(R.menu.menu_portal, action_menu_view.menu)
+        action_menu_view.setOnMenuItemClickListener { item ->
+            XLog.info("点击了 item " + item.title)
+            when(item.itemId) {
+                R.id.left_back_btn -> goBack()
+                R.id.left_close_btn -> finish()
+            }
+            return@setOnMenuItemClickListener false
+        }
         updateToolbarTitle(title)
-        toolbar?.setNavigationIcon(R.mipmap.ic_back_mtrl_white_alpha)
-        toolbar?.setNavigationOnClickListener { finish() }
+//        toolbar?.setNavigationIcon(R.mipmap.ic_back_mtrl_white_alpha)
+//        toolbar?.setNavigationOnClickListener { finish() }
 
         //webivew
         web_view.webChromeClient = webChromeClient
@@ -64,8 +74,21 @@ class O2WebViewActivity : AppCompatActivity() {
 
     }
 
-    fun updateToolbarTitle(title: String) {
+    private fun updateToolbarTitle(title: String) {
         val toolbarTitle: TextView? = findViewById(R.id.tv_snippet_top_title)
         toolbarTitle?.text = title
     }
+
+    private fun goBack() {
+        val hasPrePage = if (web_view?.canGoBack() == true) {
+            web_view.goBack()
+            true
+        } else {
+            false
+        }
+        if (!hasPrePage) {
+            finish()
+        }
+    }
+
 }
