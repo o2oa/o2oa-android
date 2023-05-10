@@ -12,9 +12,7 @@ import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.core.content.ContextCompat
 import com.google.gson.reflect.TypeToken
-import com.xiaomi.push.it
 import kotlinx.android.synthetic.main.fragment_index_portal.*
-import kotlinx.android.synthetic.main.picker_item_place.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPViewPagerFragment
@@ -34,13 +32,10 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.cms.CMSAPPConfig
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.cms.CMSApplicationInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.cms.CMSCategoryInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.cms.CMSDocumentInfoJson
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.O2JsPostMessage
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.O2UtilDatePickerMessage
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.StringUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goThenKill
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.zxing.activity.CaptureActivity
@@ -62,10 +57,14 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
 
     companion object {
         const val PORTAL_ID_KEY = "PORTAL_ID_KEY"
-        fun instance(portalId: String): IndexPortalFragment {
+        const val PORTAL_PAGE_ID_KEY = "PORTAL_PAGE_ID_KEY"
+        fun instance(portalId: String, pageId: String? = null): IndexPortalFragment {
             val instance = IndexPortalFragment()
             val args = Bundle()
             args.putString(PORTAL_ID_KEY, portalId)
+            if (!TextUtils.isEmpty(pageId)) {
+                args.putString(PORTAL_PAGE_ID_KEY, pageId)
+            }
             instance.arguments = args
             return instance
         }
@@ -78,14 +77,16 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
     private val jsBiz: JSInterfaceO2mBiz by lazy { JSInterfaceO2mBiz.with(this) }
 
     private var portalId: String = ""
+    private var pageId: String = ""
     private var portalUrl: String = ""
     override fun initUI() {
         portalId = arguments?.getString(PORTAL_ID_KEY) ?: ""
+        pageId = arguments?.getString(PORTAL_PAGE_ID_KEY) ?: ""
         if (TextUtils.isEmpty(portalId)) {
             XToast.toastShort(activity, getString(R.string.message_portal_need_id))
             web_view_portal_content.loadData(getString(R.string.message_portal_need_id), "text/plain", "UTF-8")
         } else {
-            portalUrl = APIAddressHelper.instance().getPortalWebViewUrl(portalId)
+            portalUrl = APIAddressHelper.instance().getPortalWebViewUrl(portalId, pageId)
             XLog.debug("portal url : $portalUrl")
             web_view_portal_content.addJavascriptInterface(this, "o2android") //注册js对象
             jsNotification.setupWebView(web_view_portal_content)
@@ -100,6 +101,12 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
             web_view_portal_content.webViewSetCookie(activity!!, portalUrl)
             web_view_portal_content.setDownloadListener(O2WebviewDownloadListener(activity!!))
             web_view_portal_content.webChromeClient = webChromeClient
+            // 设置标题
+            webChromeClient.onO2ReceivedTitle = { title ->
+                if (activity != null && activity is PortalWebViewActivity) {
+                    (activity as PortalWebViewActivity).setWebViewTitle(title)
+                }
+            }
             web_view_portal_content.webViewClient = object : WebViewClient() {
                 override fun onPageFinished(view: WebView?, url: String?) {
                     super.onPageFinished(view, url)

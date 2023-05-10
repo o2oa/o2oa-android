@@ -27,6 +27,20 @@ data class O2ScanResultData(var text: String)
  */
 class O2UtilNavigationOpenOtherAppMessage(var schema: String?)
 
+class O2UtilNavigationOpenWindowMessage(
+        var url: String? // 新窗口打开网
+        )
+
+/**
+ * 打开 内部原生应用
+ */
+class O2UtilNavigationOpenInnerAppMessage(
+        var appKey: String?, // ApplicationEnum的 key ,如果是portal，则需要传入  portalFlag：门户标识
+        var portalFlag: String?, // 门户标识
+        var portalTitle: String?, // 门户标题
+        var portalPage: String?, // 门户页面 id
+)
+
 
 class O2BizComplexPickerMessage(
         var pickMode: ArrayList<String>?,

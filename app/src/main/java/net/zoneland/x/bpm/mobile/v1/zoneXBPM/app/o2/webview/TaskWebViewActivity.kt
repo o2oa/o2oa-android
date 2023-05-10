@@ -223,7 +223,6 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
         web_view.webViewSetCookie(this, url)
         web_view.loadUrl(url)
         // 设置标题
-
         webChromeClient.onO2ReceivedTitle = { title ->
             updateToolbarTitle(title)
         }

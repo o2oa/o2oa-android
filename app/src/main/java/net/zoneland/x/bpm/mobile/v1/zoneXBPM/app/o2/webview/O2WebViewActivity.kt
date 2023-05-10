@@ -33,7 +33,7 @@ class O2WebViewActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_o2_web_view)
-        val title = intent?.extras?.getString(TitleKey) ?: "网页"
+        val title = intent?.extras?.getString(TitleKey) ?: ""
         val url = intent?.extras?.getString(UrlKey) ?: "https://www.o2oa.net"
         // actionbar
         val toolbar: Toolbar? = findViewById(R.id.toolbar_snippet_top_bar)

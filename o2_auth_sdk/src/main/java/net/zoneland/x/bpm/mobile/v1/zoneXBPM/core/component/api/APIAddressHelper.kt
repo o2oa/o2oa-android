@@ -233,9 +233,13 @@ class APIAddressHelper private constructor() {
     /**
      * 门户打开地址
      */
-    fun getPortalWebViewUrl(portalId:String): String {
+    fun getPortalWebViewUrl(portalId:String, pageId: String? = null): String {
         val url = webServerData?.let {
-            "$httpHead${webServerData?.host}:${webServerData?.port}/x_desktop/portalmobile.html?id=$portalId"
+            if (TextUtils.isEmpty(pageId)) {
+                "$httpHead${webServerData?.host}:${webServerData?.port}/x_desktop/portalmobile.html?id=$portalId"
+            } else {
+                "$httpHead${webServerData?.host}:${webServerData?.port}/x_desktop/portalmobile.html?id=$portalId&page=$pageId"
+            }
         } ?: ""
         return O2SDKManager.instance().urlTransfer2Mapping(url)
     }

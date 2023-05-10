@@ -12,11 +12,14 @@
         android:layout_marginStart="@dimen/spacing_small"
         android:layout_marginTop="@dimen/spacing_small"
         android:layout_marginBottom="@dimen/spacing_small"
+        android:background="@drawable/bg_attendance_normal"
+        android:paddingStart="@dimen/spacing_tiny"
+        android:paddingEnd="@dimen/spacing_tiny"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         tools:text="早退"
         android:textSize="@dimen/font_large"
-        android:textColor="@color/z_color_text_primary_dark"
+        android:textColor="@color/white"
         />
     <TextView
         android:id="@+id/tv_item_att_v2_appeal_recordDateString"

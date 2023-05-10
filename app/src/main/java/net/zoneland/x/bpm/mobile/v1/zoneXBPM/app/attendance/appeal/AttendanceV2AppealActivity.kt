@@ -6,6 +6,7 @@ import android.text.TextUtils
 import android.text.style.UnderlineSpan
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.activity_attendance_v2_appeal.*
@@ -17,10 +18,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.job.OpenJobDialogFra
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.start.StartProcessDialogFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.AttendanceV2AppealInfo
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.AttendanceV2AppealInfoToProcessData
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.AttendanceV2AppealStatus
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.AttendanceV2Config
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.MiscUtilK
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
@@ -48,9 +46,7 @@ class AttendanceV2AppealActivity : BaseMVPActivity<AttendanceV2AppealContract.Vi
         srl_att_v2_appeal_list.setOnRefreshListener {
             if (!isRefresh && !isLoadingMore) {
                 XLog.debug("下拉刷新。。。。")
-                isRefresh = true
-                page = 1
-                loadAppealList()
+                refreshDataList()
             }
         }
         MiscUtilK.swipeRefreshLayoutRun(srl_att_v2_appeal_list, this)
@@ -80,6 +76,18 @@ class AttendanceV2AppealActivity : BaseMVPActivity<AttendanceV2AppealContract.Vi
                 holder?.setText(R.id.tv_item_att_v2_appeal_recordDateString, showText)
                     ?.setText(R.id.tv_item_att_v2_appeal_result, result)
                     ?.setText(R.id.tv_item_att_v2_appeal_status, t?.statsText() ?: "")
+                val resultTv = holder?.getView<TextView>(R.id.tv_item_att_v2_appeal_result)
+                if (t?.record?.fieldWork == true) {
+                    resultTv?.background = ContextCompat.getDrawable(this@AttendanceV2AppealActivity, R.drawable.bg_attendance_fieldwork)
+                } else {
+                    when ( t?.record?.checkInResult) {
+                        AttendanceV2RecordResult.Early.value -> resultTv?.background = ContextCompat.getDrawable(this@AttendanceV2AppealActivity, R.drawable.bg_attendance_early)
+                        AttendanceV2RecordResult.Late.value -> resultTv?.background = ContextCompat.getDrawable(this@AttendanceV2AppealActivity, R.drawable.bg_attendance_late)
+                        AttendanceV2RecordResult.SeriousLate.value -> resultTv?.background = ContextCompat.getDrawable(this@AttendanceV2AppealActivity, R.drawable.bg_attendance_serilate)
+                        AttendanceV2RecordResult.NotSigned.value -> resultTv?.background = ContextCompat.getDrawable(this@AttendanceV2AppealActivity, R.drawable.bg_attendance_nosign)
+                        else -> resultTv?.background = ContextCompat.getDrawable(this@AttendanceV2AppealActivity, R.drawable.bg_attendance_normal)
+                    }
+                }
                 val processBtn = holder?.getView<LinearLayout>(R.id.ll_item_att_v2_appeal_process)
                 val processTv = holder?.getView<TextView>(R.id.tv_item_att_v2_appeal_process)
                 processBtn?.gone()
@@ -111,7 +119,7 @@ class AttendanceV2AppealActivity : BaseMVPActivity<AttendanceV2AppealContract.Vi
                 val lastPosition = lm.findLastVisibleItemPosition()
                 if (lastPosition == lm.itemCount - 1 && !isRefresh && !isLoadingMore && hasMore) {
                     XLog.debug("加载更多。。。。")
-                    refreshDataList()
+                    loadMoreDataList()
                 }
             }
         })
@@ -174,6 +182,11 @@ class AttendanceV2AppealActivity : BaseMVPActivity<AttendanceV2AppealContract.Vi
     private fun refreshDataList() {
         isRefresh = true
         page = 1
+        loadAppealList()
+    }
+    private fun loadMoreDataList() {
+        isLoadingMore = true
+        page++
         loadAppealList()
     }
 

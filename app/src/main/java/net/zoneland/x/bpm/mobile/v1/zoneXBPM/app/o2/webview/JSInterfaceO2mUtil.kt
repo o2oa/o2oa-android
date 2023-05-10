@@ -6,22 +6,38 @@ import android.content.pm.ActivityInfo
 import android.content.res.Configuration
 import android.net.Uri
 import android.os.Bundle
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentActivity
 import android.text.TextUtils
 import android.util.DisplayMetrics
 import android.webkit.JavascriptInterface
 import android.webkit.WebView
-import com.baidu.location.*
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentActivity
+import com.baidu.location.BDAbstractLocationListener
+import com.baidu.location.BDLocation
+import com.baidu.location.LocationClient
+import com.baidu.location.LocationClientOption
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 import com.wugang.activityresult.library.ActivityResult
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.attendance.main.AttendanceMainActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.bbs.main.BBSMainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.bbs.view.BBSWebViewSubjectActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.calendar.CalendarMainActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v3.CloudDiskV3Activity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.index.CMSIndexActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.view.CMSWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.im.O2LocationActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.main.MeetingMainActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.ReadCompletedListActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.ReadListActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.TaskCompletedListActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.process.TaskListActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.ApplicationEnum
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.flutter.FlutterConnectActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.*
-
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
@@ -77,7 +93,10 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
                         "navigation.setTitle" -> navigationSetTitle(message!!)
                         "navigation.close" -> navigationClose(message!!)
                         "navigation.goBack" -> navigationGoBack(message!!)
+                        "navigation.openInnerApp" -> navigationOpenInnerApp(message!!)
                         "navigation.openOtherApp" -> navigationOpenOtherApp(message!!)
+                        "navigation.openWindow" -> navigationOpenWindow(message!!)
+                        else -> XLog.error("o2mUtil 工具类， type 类型错误，$type")
                     }
                 } else {
                     XLog.error("message 格式错误！！！")
@@ -270,6 +289,93 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
 
         } else {
             XLog.error("activity不存在，无法打开dialog！！")
+        }
+    }
+
+    /**
+     * 新窗口打开
+     */
+    private fun navigationOpenWindow(message: String) {
+        val type = object : TypeToken<O2JsPostMessage<O2UtilNavigationOpenWindowMessage>>() {}.type
+        val value: O2JsPostMessage<O2UtilNavigationOpenWindowMessage> = gson.fromJson(message, type)
+        val callback = value.callback
+        val url = value.data?.url
+        if (activity != null) {
+            if (!TextUtils.isEmpty(url)) {
+                activity.runOnUiThread {
+                    O2WebViewActivity.openWebView(activity, "", url!!)
+                }
+            }
+            if (!TextUtils.isEmpty(callback)) {
+                callbackJs("$callback('{\"result\": true, \"message\": \"\"}')")
+            }
+        } else {
+            XLog.error("activity不存在 navigationOpenWindow 失败 ！！")
+        }
+    }
+
+    /**
+     * 打开内部应用
+     */
+    private fun navigationOpenInnerApp(message: String) {
+        val type = object : TypeToken<O2JsPostMessage<O2UtilNavigationOpenInnerAppMessage>>() {}.type
+        val value: O2JsPostMessage<O2UtilNavigationOpenInnerAppMessage> = gson.fromJson(message, type)
+        val callback = value.callback
+        val appKey = value.data?.appKey
+        val portalFlag = value.data?.portalFlag
+        val portalTitle = value.data?.portalTitle
+        val portalPage = value.data?.portalPage
+        if (activity != null) {
+            activity.runOnUiThread {
+                when (appKey) {
+                    ApplicationEnum.TASK.key -> activity.go<TaskListActivity>()
+                    ApplicationEnum.TASKCOMPLETED.key -> activity.go<TaskCompletedListActivity>()
+                    ApplicationEnum.READ.key -> activity.go<ReadListActivity>()
+                    ApplicationEnum.READCOMPLETED.key -> activity.go<ReadCompletedListActivity>()
+                    ApplicationEnum.BBS.key -> activity.go<BBSMainActivity>()
+                    ApplicationEnum.CMS.key -> activity.go<CMSIndexActivity>()
+                    ApplicationEnum.YUNPAN.key -> openCloudFile(activity)
+                    ApplicationEnum.clouddisk.key -> openCloudFile(activity)
+                    ApplicationEnum.MEETING.key -> activity.go<MeetingMainActivity>()
+                    ApplicationEnum.ATTENDANCE.key -> activity.go<AttendanceMainActivity>()
+                    ApplicationEnum.CALENDAR.key -> activity.go<CalendarMainActivity>()
+                    ApplicationEnum.MindMap.key -> {
+                        activity.go<FlutterConnectActivity>(
+                            FlutterConnectActivity.startFlutterAppWithRoute(
+                                ApplicationEnum.MindMap.key
+                            )
+                        )
+                    }
+                    "portal" -> {
+                        if (!TextUtils.isEmpty(portalFlag)) {
+                            activity.go<PortalWebViewActivity>(
+                                PortalWebViewActivity.startPortal(
+                                    portalFlag!!,
+                                    portalTitle ?: "",
+                                    portalPage
+                                )
+                            )
+                        } else {
+                            XLog.error("门户标识是空的，无法打开！")
+                        }
+                    }
+                    else -> XLog.error("错误的 APP key $appKey")
+                }
+            }
+            if (!TextUtils.isEmpty(callback)) {
+                callbackJs("$callback('{\"result\": true, \"message\": \"\"}')")
+            }
+        } else {
+            XLog.error("activity不存在 navigationOpenInnerApp 失败 ！！")
+        }
+    }
+
+    private fun openCloudFile(activity: FragmentActivity) {
+        if (O2SDKManager.instance().appCloudDiskIsV3()) {
+            activity.go<CloudDiskV3Activity>()
+        } else {
+            XLog.debug("没有V3版本的网盘")
+            activity.go<CloudDiskActivity>()
         }
     }
 
