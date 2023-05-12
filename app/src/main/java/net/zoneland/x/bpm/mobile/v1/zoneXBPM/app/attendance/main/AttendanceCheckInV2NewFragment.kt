@@ -190,6 +190,8 @@ class AttendanceCheckInV2NewFragment : BaseMVPViewPagerFragment<AttendanceCheckI
         if (needCheckIn) {
             // 打卡记录
             val checkItemList = data.checkItemList ?: ArrayList()
+            // 先排序 防止顺序错乱
+            checkItemList.sortBy { it.preDutyTime }
             // 是否最后一条已经打卡过的数据
             nextCheckInRecord = checkItemList.firstOrNull { element -> element.checkInResult == AttendanceV2RecordResult.PreCheckIn.value }
             needCheckIn = nextCheckInRecord != null
