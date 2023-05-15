@@ -1,5 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.invited
 
+import android.app.Activity
 import android.os.Bundle
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -19,6 +20,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
 import java.io.File
@@ -34,19 +36,30 @@ class MeetingDetailInfoActivity : BaseMVPActivity<MeetingDetailInfoContract.View
     private val meetingFileList = ArrayList<MeetingFileInfoJson>()
 
     companion object {
-        val meetingDetail = "MEETING_DETAIL_INFO"
+        const val meetingDetailKey = "MEETING_DETAIL_INFO"
+
+        fun openMeetingDetail(activity: Activity, meetingInfo: MeetingInfoJson) {
+            if (meetingInfo.mode == "online" && !TextUtils.isEmpty(meetingInfo.roomLink)) {
+                XLog.info("打开在线会议，${meetingInfo.roomLink}")
+                AndroidUtils.runDefaultBrowser(activity, meetingInfo.roomLink)
+            } else {
+                val bundle = Bundle()
+                bundle.putSerializable(meetingDetailKey, meetingInfo)
+                activity.go<MeetingDetailInfoActivity>(bundle)
+            }
+        }
     }
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
         setupToolBar(getString(R.string.meeting_detail),true,false)
 
-        if (intent.extras?.getSerializable(meetingDetail)  == null) {
+        if (intent.extras?.getSerializable(meetingDetailKey)  == null) {
             XToast.toastShort(this, "没有获取到会议详细信息！")
             finish()
             return
         }
 
-        val meetingDetailInfo = intent.extras?.getSerializable(meetingDetail) as MeetingInfoJson
+        val meetingDetailInfo = intent.extras?.getSerializable(meetingDetailKey) as MeetingInfoJson
         notAcceptPersonList.addAll(meetingDetailInfo.inviteMemberList)
         notAcceptPersonList.removeAll(meetingDetailInfo.acceptPersonList)
         acceptPersonList.addAll(meetingDetailInfo.acceptPersonList)

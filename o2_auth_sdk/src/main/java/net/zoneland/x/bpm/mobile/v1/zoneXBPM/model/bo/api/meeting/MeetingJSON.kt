@@ -45,7 +45,12 @@ data class MeetingInfoJson(
         var attachmentList : List<MeetingFileInfoJson> = ArrayList(),
         var hostUnit: String = "",// 承办部门
         var hostPerson: String = "",// 主持人
-        var type: String = "" // 会议类型
+        var type: String = "", // 会议类型
+        // 2023-05 新增字段 在线会议
+        var mode:String  = "", // online
+        var roomId:String = "", // 在线会议房间号
+        var roomLink: String = "", // 在线会议打开链接
+
 ): Serializable
 
 /**

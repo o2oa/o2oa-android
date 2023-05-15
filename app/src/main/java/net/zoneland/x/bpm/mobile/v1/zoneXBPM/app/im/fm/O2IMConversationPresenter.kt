@@ -47,8 +47,10 @@ class O2IMConversationPresenter : BasePresenterImpl<O2IMConversationContract.Vie
             ser.instantMessageList(100)
                     .subscribeOn(Schedulers.io())
                     .flatMap { res ->
+
                         val list = res.data
                         if (list != null && list.isNotEmpty()) {
+                            XLog.info("instant message size ${list.size}")
                             val newList = list.sortedBy { it.createTime }
                             Observable.just(newList)
                         }else {

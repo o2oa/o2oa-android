@@ -248,7 +248,7 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
             }
         }else if (type.startsWith("meeting_")) {
             setLinkStyle(textView) {
-                go<MeetingMainActivity>()
+                openMeeting(msg)
             }
         }else if (type.startsWith("attachment_")) {
             setLinkStyle(textView) {
@@ -277,6 +277,14 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
                     ApplicationEnum.MindMap.key))
             }
         }else {
+        }
+    }
+
+    private fun openMeeting(msg: InstantMessage) {
+        val json = JSONTokener(msg.body).nextValue()
+        if (json is JSONObject) {
+            val id = try {json.getString("id")}catch (e: Exception){null}
+            MeetingMainActivity.openWithMeetingInfo(this, id)
         }
     }
 

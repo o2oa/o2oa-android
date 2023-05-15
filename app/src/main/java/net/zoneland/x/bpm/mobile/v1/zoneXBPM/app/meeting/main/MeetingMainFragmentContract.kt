@@ -18,6 +18,7 @@ object MeetingMainFragmentContract {
         fun checkViewerBack(isDay: Boolean, result: Boolean)
         fun startProcessSuccess(workId:String)
         fun startProcessFail(message:String)
+        fun getMeetingById(meetingInfo: MeetingInfoJson)
     }
 
     interface Presenter : BasePresenter<View> {
@@ -29,5 +30,6 @@ object MeetingMainFragmentContract {
         fun checkViewer(isDay: Boolean, config: String)
         fun loadCurrentPersonIdentityWithProcess(processId: String)
         fun startProcess(title: String, identifyId: String, processId: String)
+        fun getMeetingById(id: String)
     }
 }

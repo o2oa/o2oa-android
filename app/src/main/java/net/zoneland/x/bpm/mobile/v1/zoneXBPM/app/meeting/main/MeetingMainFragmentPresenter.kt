@@ -314,4 +314,25 @@ class MeetingMainFragmentPresenter : BasePresenterImpl<MeetingMainFragmentContra
                     })
         }
     }
+
+    override fun getMeetingById(id: String) {
+        if (TextUtils.isEmpty(id)) {
+            mView?.onException("参数不能为空！")
+            return
+        }
+        getMeetingAssembleControlService(mView?.getContext())?.let { service ->
+            service.getMeetingById(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext {
+                        mView?.getMeetingById(it.data)
+                    }
+                    onError { e, isNetworkError ->
+                        XLog.error("", e)
+                        mView?.onException(e?.message ?: "请求异常！")
+                    }
+                }
+        }
+    }
 }

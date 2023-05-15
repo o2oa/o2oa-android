@@ -68,9 +68,7 @@ class MeetingMainFragment : BaseMVPViewPagerFragment<MeetingMainFragmentContract
         meeting_recycler_view.adapter = adapter
         adapter.setOnItemClickListener { _, position ->
             val meetingInvited = meetingList[position]
-            val bundle = Bundle()
-            bundle.putSerializable(MeetingDetailInfoActivity.meetingDetail, meetingInvited)
-            activity?.go<MeetingDetailInfoActivity>(bundle)
+            mPresenter.getMeetingById(meetingInvited.id)
         }
 
         ll_meeting_main_month_chang.setOnClickListener {
@@ -267,6 +265,13 @@ class MeetingMainFragment : BaseMVPViewPagerFragment<MeetingMainFragmentContract
         hideLoadingDialog()
         XToast.toastShort(activity, message)
     }
+
+    override fun getMeetingById(meetingInfo: MeetingInfoJson) {
+        activity?.let {
+            MeetingDetailInfoActivity.openMeetingDetail(it, meetingInfo)
+        }
+    }
+
 
     private val adapter: CommonRecycleViewAdapter<MeetingInfoJson> by lazy {
         object : CommonRecycleViewAdapter<MeetingInfoJson>(activity, meetingList, R.layout.item_meeting_list_view) {

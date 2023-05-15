@@ -239,7 +239,11 @@ class FastCheckInManager() {
     }
     // 结束定位
     private fun stopLocation() {
-        mLocationClient.stop()
+        try {
+            mLocationClient.stop()
+        } catch (e: Exception) {
+            XLog.error("", e)
+        }
     }
 
     /**

@@ -1,7 +1,9 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.main
 
 
+import android.app.Activity
 import android.os.Bundle
+import android.text.TextUtils
 import androidx.fragment.app.Fragment
 import android.view.View
 import kotlinx.android.synthetic.main.activity_meeting.*
@@ -9,12 +11,15 @@ import kotlinx.android.synthetic.main.fragment_meeting_bottom_bar.*
 import net.muliba.changeskin.FancySkinManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.invited.MeetingDetailInfoActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.invited.MeetingInvitedFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.room.MeetingRoomFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonFragmentPagerAdapter
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.MeetingInfoJson
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.addOnPageChangeListener
-
-
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
 
 class MeetingMainActivity : BaseMVPActivity<MeetingMainContract.View, MeetingMainContract.Presenter>(), MeetingMainContract.View, View.OnClickListener {
@@ -28,11 +33,23 @@ class MeetingMainActivity : BaseMVPActivity<MeetingMainContract.View, MeetingMai
 
     override var mPresenter: MeetingMainContract.Presenter = MeetingMainPresenter()
 
+    companion object {
+        const val meetingInfoIdKey = "meetingInfoIdKey" // 需要打开的会议详情的 id
+        fun openWithMeetingInfo(activity: Activity, meetingInfoId: String?) {
+            val bundle = Bundle()
+            bundle.putString(meetingInfoIdKey, meetingInfoId)
+            activity.go<MeetingMainActivity>(bundle)
+        }
+    }
+
 
     override fun layoutResId(): Int = R.layout.activity_meeting
 
     override fun afterSetContentView(savedInstanceState: Bundle?) {
-        setupToolBar(getString(R.string.title_activity_meeting), true, true)
+        setupToolBar(getString(R.string.title_activity_meeting),
+            setupBackButton = true,
+            isCloseBackIcon = true
+        )
 
         fragmentList.add(MeetingMainFragment())
         fragmentList.add(MeetingInvitedFragment())
@@ -56,6 +73,11 @@ class MeetingMainActivity : BaseMVPActivity<MeetingMainContract.View, MeetingMai
         icon_meeting_room_tab.setOnClickListener(this)
 
         selectTab(0)
+
+        val id = intent?.extras?.getString(meetingInfoIdKey)
+        if (!TextUtils.isEmpty(id)) {
+            mPresenter.getMeetingById(id!!)
+        }
     }
 
     private fun selectTab(i: Int) {
@@ -112,4 +134,13 @@ class MeetingMainActivity : BaseMVPActivity<MeetingMainContract.View, MeetingMai
         overridePendingTransition(R.anim.activity_scale_in, R.anim.activity_scale_out)
     }
 
+    override fun getMeetingById(meetingInfo: MeetingInfoJson) {
+        O2DialogSupport.openConfirmDialog(this, "需要打开会议【${meetingInfo.subject}】的具体页面吗？",  {d ->
+            MeetingDetailInfoActivity.openMeetingDetail(this, meetingInfo)
+        })
+    }
+
+    override fun error(errorMsg: String) {
+        XToast.toastShort(errorMsg)
+    }
 }
