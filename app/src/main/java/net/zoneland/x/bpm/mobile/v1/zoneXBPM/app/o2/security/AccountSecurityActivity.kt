@@ -4,20 +4,36 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.security
 import android.os.Bundle
 import android.text.TextUtils
 import android.widget.EditText
-import kotlinx.android.synthetic.main.activity_account_security.*
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
+import kotlinx.android.synthetic.main.activity_account_security.account_change_mobile_id
+import kotlinx.android.synthetic.main.activity_account_security.account_change_mobile_label_id
+import kotlinx.android.synthetic.main.activity_account_security.account_name_id
+import kotlinx.android.synthetic.main.activity_account_security.image_btn_account_security_biometry_enable
+import kotlinx.android.synthetic.main.activity_account_security.ll_account_security_bind_device_layout
+import kotlinx.android.synthetic.main.activity_account_security.ll_account_security_empower_btn
+import kotlinx.android.synthetic.main.activity_account_security.rl_account_security_bind_device_btn
+import kotlinx.android.synthetic.main.activity_account_security.rl_account_security_name_btn
+import kotlinx.android.synthetic.main.activity_account_security.rl_account_security_password_btn
+import kotlinx.android.synthetic.main.activity_account_security.tv_account_security_biometry_name
+import kotlinx.android.synthetic.main.activity_account_security.tv_account_security_unit_name
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.BuildConfig
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.bind.BindPhoneActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.my.MyInfoActivity
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.MessageType
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.biometric.BioConstants
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.biometric.BiometryManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.biometric.OnBiometryAuthCallback
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goAndClearBefore
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.inVisible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
-import java.lang.Exception
 
 
 class AccountSecurityActivity : BaseMVPActivity<AccountSecurityContract.View, AccountSecurityContract.Presenter>(), AccountSecurityContract.View {
@@ -43,6 +59,9 @@ class AccountSecurityActivity : BaseMVPActivity<AccountSecurityContract.View, Ac
 
         rl_account_security_password_btn.setOnClickListener {
             changeMyPassword()
+        }
+        ll_account_security_empower_btn.setOnClickListener {
+            go<EmpowerListActivity>()
         }
 
         val unitHost = O2SDKManager.instance().prefs().getString(O2.PRE_CENTER_HOST_KEY, "")

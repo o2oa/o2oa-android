@@ -392,6 +392,9 @@
     <string name="message_camera_file_create_error">Unable to take photos, unable to get the stored file!</string>
     <string name="message_update_success">update completed !</string>
     <string name="message_back_error">return error !</string>
+    <string name="title_activity_empower">外出授权</string>
+    <string name="title_activity_empower_list">我的委托</string>
+    <string name="title_activity_empower_list_to">收到的委托</string>
 
     <!-- group activity -->
     <string name="title_activity_group">My Groups </string>

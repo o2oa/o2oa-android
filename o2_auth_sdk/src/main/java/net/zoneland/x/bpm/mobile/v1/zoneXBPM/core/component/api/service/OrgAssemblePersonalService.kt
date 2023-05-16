@@ -3,11 +3,13 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.service
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ApiResponse
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.IdData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ValueData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.EmpowerData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.person.PersonJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.person.PersonPwdForm
 import okhttp3.MultipartBody
 import retrofit2.http.*
 import rx.Observable
+import java.net.IDN
 
 
 /**
@@ -53,4 +55,23 @@ interface OrgAssemblePersonalService {
      */
     @PUT("jaxrs/person/password")
     fun modifyCurrentPersonPassword(@Body body: PersonPwdForm): Observable<ApiResponse<ValueData>>
+
+
+    /**
+     * 我的委托列表
+     */
+    @GET("jaxrs/empower/list/currentperson")
+    fun myEmpowerList(): Observable<ApiResponse<List<EmpowerData>>>
+
+    /**
+     *  我收到的委托列表
+     */
+    @GET("jaxrs/empower/list/to")
+    fun myEmpowerListTo(): Observable<ApiResponse<List<EmpowerData>>>
+
+    /**
+     * 创建外出授权
+     */
+    @POST("jaxrs/empower")
+    fun postEmpower(@Body body: EmpowerData): Observable<ApiResponse<IdData>>
 }
