@@ -23,5 +23,7 @@ data class WoIdentityListItem(
         var id: String = "",
         var department: String = "",
         var woUnit: UnitJson? = null,
-        var woUnitDutyList: List<UnitDutyJson> = ArrayList()
+        var woUnitDutyList: List<UnitDutyJson> = ArrayList(),
+        //是否主身份
+        var major: Boolean = false
         )

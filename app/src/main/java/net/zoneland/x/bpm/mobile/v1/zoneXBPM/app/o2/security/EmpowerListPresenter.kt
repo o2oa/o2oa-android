@@ -54,4 +54,20 @@ class EmpowerListPresenter: BasePresenterImpl<EmpowerListContract.View>(), Empow
         }
     }
 
+    override fun deleteEmpower(id: String) {
+        getAssemblePersonalApi(mView?.getContext())?.let { service ->
+            service.deleteEmpower(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext {
+                        mView?.deleteSuccess()
+                    }
+                    onError { e, isNetworkError ->
+                        XLog.error("", e)
+                        mView?.error(e?.message ?: "")
+                    }
+                }
+        }
+    }
 }

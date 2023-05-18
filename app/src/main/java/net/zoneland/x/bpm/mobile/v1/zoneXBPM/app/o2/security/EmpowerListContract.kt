@@ -13,6 +13,8 @@ object EmpowerListContract {
         fun myEmpowerList(myList: List<EmpowerData>)
         fun myEmpowerListTo(myListTo: List<EmpowerData>)
         fun error(errorMsg: String)
+
+        fun deleteSuccess()
     }
     interface Presenter: BasePresenter<View>{
         /**
@@ -24,6 +26,8 @@ object EmpowerListContract {
          * 我收到的委托
          */
         fun myEmpowerListTo()
+
+        fun deleteEmpower(id: String)
 
     }
 }

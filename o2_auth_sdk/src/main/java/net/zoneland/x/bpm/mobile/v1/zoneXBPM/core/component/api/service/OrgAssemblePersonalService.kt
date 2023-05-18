@@ -74,4 +74,12 @@ interface OrgAssemblePersonalService {
      */
     @POST("jaxrs/empower")
     fun postEmpower(@Body body: EmpowerData): Observable<ApiResponse<IdData>>
+
+    /**
+     * 删除授权
+     */
+    @DELETE("jaxrs/empower/{id}")
+    fun  deleteEmpower(@Path("id") id: String): Observable<ApiResponse<ValueData>>
+
+
 }

@@ -393,6 +393,15 @@
     <string name="title_activity_empower">外出授权</string>
     <string name="title_activity_empower_list">我的委托</string>
     <string name="title_activity_empower_list_to">收到的委托</string>
+    <string name="title_activity_empower_create">创建外出授权</string>
+    <string name="empower_create_dept">部门</string>
+    <string name="empower_create_identity">身份</string>
+    <string name="empower_create_toPerson">委托人</string>
+    <string name="empower_create_startTime">开始时间</string>
+    <string name="empower_create_completeTime">结束时间</string>
+    <string name="empower_create_application">应用</string>
+    <string name="empower_create_process">流程</string>
+    <string name="title_activity_choose_application">选择应用</string>
 
     <!-- group activity -->
     <string name="title_activity_group">我的群组</string>

@@ -1,6 +1,9 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.security
 
 import android.os.Bundle
+import android.text.TextUtils
+import android.view.Menu
+import android.view.MenuItem
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.activity_empower_list.linear_my_empower_to_button
 import kotlinx.android.synthetic.main.activity_empower_list.ll_my_empower_button
@@ -15,10 +18,13 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.EmpowerData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.DividerItemDecoration
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
 class EmpowerListActivity : BaseMVPActivity<EmpowerListContract.View, EmpowerListContract.Presenter>(), EmpowerListContract.View {
 
@@ -64,6 +70,9 @@ class EmpowerListActivity : BaseMVPActivity<EmpowerListContract.View, EmpowerLis
         setupToolBar(getString(R.string.title_activity_empower), setupBackButton = true)
         rv_empower_list.layoutManager = LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false)
         rv_empower_list.adapter =  adapter
+        adapter.setOnItemClickListener { _, position ->
+            deleteConfirm(position)
+        }
         rv_empower_list.addItemDecoration(DividerItemDecoration(this, LinearLayoutManager.VERTICAL))
         ll_my_empower_button.setOnClickListener {
             changeMode(EmpowerType.MyEmpower)
@@ -71,6 +80,27 @@ class EmpowerListActivity : BaseMVPActivity<EmpowerListContract.View, EmpowerLis
         linear_my_empower_to_button.setOnClickListener {
             changeMode(EmpowerType.EmPowerToMe)
         }
+    }
+
+
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.menu_create, menu)
+        return super.onCreateOptionsMenu(menu)
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            R.id.menu_create -> {
+                go<EmpowerCreateActivity>()
+                return true
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+
+    override fun onResume() {
+        super.onResume()
         changeMode(EmpowerType.MyEmpower)
     }
 
@@ -96,6 +126,24 @@ class EmpowerListActivity : BaseMVPActivity<EmpowerListContract.View, EmpowerLis
         XToast.toastShort(errorMsg)
     }
 
+    override fun deleteSuccess() {
+        loadData()
+    }
+
+    private fun deleteConfirm(position: Int) {
+        if (mode == EmpowerType.MyEmpower) {
+            val emp = empowerList[position]
+            O2DialogSupport.openConfirmDialog(this, "确定要删除这个授权吗？", listener = { d ->
+                deleteEmpower(emp.id)
+            })
+        }
+    }
+
+    private fun deleteEmpower(id: String) {
+        if (!TextUtils.isEmpty(id)) {
+            mPresenter.deleteEmpower(id)
+        }
+    }
     private fun changeMode(newMode: EmpowerType) {
         mode = newMode
         when(mode) {

@@ -14,6 +14,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2CustomStyle
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPFragment
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.TaskWebViewActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.TaskWebViewActivity.Companion.startDraft
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.identity.ProcessWOIdentityJson
@@ -76,23 +77,42 @@ class StartProcessStepOneFragment : BaseMVPFragment<StartProcessStepOneContract.
     val itemDecoration: DividerItemDecoration by lazy { DividerItemDecoration(activity, DividerItemDecoration.VERTICAL_LIST) }
 
     override fun initUI() {
+        when((activity as StartProcessActivity).chooseMode) {
+            "1" -> (activity as StartProcessActivity).setToolBarTitle(getString(R.string.title_activity_start_process))
+            "2" -> (activity as StartProcessActivity).setToolBarTitle(getString(R.string.title_activity_choose_application))
+            "3" -> (activity as StartProcessActivity).setToolBarTitle(getString(R.string.title_activity_start_process))
+        }
+        //(activity as StartProcessActivity).setToolBarTitle(getString(R.string.title_activity_start_process))
 
-        (activity as StartProcessActivity).setToolBarTitle(getString(R.string.title_activity_start_process))
+        // 应用
         recycler_start_process_application_list.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
         recycler_start_process_application_list.addItemDecoration(itemDecoration)
         appAdapter.setOnItemClickListener { _, position ->
             if (appList[position].app != null) {
-                currentChooseAppId = appList[position].app!!.id
-                mPresenter.loadProcessListByAppId(currentChooseAppId)
-                appAdapter.notifyDataSetChanged()
+                if ((activity as StartProcessActivity).chooseMode == "2") {
+                    (activity as StartProcessActivity).chooseModeResult(appList[position].app, null)
+                } else {
+                    currentChooseAppId = appList[position].app!!.id
+                    mPresenter.loadProcessListByAppId(currentChooseAppId)
+                    appAdapter.notifyDataSetChanged()
+                }
             }
         }
         recycler_start_process_application_list.adapter = appAdapter
+
+        // 流程
         recycler_start_process_application_process_list.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
-        processAdapter.setOnItemClickListener { _, position ->
-            onProcessItemClick(processList[position])
-        }
         recycler_start_process_application_process_list.adapter = processAdapter
+        processAdapter.setOnItemClickListener { _, position ->
+            if ((activity as StartProcessActivity).chooseMode == "3") {
+                (activity as StartProcessActivity).chooseModeResult(null, processList[position])
+            } else {
+                onProcessItemClick(processList[position])
+            }
+        }
+        if ((activity as StartProcessActivity).chooseMode == "2") { // 应用选择 隐藏流程列表
+            recycler_start_process_application_process_list.gone()
+        }
 
         showLoadingDialog()
         mPresenter.loadApplicationListWithProcess()

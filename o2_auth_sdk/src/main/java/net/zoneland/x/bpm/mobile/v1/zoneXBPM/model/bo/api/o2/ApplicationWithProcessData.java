@@ -1,12 +1,16 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 应用对象 包含了流程数据
  * Created by FancyLou on 2016/2/23.
  */
-public class ApplicationWithProcessData {
+public class ApplicationWithProcessData implements Parcelable {
     private String id;
     private String name;
     private String alias;
@@ -153,4 +157,84 @@ public class ApplicationWithProcessData {
     public void setControllerList(List<String> controllerList) {
         this.controllerList = controllerList;
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(this.id);
+        dest.writeString(this.name);
+        dest.writeString(this.alias);
+        dest.writeString(this.createTime);
+        dest.writeString(this.updateTime);
+        dest.writeString(this.description);
+        dest.writeString(this.applicationCategory);
+        dest.writeString(this.icon);
+        dest.writeString(this.creatorPerson);
+        dest.writeString(this.lastUpdateTime);
+        dest.writeString(this.lastUpdatePerson);
+        dest.writeStringList(this.availableIdentityList);
+        dest.writeStringList(this.availableDepartmentList);
+        dest.writeStringList(this.availableCompanyList);
+        dest.writeStringList(this.controllerList);
+        dest.writeList(this.processList);
+    }
+
+    public void readFromParcel(Parcel source) {
+        this.id = source.readString();
+        this.name = source.readString();
+        this.alias = source.readString();
+        this.createTime = source.readString();
+        this.updateTime = source.readString();
+        this.description = source.readString();
+        this.applicationCategory = source.readString();
+        this.icon = source.readString();
+        this.creatorPerson = source.readString();
+        this.lastUpdateTime = source.readString();
+        this.lastUpdatePerson = source.readString();
+        this.availableIdentityList = source.createStringArrayList();
+        this.availableDepartmentList = source.createStringArrayList();
+        this.availableCompanyList = source.createStringArrayList();
+        this.controllerList = source.createStringArrayList();
+        this.processList = new ArrayList<ProcessInfoData>();
+        source.readList(this.processList, ProcessInfoData.class.getClassLoader());
+    }
+
+    public ApplicationWithProcessData() {
+    }
+
+    protected ApplicationWithProcessData(Parcel in) {
+        this.id = in.readString();
+        this.name = in.readString();
+        this.alias = in.readString();
+        this.createTime = in.readString();
+        this.updateTime = in.readString();
+        this.description = in.readString();
+        this.applicationCategory = in.readString();
+        this.icon = in.readString();
+        this.creatorPerson = in.readString();
+        this.lastUpdateTime = in.readString();
+        this.lastUpdatePerson = in.readString();
+        this.availableIdentityList = in.createStringArrayList();
+        this.availableDepartmentList = in.createStringArrayList();
+        this.availableCompanyList = in.createStringArrayList();
+        this.controllerList = in.createStringArrayList();
+        this.processList = new ArrayList<ProcessInfoData>();
+        in.readList(this.processList, ProcessInfoData.class.getClassLoader());
+    }
+
+    public static final Parcelable.Creator<ApplicationWithProcessData> CREATOR = new Parcelable.Creator<ApplicationWithProcessData>() {
+        @Override
+        public ApplicationWithProcessData createFromParcel(Parcel source) {
+            return new ApplicationWithProcessData(source);
+        }
+
+        @Override
+        public ApplicationWithProcessData[] newArray(int size) {
+            return new ApplicationWithProcessData[size];
+        }
+    };
 }

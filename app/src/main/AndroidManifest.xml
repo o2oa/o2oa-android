@@ -49,6 +49,9 @@
         android:usesCleartextTraffic="true"
         tools:replace="android:allowBackup">
         <activity
+            android:name=".app.o2.security.EmpowerCreateActivity"
+            android:exported="false" />
+        <activity
             android:name=".app.o2.security.EmpowerListActivity"
             android:exported="false" />
         <activity
