@@ -174,7 +174,10 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
 //            popupSampleTipsDialog()
             getSampleAccountsFromWWW()
         }
-        checkPopupPrompt()
+        val isShow = O2SDKManager.instance().prefs().getBoolean("firstShowUnitList", false)
+        if (!isShow) {
+            chooseUnitInfo()
+        }
     }
 
 
@@ -297,6 +300,10 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
 
             }
             .show()
+
+        O2SDKManager.instance().prefs().edit {
+            putBoolean("firstShowUnitList", true)
+        }
     }
 
     private fun clearAndreLaunch() {

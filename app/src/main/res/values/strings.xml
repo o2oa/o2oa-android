@@ -136,7 +136,7 @@
 
 
     <!-- login activity -->
-    <string name="login_bind_server">当前绑定服务器</string>
+    <string name="login_bind_server">选择访问环境</string>
     <string name="login_sample_alert_1">当前绑定服务器是：演示服务器。</string>
     <string name="login_sample_alert_2">试用账号：请到https://sample.o2oa.net获取\n 密码统一为：o2</string>
     <string name="login_sample_alert_3">请切换密码方式进行登录</string>
@@ -167,7 +167,7 @@
     <string name="message_login_fail_scan">登录失败！</string>
     <string name="message_login_fail_sign">签到失败！</string>
     <string name="message_login_success_sign">签到成功！</string>
-    <string name="account_security_change_unit_title">切换访问环境</string>
+    <string name="account_security_change_unit_title">选择访问环境</string>
     <string name="account_security_change_unit_dialog_alert">确定要切换访问环境吗，会重启应用并且需要新环境的用户密码进行登录？</string>
     <!--    <string-array name="login_facepp_trackig_mode_array">-->
     <!--        <item>Fast</item>-->
