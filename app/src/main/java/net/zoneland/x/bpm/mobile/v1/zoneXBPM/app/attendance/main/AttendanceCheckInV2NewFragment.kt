@@ -259,19 +259,20 @@ class AttendanceCheckInV2NewFragment : BaseMVPViewPagerFragment<AttendanceCheckI
             XToast.toastShort(activity!!, R.string.attendance_message_no_location_info)
             return
         }
-
-        if (record.isLastRecord) { // 只有最后一条可以更新
-            tv_attendance_check_in_new_check_in.text = getString(R.string.attendance_check_in_knock_loading)
-            tv_attendance_check_in_new_now_time.gone()
-            if (isInCheckInPositionRange && checkInPosition != null) { // 正常打卡
-                postCheckIn(record, checkInPosition!!.id, false, null)
+        O2DialogSupport.openConfirmDialog(activity!!, "确定要更新这条打卡数据？", listener = { d ->
+            if (record.isLastRecord) { // 只有最后一条可以更新
+                tv_attendance_check_in_new_check_in.text = getString(R.string.attendance_check_in_knock_loading)
+                tv_attendance_check_in_new_now_time.gone()
+                if (isInCheckInPositionRange && checkInPosition != null) { // 正常打卡
+                    postCheckIn(record, checkInPosition!!.id, false, null)
+                } else {
+                    // 外勤
+                    outSide(record)
+                }
             } else {
-                // 外勤
-                outSide(record)
+                XLog.info("不是最后一条，不能更新打卡，怎么点击到的？？？")
             }
-        } else {
-            XLog.info("不是最后一条，不能更新打卡，怎么点击到的？？？")
-        }
+        })
     }
     /**
      * 点击打卡

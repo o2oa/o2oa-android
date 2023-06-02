@@ -15,11 +15,13 @@ object AttendanceV2AppealContract {
         fun appealList(list: List<AttendanceV2AppealInfo>)
         fun checkAppealResult(value: Boolean, appealInfo: AttendanceV2AppealInfo)
         fun appealStartedProcess(value: Boolean)
+        fun appealResetStatus(value: Boolean)
     }
     interface Presenter : BasePresenter<View> {
         fun config()
         fun myAppealListByPage(page: Int)
         fun checkAppeal(appealInfo: AttendanceV2AppealInfo)
-        fun appealStartedProcess(id: String)
+        fun appealStartedProcess(id: String, jobId: String)
+        fun appealResetStatus(id: String)
     }
 }

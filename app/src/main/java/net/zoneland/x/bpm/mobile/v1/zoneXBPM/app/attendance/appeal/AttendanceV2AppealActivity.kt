@@ -26,6 +26,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2oaColorScheme
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.DividerItemDecoration
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
 class AttendanceV2AppealActivity : BaseMVPActivity<AttendanceV2AppealContract.View, AttendanceV2AppealContract.Presenter>(), AttendanceV2AppealContract.View {
 
@@ -130,7 +131,7 @@ class AttendanceV2AppealActivity : BaseMVPActivity<AttendanceV2AppealContract.Vi
             if (item.status == AttendanceV2AppealStatus.StatusInit.value && appealEnable) {
                 startAppeal(item)
             } else if (!TextUtils.isEmpty(item.jobId)) {
-                 openJob(item.jobId)
+                 openJob(item)
             }
         }
     }
@@ -165,7 +166,7 @@ class AttendanceV2AppealActivity : BaseMVPActivity<AttendanceV2AppealContract.Vi
             val dialog = StartProcessDialogFragment.createStartProcessDialog(processId, jsonData = O2SDKManager.instance().gson.toJson(data), dismiss = { result, jobId ->
                 XLog.debug("dialog 关闭了。。。。result: $result job: $jobId")
                 if (result) {
-                    mPresenter.appealStartedProcess(appealInfo.id)
+                    mPresenter.appealStartedProcess(appealInfo.id, jobId?:"")
                 }
             })
             dialog.isCancelable = false
@@ -178,6 +179,13 @@ class AttendanceV2AppealActivity : BaseMVPActivity<AttendanceV2AppealContract.Vi
         refreshDataList()
     }
 
+    override fun appealResetStatus(value: Boolean) {
+        XLog.info("还原状态的结果： $value")
+        if (!value) {
+            XToast.toastShort("还原状态失败！")
+        }
+        refreshDataList()
+    }
 
     private fun refreshDataList() {
         isRefresh = true
@@ -205,10 +213,18 @@ class AttendanceV2AppealActivity : BaseMVPActivity<AttendanceV2AppealContract.Vi
         showLoadingDialog()
         mPresenter.checkAppeal(item)
     }
+    private fun confirmNeedResetStatus(info: AttendanceV2AppealInfo) {
+        O2DialogSupport.openConfirmDialog(this, "当前工作没有找到，是否要还原当前数据的状态？", listener =  { d ->
+            mPresenter.appealResetStatus(info.id)
+        })
+    }
 
-    private fun openJob(jobId: String) {
-        val dialog = OpenJobDialogFragment.openJobDialog(jobId) {
+    private fun openJob(info: AttendanceV2AppealInfo) {
+        val dialog = OpenJobDialogFragment.openJobDialog(info.jobId) { isOpenWork ->
             XLog.debug("open job dialog 关闭了")
+            if (!isOpenWork) {
+                confirmNeedResetStatus(info)
+            }
         }
         dialog.isCancelable = false
         dialog.show(supportFragmentManager, OpenJobDialogFragment.TAG)

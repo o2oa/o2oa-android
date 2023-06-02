@@ -93,8 +93,10 @@ class StartProcessStepOneFragment : BaseMVPFragment<StartProcessStepOneContract.
                     (activity as StartProcessActivity).chooseModeResult(appList[position].app, null)
                 } else {
                     currentChooseAppId = appList[position].app!!.id
-                    mPresenter.loadProcessListByAppId(currentChooseAppId)
+                    setProcessList(appList[position].app!!.processList)
+//                    mPresenter.loadProcessListByAppId(currentChooseAppId)
                     appAdapter.notifyDataSetChanged()
+//                    appAdapter.notifyItemChanged(position)
                 }
             }
         }

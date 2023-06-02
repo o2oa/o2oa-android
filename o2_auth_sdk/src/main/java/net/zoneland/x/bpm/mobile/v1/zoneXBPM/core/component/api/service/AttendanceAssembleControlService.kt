@@ -65,8 +65,14 @@ interface AttendanceAssembleControlService {
     /**
      * 启动流程后 更新申诉数据
      */
-    @GET("jaxrs/v2/appeal/{id}/start/process")
-    fun attendanceV2AppealStartProcess(@Path("id") id: String):Observable<ApiResponse<ValueData>>
+    @POST("jaxrs/v2/appeal/{id}/start/process")
+    fun attendanceV2AppealStartProcess(@Path("id") id: String, @Body body: AttendanceV2StartProcessBody):Observable<ApiResponse<ValueData>>
+
+    /**
+     * 还原申诉数据的状态
+     */
+    @GET("jaxrs/v2/appeal/{id}/reset/status")
+    fun attendanceV2AppealResetStatus(@Path("id") id: String):Observable<ApiResponse<ValueData>>
 
 
     //////////////////////v1/////////////

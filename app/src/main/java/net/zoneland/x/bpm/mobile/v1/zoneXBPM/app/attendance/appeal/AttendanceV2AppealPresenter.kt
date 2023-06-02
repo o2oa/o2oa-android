@@ -5,6 +5,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.exception.O2ResponseException
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.AttendanceV2AppealInfo
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.AttendanceV2AppealPageListFilter
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.attendance.AttendanceV2StartProcessBody
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
@@ -31,10 +32,12 @@ class AttendanceV2AppealPresenter : BasePresenterImpl<AttendanceV2AppealContract
             }
     }
 
-    override fun appealStartedProcess(id: String) {
+    override fun appealStartedProcess(id: String, jobId: String) {
         val service = getAttendanceAssembleControlService(mView?.getContext())
         if (service != null) {
-            service.attendanceV2AppealStartProcess(id)
+            val body = AttendanceV2StartProcessBody()
+            body.job = jobId
+            service.attendanceV2AppealStartProcess(id, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .o2Subscribe {
@@ -99,6 +102,26 @@ class AttendanceV2AppealPresenter : BasePresenterImpl<AttendanceV2AppealContract
                 }
         } else {
             mView?.appealList(arrayListOf())
+        }
+    }
+
+    override fun appealResetStatus(id: String) {
+        val service = getAttendanceAssembleControlService(mView?.getContext())
+        if (service != null) {
+            service.attendanceV2AppealResetStatus(id)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext {
+                        mView?.appealResetStatus(true)
+                    }
+                    onError { e, _ ->
+                        XLog.error("${e?.message}")
+                        mView?.appealResetStatus(false)
+                    }
+                }
+        } else {
+            mView?.appealResetStatus(false)
         }
     }
 }

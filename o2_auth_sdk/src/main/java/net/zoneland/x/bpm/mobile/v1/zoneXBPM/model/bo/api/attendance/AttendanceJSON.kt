@@ -101,6 +101,9 @@ data class AttendanceV2StatisticBody(
     var startDate: String = "",
     var endDate: String = "",
 )
+data class AttendanceV2StartProcessBody(
+    var job: String = "",
+)
 
 data class AttendanceV2CheckInBody(
     var recordId: String = "",
@@ -205,7 +208,7 @@ enum class AttendanceV2RecordResult(val value: String, val label: String) {
 
 enum class AttendanceV2AppealStatus(val value: Int, val label: String) {
     StatusInit(0, "待处理"),
-    StatusProcessing(1, "审批中"),
+    StatusProcessing(1, "流转中"),
     StatusProcessAgree(2, "审批通过"),
     StatusProcessDisagree(3, "审批不通过")
 }

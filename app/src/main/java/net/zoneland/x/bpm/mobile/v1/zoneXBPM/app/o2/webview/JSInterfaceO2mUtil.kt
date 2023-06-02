@@ -258,7 +258,7 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
         val pickerValue: O2JsPostMessage<O2UtilDatePickerMessage> = gson.fromJson(message, type)
         val callback = pickerValue.callback
         var startValue = pickerValue.data?.startDate
-        var endValue = pickerValue.data?.startDate
+        var endValue = pickerValue.data?.endDate
         if (TextUtils.isEmpty(startValue)) {
             startValue = DateHelper.nowByFormate("yyyy-MM-dd")
         }
@@ -397,12 +397,12 @@ class JSInterfaceO2mUtil private constructor(val activity: FragmentActivity?) {
                     val uri = Uri.parse(schema)   //   o2oa://" 相当于 http://www.baidu.com
                     val intent =  Intent(Intent.ACTION_VIEW, uri)
 //                    if (intent.resolveActivity(activity.packageManager) != null) {
-                        try {
-                            intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
-                            activity.startActivity(intent)
-                        } catch (e: Exception) {
-                            XLog.error("没有安装第三方app，schema: $schema", e)
-                        }
+                    try {
+                        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK
+                        activity.startActivity(intent)
+                    } catch (e: Exception) {
+                        XLog.error("没有安装第三方app，schema: $schema", e)
+                    }
 //                    } else {
 //                        XLog.error("没有安装第三方app，schema: $schema")
 //                    }

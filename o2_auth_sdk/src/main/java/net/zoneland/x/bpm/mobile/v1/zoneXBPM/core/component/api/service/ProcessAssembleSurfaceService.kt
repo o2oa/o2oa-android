@@ -56,6 +56,12 @@ interface ProcessAssembleSurfaceService {
     @GET("jaxrs/application/list/complex")
     fun getApplicationProcessList(): Observable<ApiResponse<List<ApplicationWithProcessData>>>
 
+    /**
+     * 移动端能展现是流程应用
+     */
+    @GET("jaxrs/application/list/terminal/mobile")
+    fun getApplicationListWithTerminal(): Observable<ApiResponse<List<ApplicationWithProcessData>>>
+
 
     /**
      * 获取当前流程的可用身份列表

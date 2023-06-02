@@ -36,14 +36,14 @@ class OpenJobDialogFragment : DialogFragment(), OpenJobContract.View {
         const val TAG = "OpenJobDialogFragment"
         private const val jobIdKey = "jobIdKey"
 
-        fun openJobDialog(jobId: String, dismiss: () -> Unit): OpenJobDialogFragment {
+        fun openJobDialog(jobId: String, dismiss: (isOpenWork: Boolean) -> Unit): OpenJobDialogFragment {
             val dialog = OpenJobDialogFragment()
             val bundle = Bundle()
             bundle.putString(jobIdKey, jobId)
             dialog.arguments = bundle
             dialog.dismissListener = object : OpenJobDialogDismissListener {
-                override fun onDismiss() {
-                    dismiss()
+                override fun onDismiss(isOpenWork: Boolean) {
+                    dismiss(isOpenWork)
                 }
             }
             return dialog
@@ -51,7 +51,7 @@ class OpenJobDialogFragment : DialogFragment(), OpenJobContract.View {
     }
 
     interface OpenJobDialogDismissListener {
-        fun onDismiss()
+        fun onDismiss(isOpenWork: Boolean)
     }
 
     private val mPresenter = OpenJobPresenter()
@@ -119,6 +119,7 @@ class OpenJobDialogFragment : DialogFragment(), OpenJobContract.View {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         iv_open_job_dialog_close.setOnClickListener {
+            dismissListener?.onDismiss(false)
             closeSelf()
         }
         rv_open_job_dialog_work_list.layoutManager = LinearLayoutManager(activity, LinearLayoutManager.VERTICAL, false)
@@ -130,6 +131,7 @@ class OpenJobDialogFragment : DialogFragment(), OpenJobContract.View {
         val jobId = arguments?.getString(jobIdKey)
         if (arguments == null || TextUtils.isEmpty(jobId)) {
             XToast.toastShort(activity, getString(R.string.start_job_id_empty))
+            dismissListener?.onDismiss(false)
             closeSelf()
         } else {
             mPresenter.getWorkByJobId(jobId!!)
@@ -155,6 +157,9 @@ class OpenJobDialogFragment : DialogFragment(), OpenJobContract.View {
                 cpb_open_job_dialog_loading.gone()
                 adapter.notifyDataSetChanged()
             }
+        } else {
+            dismissListener?.onDismiss(false)
+            closeSelf()
         }
     }
 
@@ -163,6 +168,7 @@ class OpenJobDialogFragment : DialogFragment(), OpenJobContract.View {
     }
 
     private fun openWork(work : Work) {
+        dismissListener?.onDismiss(true)
         closeSelf()
         activity?.go<TaskWebViewActivity>(TaskWebViewActivity.start(work.id, "", work.title))
     }

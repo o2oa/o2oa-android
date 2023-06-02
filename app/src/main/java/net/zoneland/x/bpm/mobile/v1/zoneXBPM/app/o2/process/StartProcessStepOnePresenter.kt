@@ -18,7 +18,7 @@ class StartProcessStepOnePresenter : BasePresenterImpl<StartProcessStepOneContra
     override fun loadApplicationListWithProcess() {
 
         getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service->
-            service.getApplicationProcessList()
+            service.getApplicationListWithTerminal()
                 .subscribeOn(Schedulers.io())
                 .flatMap {// 过滤不是移动端的流程和应用
                     val oldList = it.data
@@ -27,11 +27,11 @@ class StartProcessStepOnePresenter : BasePresenterImpl<StartProcessStepOneContra
                         oldList.map { item ->
                             val pList = item.processList
                             if (pList != null &&  pList.isNotEmpty() ) {
-                                val newPlist = pList.filter { p -> "client" != p.startableTerminal }.toList()
-                                if (newPlist.isNotEmpty()) {
-                                    item.processList = newPlist
+//                                val newPlist = pList.filter { p -> "client" != p.startableTerminal }.toList()
+//                                if (newPlist.isNotEmpty()) {
+//                                    item.processList = newPlist
                                     newList.add(item)
-                                }
+//                                }
                             }
                         }
                     }
