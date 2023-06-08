@@ -657,6 +657,8 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         mReceiver = IMMessageReceiver()
         val filter = IntentFilter(O2IM.IM_Message_Receiver_Action)
         filter.addAction(O2.FAST_CHECK_IN_RECEIVER_ACTION) // 添加一个广播 接收极速打卡成功的消息
+        filter.addAction(O2IM.IM_Conversation_Update_Action)
+        filter.addAction(O2IM.IM_Conversation_Delete_Action)
         LocalBroadcastManager.getInstance(O2App.instance.applicationContext).registerReceiver(mReceiver!!, filter)
     }
 
@@ -698,7 +700,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
                 }
             } else if (intent?.action == O2IM.IM_Message_Receiver_Action) {
                 val body = intent.getStringExtra(O2IM.IM_Message_Receiver_name)
-                if (body != null && body.isNotEmpty()) {
+                if (!body.isNullOrEmpty()) {
                     XLog.debug("接收到im消息, $body")
                     try {
                         val message = O2SDKManager.instance().gson.fromJson<IMMessage>(
@@ -709,6 +711,11 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
                     } catch (e: Exception) {
                         XLog.error("", e)
                     }
+                }
+            }  else if (intent?.action == O2IM.IM_Conversation_Update_Action || intent?.action == O2IM.IM_Conversation_Delete_Action) {
+                val newsFragment = fragmentList[0]
+                if (newsFragment is O2IMConversationFragment) {
+                    newsFragment.receiveConversationFromWebsocket()
                 }
             }
         }

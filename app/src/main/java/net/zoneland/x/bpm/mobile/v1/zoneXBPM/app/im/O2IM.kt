@@ -8,6 +8,9 @@ object O2IM {
     const val IM_Message_Receiver_Action = "net.o2oa.android.im.message"
     const val IM_Message_Receiver_name = "IM_Message_Receiver_name"
     const val IM_Message_Receiver_revoke_name = "IM_Message_Receiver_revoke_name"
+    const val IM_Conversation_Update_Action = "net.o2oa.android.im.conversation.update"
+    const val IM_Conversation_Delete_Action = "net.o2oa.android.im.conversation.delete"
+    const val IM_Conversation_extra_name = "IM_Conversation_extra_name"
 
     const val conversation_type_single = "single"
     const val conversation_type_group = "group"
@@ -15,6 +18,8 @@ object O2IM {
 
     const val TYPE_IM_CREATE = "im_create" // 消息类型 新消息
     const val TYPE_IM_REVOKE = "im_revoke" // 消息类型 撤回
+    const val TYPE_IM_CONV_DELETE = "im_conv_delete" // 消息类型  会话删除
+    const val TYPE_IM_CONV_UPDATE = "im_conv_update" // 消息类型 会话更新
 
     const val IM_Message_Menu_name_Revoke = "撤回"
     const val IM_Message_Menu_name_Revoke_group = "撤回成员消息"

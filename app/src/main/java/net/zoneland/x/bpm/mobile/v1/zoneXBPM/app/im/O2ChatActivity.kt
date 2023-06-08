@@ -1179,37 +1179,77 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
     private fun registerBroadcast() {
         mReceiver = IMMessageReceiver()
         val filter = IntentFilter(O2IM.IM_Message_Receiver_Action)
+        filter.addAction(O2IM.IM_Conversation_Update_Action)
+        filter.addAction(O2IM.IM_Conversation_Delete_Action)
         registerReceiver(mReceiver, filter)
     }
 
 
     inner class IMMessageReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
-            // 新消息
-            val body = intent?.getStringExtra(O2IM.IM_Message_Receiver_name)
-            if (body != null && body.isNotEmpty()) {
-                XLog.debug("接收到im消息, $body")
-                try {
-                    val message = O2SDKManager.instance().gson.fromJson<IMMessage>(body, IMMessage::class.java)
-                    if (message.conversationId == conversationId) {
-                        receiveMessage(message)
+            if (intent?.action == O2IM.IM_Message_Receiver_Action) {
+                val body = intent.getStringExtra(O2IM.IM_Message_Receiver_name)
+                if (!body.isNullOrEmpty()) {
+                    XLog.debug("接收到im消息, $body")
+                    try {
+                        val message = O2SDKManager.instance().gson.fromJson<IMMessage>(
+                            body,
+                            IMMessage::class.java
+                        )
+                        if (message.conversationId == conversationId) {
+                            receiveMessage(message)
+                        }
+                    } catch (e: Exception) {
+                        XLog.error("", e)
                     }
-                } catch (e: Exception) {
-                    XLog.error("", e)
+                }
+                val revokeBody = intent.getStringExtra(O2IM.IM_Message_Receiver_revoke_name)
+                if (!revokeBody.isNullOrEmpty()) {
+                    XLog.debug("接收到im撤回消息, $revokeBody")
+                    try {
+                        val message = O2SDKManager.instance().gson.fromJson<IMMessage>(
+                            revokeBody,
+                            IMMessage::class.java
+                        )
+                        if (message.conversationId == conversationId) {
+                            adapter.removeMessage(message)
+                        }
+                    } catch (e: Exception) {
+                        XLog.error("", e)
+                    }
+                }
+            } else if (intent?.action == O2IM.IM_Conversation_Update_Action) {
+                val conv = parseJson()
+                if (conv != null && conv.id == conversationId) {
+                    // 判断人员是否还存在
+                    if (!conv.personList.contains(O2SDKManager.instance().distinguishedName)) {
+                        // 已经 被删除成员 关闭当前窗口
+                        finish()
+                    } else {
+                        mPresenter.getConversation(conversationId)
+                    }
+                }
+            } else if (intent?.action == O2IM.IM_Conversation_Delete_Action) {
+                val conv = parseJson()
+                if (conv != null && conv.id == conversationId) {
+                    // 已经删除 关闭当前聊天窗口
+                    XToast.toastShort(this@O2ChatActivity, "会话已删除！")
+                    finish()
                 }
             }
-            val revokeBody = intent?.getStringExtra(O2IM.IM_Message_Receiver_revoke_name)
-            if (revokeBody != null && revokeBody.isNotEmpty()) {
-                XLog.debug("接收到im撤回消息, $revokeBody")
-                try {
-                    val message = O2SDKManager.instance().gson.fromJson<IMMessage>(revokeBody, IMMessage::class.java)
-                    if (message.conversationId == conversationId) {
-                        adapter.removeMessage(message)
-                    }
-                } catch (e: Exception) {
-                    XLog.error("", e)
-                }
+        }
+
+        private fun parseJson() : IMConversationInfo? {
+            val convBody = intent.getStringExtra(O2IM.IM_Conversation_extra_name)
+            if (convBody.isNullOrEmpty()) {
+                return null
             }
+            try {
+                return O2SDKManager.instance().gson.fromJson(convBody, IMConversationInfo::class.java)
+            } catch (e: Exception) {
+                XLog.error("", e)
+            }
+            return null
         }
 
     }

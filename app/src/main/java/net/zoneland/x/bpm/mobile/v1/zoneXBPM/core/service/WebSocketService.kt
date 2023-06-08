@@ -125,6 +125,21 @@ class WebSocketService : Service() {
         sendBroadcast(intent)
     }
 
+    private fun sendIMConversationUpdateBroadcast(msg: String) {
+        XLog.debug("发送im 会话更新  消息： $msg")
+        val intent = Intent()
+        intent.action = O2IM.IM_Conversation_Update_Action
+        intent.putExtra(O2IM.IM_Conversation_extra_name, msg)
+        sendBroadcast(intent)
+    }
+    private fun sendIMConversationDeleteBroadcast(msg: String) {
+        XLog.debug("发送im 会话 删除  消息： $msg")
+        val intent = Intent()
+        intent.action = O2IM.IM_Conversation_Delete_Action
+        intent.putExtra(O2IM.IM_Conversation_extra_name, msg)
+        sendBroadcast(intent)
+    }
+
     /**
      * 发送消息
      */
@@ -171,6 +186,12 @@ class WebSocketService : Service() {
                         } else if (type == O2IM.TYPE_IM_REVOKE) {
                             val body = json.getJSONObject("body")
                             sendIMMessageRevokeBroadcast(body.toString())
+                        } else if ( type == O2IM.TYPE_IM_CONV_DELETE) {
+                            val body = json.getJSONObject("body")
+                            sendIMConversationDeleteBroadcast(body.toString())
+                        } else if ( type == O2IM.TYPE_IM_CONV_UPDATE) {
+                            val body = json.getJSONObject("body")
+                            sendIMConversationUpdateBroadcast(body.toString())
                         }
                     } catch (e: Exception) {
                         XLog.error("", e)

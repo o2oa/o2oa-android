@@ -239,6 +239,10 @@ class O2IMConversationFragment : BaseMVPViewPagerFragment<O2IMConversationContra
             }
         }
     }
+    fun receiveConversationFromWebsocket() {
+        // 直接重新刷新列表数据
+        mPresenter.getMyConversationList()
+    }
 
 
     private fun setUnreadNumber(number: Int) {
