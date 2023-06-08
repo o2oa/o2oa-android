@@ -40,24 +40,42 @@ class NewContactPresenter : BasePresenterImpl<NewContactContract.View>(), NewCon
             if (person != null) {
                 val identityList = person.woIdentityList
                 if (identityList.isNotEmpty()) {
-                    val identity = identityList[0]
-                    val form = IdentityLevelForm(identity = identity.distinguishedName, level = 1)
-                    expressService?.unitByIdentityAndLevel(form)
+//                    val identity = identityList[0]
+                    val list: List<Observable<ApiResponse<UnitJson>>> = identityList.mapNotNull { i ->
+                        expressService?.unitByIdentityAndLevel(IdentityLevelForm(identity = i.distinguishedName, level = 1))
+                    }
+                    Observable.zip(list) { results ->
+                        val myList = ArrayList<ApiResponse<UnitJson>>()
+                        if (results != null) {
+                            for (result in results) {
+                                val s = result as? ApiResponse<UnitJson>
+                                if (s != null) {
+                                    myList.add(s)
+                                }
+                            }
+                        }
+                        myList
+                    }
                 } else {
-                    Observable.just(ApiResponse<UnitJson>())
+                    Observable.just(ArrayList<ApiResponse<UnitJson>>())
                 }
             } else {
-                Observable.just(ApiResponse<UnitJson>())
+                Observable.just(ArrayList<ApiResponse<UnitJson>>())
             }
         }?.map { response ->
             val topList = ArrayList<NewContactFragmentVO>()
-            val unit = response.data
-            if (unit != null) {
+            if (response != null) {
                 val header = NewContactFragmentVO.GroupHeader(mView?.getContext()?.getString(R.string.contact_org_structure) ?: "组织结构", R.mipmap.icon_contact_my_department)
                 topList.add(header)
-                val u = unit.copyToVO() as NewContactFragmentVO.MyDepartment
-                u.hasChildren = true
-                topList.add(u)
+                for (api in response) {
+                    val unit = api.data
+                    if (unit != null) {
+                        val u = unit.copyToVO() as NewContactFragmentVO.MyDepartment
+                        u.hasChildren = true
+                        topList.add(u)
+                    }
+                }
+
             }
             topList
         }
