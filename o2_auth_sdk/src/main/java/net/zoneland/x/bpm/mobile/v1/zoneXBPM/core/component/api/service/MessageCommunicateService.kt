@@ -79,8 +79,10 @@ interface MessageCommunicateService {
      * 个人消息 排除IM消息
      *  列表
      */
-    @GET("jaxrs/instant/list/currentperson/noim/count/{count}/desc")
-    fun instantMessageList(@Path("count") count: Int) : Observable<ApiResponse<List<InstantMessage>>>
+//    @GET("jaxrs/instant/list/currentperson/noim/count/{count}/desc")
+//    fun instantMessageList(@Path("count") count: Int) : Observable<ApiResponse<List<InstantMessage>>>
+    @POST("jaxrs/message/list/paging/1/size/100")
+    fun instantMessageList(@Body body: HashMap<String, String>) : Observable<ApiResponse<List<InstantMessage>>>
 
     /**
      * 上传文件

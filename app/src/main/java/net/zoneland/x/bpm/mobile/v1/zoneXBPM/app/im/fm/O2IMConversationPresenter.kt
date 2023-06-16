@@ -44,14 +44,16 @@ class O2IMConversationPresenter : BasePresenterImpl<O2IMConversationContract.Vie
     override fun getMyInstantMessageList() {
         val service = getMessageCommunicateService(mView?.getContext())
         service?.let { ser ->
-            ser.instantMessageList(100)
+            val map:HashMap<String, String> = HashMap()
+            map["person"] = O2SDKManager.instance().distinguishedName
+            map["consume"] = "pmsinner"
+            ser.instantMessageList(map)
                     .subscribeOn(Schedulers.io())
                     .flatMap { res ->
-
                         val list = res.data
                         if (list != null && list.isNotEmpty()) {
                             XLog.info("instant message size ${list.size}")
-                            val newList = list.sortedBy { it.createTime }
+                            val newList = list.filter { e -> !e.type.startsWith("im_")}.sortedBy { it.createTime }
                             Observable.just(newList)
                         }else {
                             Observable.just(ArrayList())
