@@ -37,6 +37,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.person.PersonActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.TaskWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
@@ -195,6 +196,12 @@ class O2ChatActivity : BaseMVPActivity<O2ChatContract.View, O2ChatContract.Prese
             override fun openProcessWork(position: Int, msgBody: IMMessageBody) {
                 if (!TextUtils.isEmpty(msgBody.work)) {
                     go<TaskWebViewActivity>(TaskWebViewActivity.start(msgBody.work, "", ""))
+                }
+            }
+
+            override fun clickPersonAvatar(message: IMMessage) {
+                if (!TextUtils.isEmpty(message.createPerson)) {
+                    go<PersonActivity>(PersonActivity.startBundleData(message.createPerson))
                 }
             }
         }

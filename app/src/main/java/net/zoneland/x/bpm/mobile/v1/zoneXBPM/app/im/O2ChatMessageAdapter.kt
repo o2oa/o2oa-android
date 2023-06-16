@@ -162,7 +162,9 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
             sendFailBtn.setOnClickListener {
                 eventListener?.resendClick(message)
             }
-
+            avatar.setOnClickListener {
+                eventListener?.clickPersonAvatar(message)
+            }
             holder.itemView.setOnCreateContextMenuListener { menu, v, menuInfo ->
                 eventListener?.onCreateContextMenu(menu, message)
             }
@@ -369,5 +371,7 @@ class O2ChatMessageAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
         fun openFile(position: Int, msgBody: IMMessageBody)
         fun onCreateContextMenu(menu: ContextMenu?, message: IMMessage)
         fun openProcessWork(position: Int, msgBody: IMMessageBody)
+
+        fun clickPersonAvatar(message: IMMessage)
     }
 }
