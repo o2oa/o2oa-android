@@ -50,7 +50,9 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
  */
 
 
-class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, IndexPortalContract.Presenter>(), IndexPortalContract.View {
+class IndexPortalFragment :
+    BaseMVPViewPagerFragment<IndexPortalContract.View, IndexPortalContract.Presenter>(),
+    IndexPortalContract.View {
     override var mPresenter: IndexPortalContract.Presenter = IndexPortalPresenter()
 
     override fun layoutResId(): Int = R.layout.fragment_index_portal
@@ -72,7 +74,11 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
 
     private val webChromeClient: WebChromeClientWithProgressAndValueCallback
             by lazy { WebChromeClientWithProgressAndValueCallback.with(this) }
-    private val jsNotification: JSInterfaceO2mNotification by lazy { JSInterfaceO2mNotification.with(this) }
+    private val jsNotification: JSInterfaceO2mNotification by lazy {
+        JSInterfaceO2mNotification.with(
+            this
+        )
+    }
     private val jsUtil: JSInterfaceO2mUtil by lazy { JSInterfaceO2mUtil.with(this) }
     private val jsBiz: JSInterfaceO2mBiz by lazy { JSInterfaceO2mBiz.with(this) }
 
@@ -84,7 +90,11 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
         pageId = arguments?.getString(PORTAL_PAGE_ID_KEY) ?: ""
         if (TextUtils.isEmpty(portalId)) {
             XToast.toastShort(activity, getString(R.string.message_portal_need_id))
-            web_view_portal_content.loadData(getString(R.string.message_portal_need_id), "text/plain", "UTF-8")
+            web_view_portal_content.loadData(
+                getString(R.string.message_portal_need_id),
+                "text/plain",
+                "UTF-8"
+            )
         } else {
             portalUrl = APIAddressHelper.instance().getPortalWebViewUrl(portalId, pageId)
             XLog.debug("portal url : $portalUrl")
@@ -93,10 +103,13 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
             jsUtil.setupWebView(web_view_portal_content)
             jsBiz.setupWebView(web_view_portal_content)
             web_view_portal_content.addJavascriptInterface(
-                    jsNotification,
-                    JSInterfaceO2mNotification.JSInterfaceName
+                jsNotification,
+                JSInterfaceO2mNotification.JSInterfaceName
             )
-            web_view_portal_content.addJavascriptInterface(jsUtil, JSInterfaceO2mUtil.JSInterfaceName)
+            web_view_portal_content.addJavascriptInterface(
+                jsUtil,
+                JSInterfaceO2mUtil.JSInterfaceName
+            )
             web_view_portal_content.addJavascriptInterface(jsBiz, JSInterfaceO2mBiz.JSInterfaceName)
             web_view_portal_content.webViewSetCookie(activity!!, portalUrl)
             web_view_portal_content.setDownloadListener(O2WebviewDownloadListener(activity!!))
@@ -115,13 +128,18 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
                         XLog.debug("处理了大图了？？？？？？？？？？？？")
                     }
                 }
-                override fun onReceivedSslError(view: WebView?, handler: SslErrorHandler?, error: SslError?) {
+
+                override fun onReceivedSslError(
+                    view: WebView?,
+                    handler: SslErrorHandler?,
+                    error: SslError?
+                ) {
                     XLog.error("ssl error, $error")
                     handler?.proceed()
                 }
 
                 override fun shouldOverrideUrlLoading(view: WebView?, url: String?): Boolean {
-                    XLog.debug("跳转 url : $url" )
+                    XLog.debug("跳转 url : $url")
                     if (!TextUtils.isEmpty(url)) {
                         if (StringUtil.isImgUrl(url)) {
                             BigImageViewActivity.startInternetImageUrl(activity!!, url!!)
@@ -183,24 +201,30 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
     override fun cmsApplication(app: CMSApplicationInfoJson?) {
         hideLoadingDialog()
         cmsApp = app
-        if (cmsApp !=  null) {
-            if (cmsStatus == "0") {
-                activity?.go<CMSApplicationActivity>(CMSApplicationActivity.startBundleData(cmsApp!!))
-            } else if (cmsStatus == "1") {
-                val categoryList = cmsApp!!.wrapOutCategoryList
-                if (categoryList.isEmpty()) {
-                    XToast.toastShort(activity, "当前栏目没有分类信息，无法创建文档！")
-                    return
-                }
-                if (cmsOptions != null && !TextUtils.isEmpty(cmsOptions!!["category"])) {
-                    cmsPublishCategory = categoryList.firstOrNull { it.id == cmsOptions!!["category"] || it.categoryName == cmsOptions!!["category"]  }
-                    if (cmsPublishCategory != null) {
-                        mPresenter.findDocumentDraftWithCategory(cmsPublishCategory!!.id)
-                    }
-                } else {
-                    showPublishCategoriesList(categoryList)
-                }
+        if (cmsApp != null && cmsStatus == "1") {
+            val categoryList = cmsApp!!.wrapOutCategoryList
+            if (categoryList.isEmpty()) {
+                XToast.toastShort(activity, "当前栏目没有分类信息，无法创建文档！")
+                return
             }
+            if (cmsOptions != null && !TextUtils.isEmpty(cmsOptions!!["category"])) {
+                cmsPublishCategory =
+                    categoryList.firstOrNull { it.id == cmsOptions!!["category"] || it.categoryName == cmsOptions!!["category"] }
+                if (cmsPublishCategory != null) {
+                    mPresenter.findDocumentDraftWithCategory(cmsPublishCategory!!.id)
+                }
+            } else {
+                showPublishCategoriesList(categoryList)
+            }
+        }
+    }
+
+    override fun openCmsApplication(app: CMSApplicationInfoJson?) {
+        hideLoadingDialog()
+        if (app != null) {
+            activity?.go<CMSApplicationActivity>(CMSApplicationActivity.startBundleData(app))
+        } else {
+            XToast.toastShort(activity, "没有查询到对应的应用！")
         }
     }
 
@@ -240,19 +264,35 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
                 ignoreTitle = cmsConfig.ignoreTitle
                 if (!cmsConfig.latest) {
                     XLog.info("没有草稿，跳转到发布页面 有配置latest 。。。。。")
-                    activity?.go<CMSPublishDocumentActivity>(CMSPublishDocumentActivity.start(cmsPublishCategory!!, ignoreTitle))
+                    activity?.go<CMSPublishDocumentActivity>(
+                        CMSPublishDocumentActivity.start(
+                            cmsPublishCategory!!,
+                            ignoreTitle
+                        )
+                    )
                     return
                 }
             }
         }
         if (list.isEmpty()) {
             XLog.info("没有草稿，跳转到发布页面")
-            activity?.go<CMSPublishDocumentActivity>(CMSPublishDocumentActivity.start(cmsPublishCategory!!, ignoreTitle))
-        }else {
+            activity?.go<CMSPublishDocumentActivity>(
+                CMSPublishDocumentActivity.start(
+                    cmsPublishCategory!!,
+                    ignoreTitle
+                )
+            )
+        } else {
             XLog.info("有草稿，跳转到详细页面")
             val document = list[0]
             val options = "{\"readonly\": false}"
-            activity?.go<CMSWebViewActivity>(CMSWebViewActivity.startBundleDataWithOptions(document.id, document.title, options))
+            activity?.go<CMSWebViewActivity>(
+                CMSWebViewActivity.startBundleDataWithOptions(
+                    document.id,
+                    document.title,
+                    options
+                )
+            )
         }
     }
 
@@ -295,20 +335,21 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
     private var cmsStatus = "-1" // 0 打开cms应用页面 1创建文档
     private var cmsOptions: HashMap<String, String>? = null
     private var cmsPublishCategory: CMSCategoryInfoJson? = null
+
     /**
      * 创建文档 目前只有 column 和 category 有效果
      * options : {
-            "column" : column, //（string）可选，内容管理应用（栏目）的名称、别名或ID
-            "category" : category, //（string）可选，要创建的文档所属的分类的名称、别名或ID
-            "data" : data, //（json object）可选，创建文档时默认的业务数据
-            "identity" : identity, //（string）可选，创建文档所使用的身份。如果此参数为空，且当前人有多个身份的情况下，会弹出身份选择对话框；否则使用默认身份。
-            "callback" : callback, //（funcation）可选，文档创建后的回调函数。
-            "target" : target, //（boolean）可选，为true时，在当前页面打开创建的文档；否则打开新窗口。默认false。
-            "latest" : latest, //（boolean）可选，为true时，如果当前用户已经创建了此分类的文档，并且没有发布过，直接调用此文档为新文档；否则创建一个新文档。默认true。
-            "selectColumnEnable" : selectColumnEnable, //（boolean）可选，是否可以选择应用和分类进行创建文档。有category参数时为默认false,否则默认为true。
-            "ignoreTitle" : ignoreTitle //（boolean）可选，值为false时，创建的时候需要强制填写标题，默认为false。
-            "restrictToColumn" : restrictToColumn //（boolean）可选，值为true时，会限制在传入的栏目中选择分类，默认为false。
-            }
+    "column" : column, //（string）可选，内容管理应用（栏目）的名称、别名或ID
+    "category" : category, //（string）可选，要创建的文档所属的分类的名称、别名或ID
+    "data" : data, //（json object）可选，创建文档时默认的业务数据
+    "identity" : identity, //（string）可选，创建文档所使用的身份。如果此参数为空，且当前人有多个身份的情况下，会弹出身份选择对话框；否则使用默认身份。
+    "callback" : callback, //（funcation）可选，文档创建后的回调函数。
+    "target" : target, //（boolean）可选，为true时，在当前页面打开创建的文档；否则打开新窗口。默认false。
+    "latest" : latest, //（boolean）可选，为true时，如果当前用户已经创建了此分类的文档，并且没有发布过，直接调用此文档为新文档；否则创建一个新文档。默认true。
+    "selectColumnEnable" : selectColumnEnable, //（boolean）可选，是否可以选择应用和分类进行创建文档。有category参数时为默认false,否则默认为true。
+    "ignoreTitle" : ignoreTitle //（boolean）可选，值为false时，创建的时候需要强制填写标题，默认为false。
+    "restrictToColumn" : restrictToColumn //（boolean）可选，值为true时，会限制在传入的栏目中选择分类，默认为false。
+    }
      */
     @JavascriptInterface
     fun createO2CmsDocument(options: String?) {
@@ -331,14 +372,21 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
     fun openO2CmsApplication(appId: String, title: String) {
         XLog.debug("openO2CmsApplication : $appId  title: $title")
         showLoadingDialog()
-        cmsStatus = "0"
-        mPresenter.loadCmsApplication(appId)
+//        cmsStatus = "0"
+//        mPresenter.loadCmsApplication(appId)
+        mPresenter.openCmsApplication(appId)
     }
 
     @JavascriptInterface
     fun openO2CmsDocument(docId: String, docTitle: String) {
         XLog.debug("openO2CmsDocument old : $docId, $docTitle")
-        activity?.go<CMSWebViewActivity>(CMSWebViewActivity.startBundleDataWithOptions(docId, docTitle, null))
+        activity?.go<CMSWebViewActivity>(
+            CMSWebViewActivity.startBundleDataWithOptions(
+                docId,
+                docTitle,
+                null
+            )
+        )
     }
 
     /**
@@ -347,7 +395,13 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
     @JavascriptInterface
     fun openO2CmsDocumentV2(docId: String, docTitle: String, options: String?) {
         XLog.debug("openO2CmsDocument new : $docId, $docTitle $options")
-        activity?.go<CMSWebViewActivity>(CMSWebViewActivity.startBundleDataWithOptions(docId, docTitle, options))
+        activity?.go<CMSWebViewActivity>(
+            CMSWebViewActivity.startBundleDataWithOptions(
+                docId,
+                docTitle,
+                options
+            )
+        )
     }
 
     @JavascriptInterface
@@ -385,17 +439,20 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
         XLog.debug("open scan ........")
         activity?.runOnUiThread {
             PermissionRequester(activity!!)
-                    .request(Manifest.permission.CAMERA)
-                    .o2Subscribe {
-                        onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
-                            XLog.info("granted:$granted , shouldShowRequest:$shouldShowRequestPermissionRationale, denied:$deniedPermissions")
-                            if (!granted) {
-                                O2DialogSupport.openAlertDialog(activity, "需要摄像头权限才能进行扫一扫功能！")
-                            } else {
-                                activity?.go<CaptureActivity>()
-                            }
+                .request(Manifest.permission.CAMERA)
+                .o2Subscribe {
+                    onNext { (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
+                        XLog.info("granted:$granted , shouldShowRequest:$shouldShowRequestPermissionRationale, denied:$deniedPermissions")
+                        if (!granted) {
+                            O2DialogSupport.openAlertDialog(
+                                activity,
+                                "需要摄像头权限才能进行扫一扫功能！"
+                            )
+                        } else {
+                            activity?.go<CaptureActivity>()
                         }
                     }
+                }
         }
 
     }
@@ -421,6 +478,7 @@ class IndexPortalFragment : BaseMVPViewPagerFragment<IndexPortalContract.View, I
                     is PortalWebViewActivity -> {
                         activity?.finish()
                     }
+
                     else -> {
                         XLog.error("what Activity 。。。。。。。。。")
                     }

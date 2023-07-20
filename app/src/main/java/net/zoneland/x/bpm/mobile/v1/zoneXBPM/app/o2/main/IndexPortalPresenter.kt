@@ -79,4 +79,26 @@ class IndexPortalPresenter : BasePresenterImpl<IndexPortalContract.View>(), Inde
                 }
             }
     }
+
+    override fun openCmsApplication(appId: String) {
+        val service = getCMSAssembleControlService(mView?.getContext())
+        if (service != null) {
+            service.applicationList()
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext {
+                        val list = it.data
+                        if (list == null || list.isEmpty()) {
+                            mView?.openCmsApplication(null)
+                        } else {
+                            val app = list.find { a -> a.id == appId }
+                            mView?.openCmsApplication(app)
+                        }
+                    }
+                }
+        } else {
+            mView?.openCmsApplication(null)
+        }
+    }
 }

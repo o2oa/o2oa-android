@@ -16,12 +16,17 @@ object IndexPortalContract {
 //        fun loadCmsCategoryListByAppId(categoryList: List<CMSCategoryInfoJson>)
         fun cmsApplication(app: CMSApplicationInfoJson?)
         fun documentDraft(list: List<CMSDocumentInfoJson>)
+
+        fun openCmsApplication(app: CMSApplicationInfoJson?)
     }
     interface Presenter:BasePresenter<View> {
 //        fun loadCmsCategoryListByAppId(appId: String)
 
+        // 能发布的 app
         fun loadCmsApplication(appId: String)
         fun findDocumentDraftWithCategory(categoryId: String)
+        // 有权限查看的 app
+        fun openCmsApplication(appId: String)
 
     }
 }

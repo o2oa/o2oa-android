@@ -12,8 +12,14 @@ buildscript {
 
     repositories {
         google()
-        jcenter()
+        maven {
+            url = 'https://maven.aliyun.com/repository/jcenter'
+        }
         mavenCentral()
+        maven { url "https://jitpack.io" }
+        maven {
+            url "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
     }
 
     dependencies {
@@ -30,14 +36,14 @@ buildscript {
 allprojects {
     repositories {
         google()
-        jcenter()
+        maven {
+            url = 'https://maven.aliyun.com/repository/jcenter'
+        }
         mavenCentral()
         maven { url "https://jitpack.io" }
         maven {
             url "https://oss.sonatype.org/content/repositories/snapshots/"
         }
-        //o2oa
-//        maven { url "http://maven.o2oa.net/repository/maven-public/" }
     }
 
 }
