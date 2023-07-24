@@ -33,6 +33,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.ApplicationEnu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.flutter.FlutterConnectActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.CustomO2AppMsgType
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.InstantMessage
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.StringUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
@@ -94,9 +95,10 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
                                 textcardMessageView.gone()
                                 isRender = true
                                 val url = text.url
+                                val openExternally = text.openExternally
                                 if (!TextUtils.isEmpty(url) && StringUtil.isUrl(url)) {
                                     setLinkStyle(titleText) {
-                                        openInnerWebView(url)
+                                        openInnerWebView(url, openExternally)
                                     }
                                 }
                             }
@@ -129,6 +131,7 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
                             val title = appMsg.textcard!!.title
                             var desc = appMsg.textcard!!.desc
                             val url = appMsg.textcard!!.url
+                            val openExternally = appMsg.textcard!!.openExternally
                             if (!TextUtils.isEmpty(title) && !TextUtils.isEmpty(url)) {
                                 val textMessageView = holder.getView<TextView>(R.id.tv_o2_chat_message_body)
                                 textMessageView.gone()
@@ -154,7 +157,7 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
                                 textcardDesc.text = desc
                                 textcardMessageView.visible()
                                 textcardMessageView.setOnClickListener {
-                                    openInnerWebView(url)
+                                    openInnerWebView(url, openExternally)
                                 }
                                 isRender = true
                             }
@@ -216,8 +219,13 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
         }
     }
 
-    private fun openInnerWebView(url: String) {
-        O2WebViewActivity.openWebView(this, "", url)
+    private fun openInnerWebView(url: String, openOuter: Boolean) {
+        if (openOuter) { // 外部浏览器打开
+            AndroidUtils.runDefaultBrowser(this, url)
+        } else {
+            O2WebViewActivity.openWebView(this, "", url)
+        }
+
     }
 
     private fun openBigPicture(imageUrl: String) {

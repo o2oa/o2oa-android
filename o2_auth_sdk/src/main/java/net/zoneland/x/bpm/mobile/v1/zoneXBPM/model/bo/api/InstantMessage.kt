@@ -82,6 +82,7 @@ data class InstantMessage(
 data class CustomO2AppTextMsg(
     var content: String = "",
     var url: String = "",
+    var openExternally: Boolean = false,
 )
 data class CustomO2AppImageMsg(
     var url: String = "",
@@ -90,6 +91,7 @@ data class CustomO2AppCardMsg(
     var title: String = "",
     var desc: String = "",
     var url: String = "",
+    var openExternally: Boolean = false,
 )
 enum class CustomO2AppMsgType{
     text,
