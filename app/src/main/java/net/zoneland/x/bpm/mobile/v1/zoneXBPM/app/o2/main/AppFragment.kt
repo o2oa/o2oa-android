@@ -252,6 +252,11 @@ class AppFragment : BaseMVPViewPagerFragment<MyAppContract.View, MyAppContract.P
                                 O2ImageLoaderOptions(placeHolder = R.mipmap.process_default)
                             )
                         }
+                        // 门户 角标数字
+                        if (!isEdit && numberTv != null && t.appId != null) {
+                            numberTv.tag = t.appId
+                            mPresenter.getPortalNumber(activity, numberTv, t.appId!!)
+                        }
                     }
                 }
 
@@ -305,6 +310,11 @@ class AppFragment : BaseMVPViewPagerFragment<MyAppContract.View, MyAppContract.P
                                 O2ImageLoaderOptions(placeHolder = R.mipmap.process_default)
                             )
                         }
+                        // 门户 角标数字
+                        if (!isEdit && numberTv != null && t.appId != null) {
+                            numberTv.tag = t.appId
+                            mPresenter.getPortalNumber(activity, numberTv, t.appId!!)
+                        }
                     }
                 }
                 holder?.setText(R.id.app_name_id, t?.appTitle)
@@ -331,6 +341,8 @@ class AppFragment : BaseMVPViewPagerFragment<MyAppContract.View, MyAppContract.P
         ) {
             override fun convert(holder: CommonRecyclerViewHolder?, t: MyAppListObject?) {
                 val resId = ApplicationEnum.getApplicationByKey(t?.appId)?.iconResId
+                val numberTv = holder?.getView<TextView>(R.id.tv_app_list_item_num)
+                numberTv?.gone()
                 if (resId != null) {
                     holder?.setImageViewResource(R.id.app_id, resId)
                 } else {
@@ -343,6 +355,11 @@ class AppFragment : BaseMVPViewPagerFragment<MyAppContract.View, MyAppContract.P
                                 portalIconUrl,
                                 O2ImageLoaderOptions(placeHolder = R.mipmap.process_default)
                             )
+                        }
+                        // 门户 角标数字
+                        if (!isEdit && numberTv != null && t.appId != null) {
+                            numberTv.tag = t.appId
+                            mPresenter.getPortalNumber(activity, numberTv, t.appId!!)
                         }
                     }
                 }

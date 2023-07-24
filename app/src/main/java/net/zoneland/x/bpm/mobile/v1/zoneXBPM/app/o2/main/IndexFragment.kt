@@ -450,10 +450,18 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
                     }
                     t?.appId == ALL_APP_ID -> holder?.setImageViewResource(R.id.app_id, R.mipmap.ic_todo_more)
                     else -> {
+                        // 待办 待阅 数量显示
+                        val numberTv = holder?.getView<TextView>(R.id.tv_app_list_item_num)
+                        numberTv?.gone()
                         val portalIconUrl = APIAddressHelper.instance().getPortalIconUrl(t?.appId!!)
                         val icon = holder?.getView<ImageView>(R.id.app_id)
                         if (icon !=null) {
                             O2ImageLoaderManager.instance().showImage(icon, portalIconUrl, O2ImageLoaderOptions(placeHolder = R.mipmap.process_default))
+                        }
+                        // 门户 角标数字
+                        if ( numberTv != null && t.appId != null) {
+                            numberTv.tag = t.appId
+                            mPresenter.getPortalNumber(activity, numberTv, t.appId!!)
                         }
 
                     }

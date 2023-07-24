@@ -17,4 +17,6 @@ interface BasePresenter<in V : BaseView> {
     fun getTaskNumber(context: Context?, tv: TextView, tvTag: String)
     // 查询待阅数量
     fun getReadNumber(context: Context?, tv: TextView, tvTag: String)
+
+    fun getPortalNumber(context: Context?, tv: TextView, portalId: String)
 }

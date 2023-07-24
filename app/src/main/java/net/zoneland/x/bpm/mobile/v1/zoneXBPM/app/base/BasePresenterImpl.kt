@@ -493,6 +493,28 @@ open class BasePresenterImpl<V : BaseView> : BasePresenter<V> {
             }
     }
 
+    override fun getPortalNumber(context: Context?, tv: TextView, portalId: String) {
+        XLog.debug("getPortalNumber ..................")
+        getPortalAssembleSurfaceService(context)
+            ?.cornerMarkNumber(portalId)
+            ?.subscribeOn(Schedulers.io())
+            ?.observeOn(AndroidSchedulers.mainThread())
+            ?.o2Subscribe {
+                onNext {
+                    if (it.data != null && it.data.count > 0 && tv.tag != null) {
+                        val tag = tv.tag as String
+                        if (tag == portalId) {
+                            tv.text = "${it.data.count}"
+                            tv.visible()
+                        }
+                    }
+                }
+                onError { e, _ ->
+                    XLog.error("", e)
+                }
+            }
+    }
+
     override fun getReadNumber(context: Context?, tv: TextView, tvTag: String) {
         XLog.debug("getReadNumber 。。。。。。。。。。。。。。")
         val service = getProcessAssembleSurfaceServiceAPI(context)
