@@ -16,6 +16,7 @@ data class CustomStyleData(
 //        var indexId: String = "",
     var indexPortal: String = "", // 首页门户ID
     var simpleMode: Boolean = false, // 简易模式
+    var appIndexPages: List<String> = ArrayList(), // 首页展现的 tab 列表
     var systemMessageSwitch: Boolean = true, // 消息列表中 是否显示系统通知
     var systemMessageCanClick: Boolean = true, // 系统消息是否可点击打开
     var appExitAlert: String = "", // app退出提示，有提示信息就弹出窗

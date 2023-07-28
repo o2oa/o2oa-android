@@ -62,6 +62,32 @@ class WebChromeClientWithProgressAndValueCallback private constructor (val activ
         }
     }
 
+//    override fun onGeolocationPermissionsHidePrompt() {
+//        super.onGeolocationPermissionsHidePrompt()
+//    }
+//
+//    override fun onGeolocationPermissionsShowPrompt(
+//        origin: String?,
+//        callback: GeolocationPermissions.Callback?
+//    ) {
+//        PermissionRequester(activity!!).request(Manifest.permission.ACCESS_FINE_LOCATION)
+//            .o2Subscribe {
+//                onNext {  (granted, shouldShowRequestPermissionRationale, deniedPermissions) ->
+//                    if (!granted){
+//                        O2DialogSupport.openAlertDialog(activity, "需要定位权限, 去设置", {
+//                            val packageUri = Uri.parse("package:${activity.packageName}")
+//                            activity.startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, packageUri))
+//                        })
+//                    }else{
+//                        callback?.invoke(origin, true, false)
+//                    }
+//                }
+//                onError { e, _ ->
+//                    XLog.error( "检查权限出错", e)
+//                    callback?.invoke(origin, true, false)
+//                }
+//            }
+//    }
     override fun onReceivedTitle(view: WebView?, title: String?) {
         super.onReceivedTitle(view, title)
         getWebviewTitle(view)

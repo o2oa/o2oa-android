@@ -71,6 +71,7 @@ class NestedProgressWebView : WebView {
         settings.setSupportMultipleWindows(false)
         settings.javaScriptCanOpenWindowsAutomatically = true
         settings.domStorageEnabled = true
+        settings.setGeolocationEnabled(false)
 //        settings.useWideViewPort = true // 任意缩放？
 
 

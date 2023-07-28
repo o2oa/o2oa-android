@@ -35,6 +35,7 @@ class CustomStyleFragmentPresenter : BasePresenterImpl<CustomStyleFragmentContra
                 ?.flatMap { response ->
                     val data = response.data
                     if (data != null) {
+                        XLog.debug("custom style $data")
                         val images = data.images
                         val portalList = data.portalList
                         val nativeAppList = data.nativeAppList
@@ -129,6 +130,7 @@ class CustomStyleFragmentPresenter : BasePresenterImpl<CustomStyleFragmentContra
             putString(O2CustomStyle.INDEX_ID_PREF_KEY, data?.indexPortal ?: "")
             putBoolean(O2CustomStyle.CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY, data?.simpleMode ?: false)
             putBoolean(O2CustomStyle.CUSTOM_STYLE_SILENCE_GRAY_PREF_KEY, data?.needGray ?: false)
+            putStringSet(O2CustomStyle.CUSTOM_STYLE_INDEX_PAGES_KEY, data?.appIndexPages?.toSet())
         }
     }
 }

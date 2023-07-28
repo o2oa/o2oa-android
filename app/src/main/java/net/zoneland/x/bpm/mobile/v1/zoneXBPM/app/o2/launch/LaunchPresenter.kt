@@ -116,6 +116,7 @@ class LaunchPresenter : BasePresenterImpl<LaunchContract.View>(), LaunchContract
                     ?: O2CustomStyle.INDEX_TYPE_DEFAULT)
             putString(O2CustomStyle.INDEX_ID_PREF_KEY, data?.indexPortal ?: "")
             putBoolean(O2CustomStyle.CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY, data?.simpleMode ?: false)
+            putStringSet(O2CustomStyle.CUSTOM_STYLE_INDEX_PAGES_KEY, data?.appIndexPages?.toSet())
             putBoolean(O2CustomStyle.CUSTOM_STYLE_SILENCE_GRAY_PREF_KEY, data?.needGray ?: false)
             putBoolean(O2CustomStyle.CUSTOM_STYLE_SYSTEM_MESSAGE_CAN_CLICK_KEY, data?.systemMessageCanClick ?: true)
             putString(O2CustomStyle.CUSTOM_STYLE_APP_EXIT_ALERT_KEY, data?.appExitAlert ?: "")

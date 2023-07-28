@@ -82,7 +82,7 @@ public class SecuritySharedPreference implements SharedPreferences {
     @Override
     public Set<String> getStringSet(String key, Set<String> defValues) {
         final Set<String> encryptSet = mSharedPreferences.getStringSet(encryptPreference(key), null);
-        if (encryptSet == null){
+        if (encryptSet == null || encryptSet.isEmpty()){
             return defValues;
         }
         final Set<String> decryptSet = new HashSet<>();

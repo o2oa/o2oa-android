@@ -40,8 +40,10 @@ public class SecurityEditor implements SharedPreferences.Editor {
     @Override
     public SharedPreferences.Editor putStringSet(String key, Set<String> values) {
         final Set<String> encryptSet = new HashSet<>();
-        for (String value : values){
-            encryptSet.add(encryptPreference(value));
+        if (values != null && !values.isEmpty()) {
+            for (String value : values) {
+                encryptSet.add(encryptPreference(value));
+            }
         }
         mEditor.putStringSet(encryptPreference(key), encryptSet);
         return this;

@@ -34,6 +34,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.MainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2AppUpdateBean
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.im.IMMessage
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.MainPagesEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.BitmapUtil
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2DoubleClickExit
@@ -61,6 +62,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
     private val mCurrentSelectIndexKey = "mCurrentSelectIndexKey"
     private var mCurrentSelectIndex = 2
     private var simpleMode = false
+    private val pages: ArrayList<MainPagesEnum> = ArrayList()
     private var appExitAlert = ""
     private var fastCheckInManager: FastCheckInManager? = null
 
@@ -103,94 +105,125 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         setTheme(R.style.XBPMTheme_NoActionBar)
     }
 
-    override fun afterSetContentView(savedInstanceState: Bundle?) {
-        mCurrentSelectIndex = savedInstanceState?.getInt(mCurrentSelectIndexKey, 2) ?: 2
-        setupToolBar(getString(R.string.app_name))
 
+    private fun pageGenerate() {
+        val pageSet = O2SDKManager.instance().prefs().getStringSet(O2CustomStyle.CUSTOM_STYLE_INDEX_PAGES_KEY, null) ?: HashSet<String>()
+        pages.clear()
+        fragmentList.clear()
+        fragmentTitles.clear()
+        if (pageSet.isEmpty()) {
+            // 简易模式 只有首页和设置页面
+            if (simpleMode) {
+                pages.add(MainPagesEnum.home)
+                pages.add(MainPagesEnum.settings)
+            } else {
+                pages.add(MainPagesEnum.im)
+                pages.add(MainPagesEnum.contact)
+                pages.add(MainPagesEnum.home)
+                pages.add(MainPagesEnum.app)
+                pages.add(MainPagesEnum.settings)
+            }
+        } else {
+            pageSet.forEach { p ->
+                if (p == MainPagesEnum.im.key) {
+                    pages.add(MainPagesEnum.im)
+                }
+                if (p == MainPagesEnum.contact.key) {
+                    pages.add(MainPagesEnum.contact)
+                }
+                if (p == MainPagesEnum.home.key) {
+                    pages.add(MainPagesEnum.home)
+                }
+                if (p == MainPagesEnum.app.key) {
+                    pages.add(MainPagesEnum.app)
+                }
+                if (p == MainPagesEnum.settings.key) {
+                    pages.add(MainPagesEnum.settings)
+                }
+            }
+            // 必须有 home 页面
+            if (!pages.contains(MainPagesEnum.home)) {
+                pages.add(MainPagesEnum.home)
+            }
+            // 必须有 setting 页面
+            if (!pages.contains(MainPagesEnum.settings)) {
+                pages.add(MainPagesEnum.settings)
+            }
+        }
+        pages.sortBy(MainPagesEnum::order)
+
+        // 开始生成  fragment  页面
+        icon_main_bottom_news.gone()
+        icon_main_bottom_contact.gone()
+        icon_main_bottom_app.gone()
+        rl_icon_main_bottom_index.gone()
+        icon_main_bottom_setting.gone()
+        pages.forEach { page ->
+            if (page == MainPagesEnum.im) {
+                val newsFragment = O2IMConversationFragment()
+                fragmentList.add(newsFragment)
+                fragmentTitles.add(getString(R.string.tab_message))
+                icon_main_bottom_news.visible()
+                icon_main_bottom_news.setOnClickListener(this)
+            }
+            if (page == MainPagesEnum.contact) {
+                val contactFragment = NewContactFragment()
+                fragmentList.add(contactFragment)
+                fragmentTitles.add(getString(R.string.tab_contact))
+                icon_main_bottom_contact.visible()
+                icon_main_bottom_contact.setOnClickListener(this)
+            }
+            if (page == MainPagesEnum.home) {
+                val indexType = O2SDKManager.instance().prefs().getString(O2CustomStyle.INDEX_TYPE_PREF_KEY, O2CustomStyle.INDEX_TYPE_DEFAULT)
+                val indexId = O2SDKManager.instance().prefs().getString(O2CustomStyle.INDEX_ID_PREF_KEY, "") ?: ""
+                if (indexType == O2CustomStyle.INDEX_TYPE_DEFAULT || TextUtils.isEmpty(indexId)) {
+                    val indexFragment = IndexFragment()
+                    fragmentList.add(indexFragment)
+                    fragmentTitles.add(getString(R.string.tab_todo))
+                } else {
+                    val indexFragment = IndexPortalFragment.instance(indexId)
+                    fragmentList.add(indexFragment)
+                    fragmentTitles.add(getString(R.string.tab_todo))
+                }
+                rl_icon_main_bottom_index.visible()
+                rl_icon_main_bottom_index.setOnClickListener(this)
+            }
+            if (page == MainPagesEnum.app) {
+                val appFragment = AppFragment()
+                fragmentList.add(appFragment)
+                fragmentTitles.add(getString(R.string.tab_app))
+                icon_main_bottom_app.visible()
+                icon_main_bottom_app.setOnClickListener(this)
+            }
+            if (page == MainPagesEnum.settings) {
+                val settingFragment = SettingsFragment()
+                fragmentList.add(settingFragment)
+                fragmentTitles.add(getString(R.string.tab_settings))
+                icon_main_bottom_setting.visible()
+                icon_main_bottom_setting.setOnClickListener(this)
+            }
+        }
+    }
+    override fun afterSetContentView(savedInstanceState: Bundle?) {
+        setupToolBar(getString(R.string.app_name))
         XLog.info("main activity init..............")
-        val indexType = O2SDKManager.instance().prefs().getString(O2CustomStyle.INDEX_TYPE_PREF_KEY, O2CustomStyle.INDEX_TYPE_DEFAULT)
-        val indexId = O2SDKManager.instance().prefs().getString(O2CustomStyle.INDEX_ID_PREF_KEY, "") ?: ""
         simpleMode = O2SDKManager.instance().prefs().getBoolean(O2CustomStyle.CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY, false)
         appExitAlert = O2SDKManager.instance().prefs().getString(O2CustomStyle.CUSTOM_STYLE_APP_EXIT_ALERT_KEY, "") ?: ""
-        XLog.info("main activity isIndex $indexType..............simpleMode: $simpleMode")
-        // 简易模式 只有首页和设置页面
-        if (simpleMode) {
-            val indexName = getString(R.string.tab_todo)
-            if (indexType == O2CustomStyle.INDEX_TYPE_DEFAULT || TextUtils.isEmpty(indexId)) {
-                val indexFragment = IndexFragment()
-                fragmentList.add(indexFragment)
-                fragmentTitles.add(indexName)
-            } else {
-                val indexFragment = IndexPortalFragment.instance(indexId)
-                fragmentList.add(indexFragment)
-                fragmentTitles.add(indexName)
-            }
-            val settingFragment = SettingsFragment()
-            fragmentList.add(settingFragment)
-            fragmentTitles.add(getString(R.string.tab_settings))
-            icon_main_bottom_news.gone()
-            icon_main_bottom_contact.gone()
-            icon_main_bottom_app.gone()
-            icon_main_bottom_index.setOnClickListener(this)
-            icon_main_bottom_setting.setOnClickListener(this)
-        } else {
-            val newsFragment = O2IMConversationFragment()
-            fragmentList.add(newsFragment)
-            fragmentTitles.add(getString(R.string.tab_message))
-
-            val contactFragment = NewContactFragment()
-            fragmentList.add(contactFragment)
-            fragmentTitles.add(getString(R.string.tab_contact))
-
-            val indexName = getString(R.string.tab_todo)
-            if (indexType == O2CustomStyle.INDEX_TYPE_DEFAULT || TextUtils.isEmpty(indexId)) {
-                val indexFragment = IndexFragment()
-                fragmentList.add(indexFragment)
-                fragmentTitles.add(indexName)
-            } else {
-                val indexFragment = IndexPortalFragment.instance(indexId)
-                fragmentList.add(indexFragment)
-                fragmentTitles.add(indexName)
-            }
-
-            val appFragment = AppFragment()
-            fragmentList.add(appFragment)
-            fragmentTitles.add(getString(R.string.tab_app))
-
-            val settingFragment = SettingsFragment()
-            fragmentList.add(settingFragment)
-            fragmentTitles.add(getString(R.string.tab_settings))
-            icon_main_bottom_news.visible()
-            icon_main_bottom_contact.visible()
-            icon_main_bottom_app.visible()
-            icon_main_bottom_news.setOnClickListener(this)
-            icon_main_bottom_app.setOnClickListener(this)
-            icon_main_bottom_index.setOnClickListener(this)
-            icon_main_bottom_contact.setOnClickListener(this)
-            icon_main_bottom_setting.setOnClickListener(this)
-
-            // 通讯录权限加载
-//            val data = OrganizationPermissionData(excludePerson = "楼国栋@237@P", excludeUnit = "产品运营组@320789019@U", hideMobilePerson = "周睿@233@P", limitQueryAll = "蔡艳红@204@P", limitQueryOuter = "金飞@207@P")
-//            OrganizationPermissionManager.instance().initData(data)
-            mPresenter.loadOrganizationPermission()
-        }
+        pageGenerate() // 页面生成
+        val defaultIndex = pages.indexOf(MainPagesEnum.home)
+        mCurrentSelectIndex = savedInstanceState?.getInt(mCurrentSelectIndexKey, defaultIndex) ?: defaultIndex
+        XLog.info("默认选中页面 $mCurrentSelectIndex")
         content_fragmentView_id.adapter = adapter
-        content_fragmentView_id.offscreenPageLimit = if(simpleMode){2}else{5}
+        content_fragmentView_id.offscreenPageLimit = pages.size
         content_fragmentView_id.addOnPageChangeListener {
             onPageSelected { position ->
-                var index = position
-                if (simpleMode) {
-                    index = when(position) {
-                        0 -> 2
-                        else -> 4
-                    }
-                }
-                selectTab(index)
+                selectTab(position)
             }
         }
 
         selectTab(mCurrentSelectIndex)
-
+        // 通讯录权限加载
+        mPresenter.loadOrganizationPermission()
         //register scheduler job
         registerSchedulerJob()
         //注册设备号 推送消息用
@@ -199,16 +232,12 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         //绑定启动webSocket 服务
         val webSocketServiceIntent = Intent(this, WebSocketService::class.java)
         bindService(webSocketServiceIntent, serviceConnect, BIND_AUTO_CREATE)
-
         // IM 消息接收广播
         registerBroadcast()
-
         // 检查考勤版本
         mPresenter.checkAttendanceFeature()
-
         // 检测网盘是否存在V3版本
         mPresenter.checkCloudFileV3()
-
         // 权限
         PermissionRequester(this)
             .request(Manifest.permission.READ_EXTERNAL_STORAGE).o2Subscribe {
@@ -225,7 +254,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
     override fun onResume() {
         super.onResume()
         pictureLoaderService = PictureLoaderService(this)
-        changeBottomIcon(mCurrentSelectIndex)
+        changeBottomIcon()
         calDpi()
         val unit = O2SDKManager.instance().prefs().getString(O2.PRE_CENTER_HOST_KEY, "")
         if (!TextUtils.isEmpty(unit) && unit == "sample.o2oa.net") {
@@ -286,12 +315,12 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
 
     override fun onKeyDown(keyCode: Int, event: KeyEvent?): Boolean {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
-            val indexFragment =  if (simpleMode) {
-                fragmentList[0]
-            }else {
-                fragmentList[2]
+            val index = pages.indexOf(MainPagesEnum.home)
+            if (index < 0) {
+                return onBackPressExitApp(keyCode, event)
             }
-            return if (mCurrentSelectIndex == 2 && indexFragment is IndexPortalFragment) {
+            val indexFragment =  fragmentList[index]
+            return if (mCurrentSelectIndex == index && indexFragment is IndexPortalFragment) {
                 if (indexFragment.previousPage()) {
                     true
                 } else {
@@ -321,14 +350,14 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
 
     override fun onClick(v: View?) {
         when (v?.id) {
-            R.id.icon_main_bottom_news -> selectTab(0)
-            R.id.icon_main_bottom_contact -> selectTab(1)
-            R.id.icon_main_bottom_index -> {
-                val indexFragment = if (simpleMode) {
-                    fragmentList[0]
-                }else {
-                    fragmentList[2]
+            R.id.icon_main_bottom_news -> selectTab(pages.indexOf(MainPagesEnum.im))
+            R.id.icon_main_bottom_contact -> selectTab(pages.indexOf(MainPagesEnum.contact))
+            R.id.rl_icon_main_bottom_index -> {
+                val index = pages.indexOf(MainPagesEnum.home)
+                if (index < 0) {
+                    return
                 }
+                val indexFragment =  fragmentList[index]
                 if (indexFragment is IndexPortalFragment) {
                     // 点击返回上一页
                     if (!indexFragment.previousPage()) {
@@ -336,10 +365,10 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
                         indexFragment.windowReload()
                     }
                 }
-                selectTab(2)
+                selectTab(index)
             }
-            R.id.icon_main_bottom_app -> selectTab(3)
-            R.id.icon_main_bottom_setting -> selectTab(4)
+            R.id.icon_main_bottom_app -> selectTab(pages.indexOf(MainPagesEnum.app))
+            R.id.icon_main_bottom_setting -> selectTab(pages.indexOf(MainPagesEnum.settings))
         }
     }
 
@@ -369,7 +398,7 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
     //跳转到应用页面 首页使用
     fun gotoApp() {
         if (!simpleMode) {
-            selectTab(3)
+            selectTab(pages.indexOf(MainPagesEnum.app))
         }
     }
 
@@ -377,25 +406,27 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
     fun isSimpleMode(): Boolean = simpleMode
 
     private fun selectTab(i: Int) {
-        changePageView(i)
-        changeBottomIcon(i)
+        if (i < 0) {
+            return
+        }
         mCurrentSelectIndex = i
+        changePageView()
+        changeBottomIcon()
     }
 
 
-    private fun changeBottomIcon(i: Int) {
+    private fun changeBottomIcon() {
         resetBottomBtnAlpha()
-        when (i) {
-
-            0 -> {
+        when (pages[mCurrentSelectIndex]) {
+            MainPagesEnum.im -> {
                 image_icon_main_bottom_news.setImageDrawable(FancySkinManager.instance().getDrawable(this, R.mipmap.icon_main_news_red))
                 tv_icon_main_bottom_news.setTextColor(FancySkinManager.instance().getColor(this, R.color.z_color_primary))
             }
-            1 -> {
+            MainPagesEnum.contact -> {
                 image_icon_main_bottom_contact.setImageDrawable(FancySkinManager.instance().getDrawable(this, R.mipmap.icon_main_contact_red))
                 tv_icon_main_bottom_contact.setTextColor(FancySkinManager.instance().getColor(this, R.color.z_color_primary))
             }
-            2 -> {
+            MainPagesEnum.home -> {
                 val path = O2CustomStyle.indexMenuLogoFocusImagePath(this)
                 if (!TextUtils.isEmpty(path)) {
                     BitmapUtil.setImageFromFile(path!!, icon_main_bottom_index)
@@ -403,11 +434,11 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
                     icon_main_bottom_index.setImageResource(R.mipmap.index_bottom_menu_logo_focus)
                 }
             }
-            3 -> {
+            MainPagesEnum.app -> {
                 image_icon_main_bottom_app.setImageDrawable(FancySkinManager.instance().getDrawable(this, R.mipmap.icon_main_app_red))
                 tv_icon_main_bottom_app.setTextColor(FancySkinManager.instance().getColor(this, R.color.z_color_primary))
             }
-            4 -> {
+            MainPagesEnum.settings -> {
                 image_icon_main_bottom_setting.setImageDrawable(FancySkinManager.instance().getDrawable(this, R.mipmap.icon_main_setting_red))
                 tv_icon_main_bottom_setting.setTextColor(FancySkinManager.instance().getColor(this, R.color.z_color_primary))
             }
@@ -415,25 +446,15 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
 
     }
 
-    private fun changePageView(position: Int) {
-        val pageIndex = if (simpleMode) {
-            if (position == 4) {
-                1
-            }else {
-                0
-            }
-        }else {
-            position
+    private fun changePageView( ) {
+        content_fragmentView_id.setCurrentItem(mCurrentSelectIndex, false)
+        when (pages[mCurrentSelectIndex]) {
+            MainPagesEnum.im -> resetToolBar(getString(R.string.tab_message))
+            MainPagesEnum.contact -> resetToolBar(getString(R.string.tab_contact))
+            MainPagesEnum.home -> setIndexToolBar()
+            MainPagesEnum.app -> resetToolBar(getString(R.string.tab_app))
+            MainPagesEnum.settings -> resetToolBar(getString(R.string.tab_settings))
         }
-        content_fragmentView_id.setCurrentItem(pageIndex, false)
-        when (position) {
-            0 -> resetToolBar(getString(R.string.tab_message))
-            1 -> resetToolBar(getString(R.string.tab_contact))
-            2 -> setIndexToolBar()
-            3 -> resetToolBar(getString(R.string.tab_app))
-            4 -> resetToolBar(getString(R.string.tab_settings))
-        }
-
     }
 
     private fun resetToolBar(string: String?) {
@@ -663,7 +684,11 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
     }
 
     private fun receiveIMMessage(message: IMMessage) {
-        val newsFragment = fragmentList[0]
+        val index = pages.indexOf(MainPagesEnum.im)
+        if (index < 0) {
+            return
+        }
+        val newsFragment = fragmentList[index]
         if (newsFragment is O2IMConversationFragment) {
             newsFragment.receiveMessageFromWebsocket(message)
         }
@@ -713,7 +738,11 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
                     }
                 }
             }  else if (intent?.action == O2IM.IM_Conversation_Update_Action || intent?.action == O2IM.IM_Conversation_Delete_Action) {
-                val newsFragment = fragmentList[0]
+                val index = pages.indexOf(MainPagesEnum.im)
+                if (index < 0) {
+                    return
+                }
+                val newsFragment = fragmentList[index]
                 if (newsFragment is O2IMConversationFragment) {
                     newsFragment.receiveConversationFromWebsocket()
                 }
