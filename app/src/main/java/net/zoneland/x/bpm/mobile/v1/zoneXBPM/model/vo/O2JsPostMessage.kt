@@ -116,7 +116,13 @@ class O2OpenCmsDocMessage(
         var title: String?,
         var options: Map<String, Any>?
 )
-
+// 打开work
+class O2OpenWorkMessage(
+        var title: String?,
+        var workId: String?,
+        var workCompletedId: String?,
+        var options: Map<String, Any>?
+)
 class O2OpenTaskCenterMessage(
         var type: String
 )

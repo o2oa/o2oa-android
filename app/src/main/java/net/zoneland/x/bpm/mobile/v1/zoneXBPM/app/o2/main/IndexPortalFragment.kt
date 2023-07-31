@@ -372,8 +372,6 @@ class IndexPortalFragment :
     fun openO2CmsApplication(appId: String, title: String) {
         XLog.debug("openO2CmsApplication : $appId  title: $title")
         showLoadingDialog()
-//        cmsStatus = "0"
-//        mPresenter.loadCmsApplication(appId)
         mPresenter.openCmsApplication(appId)
     }
 

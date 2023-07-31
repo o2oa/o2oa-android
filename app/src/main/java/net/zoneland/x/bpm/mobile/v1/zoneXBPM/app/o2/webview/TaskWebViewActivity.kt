@@ -382,6 +382,15 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
                         "closeWork" -> runOnUiThread { finish() }
                         // 表单加载成功后
                         "appFormLoaded" -> appFormLoaded(message!!)
+                        "openO2Work" -> {
+                            val type = object : TypeToken<O2JsPostMessage<O2OpenWorkMessage>>() {}.type
+                            val value: O2JsPostMessage<O2OpenWorkMessage> = gson.fromJson(message, type)
+                            if (value.data != null && (!TextUtils.isEmpty(value.data?.workId) || !TextUtils.isEmpty(value.data?.workCompletedId))) {
+                                openO2Work(value.data?.workId ?: "", value.data?.workCompletedId ?: "", value.data?.title ?: "")
+                            } else {
+                                XLog.error("openO2Work 参数不正确，缺少work，无法打开")
+                            }
+                        }
                         "openO2CmsDocument" -> {
                             val type = object : TypeToken<O2JsPostMessage<O2OpenCmsDocMessage>>() {}.type
                             val value: O2JsPostMessage<O2OpenCmsDocMessage> = gson.fromJson(message, type)
@@ -547,6 +556,11 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
         }
     }
 
+    @JavascriptInterface
+    fun openO2Work(work: String, workCompleted: String, title: String) {
+        XLog.debug("open work : $work, $workCompleted, $title")
+        go<TaskWebViewActivity>(TaskWebViewActivity.start(work, workCompleted, title))
+    }
     /**
      * 表单加载完成后回调
      */
