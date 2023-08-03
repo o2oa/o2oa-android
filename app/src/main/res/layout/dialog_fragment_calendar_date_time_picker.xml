@@ -88,10 +88,8 @@
         app:mcv_selectionColor="@color/icon_blue"
         app:mcv_calendarMode="month"
         app:mcv_dateTextAppearance="@style/TextAppearance.MaterialCalendarWidget.Date"
-        app:mcv_firstDayOfWeek="sunday"
         app:mcv_headerTextAppearance="@style/TextAppearance.MaterialCalendarWidget.Header"
         app:mcv_weekDayLabels="@array/custom_weekdays"
-        app:mcv_horizontal_gap="8dp"
         app:mcv_weekDayTextAppearance="@style/TextAppearance.MaterialCalendarWidget.WeekDay"
         android:paddingStart="8dp"
         android:paddingEnd="8dp">

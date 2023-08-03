@@ -469,13 +469,13 @@
     <string name="title_activity_meeting_create">Conference Room</string>
 <!--    <string name="create_meeting_button_label">申请会议</string>-->
     <string-array name="custom_weekdays">
-        <item>Sun</item>
         <item>Mon</item>
         <item>Tus</item>
         <item>Wed</item>
         <item>Thur</item>
         <item>Fri</item>
         <item>Sat</item>
+        <item>Sun</item>
     </string-array>
     <string name="title_activity_meeting_create_form">Apply for meeting</string>
     <string name="meeting_add">Apply for meeting</string>

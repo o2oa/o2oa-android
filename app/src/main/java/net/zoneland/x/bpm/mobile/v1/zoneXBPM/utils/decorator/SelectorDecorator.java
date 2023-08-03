@@ -35,7 +35,7 @@ public class SelectorDecorator implements DayViewDecorator {
         view.setSelectionDrawable(drawable);
     }
 
-    public void setDate(Date date) {
-        this.date = CalendarDay.from(date);
+    public void setDate(CalendarDay date) {
+        this.date = date;
     }
 }

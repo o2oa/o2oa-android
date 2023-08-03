@@ -1,22 +1,20 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.calendar
 
 import android.annotation.SuppressLint
-import androidx.lifecycle.ViewModelProviders
 import android.graphics.Color
 import android.os.Bundle
-import androidx.cardview.widget.CardView
-import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.TextUtils
-import android.view.View
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.cardview.widget.CardView
+import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.prolificinteractive.materialcalendarview.CalendarDay
 import com.prolificinteractive.materialcalendarview.MaterialCalendarView
 import com.prolificinteractive.materialcalendarview.OnDateSelectedListener
 import com.prolificinteractive.materialcalendarview.OnMonthChangedListener
 import kotlinx.android.synthetic.main.fragment_calendar_month.*
 import net.muliba.changeskin.FancySkinManager
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2App
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.calendar.vm.MonthCalendarViewModel
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
@@ -30,8 +28,11 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.decorator.SelectorDecorator
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.decorator.TodayDecorator
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import org.threeten.bp.DateTimeUtils
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneId
 import java.util.*
-import kotlin.collections.ArrayList
 
 /**
  * Created by fancyLou on 19/06/2018.
@@ -90,14 +91,16 @@ class MonthCalendarViewModelFragment : CalendarBaseFragment(), OnDateSelectedLis
             if (map!=null) {
                 map.forEach { (day, events) ->
                     if (events.isNotEmpty()) {
-                        meetingDays.add(CalendarDay.from(DateHelper.gc(day, "yyyy-MM-dd")))
+                        val date = DateHelper.convertStringToDate("yyyy-MM-dd HH:mm:ss", day)
+                        val localDate = CalendarDay.from(Instant.ofEpochMilli(date.time).atZone(ZoneId.systemDefault()).toLocalDate())
+                        meetingDays.add(localDate)
                     }
                 }
                 val selectDay = monthViewModel.getSelectDay().value
                 if (selectDay!=null) {
                     val selectDayStr = DateHelper.getDate(selectDay.time)
                     val eventList = map[selectDayStr]
-                    if (eventList!=null && !eventList.isEmpty()) {
+                    if (!eventList.isNullOrEmpty()) {
                         list.clear()
                         if (!eventList.isEmpty()) {
                             eventList.forEach {
@@ -135,10 +138,16 @@ class MonthCalendarViewModelFragment : CalendarBaseFragment(), OnDateSelectedLis
 
 
     override fun initView() {
+        val localNow = LocalDate.now()
+        val zoneId = ZoneId.systemDefault()
+        val date = DateTimeUtils.toDate(localNow.atStartOfDay(zoneId).toInstant())
+        val now = Calendar.getInstance()
+        now.time = date
         mcv_fragment_calendar_month.isDynamicHeightEnabled = true
         mcv_fragment_calendar_month.addDecorators(TodayDecorator(activity), selectorDecorator)
         mcv_fragment_calendar_month.topbarVisible = false
-        mcv_fragment_calendar_month.setSelectedDate(Calendar.getInstance())
+        val selected = CalendarDay.from(localNow)
+        mcv_fragment_calendar_month.selectedDate = selected
         mcv_fragment_calendar_month.setOnMonthChangedListener(this)
         mcv_fragment_calendar_month.setOnDateChangedListener(this)
 
@@ -146,13 +155,10 @@ class MonthCalendarViewModelFragment : CalendarBaseFragment(), OnDateSelectedLis
         rv_fragment_calendar_month_list.adapter = adapter
         adapter.setOnItemClickListener { _, position ->
             val event = list[position]
-//            if (checkManageAble(event.manageablePersonList)) {//关注的日历可以查看
-                if (activity is CalendarMainActivity) {
-                    (activity as CalendarMainActivity).editEvent(event)
-                }
-//            }
+            if (activity is CalendarMainActivity) {
+                (activity as CalendarMainActivity).editEvent(event)
+            }
         }
-        val now = Calendar.getInstance()
         if (!this::selectDay.isInitialized) {
             selectDay = now
         }
@@ -191,17 +197,25 @@ class MonthCalendarViewModelFragment : CalendarBaseFragment(), OnDateSelectedLis
     }
 
     override fun onDateSelected(widget: MaterialCalendarView, date: CalendarDay, selected: Boolean) {
-        selectDay = date.calendar
+        val zoneId = ZoneId.systemDefault()
+        val d = DateTimeUtils.toDate(date.date.atStartOfDay(zoneId).toInstant())
+        val newDay = Calendar.getInstance()
+        newDay.time = d
+        selectDay = newDay
         showDayEvents()
-        selectorDecorator.setDate(date.date)
+        selectorDecorator.setDate(date)
         widget.invalidateDecorators()
     }
 
 
     override fun onMonthChanged(widget: MaterialCalendarView?, date: CalendarDay?) {
         if (date!=null) {
-            val day0= DateHelper.getMonthFirstDay(date.calendar)
-            val day1 = DateHelper.getMonthLastDay(date.calendar)
+            val zoneId = ZoneId.systemDefault()
+            val d = DateTimeUtils.toDate(date.date.atStartOfDay(zoneId).toInstant())
+            val newDay = Calendar.getInstance()
+            newDay.time = d
+            val day0= DateHelper.getMonthFirstDay(newDay)
+            val day1 = DateHelper.getMonthLastDay(newDay)
             myFilter.start = day0
             myFilter.end = day1
         }
@@ -215,13 +229,18 @@ class MonthCalendarViewModelFragment : CalendarBaseFragment(), OnDateSelectedLis
 
 
     override fun jump2Today() {
-        val today = Calendar.getInstance()
-        mcv_fragment_calendar_month.setCurrentDate(today)
+        val localNow = LocalDate.now()
+        val calDate = CalendarDay.from(localNow)
+        mcv_fragment_calendar_month.currentDate = calDate
         // 下面是选中今天
-        selectDay = today
-        mcv_fragment_calendar_month.setSelectedDate(today)
+        val zoneId = ZoneId.systemDefault()
+        val date = DateTimeUtils.toDate(localNow.atStartOfDay(zoneId).toInstant())
+        val cal = Calendar.getInstance()
+        cal.time = date
+        selectDay = cal
+        mcv_fragment_calendar_month.selectedDate = calDate
         showDayEvents()
-        selectorDecorator.setDate(today.time)
+        selectorDecorator.setDate(calDate)
         mcv_fragment_calendar_month.invalidateDecorators()
     }
 

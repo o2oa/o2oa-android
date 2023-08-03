@@ -218,8 +218,7 @@ class TaskWebViewActivity : BaseMVPActivity<TaskWebViewContract.View, TaskWebVie
             }
 
         }
-
-
+//        WebView.setWebContentsDebuggingEnabled(true)
         web_view.webViewSetCookie(this, url)
         web_view.loadUrl(url)
         // 设置标题

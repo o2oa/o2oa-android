@@ -475,13 +475,13 @@
     <string name="title_activity_meeting_create">会议室</string>
     <!--    <string name="create_meeting_button_label">申请会议</string>-->
     <string-array name="custom_weekdays">
-        <item>日</item>
         <item>一</item>
         <item>二</item>
         <item>三</item>
         <item>四</item>
         <item>五</item>
         <item>六</item>
+        <item>日</item>
     </string-array>
     <string name="title_activity_meeting_create_form">申请会议</string>
     <string name="meeting_add">申请会议</string>

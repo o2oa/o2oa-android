@@ -27,6 +27,10 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.decorator.EventDecorator
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.decorator.SelectorDecorator
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.decorator.TodayDecorator
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
+import org.threeten.bp.DayOfWeek
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDate
+import org.threeten.bp.ZoneId
 import java.util.*
 
 /**
@@ -56,13 +60,15 @@ class MeetingMainFragment : BaseMVPViewPagerFragment<MeetingMainFragmentContract
         calendarView_meeting_date.setOnMonthChangedListener(this)
         calendarView_meeting_date.setWeekDayLabels(R.array.custom_weekdays)
         calendarView_meeting_date.showOtherDates = MaterialCalendarView.SHOW_DEFAULTS
-        calendarView_meeting_date.setSelectedDate(Calendar.getInstance())
+        calendarView_meeting_date.selectedDate =  CalendarDay.from( LocalDate.now())
         calendarView_meeting_date.addDecorators(TodayDecorator(activity), selectorDecorator)
         calendarView_meeting_date.setHeaderTextAppearance(R.style.TextAppearance_MaterialCalendarWidget_Header)
         calendarView_meeting_date.setDateTextAppearance(R.style.TextAppearance_MaterialCalendarWidget_Date)
         calendarView_meeting_date.setWeekDayTextAppearance(R.style.TextAppearance_MaterialCalendarWidget_WeekDay)
         calendarView_meeting_date.topbarVisible = false
-
+        calendarView_meeting_date.state().edit()
+            .setFirstDayOfWeek(DayOfWeek.SUNDAY)
+            .commit()
 
         meeting_recycler_view.layoutManager = LinearLayoutManager(activity)
         meeting_recycler_view.adapter = adapter
@@ -116,7 +122,10 @@ class MeetingMainFragment : BaseMVPViewPagerFragment<MeetingMainFragmentContract
     override fun findMyMeetingByMonth(list: List<MeetingInfoJson>) {
         val meetingDays = ArrayList<CalendarDay>()
         list.map {
-            meetingDays.add(CalendarDay.from(DateHelper.gc(it.startTime, "yyyy-MM-dd HH:mm:ss")))
+//            val c = DateHelper.gc(it.startTime, "yyyy-MM-dd HH:mm:ss")
+            val date = DateHelper.convertStringToDate("yyyy-MM-dd HH:mm:ss", it.startTime)
+            val localDate = CalendarDay.from(Instant.ofEpochMilli(date.time).atZone(ZoneId.systemDefault()).toLocalDate())
+            meetingDays.add(localDate)
         }
         calendarView_meeting_date.removeDecorators()
         calendarView_meeting_date.addDecorators(
@@ -128,21 +137,43 @@ class MeetingMainFragment : BaseMVPViewPagerFragment<MeetingMainFragmentContract
     }
 
     override fun onDateSelected(widget: MaterialCalendarView, date: CalendarDay, selected: Boolean) {
-        selectorDecorator.setDate(date.date)
+        selectorDecorator.setDate(date)
+        val monthString = if (date.month > 9) {
+            "${date.month}"
+        }else {
+            "0${date.month}"
+        }
+        val dateString = if (date.day > 9) {
+            "${date.day}"
+        }else {
+            "0${date.day}"
+        }
+        val str = "${date.year}-$monthString-$dateString"
         widget.invalidateDecorators()
-        daySelected = DateHelper.getDate(date.date)
-        tv_meeting_choose_day.text = DateHelper.getDate(date.date)
+        daySelected = str
+        tv_meeting_choose_day.text = str
         showLoadingDialog()
         loadDayMeetings()
     }
 
     override fun onMonthChanged(widget: MaterialCalendarView?, date: CalendarDay?) {
         if (date != null) {
-            XLog.info("短短的${DateHelper.getDate(date.date)}")
-            val newMonth = DateHelper.getDate(date.date).substring(0, 7)
+            val monthString = if (date.month > 9) {
+                "${date.month}"
+            }else {
+                "0${date.month}"
+            }
+            val dateString = if (date.day > 9) {
+                "${date.day}"
+            }else {
+                "0${date.day}"
+            }
+            val str = "${date.year}-$monthString-$dateString"
+            XLog.info("短短的$str")
+            val newMonth = str.substring(0, 7)
             val oldmonth = monthSelected.substring(0, 7)
             if (newMonth != oldmonth) {
-                monthSelected = DateHelper.getDate(date.date)
+                monthSelected = str
                 showLoadingDialog()
                 loadMonthMeetings()
             }

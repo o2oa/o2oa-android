@@ -21,6 +21,9 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import org.threeten.bp.DateTimeUtils
+import org.threeten.bp.Instant
+import org.threeten.bp.ZoneId
 import java.util.*
 
 /**
@@ -105,8 +108,9 @@ class CalendarDateTimePickerFragment : DialogFragment() , OnDateSelectedListener
                 if (!TextUtils.isEmpty(defaultValue)) {
                     currentDate = DateHelper.convertStringToDate("yyyy-MM-dd", defaultValue)
                 }
-                calendarView_date_picker.setSelectedDate(currentDate)
-                calendarView_date_picker.setCurrentDate(currentDate)
+                val localDate = CalendarDay.from(Instant.ofEpochMilli(currentDate.time).atZone(ZoneId.systemDefault()).toLocalDate())
+                calendarView_date_picker.selectedDate = localDate
+                calendarView_date_picker.currentDate = localDate
                 setCalendarBg(currentDate)
                 tv_start_date.text = DateHelper.getDate(currentDate)
             }
@@ -115,14 +119,15 @@ class CalendarDateTimePickerFragment : DialogFragment() , OnDateSelectedListener
                 if (!TextUtils.isEmpty(defaultValue)) {
                     currentDate = DateHelper.convertStringToDate("yyyy-MM-dd HH:mm", defaultValue)
                 }
-                calendarView_date_picker.setSelectedDate(currentDate)
-                calendarView_date_picker.setCurrentDate(currentDate)
+                val cal = Calendar.getInstance()
+                cal.time = currentDate
+                val localDate = CalendarDay.from(Instant.ofEpochMilli(currentDate.time).atZone(ZoneId.systemDefault()).toLocalDate())
+                calendarView_date_picker.selectedDate = localDate
+                calendarView_date_picker.currentDate = localDate
                 setCalendarBg(currentDate)
                 tv_start_date.text = DateHelper.getDate(currentDate)
                 tv_time_value.text = DateHelper.getDateTime("HH:mm", currentDate)
                 //
-                val cal = Calendar.getInstance()
-                cal.time = currentDate
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     time_picker_calendar_picker.hour = cal.get(Calendar.HOUR_OF_DAY)
                     time_picker_calendar_picker.minute = cal.get(Calendar.MINUTE)
@@ -137,11 +142,14 @@ class CalendarDateTimePickerFragment : DialogFragment() , OnDateSelectedListener
                 if (!TextUtils.isEmpty(defaultStartDate)) {
                     startDate = DateHelper.convertStringToDate("yyyy-MM-dd", defaultStartDate)
                 }
+                val cal = Calendar.getInstance()
+                cal.time = startDate
+                val localDate = CalendarDay.from(Instant.ofEpochMilli(startDate.time).atZone(ZoneId.systemDefault()).toLocalDate())
                 if (!TextUtils.isEmpty(defaultEndDate)) {
                     endDate = DateHelper.convertStringToDate("yyyy-MM-dd", defaultEndDate)
                 }
-                calendarView_date_picker.setSelectedDate(startDate)
-                calendarView_date_picker.setCurrentDate(startDate)
+                calendarView_date_picker.selectedDate = localDate
+                calendarView_date_picker.currentDate = localDate
                 setCalendarBg(startDate)
                 tv_start_date.text = DateHelper.getDate(startDate)
                 tv_end_date.text = DateHelper.getDate(endDate)
@@ -183,8 +191,19 @@ class CalendarDateTimePickerFragment : DialogFragment() , OnDateSelectedListener
     }
 
     override fun onDateSelected(p0: MaterialCalendarView, p1: CalendarDay, p2: Boolean) {
+        val monthString = if (p1.month > 9) {
+            "${p1.month}"
+        }else {
+            "0${p1.month}"
+        }
+        val dateString = if (p1.day > 9) {
+            "${p1.day}"
+        }else {
+            "0${p1.day}"
+        }
+        val str = "${p1.year}-$monthString-$dateString"
         if (isStartDateCalendarMode) {
-            tv_start_date.text = DateHelper.getDate(p1.date)
+            tv_start_date.text =str
             //如果是DATE_TIME_PICKER_TYPE类型 切换到时间选择器
             if (pickerType == DATE_TIME_PICKER_TYPE) {
                 animationForTimePickerVisible()
@@ -192,13 +211,15 @@ class CalendarDateTimePickerFragment : DialogFragment() , OnDateSelectedListener
                 showEndDateCalendar()
             }
         }else {
-            tv_end_date.text = DateHelper.getDate(p1.date)
+            tv_end_date.text = str
         }
     }
 
     override fun onMonthChanged(p0: MaterialCalendarView?, p1: CalendarDay?) {
         if (p1!= null) {
-            setCalendarBg(p1.date)
+            val zoneId = ZoneId.systemDefault()
+            val d = DateTimeUtils.toDate(p1.date.atStartOfDay(zoneId).toInstant())
+            setCalendarBg(d)
         }
     }
 
@@ -223,18 +244,22 @@ class CalendarDateTimePickerFragment : DialogFragment() , OnDateSelectedListener
         isStartDateCalendarMode = true
         tv_start_date.setTextColor(ContextCompat.getColor(activity!!, R.color.icon_blue))
         tv_end_date.setTextColor(ContextCompat.getColor(activity!!, R.color.z_color_text_primary))
-        val sDate = DateHelper.convertStringToDate("yyyy-MM-dd", tv_start_date.text.toString())
-        calendarView_date_picker.setSelectedDate(sDate)
-        calendarView_date_picker.setCurrentDate(sDate)
+//        val sDate = DateHelper.convertStringToDate("yyyy-MM-dd", tv_start_date.text.toString())
+        val cal = DateHelper.gc(tv_start_date.text.toString(), "yyyy-MM-dd")
+        val local = CalendarDay.from(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE))
+        calendarView_date_picker.selectedDate = local
+        calendarView_date_picker.currentDate = local
     }
 
     private fun showEndDateCalendar() {
         isStartDateCalendarMode = false
         tv_start_date.setTextColor(ContextCompat.getColor(activity!!, R.color.z_color_text_primary))
         tv_end_date.setTextColor(ContextCompat.getColor(activity!!, R.color.icon_blue))
-        val eDate = DateHelper.convertStringToDate("yyyy-MM-dd", tv_end_date.text.toString())
-        calendarView_date_picker.setSelectedDate(eDate)
-        calendarView_date_picker.setCurrentDate(eDate)
+//        val eDate = DateHelper.convertStringToDate("yyyy-MM-dd", tv_end_date.text.toString())
+        val cal = DateHelper.gc(tv_end_date.text.toString(), "yyyy-MM-dd")
+        val local = CalendarDay.from(cal.get(Calendar.YEAR), cal.get(Calendar.MONTH), cal.get(Calendar.DATE))
+        calendarView_date_picker.selectedDate = local
+        calendarView_date_picker.currentDate = local
 
     }
     /**

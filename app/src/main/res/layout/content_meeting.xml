@@ -35,12 +35,21 @@
             android:layout_marginEnd="@dimen/meeting_padding"
             android:background="@color/z_color_split_meeting_line"/>
 
+<!--        <com.prolificinteractive.materialcalendarview.MaterialCalendarView-->
+<!--            app:mcv_calendarMode="week"-->
+<!--            android:id="@+id/calendarView_meeting_date"-->
+<!--            android:layout_width="match_parent"-->
+<!--            android:layout_height="wrap_content"-->
+<!--            android:background="@android:color/white"/>-->
         <com.prolificinteractive.materialcalendarview.MaterialCalendarView
-            app:mcv_calendarMode="week"
             android:id="@+id/calendarView_meeting_date"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@android:color/white"/>
+            app:mcv_calendarMode="week"
+            app:mcv_firstDayOfWeek="monday"
+            app:mcv_weekDayLabels="@array/custom_weekdays"
+            android:background="@android:color/white"
+            />
         
         <LinearLayout
             android:id="@+id/ll_meeting_main_month_chang"
