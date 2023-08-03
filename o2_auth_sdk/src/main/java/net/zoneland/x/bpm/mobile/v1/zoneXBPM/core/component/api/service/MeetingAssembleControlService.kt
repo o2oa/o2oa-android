@@ -2,6 +2,7 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.service
 
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.ApiResponse
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.IdData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.process.ProcessDataJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.BuildingInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.MeetingCheckInRes
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.MeetingInfoJson
@@ -27,6 +28,12 @@ interface MeetingAssembleControlService {
      */
     @GET("jaxrs/building/list")
     fun listBuildings(): Observable<ApiResponse<List<BuildingInfoJson>>>
+
+    /**
+     * 配置文件读取
+     */
+    @GET("jaxrs/config/system/config")
+    fun config(): Observable<ApiResponse<ProcessDataJson>>
 
     /**
      * 根据start 和 completed 查询所有的会议室情况 是否空闲

@@ -172,34 +172,43 @@ class MeetingMainFragmentPresenter : BasePresenterImpl<MeetingMainFragmentContra
     }
 
     override fun getMeetingConfig() {
-        val service = getOrganizationAssembleCustomService(mView?.getContext())
-        if (service != null){
-            service.getMeetingConfig()
+        XLog.info("老公共服务器模块已经去掉了！！！")
+        val meetingService = getMeetingAssembleControlService(mView?.getContext())
+        if (meetingService != null) {
+            meetingService.config()
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(ResponseHandler { info ->
-                    mView?.setMeetingConfig(info)
-                }, ExceptionHandler(mView?.getContext()) { e ->
-                    XLog.error("", e)
-                    mView?.setMeetingConfig("")
-                })
-        }else {
-            XLog.info("老公共服务器模块已经去掉了！！！")
-            val personService = getAssemblePersonalApi(mView?.getContext())
-            if (personService != null) {
-                personService.getMeetingConfig()
-                        .subscribeOn(Schedulers.io())
-                        .observeOn(AndroidSchedulers.mainThread())
-                        .subscribe(ResponseHandler { info ->
-                            mView?.setMeetingConfig(info)
-                        }, ExceptionHandler(mView?.getContext()) { e ->
-                            XLog.error("", e)
+                .o2Subscribe {
+                    onNext {
+                        val config = it.data
+                        if (config != null) {
+                            mView?.setMeetingConfig(O2SDKManager.instance().gson.toJson(config))
+                        } else {
                             mView?.setMeetingConfig("")
-                        })
-            }else {
-                XLog.error("公共服务模块不存在")
-                mView?.setMeetingConfig("")
-            }
+                        }
+                    }
+                    onError { e, _ ->
+                        XLog.error("", e)
+                        val personService = getAssemblePersonalApi(mView?.getContext())
+                        if (personService != null) {
+                            personService.getMeetingConfig()
+                                .subscribeOn(Schedulers.io())
+                                .observeOn(AndroidSchedulers.mainThread())
+                                .subscribe(ResponseHandler { info ->
+                                    mView?.setMeetingConfig(info)
+                                }, ExceptionHandler(mView?.getContext()) { e ->
+                                    XLog.error("", e)
+                                    mView?.setMeetingConfig("")
+                                })
+                        }else {
+                            XLog.error("公共服务模块不存在")
+                            mView?.setMeetingConfig("")
+                        }
+                    }
+                }
+        } else {
+            XLog.error("会议服务模块不存在")
+            mView?.setMeetingConfig("")
         }
 
     }
