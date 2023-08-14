@@ -144,8 +144,9 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
     var isLoadHotPictureList = false
 //    var isRedPointShow = true
     //load more refresh
-    var lastTaskId = ""
-    var lastNewsId = ""
+    var page = 1 // 页码
+//    var lastTaskId = ""
+//    var lastNewsId = ""
     var isRefreshTaskList = false ////是否正在刷新任务
     var isRefreshNewsList = false //是否正在刷新新闻列表
     var isLoadMoreList = false //是否正在加载
@@ -211,11 +212,13 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
         }
         if (!isRefreshNewsList) {
             isRefreshNewsList = true
-            mPresenter.loadNewsList(O2.FIRST_PAGE_TAG)
+            page = 1
+            mPresenter.loadNewsListByPage(page)
         }
         if (!isRefreshTaskList) {
             isRefreshTaskList = true
-            mPresenter.loadTaskList(O2.FIRST_PAGE_TAG)
+            page = 1
+            mPresenter.loadTaskListByPage(page)
         }
     }
 
@@ -240,12 +243,11 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
             R.id.tv_todo_fragment_publish -> activity?.go<StartProcessActivity>()
             R.id.linear_main_todo_new_message_center_button -> {
                 currentType = BUSINESS_TYPE_MESSAGE_CENTER
-                refreshRecyclerView()
+                lazyLoad()
             }
             R.id.linear_main_todo_new_task_center_button -> {
                 currentType = BUSINESS_TYPE_WORK_CENTER
-//                isRedPointShow = false
-                refreshRecyclerView()
+                lazyLoad()
             }
             R.id.ll_todo_fragment_search -> {
                 if (isSearchV2) {
@@ -288,9 +290,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
             isLoadMoreList = false
             hiddenObtainMoreDataAnimation()
         }
-        if (list.isNotEmpty()) {
-            lastTaskId = list[list.size - 1].id
-        }
+
         refreshRecyclerView()
     }
 
@@ -319,9 +319,7 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
             isLoadMoreList = false
             hiddenObtainMoreDataAnimation()
         }
-        if (list.isNotEmpty()) {
-            lastNewsId = list[list.size - 1].id
-        }
+
         refreshRecyclerView()
     }
 
@@ -524,13 +522,15 @@ class IndexFragment : BaseMVPViewPagerFragment<IndexContract.View, IndexContract
                 if (!isRefreshNewsList) {
                     showObtainMoreDataAnimation()
                     isLoadMoreList = true
-                    mPresenter.loadNewsList(lastNewsId)
+                    page++
+                    mPresenter.loadNewsListByPage(page)
                 }
             } else {
                 if (!isRefreshTaskList) {
                     showObtainMoreDataAnimation()
                     isLoadMoreList = true
-                    mPresenter.loadTaskList(lastTaskId)
+                    page++
+                    mPresenter.loadTaskListByPage(page)
                 }
             }
         }

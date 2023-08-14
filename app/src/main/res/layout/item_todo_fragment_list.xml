@@ -23,13 +23,14 @@
         />
     <TextView
         android:id="@+id/tv_todo_fragment_task_type"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        tools:text="【车辆审批】"
+        tools:text="【车辆辆辆辆辆辆辆审批车辆辆审批车辆辆辆辆审批车辆辆辆辆辆】"
         android:textSize="@dimen/font_normal"
         android:textColor="@color/z_color_text_primary"
-        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_todo_fragment_task_title"
+        app:layout_constraintEnd_toStartOf="@+id/tv_todo_fragment_task_date"
         android:layout_marginTop="@dimen/spacing_tiny"
         android:layout_marginStart="@dimen/spacing_small"
         />

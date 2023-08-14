@@ -81,6 +81,9 @@ interface CMSAssembleControlService {
     @PUT("jaxrs/document/filter/list/{lastId}/next/{count}")
     fun filterDocumentList(@Body filter: RequestBody, @Path("lastId") lastId: String, @Path("count") count: Int): Observable<ApiResponse<List<CMSDocumentInfoJson>>>
 
+    @PUT("jaxrs/document/filter/list/{page}/size/{size}")
+    fun filterDocumentListByPaging(@Body filter: RequestBody, @Path("page") page: Int, @Path("size") size: Int): Observable<ApiResponse<List<CMSDocumentInfoJson>>>
+
 
     /**
      * 获取附件对象

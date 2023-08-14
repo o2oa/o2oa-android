@@ -8,5 +8,6 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.cms
 data class CMSDocumentFilter(
         var statusList: ArrayList<String> = ArrayList(),
         var categoryIdList: ArrayList<String>? = null,
+        var justData: Boolean = true,
 //        var orderField: String = ""
 )

@@ -271,6 +271,9 @@ interface ProcessAssembleSurfaceService {
     @GET("jaxrs/task/list/{lastId}/next/{limit}")
     fun getTaskListByPage(@Path("lastId") lastId: String, @Path("limit") limit: Int): Observable<ApiResponse<List<TaskData>>>
 
+    @GET("jaxrs/task/list/my/paging/{page}/size/{limit}")
+    fun getTaskListByPaging(@Path("page") page: Int, @Path("limit") limit: Int): Observable<ApiResponse<List<TaskData>>>
+
     /**
      * 应用内分页获取任务列表
      * @param lastId (0) 第一条开始 、 传入最后一个任务id就是从这条任务开始

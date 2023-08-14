@@ -45,6 +45,20 @@ class IndexPresenter : BasePresenterImpl<IndexContract.View>(), IndexContract.Pr
         }
     }
 
+    override fun loadTaskListByPage(page: Int) {
+        getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service ->
+            service.getTaskListByPaging(page, O2.DEFAULT_PAGE_NUMBER)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(ResponseHandler { list -> mView?.loadTaskList(list) },
+                    ExceptionHandler(mView?.getContext()) { e ->
+                        XLog.error("", e)
+                        mView?.loadTaskListFail()
+                    }
+                )
+        }
+    }
+
     override fun loadTaskList(lastId: String) {
         getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service ->
             service.getTaskListByPage(lastId, O2.DEFAULT_PAGE_NUMBER)
@@ -56,6 +70,37 @@ class IndexPresenter : BasePresenterImpl<IndexContract.View>(), IndexContract.Pr
         }
     }
 
+
+    override fun loadNewsListByPage(page: Int) {
+        XLog.debug("获取新闻列表 page $page")
+        val status = ArrayList<String>()
+        status.add("published")
+        val filter = CMSDocumentFilter()
+        filter.statusList = status
+        filter.justData = true
+        val json = O2SDKManager.instance().gson.toJson(filter)
+        XLog.debug(json)
+        val body = RequestBody.create(MediaType.parse("application/json"), json)
+        getCMSAssembleControlService(mView?.getContext())?.let { service ->
+            service.filterDocumentListByPaging(body, page, O2.DEFAULT_PAGE_NUMBER)
+                .subscribeOn(Schedulers.io())
+                .observeOn(AndroidSchedulers.mainThread())
+                .o2Subscribe {
+                    onNext { response->
+                        if (response.data!=null) {
+                            mView?.loadNewsList(response.data)
+                        }else{
+                            mView?.loadNewsListFail()
+                        }
+                    }
+                    onError { e, isNetworkError ->
+                        XLog.error("获取新闻出错，$isNetworkError", e)
+                        mView?.loadNewsListFail()
+                    }
+                }
+
+        }
+    }
     override fun loadNewsList(lastId: String) {
         XLog.debug("获取新闻列表 $lastId")
         val status = ArrayList<String>()
