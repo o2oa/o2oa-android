@@ -2,18 +2,24 @@ package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.invited
 
 import android.app.Activity
 import android.os.Bundle
+import android.text.SpannableString
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import android.text.TextUtils
+import android.text.style.UnderlineSpan
 import android.view.View
 import android.widget.ImageView
 import android.widget.TextView
 import kotlinx.android.synthetic.main.content_meeting_detail.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.R
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.MeetingModeEnum
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.process.ProcessDataJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.MeetingFileInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.MeetingInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.AndroidUtils
@@ -21,6 +27,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.go
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
 import java.io.File
@@ -39,14 +46,14 @@ class MeetingDetailInfoActivity : BaseMVPActivity<MeetingDetailInfoContract.View
         const val meetingDetailKey = "MEETING_DETAIL_INFO"
 
         fun openMeetingDetail(activity: Activity, meetingInfo: MeetingInfoJson) {
-            if (meetingInfo.mode == "online" && !TextUtils.isEmpty(meetingInfo.roomLink)) {
-                XLog.info("打开在线会议，${meetingInfo.roomLink}")
-                AndroidUtils.runDefaultBrowser(activity, meetingInfo.roomLink)
-            } else {
+//            if (meetingInfo.mode == "online" && !TextUtils.isEmpty(meetingInfo.roomLink)) {
+//                XLog.info("打开在线会议，${meetingInfo.roomLink}")
+//                AndroidUtils.runDefaultBrowser(activity, meetingInfo.roomLink)
+//            } else {
                 val bundle = Bundle()
                 bundle.putSerializable(meetingDetailKey, meetingInfo)
                 activity.go<MeetingDetailInfoActivity>(bundle)
-            }
+//            }
         }
     }
 
@@ -100,6 +107,39 @@ class MeetingDetailInfoActivity : BaseMVPActivity<MeetingDetailInfoContract.View
         recycler_meeting_invited_not_accept_person_list.layoutManager = GridLayoutManager(this, 5)
         recycler_meeting_invited_not_accept_person_list.adapter = notAcceptPersonAdapter
         notAcceptPersonAdapter.notifyDataSetChanged()
+
+        val config = O2SDKManager.instance().prefs().getString(O2.PRE_MEETING_CONFIG_KEY, "")
+        if (!TextUtils.isEmpty(config)) {
+            val meetingConfig = O2SDKManager.instance().gson.fromJson<ProcessDataJson>(config, ProcessDataJson::class.java)
+            if (meetingConfig.enableOnline) {
+                ll_meeting_mode.visible()
+                v_meeting_mode.visible()
+                if (meetingDetailInfo.mode == MeetingModeEnum.online.key) {
+                    edit_meeting_mode.text = MeetingModeEnum.online.display
+                    ll_meeting_room_link.visible()
+                    v_meeting_room_link.visible()
+                    val link = meetingDetailInfo.roomLink
+                    edit_meeting_room_link.text = link
+                    if (!TextUtils.isEmpty(link)) {
+                        val sp = SpannableString(link)
+                        sp.setSpan(UnderlineSpan(), 0, link.length, 0)
+                        edit_meeting_room_link.text = sp
+                        ll_meeting_room_link.setOnClickListener {
+                            if (link.startsWith("http://") || link.startsWith("https://")) {
+                                AndroidUtils.runDefaultBrowser(this@MeetingDetailInfoActivity, link)
+                            } else {
+                                XToast.toastShort("不是正确的 url 地址！")
+                            }
+                        }
+                    }
+                    ll_meeting_room_id.visible()
+                    v_meeting_room_id.visible()
+                    edit_meeting_room_id.text = meetingDetailInfo.roomId
+                } else {
+                    edit_meeting_mode.text = MeetingModeEnum.offline.display
+                }
+            }
+        }
 
     }
 

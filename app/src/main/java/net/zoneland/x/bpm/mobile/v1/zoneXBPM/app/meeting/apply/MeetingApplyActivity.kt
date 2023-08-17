@@ -25,10 +25,13 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.ContactPickerAc
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.MeetingModeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.process.ProcessDataJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.MeetingInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goWithRequestCode
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
@@ -36,6 +39,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CircleImageView
 import java.io.File
 import java.util.*
+import kotlin.collections.ArrayList
 
 
 class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingApplyContract.Presenter>(),
@@ -52,10 +56,15 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
     private var addFile = ""
     private var meetingId = ""
     private var roomId: String = ""
+    private var showOnlineEdit = false // 是否显示在线会议连接和房间号的输入框
+    private var showMode = false // 是否显示会议方式选择
 
     private var type: String = ""  // 会议类型
     private var hostPerson: String = "" // 主持人 默认当前用户
     private var hostUnit: String = "" // 承办部门
+
+    private val modeList = arrayListOf(MeetingModeEnum.offline, MeetingModeEnum.online)
+    private var mode: String = "" // 会议方式
 
     companion object {
         val MEETING_CHOOSE_ROOM = 1001
@@ -136,8 +145,32 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
                 typeList.clear()
                 typeList.addAll(list)
             }
+            showMode = meetingConfig.enableOnline
+            showOnlineEdit = meetingConfig.enableOnline && meetingConfig.onlineProduct != "好视通"
         }
+        if (showMode) {
+            ll_meeting_mode.visible()
+            v_meeting_mode.visible()
+            setMeetingMode(modeList[0])
+            rl_choose_meeting_mode.setOnClickListener(this)
+        } else {
+            ll_meeting_mode.gone()
+            v_meeting_mode.gone()
+        }
+    }
 
+    private fun onlineEditForm() {
+        if (showOnlineEdit && mode == MeetingModeEnum.online.key) {
+            ll_meeting_roomLink.visible()
+            v_meeting_room_link.visible()
+            ll_meeting_room_id_online.visible()
+            v_meeting_room_id_online.visible()
+        } else {
+            ll_meeting_roomLink.gone()
+            v_meeting_room_link.gone()
+            ll_meeting_room_id_online.gone()
+            v_meeting_room_id_online.gone()
+        }
     }
 
     override fun onClick(v: View?) {
@@ -171,6 +204,9 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
             }
             R.id.rl_choose_meeting_hostUnit -> {
                 chooseHostUnit()
+            }
+            R.id.rl_choose_meeting_mode -> {
+                chooseMeetingMode()
             }
             /*R.id.button_submit_meeting -> {
                 val subject = edit_meeting_create_form_name.text.toString()
@@ -241,6 +277,18 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
                     XToast.toastShort(this, "请选择与会人员！")
                     return true
                 }
+                if (showOnlineEdit && mode == MeetingModeEnum.online.key) {
+                    val onlineLink = edit_meeting_create_form_room_link.text.toString()
+                    if (onlineLink.isEmpty()) {
+                        XToast.toastShort(this, getString(R.string.meeting_form_room_link_hint))
+                        return true
+                    }
+                    val onlineroomid = edit_meeting_create_form_room_id_online.text.toString()
+                    if (onlineroomid.isEmpty()) {
+                        XToast.toastShort(this, getString(R.string.meeting_form_online_room_id_hint))
+                        return true
+                    }
+                }
                 val info = newMeetingInfoJson(subject, startDay, startTime, endTime)
                 if (TextUtils.isEmpty(meetingId)) {
                     mPresenter.saveMeetingNoFile(info)
@@ -273,6 +321,9 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
         info.hostPerson = hostPerson
         info.hostUnit = hostUnit
         info.applicant = O2SDKManager.instance().distinguishedName
+        info.mode = mode
+        info.roomLink = edit_meeting_create_form_room_link.text.toString()
+        info.roomId = edit_meeting_create_form_room_id_online.text.toString()
         return info
     }
 
@@ -365,11 +416,31 @@ class MeetingApplyActivity : BaseMVPActivity<MeetingApplyContract.View, MeetingA
                 }.show()
         }
     }
-
     private fun setMeetingType(index: Int) {
         type = typeList[index]
         edit_meeting_type.text = type
     }
+
+    /**
+     * 选择会议方式
+     *
+     */
+    private fun chooseMeetingMode() {
+        val modenames = modeList.map { it.display }
+        BottomSheetMenu(this)
+            .setTitle(getString(R.string.meeting_form_mode))
+            .setItems(modenames, ContextCompat.getColor(this, R.color.z_color_text_primary)) { index ->
+                setMeetingMode(modeList[index])
+            }.show()
+    }
+
+    private fun setMeetingMode(m: MeetingModeEnum) {
+        mode = m.key
+        edit_meeting_mode.text = m.display
+        onlineEditForm()
+    }
+
+
 
     /**
      * 选择主持人

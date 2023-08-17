@@ -492,6 +492,12 @@
 <!--    <string name="meeting_end_time_hint">请选择结束时间</string>-->
     <string name="meeting_room">Conference Room</string>
     <string name="meeting_form_type">Meeting type</string>
+    <string name="meeting_form_mode">Meeting format</string>
+    <string name="meeting_form_mode_hint">Please select a Meeting format</string>
+    <string name="meeting_form_room_link">Meeting Link</string>
+    <string name="meeting_form_room_link_hint">Please enter the meeting link</string>
+    <string name="meeting_form_online_room_id">Meeting Number</string>
+    <string name="meeting_form_online_room_id_hint">Please enter the Meeting Number</string>
     <string name="meeting_form_type_hint">Please select a meeting type</string>
     <string name="meeting_form_hostPerson">Host</string>
     <string name="meeting_form_hostPerson_hint">Please select the host</string>

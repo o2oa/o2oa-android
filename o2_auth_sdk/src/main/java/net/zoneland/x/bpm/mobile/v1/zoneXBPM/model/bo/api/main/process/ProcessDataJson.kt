@@ -15,7 +15,9 @@ data class ProcessDataJson(
 		var toWeekViewName: String = "",
 		var toDayViewName: String = "",
 		var toListViewName: String = "",
-		var toRoomViewName: String = ""
+		var toRoomViewName: String = "",
+		var enableOnline: Boolean = false, // 是否启用在线会议
+		var onlineProduct: String = "",// 在线会议类型：其他 | 好视通
 )
 
 data class ProcessJson(

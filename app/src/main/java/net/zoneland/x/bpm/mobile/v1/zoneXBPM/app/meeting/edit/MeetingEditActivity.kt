@@ -21,12 +21,15 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.organization.ContactPickerAc
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecycleViewAdapter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.adapter.CommonRecyclerViewHolder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.enums.MeetingModeEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.process.ProcessDataJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.MeetingFileInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.meeting.MeetingInfoJson
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.FileExtensionHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PickTypeMode
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.pick.PicturePickUtil
@@ -52,6 +55,11 @@ class MeetingEditActivity : BaseMVPActivity<MeetingEditContract.View, MeetingEdi
     private var type: String = ""  // 会议类型
     private var hostPerson: String = "" // 主持人 默认当前用户
     private var hostUnit: String = "" // 承办部门
+
+    private var showOnlineEdit = false // 是否显示在线会议连接和房间号的输入框
+    private var showMode = false // 是否显示会议方式选择
+    private val modeList = arrayListOf(MeetingModeEnum.offline, MeetingModeEnum.online)
+    private var mode: String = "" // 会议方式
 
     companion object {
         val MEETING_INFO_KEY = "xbpm.meeting.edit.info"
@@ -159,11 +167,41 @@ class MeetingEditActivity : BaseMVPActivity<MeetingEditContract.View, MeetingEdi
                 typeList.clear()
                 typeList.addAll(meetingConfig.typeList!!)
             }
+            showMode = meetingConfig.enableOnline
+            showOnlineEdit = meetingConfig.enableOnline && meetingConfig.onlineProduct != "好视通"
         }
         rl_choose_meeting_type.setOnClickListener { chooseMeetingType() }
         rl_choose_meeting_hostPerson.setOnClickListener { chooseHostPerson() }
         rl_choose_meeting_hostUnit.setOnClickListener { chooseHostUnit() }
+        if (showMode) {
+            edit_meeting_create_form_room_link.setText(meeting.roomLink)
+            edit_meeting_create_form_room_id_online.setText(meeting.roomId)
+            ll_meeting_mode.visible()
+            v_meeting_mode.visible()
+            if (meeting.mode == MeetingModeEnum.online.key) {
+                setMeetingMode(MeetingModeEnum.online)
+            } else {
+                setMeetingMode(MeetingModeEnum.offline)
+            }
+            rl_choose_meeting_mode.setOnClickListener { chooseMeetingMode() }
+        } else {
+            ll_meeting_mode.gone()
+            v_meeting_mode.gone()
+        }
+    }
 
+    private fun onlineEditForm() {
+        if (showOnlineEdit && mode == MeetingModeEnum.online.key) {
+            ll_meeting_roomLink.visible()
+            v_meeting_room_link.visible()
+            ll_meeting_room_id_online.visible()
+            v_meeting_room_id_online.visible()
+        } else {
+            ll_meeting_roomLink.gone()
+            v_meeting_room_link.gone()
+            ll_meeting_room_id_online.gone()
+            v_meeting_room_id_online.gone()
+        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -247,6 +285,25 @@ class MeetingEditActivity : BaseMVPActivity<MeetingEditContract.View, MeetingEdi
         edit_meeting_type.text = type
     }
     /**
+     * 选择会议方式
+     *
+     */
+    private fun chooseMeetingMode() {
+        val modenames = modeList.map { it.display }
+        BottomSheetMenu(this)
+            .setTitle(getString(R.string.meeting_form_mode))
+            .setItems(modenames, ContextCompat.getColor(this, R.color.z_color_text_primary)) { index ->
+                setMeetingMode(modeList[index])
+            }.show()
+    }
+
+    private fun setMeetingMode(m: MeetingModeEnum) {
+        mode = m.key
+        edit_meeting_mode.text = m.display
+        onlineEditForm()
+    }
+
+    /**
      * 选择主持人
      */
     private fun chooseHostPerson() {
@@ -324,6 +381,18 @@ class MeetingEditActivity : BaseMVPActivity<MeetingEditContract.View, MeetingEdi
             XToast.toastShort(this, "请选择与会人员！")
             return
         }
+        val onlineLink = edit_meeting_create_form_room_link.text.toString()
+        val onlineroomid = edit_meeting_create_form_room_id_online.text.toString()
+        if (showOnlineEdit && mode == MeetingModeEnum.online.key) {
+            if (onlineLink.isEmpty()) {
+                XToast.toastShort(this, getString(R.string.meeting_form_room_link_hint))
+                return
+            }
+            if (onlineroomid.isEmpty()) {
+                XToast.toastShort(this, getString(R.string.meeting_form_online_room_id_hint))
+                return
+            }
+        }
         meeting.subject = subject
         meeting.summary = edit_meeting_edit_form_desc.text.toString()
         val savePersonList = invitePersonList
@@ -343,6 +412,10 @@ class MeetingEditActivity : BaseMVPActivity<MeetingEditContract.View, MeetingEdi
         meeting.type = type
         meeting.hostPerson = hostPerson
         meeting.hostUnit = hostUnit
+        meeting.mode = mode
+        meeting.roomLink = onlineLink
+        meeting.roomId = onlineroomid
+
         mPresenter.updateMeetingInfo(meeting)
     }
 

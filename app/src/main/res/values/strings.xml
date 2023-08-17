@@ -498,6 +498,13 @@
     <!--    <string name="meeting_end_time_hint">请选择结束时间</string>-->
     <string name="meeting_room">会议室</string>
     <string name="meeting_form_type">会议类型</string>
+    <string name="meeting_form_mode">会议方式</string>
+    <string name="meeting_form_mode_hint">请选择会议方式</string>
+    <string name="meeting_form_room_link">会议链接</string>
+    <string name="meeting_form_room_link_hint">请输入会议链接</string>
+    <string name="meeting_form_online_room_id">房间号</string>
+    <string name="meeting_form_online_room_id_hint">请输入房间号</string>
+
     <string name="meeting_form_type_hint">请选择会议类型</string>
     <string name="meeting_form_hostPerson">主持人</string>
     <string name="meeting_form_hostPerson_hint">请选择主持人</string>
