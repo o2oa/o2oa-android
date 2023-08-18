@@ -135,7 +135,7 @@ class MeetingMainActivity : BaseMVPActivity<MeetingMainContract.View, MeetingMai
     }
 
     override fun getMeetingById(meetingInfo: MeetingInfoJson) {
-        O2DialogSupport.openConfirmDialog(this, "需要打开会议【${meetingInfo.subject}】的具体页面吗？",  {d ->
+        O2DialogSupport.openConfirmDialog(this, "需要打开会议【${meetingInfo.subject}】的页面吗？",  {d ->
             MeetingDetailInfoActivity.openMeetingDetail(this, meetingInfo)
         })
     }
