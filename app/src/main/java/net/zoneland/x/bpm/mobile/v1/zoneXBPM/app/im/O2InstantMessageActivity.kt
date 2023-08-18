@@ -24,6 +24,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.CloudDiskActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v2.viewer.BigImageViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.clouddrive.v3.CloudDiskV3Activity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.index.CMSIndexActivity
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.cms.view.CMSWebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.meeting.main.MeetingMainActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.O2WebViewActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.webview.TaskWebViewActivity
@@ -273,7 +274,7 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
             }
         }else if (type.startsWith("cms_")) {
             setLinkStyle(textView) {
-                go<CMSIndexActivity>()
+                openCms(msg)
             }
         }else if (type.startsWith("bbs_")) {
             setLinkStyle(textView) {
@@ -288,6 +289,22 @@ class O2InstantMessageActivity : BaseMVPActivity<O2InstantMessageContract.View, 
         }
     }
 
+    /**
+     * 如果有 id  打开对应文档
+     * 否则 打开 信息中心
+     */
+    private fun openCms(msg: InstantMessage) {
+        val json = JSONTokener(msg.body).nextValue()
+        if (json is JSONObject) {
+            val id = try {json.getString("id")}catch (e: Exception){null}
+            val title = try {json.getString("title")}catch (e: Exception){""}
+            if (!id.isNullOrEmpty()) {
+                go<CMSWebViewActivity>(CMSWebViewActivity.startBundleData(id, title ?: ""))
+                return
+            }
+        }
+        go<CMSIndexActivity>()
+    }
     private fun openMeeting(msg: InstantMessage) {
         val json = JSONTokener(msg.body).nextValue()
         if (json is JSONObject) {
