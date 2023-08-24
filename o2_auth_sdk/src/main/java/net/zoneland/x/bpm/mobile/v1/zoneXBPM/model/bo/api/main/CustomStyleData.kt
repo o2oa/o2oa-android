@@ -23,9 +23,12 @@ data class CustomStyleData(
     var contactPermissionView: String = O2CustomStyle.CUSTOM_STYLE_CONTACT_PERMISSION_DEFAULT, // 通讯录权限使用的视图
     var portalList: List<PortalData> = ArrayList(), // 门户应用列表
     var nativeAppList: List<AppItemOnlineVo> = ArrayList(), // 原生应用列表
-    var images: ArrayList<ImageValue> = ArrayList() // 替换的图片列表
+    var images: ArrayList<ImageValue> = ArrayList(), // 替换的图片列表
+    var processFilterList: List<String> = ArrayList(), // 首页办公中心 待办列表过滤流程的条件
+    var cmsCategoryFilterList: List<String> = ArrayList(), // 首页信息中心 信息列表过滤分类的条件
 ) {
 
     data class ImageValue(var name: String = "",
-                          var value: String = "")
+                          var value: String = "",
+                            var path: String = "")
 }

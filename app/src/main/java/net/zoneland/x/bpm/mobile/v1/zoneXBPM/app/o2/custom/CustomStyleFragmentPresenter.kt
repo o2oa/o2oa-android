@@ -6,12 +6,15 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2CustomStyle
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.APIAddressHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.realm.RealmDataService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.main.CustomStyleData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.portal.PortalData
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.vo.AppItemOnlineVo
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.Base64ImageUtil
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2FileDownloadHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XToast
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
 import rx.Observable
@@ -89,6 +92,7 @@ class CustomStyleFragmentPresenter : BasePresenterImpl<CustomStyleFragmentContra
     private fun storageImages(images: List<CustomStyleData.ImageValue>) {
         images.map { image ->
             val base64 = image.value
+            val imageUrlPath = image.path
             val path = when (image.name) {
                 O2CustomStyle.IMAGE_KEY_LAUNCH_LOGO -> {
                     O2CustomStyle.launchLogoImagePath(mView?.getContext())
@@ -117,10 +121,32 @@ class CustomStyleFragmentPresenter : BasePresenterImpl<CustomStyleFragmentContra
                 else -> ""
             }
             if (!TextUtils.isEmpty(path)) {
-                val result = Base64ImageUtil.generateImage(path, base64)
-                XLog.info("generate image result: $result, path: $path")
+                // 在线图片
+                if (!TextUtils.isEmpty(imageUrlPath)) {
+                    val downloadUrl = APIAddressHelper.instance().getO2WebUrl(imageUrlPath)
+                    downloadImageToLocal(path!!, downloadUrl)
+                } else if (!TextUtils.isEmpty(base64)) { // base64
+                    val result = Base64ImageUtil.generateImage(path, base64)
+                    XLog.info("generate image result: $result, path: $path")
+                }
+
             }
         }
+    }
+
+    private fun downloadImageToLocal(filePath: String, downloadUrl: String) {
+        XLog.info("下载图片，$downloadUrl 到 $filePath")
+        O2FileDownloadHelper.download(downloadUrl, filePath)
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .o2Subscribe {
+                onNext {
+                    XLog.info("下载完成！")
+                }
+                onError { e, _ ->
+                    XLog.error("", e)
+                }
+            }
     }
 
     private fun storageIndexPageInfo(data: CustomStyleData?) {
@@ -131,6 +157,8 @@ class CustomStyleFragmentPresenter : BasePresenterImpl<CustomStyleFragmentContra
             putBoolean(O2CustomStyle.CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY, data?.simpleMode ?: false)
             putBoolean(O2CustomStyle.CUSTOM_STYLE_SILENCE_GRAY_PREF_KEY, data?.needGray ?: false)
             putStringSet(O2CustomStyle.CUSTOM_STYLE_INDEX_PAGES_KEY, data?.appIndexPages?.toSet())
+            putStringSet(O2CustomStyle.CUSTOM_STYLE_INDEX_FILTER_PROCESS_KEY, data?.processFilterList?.toSet())
+            putStringSet(O2CustomStyle.CUSTOM_STYLE_INDEX_FILTER_CATEGORY_KEY, data?.cmsCategoryFilterList?.toSet())
         }
     }
 }

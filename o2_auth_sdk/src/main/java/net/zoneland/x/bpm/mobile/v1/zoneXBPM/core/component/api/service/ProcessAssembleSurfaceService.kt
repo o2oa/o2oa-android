@@ -273,6 +273,8 @@ interface ProcessAssembleSurfaceService {
 
     @GET("jaxrs/task/list/my/paging/{page}/size/{limit}")
     fun getTaskListByPaging(@Path("page") page: Int, @Path("limit") limit: Int): Observable<ApiResponse<List<TaskData>>>
+    @POST("jaxrs/task/list/my/filter/{page}/size/{limit}")
+    fun getTaskListMyFilterPaging(@Path("page") page: Int, @Path("limit") limit: Int, @Body filter: RequestBody): Observable<ApiResponse<List<TaskData>>>
 
     /**
      * 应用内分页获取任务列表

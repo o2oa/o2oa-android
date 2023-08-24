@@ -25,7 +25,6 @@ object IndexContract {
     }
     interface Presenter: BasePresenter<View> {
 
-        fun loadTaskList(lastId: String)
         fun loadTaskListByPage(page: Int)
         fun loadNewsList(lastId: String)
         fun loadNewsListByPage(page: Int)

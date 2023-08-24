@@ -32,6 +32,9 @@ object O2CustomStyle {
     const val CUSTOM_STYLE_SIMPLE_MODE_PREF_KEY = "customStyleSimpleModeKey"
     // 首页展现的 tab 列表的 key
     const val CUSTOM_STYLE_INDEX_PAGES_KEY = "customStyleIndexPagesKey"
+
+    const val CUSTOM_STYLE_INDEX_FILTER_PROCESS_KEY = "customStyleIndexFilterProcessKey"
+    const val CUSTOM_STYLE_INDEX_FILTER_CATEGORY_KEY = "customStyleIndexFilterCategoryKey"
     // 默哀
     const val CUSTOM_STYLE_SILENCE_GRAY_PREF_KEY = "customStyleSilenceGrayKey"
     // 系统消息是否可点击

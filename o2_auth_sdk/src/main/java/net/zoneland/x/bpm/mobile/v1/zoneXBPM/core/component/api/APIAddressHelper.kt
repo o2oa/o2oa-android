@@ -127,6 +127,17 @@ class APIAddressHelper private constructor() {
     }
 
     /**
+     * web 服务器地址
+     * @param path 相对地址
+     */
+    fun getO2WebUrl(path: String): String {
+        val url = webServerData?.let {
+            "$httpHead${webServerData?.host}:${webServerData?.port}/$path"
+        } ?: ""
+        return O2SDKManager.instance().urlTransfer2Mapping(url)
+    }
+
+    /**
      * 论坛附件下载地址
      * jaxrs/attachment/download/${attachmentId}/stream/true
      */

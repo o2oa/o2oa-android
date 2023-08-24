@@ -1,7 +1,10 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.main
 
+import com.xiaomi.push.id
+import com.xiaomi.push.it
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ExceptionHandler
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2CustomStyle
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.O2SDKManager
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BasePresenterImpl
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.api.ResponseHandler
@@ -10,6 +13,7 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.component.realm.RealmDataServi
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2SearchV2Form
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.cms.CMSDocumentFilter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.HotPictureOutData
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.api.o2.TaskFilter
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.persistence.MyAppListObject
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.o2Subscribe
@@ -46,8 +50,18 @@ class IndexPresenter : BasePresenterImpl<IndexContract.View>(), IndexContract.Pr
     }
 
     override fun loadTaskListByPage(page: Int) {
+        val processSet = O2SDKManager.instance().prefs().getStringSet(O2CustomStyle.CUSTOM_STYLE_INDEX_FILTER_PROCESS_KEY, null) ?: HashSet<String>()
+        val filter = TaskFilter()
+        val processList =  ArrayList<String>()
+        processSet.forEach {
+            processList.add(it)
+        }
+        filter.processList = processList
+        val json = O2SDKManager.instance().gson.toJson(filter)
+        XLog.debug(json)
+        val body = RequestBody.create(MediaType.parse("application/json"), json)
         getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service ->
-            service.getTaskListByPaging(page, O2.DEFAULT_PAGE_NUMBER)
+            service.getTaskListMyFilterPaging(page, O2.DEFAULT_PAGE_NUMBER, body)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(ResponseHandler { list -> mView?.loadTaskList(list) },
@@ -59,24 +73,20 @@ class IndexPresenter : BasePresenterImpl<IndexContract.View>(), IndexContract.Pr
         }
     }
 
-    override fun loadTaskList(lastId: String) {
-        getProcessAssembleSurfaceServiceAPI(mView?.getContext())?.let { service ->
-            service.getTaskListByPage(lastId, O2.DEFAULT_PAGE_NUMBER)
-                    .subscribeOn(Schedulers.io())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(ResponseHandler({ list -> mView?.loadTaskList(list) }),
-                            ExceptionHandler(mView?.getContext(), { e -> mView?.loadTaskListFail() })
-                    )
-        }
-    }
 
 
     override fun loadNewsListByPage(page: Int) {
         XLog.debug("获取新闻列表 page $page")
         val status = ArrayList<String>()
         status.add("published")
+        val categorySet = O2SDKManager.instance().prefs().getStringSet(O2CustomStyle.CUSTOM_STYLE_INDEX_FILTER_CATEGORY_KEY, null) ?: HashSet<String>()
+        val categoryIdList =  ArrayList<String>()
+        categorySet.forEach {
+            categoryIdList.add(it)
+        }
         val filter = CMSDocumentFilter()
         filter.statusList = status
+        filter.categoryIdList = categoryIdList
         filter.justData = true
         val json = O2SDKManager.instance().gson.toJson(filter)
         XLog.debug(json)
