@@ -43,10 +43,15 @@ class AppFragment : BaseMVPViewPagerFragment<MyAppContract.View, MyAppContract.P
         initNativeApp()
         initPortalApp()
         initMyApp()
-        // 设置顶部大图 
-        val path = O2CustomStyle.applicationTopImagePath(activity)
-        if (!TextUtils.isEmpty(path)) {
-            BitmapUtil.setImageFromFile(path!!, my_app_top_image)
+        // 设置顶部大图
+        val newUrl = O2CustomStyle.applicationTopImageUrl()
+        if (newUrl.isNullOrEmpty()) {
+            val path = O2CustomStyle.applicationTopImagePath(activity)
+            if (!TextUtils.isEmpty(path)) {
+                BitmapUtil.setImageFromFile(path!!, my_app_top_image)
+            }
+        } else {
+            O2ImageLoaderManager.instance().showImage(my_app_top_image, newUrl, O2ImageLoaderOptions(isSkipCache = true))
         }
     }
 

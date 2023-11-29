@@ -40,6 +40,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.DateHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.O2DoubleClickExit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.XLog
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderOptions
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.GrayFrameLayout
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2AlertIconEnum
@@ -427,12 +429,19 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
                 tv_icon_main_bottom_contact.setTextColor(FancySkinManager.instance().getColor(this, R.color.z_color_primary))
             }
             MainPagesEnum.home -> {
-                val path = O2CustomStyle.indexMenuLogoFocusImagePath(this)
-                if (!TextUtils.isEmpty(path)) {
-                    BitmapUtil.setImageFromFile(path!!, icon_main_bottom_index)
+                val newUrl = O2CustomStyle.indexMenuLogoFocusImageNewUrl()
+                if (newUrl.isNullOrEmpty()) {
+                    val path = O2CustomStyle.indexMenuLogoFocusImagePath(this)
+                    if (!TextUtils.isEmpty(path)) {
+                        BitmapUtil.setImageFromFile(path!!, icon_main_bottom_index)
+                    } else {
+                        icon_main_bottom_index.setImageResource(R.mipmap.index_bottom_menu_logo_focus)
+                    }
                 } else {
-                    icon_main_bottom_index.setImageResource(R.mipmap.index_bottom_menu_logo_focus)
+                    O2ImageLoaderManager.instance().showImage(icon_main_bottom_index, newUrl, O2ImageLoaderOptions(isSkipCache = true))
                 }
+                icon_main_bottom_index_blur.gone()
+                icon_main_bottom_index.visible()
             }
             MainPagesEnum.app -> {
                 image_icon_main_bottom_app.setImageDrawable(FancySkinManager.instance().getDrawable(this, R.mipmap.icon_main_app_red))
@@ -472,12 +481,20 @@ class MainActivity : BaseMVPActivity<MainContract.View, MainContract.Presenter>(
         tv_icon_main_bottom_news.setTextColor(FancySkinManager.instance().getColor(this, R.color.z_color_text_primary))
         image_icon_main_bottom_contact.setImageDrawable(FancySkinManager.instance().getDrawable(this, R.mipmap.icon_main_contact))
         tv_icon_main_bottom_contact.setTextColor(FancySkinManager.instance().getColor(this, R.color.z_color_text_primary))
-        val path = O2CustomStyle.indexMenuLogoBlurImagePath(this)
-        if (!TextUtils.isEmpty(path)) {
-            BitmapUtil.setImageFromFile(path!!, icon_main_bottom_index)
+        val newUrl = O2CustomStyle.indexMenuLogoBlurImageNewUrl()
+        if (newUrl.isNullOrEmpty()) {
+            val path = O2CustomStyle.indexMenuLogoBlurImagePath(this)
+            if (!TextUtils.isEmpty(path)) {
+                BitmapUtil.setImageFromFile(path!!, icon_main_bottom_index_blur)
+            } else {
+                icon_main_bottom_index_blur.setImageResource(R.mipmap.index_bottom_menu_logo_blur)
+            }
         } else {
-            icon_main_bottom_index.setImageResource(R.mipmap.index_bottom_menu_logo_blur)
+            O2ImageLoaderManager.instance().showImage(icon_main_bottom_index_blur, newUrl, O2ImageLoaderOptions(isSkipCache = true))
         }
+        icon_main_bottom_index_blur.visible()
+        icon_main_bottom_index.gone()
+
         image_icon_main_bottom_app.setImageDrawable(FancySkinManager.instance().getDrawable(this, R.mipmap.icon_main_app))
         tv_icon_main_bottom_app.setTextColor(FancySkinManager.instance().getColor(this, R.color.z_color_text_primary))
         image_icon_main_bottom_setting.setImageDrawable(FancySkinManager.instance().getDrawable(this, R.mipmap.icon_main_setting))

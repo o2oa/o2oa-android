@@ -78,45 +78,67 @@ class LaunchPresenter : BasePresenterImpl<LaunchContract.View>(), LaunchContract
 
     private fun storageImages(images: List<CustomStyleData.ImageValue>) {
         images.map { image ->
-            val base64 = image.value
             val imageUrlPath = image.path
-            val path = when (image.name) {
-                O2CustomStyle.IMAGE_KEY_LAUNCH_LOGO -> {
-                    O2CustomStyle.launchLogoImagePath(mView?.getContext())
-                }
-                O2CustomStyle.IMAGE_KEY_INDEX_BOTTOM_MENU_LOGO_FOCUS -> {
-                    O2CustomStyle.indexMenuLogoFocusImagePath(mView?.getContext())
-                }
-                O2CustomStyle.IMAGE_KEY_INDEX_BOTTOM_MENU_LOGO_BLUR -> {
-                    O2CustomStyle.indexMenuLogoBlurImagePath(mView?.getContext())
-                }
-                O2CustomStyle.IMAGE_KEY_LOGIN_AVATAR -> {
-                    O2CustomStyle.loginAvatarImagePath(mView?.getContext())
-                }
-                O2CustomStyle.IMAGE_KEY_PEOPLE_AVATAR_DEFAULT -> {
-                    O2CustomStyle.peopleAvatarImagePath(mView?.getContext())
-                }
-                O2CustomStyle.IMAGE_KEY_PROCESS_DEFAULT -> {
-                    O2CustomStyle.processDefaultImagePath(mView?.getContext())
-                }
-                O2CustomStyle.IMAGE_KEY_SETUP_ABOUT_LOGO -> {
-                    O2CustomStyle.setupAboutImagePath(mView?.getContext())
-                }
-                O2CustomStyle.IMAGE_KEY_APPLICATION_TOP -> {
-                    O2CustomStyle.applicationTopImagePath(mView?.getContext())
-                }
-                else -> ""
-            }
-            if (!TextUtils.isEmpty(path)) {
-                // 在线图片
-                if (!TextUtils.isEmpty(imageUrlPath)) {
-                    val downloadUrl = APIAddressHelper.instance().getO2WebUrl(imageUrlPath)
-                    downloadImageToLocal(path!!, downloadUrl)
-                } else if (!TextUtils.isEmpty(base64)) {
+            if (!TextUtils.isEmpty(imageUrlPath)) { // 新的  url 方式展现图片
+                val downloadUrl = APIAddressHelper.instance().getO2WebUrl(imageUrlPath)
+                webImageUrl(image.name, downloadUrl)
+            } else {
+                // 老的 base64
+                val base64 = image.value
+                val path = baseImageLocalPath(image.name)
+                if (!TextUtils.isEmpty(path) && !TextUtils.isEmpty(base64)) {
                     val result = Base64ImageUtil.generateImage(path, base64)
                     XLog.info("generate image result: $result, path: $path")
                 }
             }
+        }
+    }
+
+    private fun webImageUrl(name: String, downloadUrl: String) {
+        val prefs = when (name) {
+            O2CustomStyle.IMAGE_KEY_LAUNCH_LOGO -> O2CustomStyle.IMAGE_KEY_LAUNCH_LOGO_URL
+            O2CustomStyle.IMAGE_KEY_INDEX_BOTTOM_MENU_LOGO_FOCUS -> O2CustomStyle.IMAGE_KEY_LAUNCH_LOGO_URL
+            O2CustomStyle.IMAGE_KEY_INDEX_BOTTOM_MENU_LOGO_BLUR -> O2CustomStyle.IMAGE_KEY_INDEX_BOTTOM_MENU_LOGO_BLUR_URL
+            O2CustomStyle.IMAGE_KEY_LOGIN_AVATAR -> O2CustomStyle.IMAGE_KEY_LOGIN_AVATAR_URL
+            O2CustomStyle.IMAGE_KEY_PEOPLE_AVATAR_DEFAULT -> O2CustomStyle.IMAGE_KEY_PEOPLE_AVATAR_DEFAULT_URL
+            O2CustomStyle.IMAGE_KEY_PROCESS_DEFAULT -> O2CustomStyle.IMAGE_KEY_PROCESS_DEFAULT_URL
+            O2CustomStyle.IMAGE_KEY_SETUP_ABOUT_LOGO -> O2CustomStyle.IMAGE_KEY_SETUP_ABOUT_LOGO_URL
+            O2CustomStyle.IMAGE_KEY_APPLICATION_TOP -> O2CustomStyle.IMAGE_KEY_APPLICATION_TOP_URL
+            else -> ""
+        }
+        if (prefs.isNotEmpty()) {
+            O2SDKManager.instance().prefs().edit {
+                putString(prefs, downloadUrl)
+            }
+        }
+    }
+    private fun baseImageLocalPath(name: String): String? {
+        return when (name) {
+            O2CustomStyle.IMAGE_KEY_LAUNCH_LOGO -> {
+                O2CustomStyle.launchLogoImagePath(mView?.getContext())
+            }
+            O2CustomStyle.IMAGE_KEY_INDEX_BOTTOM_MENU_LOGO_FOCUS -> {
+                O2CustomStyle.indexMenuLogoFocusImagePath(mView?.getContext())
+            }
+            O2CustomStyle.IMAGE_KEY_INDEX_BOTTOM_MENU_LOGO_BLUR -> {
+                O2CustomStyle.indexMenuLogoBlurImagePath(mView?.getContext())
+            }
+            O2CustomStyle.IMAGE_KEY_LOGIN_AVATAR -> {
+                O2CustomStyle.loginAvatarImagePath(mView?.getContext())
+            }
+//            O2CustomStyle.IMAGE_KEY_PEOPLE_AVATAR_DEFAULT -> {
+//                O2CustomStyle.peopleAvatarImagePath(mView?.getContext())
+//            }
+//            O2CustomStyle.IMAGE_KEY_PROCESS_DEFAULT -> {
+//                O2CustomStyle.processDefaultImagePath(mView?.getContext())
+//            }
+            O2CustomStyle.IMAGE_KEY_SETUP_ABOUT_LOGO -> {
+                O2CustomStyle.setupAboutImagePath(mView?.getContext())
+            }
+            O2CustomStyle.IMAGE_KEY_APPLICATION_TOP -> {
+                O2CustomStyle.applicationTopImagePath(mView?.getContext())
+            }
+            else -> ""
         }
     }
 

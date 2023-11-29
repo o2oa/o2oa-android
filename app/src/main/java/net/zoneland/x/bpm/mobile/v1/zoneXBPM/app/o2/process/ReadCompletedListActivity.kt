@@ -48,8 +48,6 @@ class ReadCompletedListActivity : BaseMVPActivity<ReadCompletedListContract.View
                         ?.setText(R.id.todo_card_view_node_id, data?.activityName)
                         ?.setText(R.id.todo_card_view_time_id, time)
                 val icon = holder?.getView<CircleImageView>(R.id.todo_card_view_icon_id)
-                val bitmap = BitmapFactory.decodeFile(O2CustomStyle.processDefaultImagePath(this@ReadCompletedListActivity))
-                icon?.setImageBitmap(bitmap)
                 icon?.tag = data?.application
                 loadApplicationIcon(holder?.convertView, data?.application)
             }

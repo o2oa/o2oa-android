@@ -74,11 +74,16 @@ class SettingsFragment : BaseMVPViewPagerFragment<SettingsContract.View, Setting
         tv_settings_my_name.text = O2SDKManager.instance().cName
         tv_settings_my_sign.text = O2SDKManager.instance().cSignature
 
-
-        val path = O2CustomStyle.setupAboutImagePath(activity)
-        if (!TextUtils.isEmpty(path)) {
-            BitmapUtil.setImageFromFile(path!!, setting_image_about_icon)
+        val newUrl = O2CustomStyle.setupAboutImageUrl()
+        if (newUrl.isNullOrEmpty()) {
+            val path = O2CustomStyle.setupAboutImagePath(activity)
+            if (!TextUtils.isEmpty(path)) {
+                BitmapUtil.setImageFromFile(path!!, setting_image_about_icon)
+            }
+        } else {
+            O2ImageLoaderManager.instance().showImage(setting_image_about_icon, newUrl, O2ImageLoaderOptions(isSkipCache = true))
         }
+
 
     }
 

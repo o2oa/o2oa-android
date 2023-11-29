@@ -31,6 +31,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.biometric.OnBiometryAuthCallb
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.goThenKill
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderOptions
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.BottomSheetMenu
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.CountDownButtonHelper
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
@@ -563,10 +565,16 @@ class LoginActivity: BaseMVPActivity<LoginContract.View, LoginContract.Presenter
      * 设置logo
      */
     private fun setDefaultLogo() {
-        val path = O2CustomStyle.loginAvatarImagePath(this@LoginActivity)
-        if (!TextUtils.isEmpty(path)) {
-            BitmapUtil.setImageFromFile(path!!, image_login_logo)
+        val newUrl = O2CustomStyle.loginAvatarImageNewUrl()
+        if (newUrl.isNullOrEmpty()) {
+            val path = O2CustomStyle.loginAvatarImagePath(this@LoginActivity)
+            if (!TextUtils.isEmpty(path)) {
+                BitmapUtil.setImageFromFile(path!!, image_login_logo)
+            }
+        } else {
+            O2ImageLoaderManager.instance().showImage(image_login_logo, newUrl, O2ImageLoaderOptions(isSkipCache = true))
         }
+
     }
 
 

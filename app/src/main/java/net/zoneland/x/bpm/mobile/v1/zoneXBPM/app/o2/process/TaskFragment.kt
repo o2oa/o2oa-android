@@ -45,8 +45,6 @@ class TaskFragment : BaseMVPViewPagerFragment<TaskContract.View, TaskContract.Pr
                         ?.setText(R.id.todo_card_view_node_id, data?.activityName)
                         ?.setText(R.id.todo_card_view_time_id, time)
                 val icon = holder?.getView<CircleImageView>(R.id.todo_card_view_icon_id)
-                val bitmap = BitmapFactory.decodeFile(O2CustomStyle.processDefaultImagePath(activity))
-                icon?.setImageBitmap(bitmap)
                 icon?.tag = data?.application
                 (activity as TaskListActivity).loadApplicationIcon(holder?.convertView, data?.application)
             }

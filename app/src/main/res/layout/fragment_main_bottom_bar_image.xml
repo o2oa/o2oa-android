@@ -32,7 +32,16 @@
             android:layout_height="match_parent"
             android:layout_centerInParent="true"
             android:scaleType="fitCenter"
+            android:visibility="visible"
             android:src="@mipmap/index_bottom_menu_logo_focus" />
+        <ImageView
+            android:id="@+id/icon_main_bottom_index_blur"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true"
+            android:scaleType="fitCenter"
+            android:visibility="gone"
+            android:src="@mipmap/index_bottom_menu_logo_blur" />
         </RelativeLayout>
 
         <RelativeLayout

@@ -50,19 +50,27 @@ object O2CustomStyle {
 
     //MARK - 缓存图片key
     const val IMAGE_KEY_LAUNCH_LOGO = "launch_logo" //启动页logo图  关于页面用的也是这个图 195px    65dp
+    const val IMAGE_KEY_LAUNCH_LOGO_URL = "launch_logo_URL" //启动页logo图  关于页面用的也是这个图 195px    65dp
     //首页底部菜单home按钮  114px   38dp
     const val IMAGE_KEY_INDEX_BOTTOM_MENU_LOGO_FOCUS = "index_bottom_menu_logo_focus"
+    const val IMAGE_KEY_INDEX_BOTTOM_MENU_LOGO_FOCUS_URL = "index_bottom_menu_logo_focus_URL"
     const val IMAGE_KEY_INDEX_BOTTOM_MENU_LOGO_BLUR = "index_bottom_menu_logo_blur"
+    const val IMAGE_KEY_INDEX_BOTTOM_MENU_LOGO_BLUR_URL = "index_bottom_menu_logo_blur_URL"
 
     const val IMAGE_KEY_LOGIN_AVATAR = "login_avatar" //登录页默认头像  225px  75dp
+    const val IMAGE_KEY_LOGIN_AVATAR_URL = "login_avatar_URL" //登录页默认头像  225px  75dp
 
     const val IMAGE_KEY_PEOPLE_AVATAR_DEFAULT = "people_avatar_default" //人员默认头像  120px  40dp
+    const val IMAGE_KEY_PEOPLE_AVATAR_DEFAULT_URL = "people_avatar_default_URL" //人员默认头像  120px  40dp
 
     const val IMAGE_KEY_PROCESS_DEFAULT = "process_default"  //流程默认图标   90px  30dp
+    const val IMAGE_KEY_PROCESS_DEFAULT_URL = "process_default_URL"  //流程默认图标   90px  30dp
 
     const val IMAGE_KEY_SETUP_ABOUT_LOGO = "setup_about_logo" //设置页 关于按钮 logo    66px  22dp
+    const val IMAGE_KEY_SETUP_ABOUT_LOGO_URL = "setup_about_logo_URL" //设置页 关于按钮 logo    66px  22dp
 
     const val IMAGE_KEY_APPLICATION_TOP = "application_top" //应用页面 顶部图片    730  390
+    const val IMAGE_KEY_APPLICATION_TOP_URL = "application_top_URL" //应用页面 顶部图片    730  390
 
 
     /**
@@ -75,6 +83,9 @@ object O2CustomStyle {
             null
         }
     }
+    fun launchLogoImageNewUrl(): String? {
+       return O2SDKManager.instance().prefs().getString(IMAGE_KEY_LAUNCH_LOGO_URL, "")
+    }
 
     /**
      * 首页底部Home focus 图地址
@@ -85,6 +96,9 @@ object O2CustomStyle {
         } else {
             null
         }
+    }
+    fun indexMenuLogoFocusImageNewUrl(): String? {
+        return O2SDKManager.instance().prefs().getString(IMAGE_KEY_INDEX_BOTTOM_MENU_LOGO_FOCUS_URL, "")
     }
 
     /**
@@ -97,6 +111,9 @@ object O2CustomStyle {
             null
         }
     }
+    fun indexMenuLogoBlurImageNewUrl(): String? {
+        return O2SDKManager.instance().prefs().getString(IMAGE_KEY_INDEX_BOTTOM_MENU_LOGO_BLUR_URL, "")
+    }
 
     /**
      * 登录页头像 图地址
@@ -108,28 +125,37 @@ object O2CustomStyle {
             null
         }
     }
+    fun loginAvatarImageNewUrl(): String? {
+        return O2SDKManager.instance().prefs().getString(IMAGE_KEY_LOGIN_AVATAR_URL, "")
+    }
 
     /**
      * 人员头像默认 图地址
      */
-    fun peopleAvatarImagePath(context: Context?): String? {
-        return if (context != null) {
-            FileUtil.appExternalImageDir(context)?.absolutePath + File.separator + IMAGE_KEY_PEOPLE_AVATAR_DEFAULT + extension_png
-        } else {
-            null
-        }
-    }
+//    fun peopleAvatarImagePath(context: Context?): String? {
+//        return if (context != null) {
+//            FileUtil.appExternalImageDir(context)?.absolutePath + File.separator + IMAGE_KEY_PEOPLE_AVATAR_DEFAULT + extension_png
+//        } else {
+//            null
+//        }
+//    }
+//    fun peopleAvatarImageUrl(): String? {
+//        return O2SDKManager.instance().prefs().getString(IMAGE_KEY_PEOPLE_AVATAR_DEFAULT_URL, "")
+//    }
 
     /**
      * 流程默认 图地址
      */
-    fun processDefaultImagePath(context: Context?): String? {
-        return if (context != null) {
-            FileUtil.appExternalImageDir(context)?.absolutePath + File.separator + IMAGE_KEY_PROCESS_DEFAULT + extension_png
-        } else {
-            null
-        }
-    }
+//    fun processDefaultImagePath(context: Context?): String? {
+//        return if (context != null) {
+//            FileUtil.appExternalImageDir(context)?.absolutePath + File.separator + IMAGE_KEY_PROCESS_DEFAULT + extension_png
+//        } else {
+//            null
+//        }
+//    }
+//    fun processDefaultImageUrl(): String? {
+//        return O2SDKManager.instance().prefs().getString(IMAGE_KEY_PROCESS_DEFAULT_URL, "")
+//    }
 
     /**
      * 设置页关于logo 图地址
@@ -141,6 +167,9 @@ object O2CustomStyle {
             null
         }
     }
+    fun setupAboutImageUrl(): String? {
+        return O2SDKManager.instance().prefs().getString(IMAGE_KEY_SETUP_ABOUT_LOGO_URL, "")
+    }
 
     /**
      * 应用页面 顶部大图
@@ -151,6 +180,9 @@ object O2CustomStyle {
         } else {
             null
         }
+    }
+    fun applicationTopImageUrl(): String? {
+        return O2SDKManager.instance().prefs().getString(IMAGE_KEY_APPLICATION_TOP_URL, "")
     }
 
 

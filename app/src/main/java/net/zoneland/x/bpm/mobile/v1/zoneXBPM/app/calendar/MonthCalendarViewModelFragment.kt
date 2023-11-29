@@ -42,7 +42,11 @@ import java.util.*
 
 class MonthCalendarViewModelFragment : CalendarBaseFragment(), OnDateSelectedListener, OnMonthChangedListener {
 
-    private val selectorDecorator: SelectorDecorator by lazy { SelectorDecorator(activity) }
+    private val selectorDecorator: SelectorDecorator by lazy {
+        SelectorDecorator(
+            activity
+        )
+    }
     private val list = ArrayList<CalendarEventInfoData>()
     private val adapter: CommonRecycleViewAdapter<CalendarEventInfoData> by lazy {
         object : CommonRecycleViewAdapter<CalendarEventInfoData>(activity, list, R.layout.item_fragment_calendar_month_list) {
@@ -113,9 +117,17 @@ class MonthCalendarViewModelFragment : CalendarBaseFragment(), OnDateSelectedLis
             }
             //clear decorator
             mcv_fragment_calendar_month.removeDecorators()
-            mcv_fragment_calendar_month.addDecorators(TodayDecorator(activity), selectorDecorator)
+            mcv_fragment_calendar_month.addDecorators(
+                TodayDecorator(
+                    activity
+                ), selectorDecorator)
             //addDecorator
-            mcv_fragment_calendar_month.addDecorator(EventDecorator(FancySkinManager.instance().getColor(activity!!, R.color.z_color_primary), meetingDays))
+            mcv_fragment_calendar_month.addDecorator(
+                EventDecorator(
+                    FancySkinManager.instance().getColor(activity!!, R.color.z_color_primary),
+                    meetingDays
+                )
+            )
 
         })
         monthViewModel.getSelectDay().observe(this, androidx.lifecycle.Observer { day->
@@ -144,7 +156,10 @@ class MonthCalendarViewModelFragment : CalendarBaseFragment(), OnDateSelectedLis
         val now = Calendar.getInstance()
         now.time = date
         mcv_fragment_calendar_month.isDynamicHeightEnabled = true
-        mcv_fragment_calendar_month.addDecorators(TodayDecorator(activity), selectorDecorator)
+        mcv_fragment_calendar_month.addDecorators(
+            TodayDecorator(
+                activity
+            ), selectorDecorator)
         mcv_fragment_calendar_month.topbarVisible = false
         val selected = CalendarDay.from(localNow)
         mcv_fragment_calendar_month.selectedDate = selected

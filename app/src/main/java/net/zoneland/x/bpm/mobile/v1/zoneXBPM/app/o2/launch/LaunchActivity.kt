@@ -1,6 +1,6 @@
 package net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.launch
 
-import android.Manifest
+
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
@@ -22,7 +22,6 @@ import androidx.viewpager.widget.PagerAdapter
 import androidx.viewpager.widget.ViewPager
 import cn.jpush.android.api.JPushInterface
 import kotlinx.android.synthetic.main.activity_launch.*
-import kotlinx.android.synthetic.main.fragment_fluid_login_phone.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.base.BaseMVPActivity
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.app.o2.DownloadAPKFragment
@@ -36,7 +35,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.core.service.DownloadAPKService
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.model.bo.O2AppUpdateBean
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.*
-import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.permission.PermissionRequester
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderOptions
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2AlertDialogBuilder
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2AlertIconEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
@@ -391,9 +391,15 @@ class LaunchActivity : BaseMVPActivity<LaunchContract.View, LaunchContract.Prese
                         mPresenter.downloadConfig()
                     }
                     tv_launch_status.text = getString(R.string.launch_auto_login) //准备登录
-                    val path = O2CustomStyle.launchLogoImagePath(this)
-                    if (!TextUtils.isEmpty(path)) {
-                        BitmapUtil.setImageFromFile(path!!, image_launch_logo)
+
+                    val logoUrl = O2CustomStyle.launchLogoImageNewUrl()
+                    if (logoUrl.isNullOrEmpty()) {
+                        val path = O2CustomStyle.launchLogoImagePath(this)
+                        if (!TextUtils.isEmpty(path)) {
+                            BitmapUtil.setImageFromFile(path!!, image_launch_logo)
+                        }
+                    } else {
+                        O2ImageLoaderManager.instance().showImage(image_launch_logo, logoUrl, O2ImageLoaderOptions(isSkipCache = true))
                     }
                 }
                 LaunchState.NoBindError -> {

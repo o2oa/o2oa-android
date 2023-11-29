@@ -56,8 +56,6 @@ class StartProcessStepOneFragment : BaseMVPFragment<StartProcessStepOneContract.
                     appNameTv.visible()
                     icon.visible()
                     appNameTv.text = t.app?.name ?: ""
-                    val bitmap = BitmapFactory.decodeFile(O2CustomStyle.processDefaultImagePath(activity))
-                    icon?.setImageBitmap(bitmap)
                     icon.tag = t.app?.id
                     (activity as StartProcessActivity).loadProcessApplicationIcon(icon, t.app?.id ?: "1" )
                     if (t.app?.id == currentChooseAppId) {

@@ -40,7 +40,11 @@ class MeetingMainFragment : BaseMVPViewPagerFragment<MeetingMainFragmentContract
         MeetingMainFragmentContract.View, OnDateSelectedListener, OnMonthChangedListener, IdentifyChooseDialog.DialogCallback {
 
     private val meetingList = ArrayList<MeetingInfoJson>()
-    private val selectorDecorator: SelectorDecorator by lazy { SelectorDecorator(activity) }
+    private val selectorDecorator: SelectorDecorator by lazy {
+        SelectorDecorator(
+            activity
+        )
+    }
     private lateinit var daySelected: String
     private lateinit var monthSelected: String
     private var identifyDialog: IdentifyChooseDialog? = null
@@ -61,7 +65,10 @@ class MeetingMainFragment : BaseMVPViewPagerFragment<MeetingMainFragmentContract
         calendarView_meeting_date.setWeekDayLabels(R.array.custom_weekdays)
         calendarView_meeting_date.showOtherDates = MaterialCalendarView.SHOW_DEFAULTS
         calendarView_meeting_date.selectedDate =  CalendarDay.from( LocalDate.now())
-        calendarView_meeting_date.addDecorators(TodayDecorator(activity), selectorDecorator)
+        calendarView_meeting_date.addDecorators(
+            TodayDecorator(
+                activity
+            ), selectorDecorator)
         calendarView_meeting_date.setHeaderTextAppearance(R.style.TextAppearance_MaterialCalendarWidget_Header)
         calendarView_meeting_date.setDateTextAppearance(R.style.TextAppearance_MaterialCalendarWidget_Date)
         calendarView_meeting_date.setWeekDayTextAppearance(R.style.TextAppearance_MaterialCalendarWidget_WeekDay)
@@ -129,10 +136,17 @@ class MeetingMainFragment : BaseMVPViewPagerFragment<MeetingMainFragmentContract
         }
         calendarView_meeting_date.removeDecorators()
         calendarView_meeting_date.addDecorators(
-                TodayDecorator(activity),
+            TodayDecorator(
+                activity
+            ),
                 selectorDecorator
         )
-        calendarView_meeting_date.addDecorator(EventDecorator(FancySkinManager.instance().getColor(activity!!, R.color.z_color_primary_dark), meetingDays))
+        calendarView_meeting_date.addDecorator(
+            EventDecorator(
+                FancySkinManager.instance().getColor(activity!!, R.color.z_color_primary_dark),
+                meetingDays
+            )
+        )
         hideLoadingDialog()
     }
 

@@ -22,6 +22,8 @@ import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.*
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.edit
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.gone
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.extension.visible
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderManager
+import net.zoneland.x.bpm.mobile.v1.zoneXBPM.utils.imageloader.O2ImageLoaderOptions
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2AlertIconEnum
 import net.zoneland.x.bpm.mobile.v1.zoneXBPM.widgets.dialog.O2DialogSupport
 
@@ -52,10 +54,16 @@ class AboutActivity : AppCompatActivity() {
                 .plus(getString(R.string.reserved))
         tv_about_reserved.text = copyRight
 
-        val path = O2CustomStyle.launchLogoImagePath(this)
-        if (!TextUtils.isEmpty(path)) {
-            BitmapUtil.setImageFromFile(path!!, image_about_logo)
+        val logoUrl = O2CustomStyle.launchLogoImageNewUrl()
+        if (logoUrl.isNullOrEmpty()) {
+            val path = O2CustomStyle.launchLogoImagePath(this)
+            if (!TextUtils.isEmpty(path)) {
+                BitmapUtil.setImageFromFile(path!!, image_about_logo)
+            }
+        } else {
+            O2ImageLoaderManager.instance().showImage(image_about_logo, logoUrl, O2ImageLoaderOptions(isSkipCache = true))
         }
+
         ll_about_check_version.visible()
         relative_about_check_version.visible()
         relative_about_check_version.setOnClickListener {
