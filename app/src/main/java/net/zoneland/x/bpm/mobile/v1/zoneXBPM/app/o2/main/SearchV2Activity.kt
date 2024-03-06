@@ -363,7 +363,7 @@ class SearchV2Activity : BaseMVPActivity<SearchV2Contract.View, SearchV2Contract
 
     override fun workOrWorkcompletedResult(list: WorkOrWorkcompletedList?, title: String) {
         hideLoadingDialog()
-        if (list != null && (list.workList.isNotEmpty() || list.workCompletedList.isEmpty())) {
+        if (list != null && (list.workList.isNotEmpty() || list.workCompletedList.isNotEmpty())) {
             val itemCount = list.workList.size + list.workCompletedList.size
             if (itemCount == 1) {
                 if (list.workList.isNotEmpty()) {
